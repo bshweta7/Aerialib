@@ -1,0 +1,29 @@
+services:
+
+  backend: 
+    container_name: backend_container
+    build: 
+      context: ./backend
+      dockerfile: "Dockerfile"
+    ports: 
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=aerialib_postgres_secret_password
+      - DB_DATABASE=aerialib
+    depends_on:
+      - db
+  
+  db: 
+    build:
+      context: ./db
+      dockerfile: "Dockerfile"
+    container_name: db_container
+    restart: always
+    environment: 
+      POSTGRES_DB: aerialib 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aerialib_postgres_secret_password     
+    ports: 
+      - "5432:5432"

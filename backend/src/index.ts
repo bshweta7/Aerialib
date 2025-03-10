@@ -1,6 +1,9 @@
 import express from "express";
 
-const app = express();
+// Load values from .env file
+import 'dotenv/config'
+
+const app = express(); // TODO should this be let instaed of const
 
 // create rest api
 app.get("/", (req, res) => {
