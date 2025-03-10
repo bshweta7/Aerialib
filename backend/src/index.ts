@@ -7,7 +7,7 @@ const app = express(); // TODO should this be let instaed of const
 
 // create rest api
 app.get("/", (req, res) => {
-    res.send("Welcome to Aerialib");
+    res.send("Welcome to Aerialib :DDDD");
 });
 
 // start server
