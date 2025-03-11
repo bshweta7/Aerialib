@@ -36,9 +36,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text("My Poses"),
+            title: const Text("My Dashboard"),
             // actions: [
             //   IconButton(
+          // TODO hamburger menu or profile/settings on the top right ?
             //       onPressed: () {
             //         Navigator.push(context, AddNewTaskPage.route());
             //       },
@@ -47,7 +48,9 @@ class _HomePageState extends State<HomePage> {
             //   )
             // ]
         ),
-        body: Center(child: Text("Hello"))
+        body: Center(
+            child: const Text("Dashboard (home page) under development. "),
+        )
         // BlocBuilder<TasksCubit, TasksState>(
         //   builder: (context, state) {
         //     if (state is TaskLoading) {
