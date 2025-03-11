@@ -8,6 +8,8 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 // import 'package:frontend/features/home/widgets/task_card.dart';
 import 'package:intl/intl.dart';
 
+import '../../poses/pages/pose_library_page.dart';
+
 // import '../widgets/date_selector.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,9 +50,41 @@ class _HomePageState extends State<HomePage> {
             //   )
             // ]
         ),
-        body: Center(
-            child: const Text("Dashboard (home page) under development. "),
+        body: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                  "Navigation",
+                  style: TextStyle(
+                    fontSize:50,
+                    fontWeight: FontWeight.bold,
+                  )
+              ),
+              const SizedBox(height: 30,),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(PoseLibraryPage.route());
+                  },
+                  child: const Text(
+                      'Pose Library',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      )
+                  )
+              ),
+
+              const SizedBox(height:15),
+              const Text("Dashboard is under development. "),
+
+            ]
+          ),
         )
+
+
+
         // BlocBuilder<TasksCubit, TasksState>(
         //   builder: (context, state) {
         //     if (state is TaskLoading) {
