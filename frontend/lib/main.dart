@@ -4,13 +4,15 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/auth/pages/signup_page.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
 
+import 'features/poses/cubit/poses_cubit.dart';
+
 // import 'features/home/cubit/tasks_cubit.dart';
 
 void main() {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit()),
-      // BlocProvider(create: (_) => TasksCubit()),
+      BlocProvider(create: (_) => PosesCubit()),
     ],
     child: const MyApp(),
   ));
@@ -37,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Task App',
+      title: 'Aerialib',
       theme: ThemeData(
         fontFamily: "Cera Pro",
         inputDecorationTheme: InputDecorationTheme(
