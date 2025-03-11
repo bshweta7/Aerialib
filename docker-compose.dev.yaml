@@ -31,3 +31,8 @@ services:
       POSTGRES_PASSWORD: aerialib_postgres_secret_password
     ports:
       - "5432:5432"
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data #TODO Check if this should move to ./db
+
+volumes:
+  postgres_data:

@@ -1,0 +1,14 @@
+npm install {package} --> (in terminal) to install new package
+may need to run "docker compose exec -it backend npm install" in terminal to make it work in docker. 
+
+http.cat for status code reference
+
+docker compose exec -it db /bin/bash --> lets you write things into the Exec tab in the docker desktop interface for postgres_container. 
+docker compose exec -it backend /bin/bash --> lets you write things into the Exec tab in the docker desktop interface for backend_container.
+
+docker compose ps --> shows the containers. Service shows the name you would put into the command below. 
+
+psql -U postgres -d aerialib; --> To get database for sql queries
+remember ; for sql
+
+run "npx drizzle-kit push" from src folder when you want to add a new database schema to the postgreSQL db (e.g. after adding a Tasks DB)
