@@ -46,4 +46,34 @@ poseRouter.delete("/", auth, async (req: AuthRequest, res) => {
     }
 })
 
+poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
+    try {
+      // req.body = { ...req.body, dueAt: new Date(req.body.dueAt), uid: req.user };
+      const posesList = req.body;
+  
+      const filteredPoses: NewPose[] = [];
+  
+      for (let t of posesList) {
+        t = {
+          ...t,
+          dueAt: new Date(t.dueAt),
+          createdAt: new Date(t.createdAt),
+          updatedAt: new Date(t.updatedAt),
+          uid: req.user,
+        };
+        filteredPoses.push(t);
+      }
+  
+      const pushedPoses = await db
+        .insert(poses)
+        .values(posesList)
+        .returning();
+  
+      res.status(201).json(pushedPoses);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ error: e });
+    }
+  });
+  
 export default poseRouter;

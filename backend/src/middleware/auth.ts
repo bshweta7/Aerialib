@@ -27,7 +27,7 @@ export const auth = async (
         }
 
         // verify if token is valid
-        const verified = jwt.verify(token, "passwordKey"); // TODO update passwordKey
+        const verified = jwt.verify(token, "passwordKey"); // TODO update passwordKey move to env file
 
         if(!verified){
             res.status(401).json({error: "Token verification failed!"});

@@ -58,7 +58,7 @@ class PoseModel {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'dueAt': dueAt.toIso8601String(),
-      'hexColor': rgbToHex(color),
+      'color': rgbToHex(color), // TODO CHECK THIS
       'isSynced': isSynced,
     };
   }
