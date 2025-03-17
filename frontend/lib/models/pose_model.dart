@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
-
-import 'package:frontend/core/constants/utils.dart'; // Assuming you have these utilities
 
 class PoseModel {
   final String id;

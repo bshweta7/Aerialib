@@ -41,14 +41,17 @@ class PoseLocalRepository {
           db.execute('''
             CREATE TABLE $tableName(
               id TEXT PRIMARY KEY,
-              title TEXT NOT NULL,
-              description TEXT NOT NULL,
-              uid TEXT NOT NULL,
-              dueAt TEXT NOT NULL,
-              color TEXT NOT NULL,
+              name TEXT NOT NULL,
+              description TEXT,
+              cues TEXT,
+              apparatus TEXT NOT NULL,
+              level INTEGER NOT NULL,
+              createdBy TEXT NOT NULL,
+              updatedBy TEXT, 
               createdAt TEXT NOT NULL,
               updatedAt TEXT NOT NULL,
-              isSynced INTEGER NOT NULL
+              isSynced INTEGER NOT NULL,
+              thumbnailURL TEXT NOT NULL
             )'''
           );
         }
@@ -57,14 +60,17 @@ class PoseLocalRepository {
         return db.execute('''
           CREATE TABLE $tableName(
             id TEXT PRIMARY KEY,
-            title TEXT NOT NULL,
-            description TEXT NOT NULL,
-            uid TEXT NOT NULL,
-            dueAt TEXT NOT NULL,
-            color TEXT NOT NULL,
+            name TEXT NOT NULL,
+            description TEXT,
+            cues TEXT,
+            apparatus TEXT NOT NULL,
+            level INTEGER NOT NULL,
+            createdBy TEXT NOT NULL,
+            updatedBy TEXT, 
             createdAt TEXT NOT NULL,
             updatedAt TEXT NOT NULL,
-            isSynced INTEGER NOT NULL
+            isSynced INTEGER NOT NULL,
+            thumbnailURL TEXT NOT NULL
           )'''
         );
       },

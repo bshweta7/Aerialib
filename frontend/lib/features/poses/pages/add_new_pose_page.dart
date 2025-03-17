@@ -37,11 +37,11 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
       if (level != null) { // Check if level is a valid integer
         await context.read<PosesCubit>().createNewPose(
           name: nameController.text.trim(),
-          description: descriptionController.text.trim(),
-          cues: cuesController.text.trim(),
           apparatus: apparatusController.text.trim(),
           level: level, // Use the parsed integer
-          thumbnailURL: thumbnailURLController.text.trim(),
+          description: descriptionController.text.trim(),
+          cues: cuesController.text.trim(),
+          thumbnailURL: '', // TODO
           token: user.user.token,
           createdBy: user.user.id,
         );
@@ -88,7 +88,8 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
           listener: (context, state) {
             if (state is PoseError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.error))
+                SnackBar(content: Text("There was an error adding the pose"))
+                // SnackBar(content: Text(state.error))
               );
             } else if (state is AddNewPoseSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -111,7 +112,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
               padding: const EdgeInsets.all(20),
               child: Form(
                 key: formKey,
-                child: Column(
+                child: Column( // TODO expanded widget here???
                     children: [
                       // Name Textbox
                       TextFormField(
@@ -128,6 +129,60 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                         },
                       ),
                       const SizedBox(height: 10,),
+
+                      // Apparatus Dropdown
+                      DropdownButtonFormField<String>(
+                        value: apparatusController.text.isNotEmpty ? apparatusController.text : null,
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            apparatusController.text = newValue;
+                          }
+                        },
+                        items: <String>['Lyra', 'Hammock']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        decoration: const InputDecoration(
+                          labelText: 'Apparatus',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select an apparatus';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Level Dropdown
+                      DropdownButtonFormField<int>(
+                        value: levelController.text.isNotEmpty ? int.tryParse(levelController.text) : null,
+                        onChanged: (int? newValue) {
+                          if (newValue != null) {
+                            levelController.text = newValue.toString();
+                          }
+                        },
+                        items: <int>[0, 1, 2, 3, 4,]
+                            .map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(value.toString()),
+                          );
+                        }).toList(),
+                        decoration: const InputDecoration(
+                          labelText: 'Level',
+                        ),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select a level';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
 
                       // Description Textbox
                       TextFormField(
@@ -148,22 +203,8 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                         maxLines: 3,
                       ),
                       const SizedBox(height: 10,),
-                      
 
 
-                      // ColorPicker(
-                      //   heading: const Text("Select Color"),
-                      //   subheading: const Text("Select a different shade"),
-                      //   onColorChanged: (Color color) {
-                      //     setState(() {
-                      //       selectedColor = color;
-                      //     });
-                      //   },
-                      //   color: selectedColor,
-                      //   pickersEnabled: {
-                      //     ColorPickerType.wheel: true,
-                      //   },
-                      // ),
                       const SizedBox(height: 10,),
                       ElevatedButton(
                           onPressed: createNewPose,
