@@ -14,11 +14,12 @@ app.use(express.json());
 app.use(cors());
 
 // middleware to only passes json related routes
-app.use(express.json()); 
+app.use(express.json());
 
 // bind route with prefix of /auth
-app.use("/auth", authRouter)
 app.use("/poses", poseRouter);
+app.use("/auth", authRouter);
+console.log("AAARJGIGJIFJAA")
 
 // create rest api
 app.get("/", (req, res) => {

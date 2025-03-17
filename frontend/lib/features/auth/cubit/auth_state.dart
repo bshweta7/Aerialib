@@ -16,5 +16,6 @@ final class AuthLoggedIn extends AuthState {
 final class AuthError extends AuthState {
   final String error;
   AuthError(this.error);
-
 }
+
+final class AuthErrorShow extends AuthState {}

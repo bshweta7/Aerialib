@@ -1,16 +1,14 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:frontend/core/constants/utils.dart';
+import 'package:frontend/core/constants/utils.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-// import 'package:frontend/features/home/cubit/tasks_cubit.dart';
-// import 'package:frontend/features/home/pages/add_new_task_page.dart';
-// import 'package:frontend/features/home/widgets/task_card.dart';
+import 'package:frontend/features/poses/cubit/poses_cubit.dart';
+import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
+import 'package:frontend/features/poses/widgets/pose_card.dart';
 import 'package:intl/intl.dart';
 
-import '../../poses/pages/pose_library_page.dart';
-
-// import '../widgets/date_selector.dart';
 
 class HomePage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -31,140 +29,109 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    // context.read<TasksCubit>().getAllTasks(token: user.user.token);
+    context.read<PosesCubit>().getAllPoses(token: user.user.token);
+    Connectivity().onConnectivityChanged.listen((data) async {
+      if (data.contains(ConnectivityResult.wifi)) {
+        print("Wifi Available");
+        await context.read<PosesCubit>().syncPoses(user.user.token);
+
+      } else {
+        print("No wifi available");
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text("My Dashboard"),
-            // actions: [
-            //   IconButton(
-          // TODO hamburger menu or profile/settings on the top right ?
-            //       onPressed: () {
-            //         Navigator.push(context, AddNewTaskPage.route());
-            //       },
-            //       icon: const Icon(CupertinoIcons.add,
-            //       )
-            //   )
-            // ]
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                  "Navigation",
-                  style: TextStyle(
-                    fontSize:50,
-                    fontWeight: FontWeight.bold,
-                  )
-              ),
-              const SizedBox(height: 30,),
-              ElevatedButton(
+            title: const Text("My Poses"),
+            actions: [
+              IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(PoseLibraryPage.route());
+                    Navigator.push(context, AddNewPosePage.route());
                   },
-                  child: const Text(
-                      'Pose Library',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      )
+                  icon: const Icon(CupertinoIcons.add,
                   )
-              ),
-
-              const SizedBox(height:15),
-              const Text("Dashboard is under development. "),
-
+              )
             ]
-          ),
+        ),
+        body: BlocBuilder<PosesCubit, PosesState>(
+          builder: (context, state) {
+            if (state is PoseLoading) {
+              return const Center(child: CircularProgressIndicator(),);
+            }
+            if (state is PoseError) {
+              print("AAACK ERROR");
+              return Center(child: Column(
+                children: [
+                  Text("AAACK We got an error :("),
+                  Text(state.error),
+                ],
+              ),);
+            }
+            if (state is GetPosesSuccess) {
+              final poses = state.poses.toList();
+
+              // TODO FILTERING: final poses = state.poses.where(
+              //                       (elem) =>
+              //                   DateFormat('d').format(elem.dueAt) == DateFormat('d').format(selectedDate) &&
+              //                       selectedDate.month == elem.dueAt.month &&
+              //                       selectedDate.year == elem.dueAt.year
+              //               ).toList();
+
+              print("POSES FROM HOME PAGE");
+              print(poses);
+
+              return Column(
+                  children: [
+
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: poses.length,
+                          itemBuilder: (context, index) {
+                            final pose = poses[index];
+                            return Row(
+                              children: [
+                                Expanded(
+                                  child: PoseCard(
+                                      color: pose.color,
+                                      headerText: pose.title,
+                                      descriptionText: pose.description
+                                  ),
+                                ),
+                                Container(
+                                  height: 10,
+                                  width: 10,
+                                  decoration: BoxDecoration(
+                                    color: strengthenColor(
+                                      pose.color,
+                                      0.69,
+                                    ),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text(
+                                      DateFormat.jm().format(pose.dueAt),
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                      )
+                                  ),
+                                )
+
+                              ],
+                            );
+                          }
+                      ),
+                    )
+                  ]
+              );
+            }
+            return const SizedBox();
+          },
         )
-
-
-
-        // BlocBuilder<TasksCubit, TasksState>(
-        //   builder: (context, state) {
-        //     if (state is TaskLoading) {
-        //       return const Center(child: CircularProgressIndicator(),);
-        //     }
-        //     if (state is TaskError) {
-        //       print("AAACK ERROR");
-        //       return Center(child: Column(
-        //         children: [
-        //           Text("AAACK We got an error :("),
-        //           Text(state.error),
-        //         ],
-        //       ),);
-        //     }
-        //     if (state is GetTasksSuccess) {
-        //       final tasks = state.tasks.where(
-        //               (elem) =>
-        //           DateFormat('d').format(elem.dueAt) == DateFormat('d').format(selectedDate) &&
-        //               selectedDate.month == elem.dueAt.month &&
-        //               selectedDate.year == elem.dueAt.year
-        //       ).toList();
-        //
-        //       print(tasks);
-        //
-        //       return Column(
-        //           children: [
-        //             DateSelector(
-        //                 selectedDate: selectedDate,
-        //                 onTap: (date) {
-        //                   setState(() {
-        //                     selectedDate = date;
-        //                   });
-        //                 }
-        //             ),
-        //             Expanded(
-        //               child: ListView.builder(
-        //                   itemCount: tasks.length,
-        //                   itemBuilder: (context, index) {
-        //                     final task = tasks[index];
-        //                     return Row(
-        //                       children: [
-        //                         Expanded(
-        //                           child: TaskCard(
-        //                               color: task.color,
-        //                               headerText: task.title,
-        //                               descriptionText: task.description
-        //                           ),
-        //                         ),
-        //                         Container(
-        //                           height: 10,
-        //                           width: 10,
-        //                           decoration: BoxDecoration(
-        //                             color: strengthenColor(
-        //                               task.color,
-        //                               0.69,
-        //                             ),
-        //                             shape: BoxShape.circle,
-        //                           ),
-        //                         ),
-        //                         Padding(
-        //                           padding: const EdgeInsets.all(12.0),
-        //                           child: Text(
-        //                               DateFormat.jm().format(task.dueAt),
-        //                               style: const TextStyle(
-        //                                 fontSize: 17,
-        //                               )
-        //                           ),
-        //                         )
-
-        //                       ],
-        //                     );
-        //                   }
-        //               ),
-        //             )
-        //           ]
-        //       );
-        //     }
-        //     return const SizedBox();
-        //   },
-        // )
     );
   }
 }

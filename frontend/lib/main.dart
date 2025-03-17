@@ -4,9 +4,7 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/auth/pages/signup_page.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
 
-import 'features/poses/cubit/poses_cubit.dart';
-
-// import 'features/home/cubit/tasks_cubit.dart';
+import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 
 void main() {
   runApp(MultiBlocProvider(
@@ -17,7 +15,6 @@ void main() {
     child: const MyApp(),
   ));
 }
-
 
 
 class MyApp extends StatefulWidget {
@@ -51,19 +48,19 @@ class _MyAppState extends State<MyApp> {
             ),
             borderRadius: BorderRadius.circular(10),
           ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
+          focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(
                 width: 3,
               )
           ),
-          errorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
+          errorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(
                 color: Colors.red,
                 width: 3,
               )
           ),
-          border: OutlineInputBorder(
-              borderSide: const BorderSide(
+          border: const OutlineInputBorder(
+              borderSide: BorderSide(
                 width: 3,
               )
           ),

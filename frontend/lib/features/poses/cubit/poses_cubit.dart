@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/utils.dart';
 import 'package:frontend/features/poses/repository/pose_remote_repository.dart';
 import 'package:frontend/models/pose_model.dart';
-
-import '../repository/pose_local_repository.dart';
+import 'package:frontend/features/poses/repository/pose_local_repository.dart';
 
 part 'poses_state.dart';
 
@@ -19,14 +18,16 @@ class PosesCubit extends Cubit<PosesState>{
     required String description,
     required Color color,
     required String token,
+    required String uid,
     required DateTime dueAt,
   }) async {
     try {
       emit(PoseLoading());
       final poseModel = await poseRemoteRepository.createPose(
+          uid: uid,
           title: title,
           description: description,
-          hexColor: rgbToHex(color),
+          color: rgbToHex(color),
           token: token,
           dueAt: dueAt
       );
@@ -52,4 +53,28 @@ class PosesCubit extends Cubit<PosesState>{
       emit(PoseError(e.toString()));
     }
   }
+
+  Future<void> syncPoses(String token) async {
+    // get all unsynced poses from our sqlite db
+    final unsyncedPoses = await poseLocalRepository.getUnsyncedPoses();
+    print(unsyncedPoses);
+    if (unsyncedPoses.isEmpty) {
+      return;
+    }
+    // talk to our postgresql db to add the new pose
+    final isSynced = await poseRemoteRepository.syncPoses(
+        token: token,
+        poses: unsyncedPoses
+    );
+    // change the poses that were added to the db from 0 to 1
+    if (isSynced) {
+      print("Poses have been synced");
+      for (final pose in unsyncedPoses) {
+        poseLocalRepository.updateRowValue(pose.id, 1);
+      }
+    }
+
+  }
 }
+
+// TODO see his next video on background plugin that syncs every 7 days.

@@ -147,7 +147,7 @@ authRouter.get("/", auth, async (req: AuthRequest, res) => {
         }
 
         const [user] = await db.select().from(users).where(eq(users.id, req.user));
-        
+
         res.json({ ...user, token: req.token })
     } catch (e) {
         res.status(500).json(false);

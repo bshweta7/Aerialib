@@ -6,7 +6,7 @@ import 'package:frontend/features/home/pages/home_page.dart';
 
 // TODO set up username and allow login from username OR email
 // TODO allow tab to go from username textbox to password textbox
-// TODO arrows dont work in textboxes?
+// TODO arrows don't work in textboxes?
 
 class LoginPage extends StatefulWidget {
   static MaterialPageRoute route() => MaterialPageRoute(
@@ -41,6 +41,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void resetPage() {
+    // reset to Auth initial
+    context.read<AuthCubit>().reInitialize();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,10 +52,12 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           if(state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error),
+              const SnackBar(
+                content: Text("Could not login"),
+                // content: Text(state.error), //TODO update snackbar to show more specific error message
               ),
             );
+            resetPage(); // TODO test this
           } else if (state is AuthLoggedIn) {
             Navigator.pushAndRemoveUntil(
               context,

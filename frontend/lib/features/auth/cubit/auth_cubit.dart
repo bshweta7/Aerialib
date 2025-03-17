@@ -70,4 +70,8 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(e.toString()));
     }
   }
+
+  void reInitialize() {
+    emit(AuthInitial());
+  }
 }

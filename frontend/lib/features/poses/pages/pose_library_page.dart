@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,17 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
     context.read<PosesCubit>().getAllPoses(token: user.user.token);
+    Connectivity().onConnectivityChanged.listen((data) async {
+      if (data.contains(ConnectivityResult.wifi)) {
+        print("Wifi Available");
+        await context.read<PosesCubit>().syncPoses(user.user.token);
+
+      } else {
+        print("No wifi available");
+      }
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +73,15 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               ),);
             }
             if (state is GetPosesSuccess) {
-              final poses = state.poses.where(
-                      (elem) =>
-                  DateFormat('d').format(elem.dueAt) == DateFormat('d').format(selectedDate) &&
-                      selectedDate.month == elem.dueAt.month &&
-                      selectedDate.year == elem.dueAt.year
-              ).toList();
+              // final poses = state.poses.where(
+              //         (elem) =>
+              //     DateFormat('d').format(elem.dueAt) == DateFormat('d').format(selectedDate) &&
+              //         selectedDate.month == elem.dueAt.month &&
+              //         selectedDate.year == elem.dueAt.year
+              // ).toList();
+              final poses = state.poses.toList();
 
+              print("Poses List: ");
               print(poses);
 
               return Column(

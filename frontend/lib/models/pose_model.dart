@@ -58,7 +58,7 @@ class PoseModel {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'dueAt': dueAt.toIso8601String(),
-      'color': rgbToHex(color), // TODO CHECK THIS
+      'color': rgbToHex(color),
       'isSynced': isSynced,
     };
   }
@@ -72,7 +72,7 @@ class PoseModel {
       createdAt: DateTime.parse(map['createdAt']),
       updatedAt: DateTime.parse(map['updatedAt']),
       dueAt: DateTime.parse(map['dueAt']),
-      color: hexToRgb(map['hexColor']),
+      color: hexToRgb(map['color']),
       isSynced: map['isSynced'] ?? 1,
     );
   }

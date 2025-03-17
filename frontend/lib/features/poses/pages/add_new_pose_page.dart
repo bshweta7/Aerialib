@@ -27,11 +27,12 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
     if (formKey.currentState!.validate()) {
       AuthLoggedIn user = context.read<AuthCubit>().state as AuthLoggedIn;
       await context.read<PosesCubit>().createNewPose(
-          title: titleController.text.trim(),
-          description: descriptionController.text.trim(),
-          color: selectedColor,
-          token: user.user.token,
-          dueAt: selectedDate);
+        uid: user.user.id,
+        title: titleController.text.trim(),
+        description: descriptionController.text.trim(),
+        color: selectedColor,
+        token: user.user.token,
+        dueAt: selectedDate);
     }
   }
 
