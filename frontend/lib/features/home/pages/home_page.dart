@@ -24,9 +24,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  DateTime selectedDate = DateTime.now();
+  
   int _gridSize = 3; // Start at 0 and set during the first build
   int _gridSizeMax = 10; // TODO set this dynamically when building
+
   @override
   void initState() {
     super.initState();
@@ -85,23 +86,28 @@ class _HomePageState extends State<HomePage> {
               )
             ]
         ),
+
         body: BlocBuilder<PosesCubit, PosesState>(
           builder: (context, state) {
+
             if (state is PoseLoading) {
               return const Center(child: CircularProgressIndicator(),);
             }
+
             if (state is PoseError) {
-              print("AAACK ERROR");
-              return Center(child: Column(
-                children: [
-                  Text("AAACK We got an error :("),
-                  Text(state.error),
-                ],
-              ),);
+              print("Error: State is Pose Error");
+              return Center(
+                child: Column(
+                  children: [
+                    const Text("State pose error"),
+                    Text(state.error),
+                  ],
+                ),
+              );
             }
+
             if (state is GetPosesSuccess) {
               final poses = state.poses.toList();
-
               // TODO FILTERING: final poses = state.poses.where(
               //                       (elem) =>
               //                   DateFormat('d').format(elem.dueAt) == DateFormat('d').format(selectedDate) &&
