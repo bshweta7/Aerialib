@@ -53,6 +53,8 @@ class PoseRemoteRepository {
           dueAt: dueAt,
           color: hexToRgb(color),
           isSynced: 0,
+          imageURL: "",
+          thumbnailURL: ""
         );
         // await poseLocalRepository.insertPose(poseModel);
         return poseModel;

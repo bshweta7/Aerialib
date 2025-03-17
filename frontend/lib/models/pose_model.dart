@@ -13,6 +13,9 @@ class PoseModel {
   final DateTime updatedAt;
   final DateTime dueAt;
   final int isSynced;
+  final String imageURL;
+  final String thumbnailURL;
+
   PoseModel({
     required this.id,
     required this.uid,
@@ -23,6 +26,8 @@ class PoseModel {
     required this.dueAt,
     required this.color,
     required this.isSynced,
+    required this.imageURL,
+    required this.thumbnailURL,
   });
 
   PoseModel copyWith({
@@ -35,6 +40,8 @@ class PoseModel {
     DateTime? dueAt,
     Color? color,
     int? isSynced,
+    String? imageURL,
+    String? thumbnailURL,
   }) {
     return PoseModel(
       id: id ?? this.id,
@@ -46,6 +53,8 @@ class PoseModel {
       dueAt: dueAt ?? this.dueAt,
       color: color ?? this.color,
       isSynced: isSynced ?? this.isSynced,
+      imageURL: imageURL ?? this.imageURL,
+      thumbnailURL: thumbnailURL ?? this.thumbnailURL,
     );
   }
 
@@ -60,6 +69,8 @@ class PoseModel {
       'dueAt': dueAt.toIso8601String(),
       'color': rgbToHex(color),
       'isSynced': isSynced,
+      'imageURL': imageURL,
+      'thumbnailURL': thumbnailURL,
     };
   }
 
@@ -74,6 +85,8 @@ class PoseModel {
       dueAt: DateTime.parse(map['dueAt']),
       color: hexToRgb(map['color']),
       isSynced: map['isSynced'] ?? 1,
+      imageURL: map['imageURL'] ?? '',
+      thumbnailURL: map['thumbnailURL'] ?? '',
     );
   }
 
@@ -84,7 +97,17 @@ class PoseModel {
 
   @override
   String toString() {
-    return 'PoseModel(id: $id, uid: $uid, title: $title, description: $description, createdAt: $createdAt, updatedAt: $updatedAt, dueAt: $dueAt, color: $color)';
+    return 'PoseModel('
+        'id: $id, '
+        'uid: $uid, '
+        'title: $title, '
+        'description: $description, '
+        'createdAt: $createdAt, '
+        'updatedAt: $updatedAt, '
+        'dueAt: $dueAt, '
+        'color: $color, '
+        'imageURL: $imageURL'
+        'thumbnailURL: $thumbnailURL)';
   }
 
   @override
@@ -99,7 +122,10 @@ class PoseModel {
         other.updatedAt == updatedAt &&
         other.dueAt == dueAt &&
         other.color == color &&
+        other.imageURL == imageURL &&
+        other.thumbnailURL == thumbnailURL &&
         other.isSynced == isSynced;
+
   }
 
   @override
@@ -112,6 +138,8 @@ class PoseModel {
     updatedAt.hashCode ^
     dueAt.hashCode ^
     color.hashCode ^
+    thumbnailURL.hashCode ^
+    imageURL.hashCode ^
     isSynced.hashCode;
   }
 }
