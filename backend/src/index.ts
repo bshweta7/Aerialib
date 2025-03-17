@@ -19,11 +19,10 @@ app.use(express.json());
 // bind route with prefix of /auth
 app.use("/poses", poseRouter);
 app.use("/auth", authRouter);
-console.log("AAARJGIGJIFJAA")
 
 // create rest api
 app.get("/", (req, res) => {
-    res.send("Welcome to Aerialib :DDDD");
+    res.send("Welcome to Aerialib ");
 });
 
 // start server

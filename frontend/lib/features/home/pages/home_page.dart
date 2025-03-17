@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _gridSize;
     });
-  }
+  } // TODO MOve this to media_grid.dart and have it all in one.
 
   @override
   Widget build(BuildContext context) {

@@ -17,14 +17,23 @@ export type NewUser = typeof users.$inferInsert;
 
 export const poses = pgTable("poses", {
     id: uuid("id").primaryKey().defaultRandom(),
-    title: text("title").notNull(),
-    description: text("description").notNull(),
-    color: text("color").notNull(),
-    uid: uuid("uid").notNull().references(() => users.id, {onDelete: "cascade"}),
-    dueAt: timestamp("due_at").$defaultFn(() => new Date(Date.now() + 7*24*60*60*1000)),
+    name: text("name").notNull(),
+    // TODO alternative names
+    description: text("description"),
+    cues: text("cues"),
+    apparatus: text("apparatus").notNull(),
+    level: integer("level").notNull(),
+    // TODO contraindications
+    // TODO image info    
+    createdBy: uuid("created_by").notNull().references(() => users.id, {onDelete: "cascade"}),
+    updatedBy: uuid("updated_by").references(() => users.id),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
     // isSynced: integer("is_synced").notNull()
+
+
+
+
 });
 
 

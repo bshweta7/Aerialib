@@ -25,7 +25,8 @@ poseRouter.post("/", auth, async (req: AuthRequest, res) => {
 
 poseRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
-        const allPoses = await db.select().from(poses).where(eq(poses.uid, req.user!));
+        const allPoses = await db.select().from(poses);
+        // const allPoses = await db.select().from(poses).where(eq(poses.createdBy, req.user!));
 
         res.json(allPoses);
 
@@ -48,18 +49,15 @@ poseRouter.delete("/", auth, async (req: AuthRequest, res) => {
 
 poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
     try {
-      // req.body = { ...req.body, dueAt: new Date(req.body.dueAt), uid: req.user };
       const posesList = req.body;
-  
       const filteredPoses: NewPose[] = [];
   
       for (let t of posesList) {
         t = {
           ...t,
-          dueAt: new Date(t.dueAt),
           createdAt: new Date(t.createdAt),
           updatedAt: new Date(t.updatedAt),
-          uid: req.user,
+          createdBy: req.user, // TODO Double check if this is right 
         };
         filteredPoses.push(t);
       }
