@@ -23,16 +23,12 @@ export const poses = pgTable("poses", {
     cues: text("cues"),
     apparatus: text("apparatus").notNull(),
     level: integer("level").notNull(),
-    // TODO contraindications
-    // TODO image info    
+    // TODO contraindications 
     createdBy: uuid("created_by").notNull().references(() => users.id, {onDelete: "cascade"}),
     updatedBy: uuid("updated_by").references(() => users.id),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
-    // isSynced: integer("is_synced").notNull()
-
-
-
+    thumbnailURL: text("thumbnail_url").notNull(),
 
 });
 

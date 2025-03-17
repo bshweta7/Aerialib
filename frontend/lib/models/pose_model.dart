@@ -1,59 +1,63 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:frontend/core/constants/utils.dart';
+import 'package:frontend/core/constants/utils.dart'; // Assuming you have these utilities
 
 class PoseModel {
   final String id;
-  final String uid;
-  final String title;
-  final Color color;
-  final String description;
+  final String name;
+  final String? description;
+  final String? cues;
+  final String apparatus;
+  final int level;
+  final String createdBy;
+  final String? updatedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final DateTime dueAt;
   final int isSynced;
-  final String imageURL;
   final String thumbnailURL;
 
   PoseModel({
     required this.id,
-    required this.uid,
-    required this.title,
-    required this.description,
+    required this.name,
+    this.description,
+    this.cues,
+    required this.apparatus,
+    required this.level,
+    required this.createdBy,
+    this.updatedBy,
     required this.createdAt,
     required this.updatedAt,
-    required this.dueAt,
-    required this.color,
     required this.isSynced,
-    required this.imageURL,
     required this.thumbnailURL,
   });
 
   PoseModel copyWith({
     String? id,
-    String? uid,
-    String? title,
+    String? name,
     String? description,
+    String? cues,
+    String? apparatus,
+    int? level,
+    String? createdBy,
+    String? updatedBy,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? dueAt,
-    Color? color,
     int? isSynced,
-    String? imageURL,
     String? thumbnailURL,
   }) {
     return PoseModel(
       id: id ?? this.id,
-      uid: uid ?? this.uid,
-      title: title ?? this.title,
+      name: name ?? this.name,
       description: description ?? this.description,
+      cues: cues ?? this.cues,
+      apparatus: apparatus ?? this.apparatus,
+      level: level ?? this.level,
+      createdBy: createdBy ?? this.createdBy,
+      updatedBy: updatedBy ?? this.updatedBy,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      dueAt: dueAt ?? this.dueAt,
-      color: color ?? this.color,
       isSynced: isSynced ?? this.isSynced,
-      imageURL: imageURL ?? this.imageURL,
       thumbnailURL: thumbnailURL ?? this.thumbnailURL,
     );
   }
@@ -61,15 +65,16 @@ class PoseModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'uid': uid,
-      'title': title,
+      'name': name,
       'description': description,
+      'cues': cues,
+      'apparatus': apparatus,
+      'level': level,
+      'createdBy': createdBy,
+      'updatedBy': updatedBy,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
-      'dueAt': dueAt.toIso8601String(),
-      'color': rgbToHex(color),
       'isSynced': isSynced,
-      'imageURL': imageURL,
       'thumbnailURL': thumbnailURL,
     };
   }
@@ -77,16 +82,17 @@ class PoseModel {
   factory PoseModel.fromMap(Map<String, dynamic> map) {
     return PoseModel(
       id: map['id'] ?? '',
-      uid: map['uid'] ?? '',
-      title: map['title'] ?? '',
-      description: map['description'] ?? '',
+      name: map['name'] ?? '',
+      description: map['description'],
+      cues: map['cues'],
+      apparatus: map['apparatus'] ?? '',
+      level: map['level'] ?? -1,
+      createdBy: map['createdBy'] ?? '',
+      updatedBy: map['updatedBy'],
       createdAt: DateTime.parse(map['createdAt']),
       updatedAt: DateTime.parse(map['updatedAt']),
-      dueAt: DateTime.parse(map['dueAt']),
-      color: hexToRgb(map['color']),
       isSynced: map['isSynced'] ?? 1,
-      imageURL: map['imageURL'] ?? '',
-      thumbnailURL: map['thumbnailURL'] ?? '',
+      thumbnailURL: map['thumbnailURL'] ?? '', // TODO make default thumbnailURL point to a exclamation mark image
     );
   }
 
@@ -99,15 +105,17 @@ class PoseModel {
   String toString() {
     return 'PoseModel('
         'id: $id, '
-        'uid: $uid, '
-        'title: $title, '
+        'name: $name, '
         'description: $description, '
+        'cues: $cues, '
+        'apparatus: $apparatus, '
+        'level: $level, '
+        'createdBy: $createdBy, '
+        'updatedBy: $updatedBy, '
         'createdAt: $createdAt, '
         'updatedAt: $updatedAt, '
-        'dueAt: $dueAt, '
-        'color: $color, '
-        'imageURL: $imageURL'
-        'thumbnailURL: $thumbnailURL)';
+        'isSynced: $isSynced, '
+        'thumbnailURL: $thumbnailURL)'; // Added thumbnailURL
   }
 
   @override
@@ -115,31 +123,32 @@ class PoseModel {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        other.uid == uid &&
-        other.title == title &&
+        other.name == name &&
         other.description == description &&
+        other.cues == cues &&
+        other.apparatus == apparatus &&
+        other.level == level &&
+        other.createdBy == createdBy &&
+        other.updatedBy == updatedBy &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
-        other.dueAt == dueAt &&
-        other.color == color &&
-        other.imageURL == imageURL &&
-        other.thumbnailURL == thumbnailURL &&
-        other.isSynced == isSynced;
-
+        other.isSynced == isSynced &&
+        other.thumbnailURL == thumbnailURL; // Added thumbnailURL
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-    uid.hashCode ^
-    title.hashCode ^
+    name.hashCode ^
     description.hashCode ^
+    cues.hashCode ^
+    apparatus.hashCode ^
+    level.hashCode ^
+    createdBy.hashCode ^
+    updatedBy.hashCode ^
     createdAt.hashCode ^
     updatedAt.hashCode ^
-    dueAt.hashCode ^
-    color.hashCode ^
-    thumbnailURL.hashCode ^
-    imageURL.hashCode ^
-    isSynced.hashCode;
+    isSynced.hashCode ^
+    thumbnailURL.hashCode; // Added thumbnailURL
   }
 }

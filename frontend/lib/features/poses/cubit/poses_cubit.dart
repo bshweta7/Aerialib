@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/utils.dart';
@@ -14,22 +13,26 @@ class PosesCubit extends Cubit<PosesState>{
   final poseLocalRepository = PoseLocalRepository();
 
   Future<void> createNewPose({
-    required String title,
+    required String name,
     required String description,
-    required Color color,
+    required String cues,
+    required String apparatus,
+    required int level,
+    required String thumbnailURL,
     required String token,
-    required String uid,
-    required DateTime dueAt,
+    required String createdBy,
   }) async {
     try {
       emit(PoseLoading());
       final poseModel = await poseRemoteRepository.createPose(
-          uid: uid,
-          title: title,
-          description: description,
-          color: rgbToHex(color),
-          token: token,
-          dueAt: dueAt
+        name: name,
+        description: description,
+        cues: cues,
+        apparatus: apparatus,
+        level: level,
+        thumbnailURL: thumbnailURL,
+        token: token,
+        createdBy: createdBy,
       );
       await poseLocalRepository.insertPose(poseModel);
 

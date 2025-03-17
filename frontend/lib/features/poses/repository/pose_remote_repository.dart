@@ -13,14 +13,18 @@ class PoseRemoteRepository {
   final poseLocalRepository = PoseLocalRepository();
 
   Future<PoseModel> createPose({
-    required String title,
+    required String name,
     required String description,
-    required String color,
+    required String cues,
+    required String apparatus,
+    required int level,
+    required String thumbnailURL,
     required String token,
-    required String uid,
-    required DateTime dueAt,
+    required String createdBy,
   }) async {
+
     try {
+      // First try POST into backend
       final res = await http.post(
           Uri.parse("${Constants.backendUri}/poses"),
           headers: {
@@ -28,35 +32,42 @@ class PoseRemoteRepository {
             'x-auth-token': token,
           },
           body: jsonEncode({
-            'title': title,
-            'description': description,
-            'color': color,
-            'dueAt': dueAt.toIso8601String(),
+            'name': name,
+            // 'description': description,
+            // 'cues': cues,
+            'apparatus': apparatus,
+            'level': level,
+            'createdBy': createdBy,
+            'thumbnailURL': thumbnailURL,
+            // TODO why doesnt this include everything? POST thunderclient didnt work when i added a nullable one like description - gave error.
           })
       );
 
       if(res.statusCode != 201) {
-        print("ERROR: Could not create pose - POST /poses");
+        print("ERROR: Could not create pose --> POST /poses");
         throw jsonDecode(res.body)['error'];
+      } else {
+        return PoseModel.fromJson(res.body);
       }
 
-      return PoseModel.fromJson(res.body);
     } catch (e) {
       try {
+        // otherwise make a PoseModel without POSTing it.
         final poseModel = PoseModel(
           id: const Uuid().v6(),
-          uid: uid,
-          title: title,
+          name: name,
           description: description,
+          cues: cues,
+          apparatus: apparatus,
+          level: level,
+          createdBy: createdBy,
+          updatedBy: createdBy,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
-          dueAt: dueAt,
-          color: hexToRgb(color),
           isSynced: 0,
-          imageURL: "",
-          thumbnailURL: ""
+          thumbnailURL: thumbnailURL,
         );
-        // await poseLocalRepository.insertPose(poseModel);
+        // await poseLocalRepository.insertPose(poseModel); // TODO shouldnt this insert???
         return poseModel;
       } catch (e) {
         rethrow;

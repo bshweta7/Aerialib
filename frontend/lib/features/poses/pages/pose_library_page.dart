@@ -93,28 +93,30 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             final pose = poses[index];
                             return Row(
                               children: [
-                                Expanded(
-                                  child: PoseCard(
-                                      color: pose.color,
-                                      headerText: pose.title,
-                                      descriptionText: pose.description
-                                  ),
-                                ),
+                                // Expanded(
+                                //   child: PoseCard(
+                                //       // color: '#4d2561', // TODO : FIX THIS
+                                // TODO EVERYTHING IS ON HOMEPAGE BUT IT SHOULD BE ON HERE
+                                //       headerText: pose.name,
+                                //       descriptionText: pose.description
+                                //   ),
+                                // ),
                                 Container(
                                   height: 10,
                                   width: 10,
                                   decoration: BoxDecoration(
-                                    color: strengthenColor(
-                                      pose.color,
-                                      0.69,
-                                    ),
+                                    // color: strengthenColor(
+                                    //   pose.color,
+                                    //   0.69,
+                                    // ),
                                     shape: BoxShape.circle,
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: Text(
-                                      DateFormat.jm().format(pose.dueAt),
+                                      // DateFormat.jm().format(pose.dueAt),
+                                      "MY TEXT TODO",
                                       style: const TextStyle(
                                         fontSize: 17,
                                       )

@@ -17,28 +17,41 @@ class AddNewPosePage extends StatefulWidget {
 }
 
 class _AddNewPosePageState extends State<AddNewPosePage> {
-  TextEditingController titleController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  Color selectedColor = const Color.fromRGBO(246, 222, 194, 1);
-  DateTime selectedDate = DateTime.now();
+  TextEditingController cuesController = TextEditingController();
+  TextEditingController apparatusController = TextEditingController();
+  TextEditingController levelController = TextEditingController();
+  TextEditingController thumbnailURLController = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
 
   void createNewPose() async {
     if (formKey.currentState!.validate()) {
-      AuthLoggedIn user = context.read<AuthCubit>().state as AuthLoggedIn;
-      await context.read<PosesCubit>().createNewPose(
-        uid: user.user.id,
-        title: titleController.text.trim(),
-        description: descriptionController.text.trim(),
-        color: selectedColor,
-        token: user.user.token,
-        dueAt: selectedDate);
+      AuthLoggedIn user = context
+          .read<AuthCubit>()
+          .state as AuthLoggedIn;
+      int? level = int.tryParse(
+          levelController.text.trim()); // Parse level to int
+
+      if (level != null) { // Check if level is a valid integer
+        await context.read<PosesCubit>().createNewPose(
+          name: nameController.text.trim(),
+          description: descriptionController.text.trim(),
+          cues: cuesController.text.trim(),
+          apparatus: apparatusController.text.trim(),
+          level: level, // Use the parsed integer
+          thumbnailURL: thumbnailURLController.text.trim(),
+          token: user.user.token,
+          createdBy: user.user.id,
+        );
+      }
     }
   }
 
   @override
   void dispose() {
-    titleController.dispose();
+    nameController.dispose();
     descriptionController.dispose();
     super.dispose();
   }
@@ -48,27 +61,27 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
     return Scaffold(
         appBar: AppBar(
             title: const Text("Add New Pose"),
-            actions: [
-              GestureDetector(
-                onTap: () async {
-                  final _selectedDate = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(
-                          const Duration(days:90)
-                      )
-                  );
-                  if(_selectedDate!=null) {
-                    setState(() {
-                      selectedDate = _selectedDate;
-                    });
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(DateFormat("MM-d-y").format(selectedDate)),
-                ),
-              )
+            actions: const [
+              // GestureDetector(
+              //   onTap: () async {
+              //     final _selectedDate = await showDatePicker(
+              //         context: context,
+              //         firstDate: DateTime.now(),
+              //         lastDate: DateTime.now().add(
+              //             const Duration(days:90)
+              //         )
+              //     );
+              //     if(_selectedDate!=null) {
+              //       setState(() {
+              //         selectedDate = _selectedDate;
+              //       });
+              //     }
+              //   },
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Text(DateFormat("MM-d-y").format(selectedDate)),
+              //   ),
+              // )
             ]
         ),
         body: BlocConsumer<PosesCubit, PosesState>(
@@ -100,48 +113,57 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                 key: formKey,
                 child: Column(
                     children: [
+                      // Name Textbox
                       TextFormField(
-                        controller: titleController,
+                        controller: nameController,
                         decoration: const InputDecoration(
-                          hintText: 'Title',
+                          hintText: 'Pose Name',
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return "Title cannot be empty";
+                            return "Name cannot be empty";
                           } else {
                             return null;
                           }
                         },
                       ),
                       const SizedBox(height: 10,),
+
+                      // Description Textbox
                       TextFormField(
                         controller: descriptionController,
                         decoration: const InputDecoration(
                           hintText: 'Description',
                         ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Description cannot be empty";
-                          } else {
-                            return null;
-                          }
-                        },
-                        maxLines: 4,
+                        maxLines: 2,
                       ),
                       const SizedBox(height: 10,),
-                      ColorPicker(
-                        heading: const Text("Select Color"),
-                        subheading: const Text("Select a different shade"),
-                        onColorChanged: (Color color) {
-                          setState(() {
-                            selectedColor = color;
-                          });
-                        },
-                        color: selectedColor,
-                        pickersEnabled: {
-                          ColorPickerType.wheel: true,
-                        },
+
+                      // Cues Textbox
+                      TextFormField(
+                        controller: cuesController,
+                        decoration: const InputDecoration(
+                          hintText: 'Cues',
+                        ),
+                        maxLines: 3,
                       ),
+                      const SizedBox(height: 10,),
+                      
+
+
+                      // ColorPicker(
+                      //   heading: const Text("Select Color"),
+                      //   subheading: const Text("Select a different shade"),
+                      //   onColorChanged: (Color color) {
+                      //     setState(() {
+                      //       selectedColor = color;
+                      //     });
+                      //   },
+                      //   color: selectedColor,
+                      //   pickersEnabled: {
+                      //     ColorPickerType.wheel: true,
+                      //   },
+                      // ),
                       const SizedBox(height: 10,),
                       ElevatedButton(
                           onPressed: createNewPose,

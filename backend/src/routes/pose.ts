@@ -8,10 +8,12 @@ const poseRouter = Router();
 
 poseRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
+      // TODO make sure the pose doesn't exist already? 
         // TODO: check that the values were actually provided because it error if you dont
         //create new pose in db 
         req.body = { ...req.body, dueAt: new Date(req.body.dueAt), uid: req.user };
         const NewPose: NewPose = req.body;
+        console.log(NewPose);
 
         const [pose] = await db.insert(poses).values(NewPose).returning();
 
