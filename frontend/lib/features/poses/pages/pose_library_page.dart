@@ -38,6 +38,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   List<String> initialApparatus = Constants.apparatusOptions;
   List<int> initialLevels = Constants.levelOptions;
   bool _isContainerVisible = false; // Initially hidden
+  final ScrollController _myScrollController = ScrollController();
 
   @override
   void initState() {
@@ -219,10 +220,13 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                               children: [
 
                                 // Apparatus Filter
-                                Row(
+                                Wrap( // Changed to Wrap
+                                  alignment: WrapAlignment.start,
+                                  spacing: 8.0, // Space between children horizontally
+                                  runSpacing: 4.0, // Space between lines vertically
                                   children: [
                                     const Text(
-                                      "Apparatus: ",
+                                      "Apparatus:   ",
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
@@ -257,10 +261,13 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                 SizedBox(height:10),
 
                                 // Level Filter
-                                Row(
+                                Wrap( // Changed to Wrap
+                                  alignment: WrapAlignment.start,
+                                  spacing: 8.0, // Space between children horizontally
+                                  runSpacing: 4.0, // Space between lines vertically
                                   children: [
                                     const Text(
-                                      "Level: ",
+                                      "Level:   ",
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
@@ -290,7 +297,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             ),
                           ),
 
-                        SizedBox(height:10),
                       ],
                     ),
                   ),
@@ -436,72 +442,97 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                   // ),
 
                   Expanded(
-                    child: MediaGrid(poses, _gridSize, "", "")
-                    // TODO remove ""s
-                  ),
-
-                  Container(
-                    width: double.infinity, // Expand horizontally
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 10.0
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.purple.shade100,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Stack(
                       children: [
-                        Row(
-                          children: [
-                            Column(
-                              children: [
-                                const Text(
-                                  "Grid Size: ",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(CupertinoIcons.minus),
-                                      onPressed: () {
-                                        _changeGridSize(1);
-                                      },
-                                      tooltip: 'Decrease Image Size',
-                                    ),
-
-                                    IconButton(
-                                      icon: const Icon(CupertinoIcons.add),
-                                      onPressed: () {
-                                        _changeGridSize(-1);
-                                      },
-                                      tooltip: 'Increase Image Size',
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-
-                            IconButton(
-                              icon: const Icon(CupertinoIcons.up_arrow),
-                              onPressed: () {
-                                // TODO implement top of page
-                              },
-                              tooltip: 'Go to the top of the page',
-                            )
-                          ],
+                        SingleChildScrollView(
+                          controller: _myScrollController,
+                          child: MediaGrid(
+                            poses,
+                            _gridSize,
+                            "",
+                            "",
+                          ),
                         ),
-
+                        Positioned(
+                          bottom: 20, // Adjust position as needed
+                          right: 20,  // Adjust position as needed
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              _myScrollController.animateTo(
+                                0,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            },
+                            child: Icon(Icons.arrow_upward),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
+                  )
+
+                  // Container(
+                  //   width: double.infinity, // Expand horizontally
+                  //   margin: const EdgeInsets.symmetric(
+                  //     vertical: 10,
+                  //   ),
+                  //   padding: const EdgeInsets.symmetric(
+                  //       vertical: 10.0,
+                  //       horizontal: 10.0
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.purple.shade100,
+                  //   ),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Row(
+                  //         children: [
+                  //           Column(
+                  //             children: [
+                  //               const Text(
+                  //                 "Grid Size: ",
+                  //                 style: TextStyle(
+                  //                   fontSize: 14,
+                  //                   fontWeight: FontWeight.bold,
+                  //                 ),
+                  //               ),
+                  //               Row(
+                  //                 crossAxisAlignment: CrossAxisAlignment.center,
+                  //                 children: [
+                  //                   IconButton(
+                  //                     icon: const Icon(CupertinoIcons.minus),
+                  //                     onPressed: () {
+                  //                       _changeGridSize(1);
+                  //                     },
+                  //                     tooltip: 'Decrease Image Size',
+                  //                   ),
+                  //
+                  //                   IconButton(
+                  //                     icon: const Icon(CupertinoIcons.add),
+                  //                     onPressed: () {
+                  //                       _changeGridSize(-1);
+                  //                     },
+                  //                     tooltip: 'Increase Image Size',
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //             ],
+                  //           ),
+                  //
+                  //           IconButton(
+                  //             icon: const Icon(CupertinoIcons.up_arrow),
+                  //             onPressed: () {
+                  //               // TODO implement top of page
+                  //             },
+                  //             tooltip: 'Go to the top of the page',
+                  //           )
+                  //         ],
+                  //       ),
+                  //
+                  //     ],
+                  //   ),
+                  // ),
 
 
 
