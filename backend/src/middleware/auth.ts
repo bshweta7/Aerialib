@@ -2,10 +2,12 @@ import { UUID } from "crypto";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { db } from "../db";
-import { users } from "../db/schema";
+import { usersTable } from "../db/schema";
 import { eq } from "drizzle-orm";
 
 export interface AuthRequest extends Request {
+    // Request is default type of req, AuthRequest extends it to add in user and token (i.e. auth info) as additional fields
+    // Can be used even if not authenticated because user and token are nullable
     user?: UUID;
     token?: string;
 }
@@ -39,8 +41,8 @@ export const auth = async (
 
         const [user] = await db
             .select()
-            .from(users)
-            .where(eq(users.id, verifiedToken.id));
+            .from(usersTable)
+            .where(eq(usersTable.id, verifiedToken.id));
 
         // if no user, return false
         if (!user) {

@@ -336,13 +336,13 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                           // Options Button
                           child: FloatingActionButton(
-                            child: const Icon(Icons.settings),
                             tooltip: 'Open page options',
                             onPressed: () {
                               setState(() {
                                 _areOptionsVisible = !_areOptionsVisible; // Toggle visibility
                               });
                             },
+                            child: const Icon(Icons.settings),
                           ),
                         ),
 
@@ -352,13 +352,13 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             bottom: 260,
                             right: 20,
                             child: FloatingActionButton(
-                              child: const Icon(CupertinoIcons.refresh),
                               tooltip: 'Reset filters',
                               onPressed: () {
                                 // TODO implement reset filters
                                 initialApparatus = Constants.apparatusOptions;
                                 initialLevels = Constants.levelOptions;
                               },
+                              child: const Icon(CupertinoIcons.refresh),
                             ),
                           ),
 
@@ -368,11 +368,11 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             bottom: 180,
                             right: 20,
                             child: FloatingActionButton(
-                              child: const Icon(CupertinoIcons.add),
                               tooltip: 'Add new pose',
                               onPressed: () {
                                 Navigator.push(context, AddNewPosePage.route());
                               },
+                              child: const Icon(CupertinoIcons.add),
                             ),
                           ),
 
@@ -389,8 +389,8 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                   curve: Curves.easeInOut,
                                 );
                               },
-                              child: const Icon(CupertinoIcons.arrow_up),
                               tooltip: 'Scroll to the top of the page',
+                              child: const Icon(CupertinoIcons.arrow_up),
                             ),
 
 
@@ -403,7 +403,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               );
             }
             return const SizedBox();
-
           },
         )
     );

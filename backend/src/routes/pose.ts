@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
-import { NewPose, poses } from "../db/schema";
+import { NewPose, posesTable } from "../db/schema";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
 
@@ -11,11 +11,11 @@ poseRouter.post("/", auth, async (req: AuthRequest, res) => {
       // TODO make sure the pose doesn't exist already? 
         // TODO: check that the values were actually provided because it error if you dont
         //create new pose in db 
-        req.body = { ...req.body, dueAt: new Date(req.body.dueAt), uid: req.user };
+        req.body = { ...req.body, uid: req.user }; 
         const NewPose: NewPose = req.body;
         console.log(NewPose);
 
-        const [pose] = await db.insert(poses).values(NewPose).returning();
+        const [pose] = await db.insert(posesTable).values(NewPose).returning();
 
         res.status(201).json(pose);
 
@@ -27,8 +27,8 @@ poseRouter.post("/", auth, async (req: AuthRequest, res) => {
 
 poseRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
-        const allPoses = await db.select().from(poses);
-        // const allPoses = await db.select().from(poses).where(eq(poses.createdBy, req.user!));
+        const allPoses = await db.select().from(posesTable);
+        // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
 
         res.json(allPoses);
 
@@ -40,7 +40,7 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
 poseRouter.delete("/", auth, async (req: AuthRequest, res) => {
     try {
         const { poseId }: { poseId: string } = req.body;
-        await db.delete(poses).where(eq(poses.id, poseId));
+        await db.delete(posesTable).where(eq(posesTable.id, poseId));
 
         res.json(true);
 
@@ -65,7 +65,7 @@ poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
       }
   
       const pushedPoses = await db
-        .insert(poses)
+        .insert(posesTable)
         .values(posesList)
         .returning();
   
