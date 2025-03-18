@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/constants/utils.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
@@ -34,6 +35,9 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   String _searchQuery = ''; // To store the current search query
   final _apparatusController = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
+  List<String> initialApparatus = Constants.apparatusOptions;
+  List<int> initialLevels = Constants.levelOptions;
+  bool _isContainerVisible = false; // Initially hidden
 
   @override
   void initState() {
@@ -167,48 +171,192 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
-                        const Text(
-                          "Filters",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        // Apparatus Filter
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              "Apparatus: ",
+                              "Filters",
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
 
-                            MultiSelectApparatus(
-                              apparatusController: _apparatusController,
+                            IconButton(
+                              icon: const Icon(CupertinoIcons.refresh),
+                              onPressed: () {
+                                // TODO Reset all filter states
+                              },
+                              tooltip: 'Reset filters',
                             ),
-                            // const SizedBox(height: 20),
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     if (_formKey.currentState!.validate()) {
-                            //       SnackBar(content: Text('Selected Apparatus: ${_apparatusController.text}'));
-                            //       // Process the data
-                            //     }
-                            //   },
-                            //   child: const Text('Submit'),
-                            // ),
 
+                            IconButton(
+                              icon: Icon(_isContainerVisible
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down), // Change icon based on visibility
+                              onPressed: () {
+                                setState(() {
+                                  _isContainerVisible = !_isContainerVisible; // Toggle visibility
+                                });
+                              },
+                              tooltip: 'Toggle filters',
+                            ),
                           ],
                         ),
+                        if (_isContainerVisible) // Conditional rendering
+                          Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.purple.shade100,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
 
+                                // Apparatus Filter
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "Apparatus: ",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
 
+                                    MultiSelect(
+                                      options: Constants.apparatusOptions,
+                                      initialValues: initialApparatus,
+                                      getLabel: (String apparatus) {
+                                        if (apparatus.isEmpty) {
+                                          return apparatus; // Or return some default string if needed
+                                        }
+                                        return apparatus[0].toUpperCase() + apparatus.substring(1);
+                                      },
+                                      // getLabel: (String apparatus) => apparatus, // Simple string case
+                                      onSelectionChanged: (List<String> selected) {
+                                        print('Selected Apparatus: $selected');
+                                        // Update your apparatus controller or state here
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          // const SnackBar(content: Text('Please select at least one apparatus'));
+                                          return 'Please select at least one apparatus';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(height:10),
+
+                                // Level Filter
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "Level: ",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    MultiSelect<int>(
+                                      options: Constants.levelOptions,
+                                      initialValues: initialLevels,
+                                      getLabel: (int level) => 'Level $level', // Format the label
+                                      onSelectionChanged: (List<int> selected) {
+                                        print('Selected Levels: $selected');
+                                        // Update your levels state here
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select at least one level';
+                                        }
+                                        return null;
+                                      },
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height:10),
+
+                              ],
+                            ),
+                          ),
+
+                        SizedBox(height:10),
                       ],
                     ),
                   ),
 
+                  Container(
+                    width: double.infinity, // Expand horizontally
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 10.0
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.purple.shade100,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Column(
+                              children: [
+                                const Text(
+                                  "Grid Size: ",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(CupertinoIcons.minus),
+                                      onPressed: () {
+                                        _changeGridSize(1);
+                                      },
+                                      tooltip: 'Decrease Image Size',
+                                    ),
+
+                                    IconButton(
+                                      icon: const Icon(CupertinoIcons.add),
+                                      onPressed: () {
+                                        _changeGridSize(-1);
+                                      },
+                                      tooltip: 'Increase Image Size',
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+
+                            IconButton(
+                              icon: const Icon(CupertinoIcons.up_arrow),
+                              onPressed: () {
+                                // TODO implement top of page
+                              },
+                              tooltip: 'Go to the top of the page',
+                            )
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
 
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -291,6 +439,72 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     child: MediaGrid(poses, _gridSize, "", "")
                     // TODO remove ""s
                   ),
+
+                  Container(
+                    width: double.infinity, // Expand horizontally
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 10.0
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.purple.shade100,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Column(
+                              children: [
+                                const Text(
+                                  "Grid Size: ",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(CupertinoIcons.minus),
+                                      onPressed: () {
+                                        _changeGridSize(1);
+                                      },
+                                      tooltip: 'Decrease Image Size',
+                                    ),
+
+                                    IconButton(
+                                      icon: const Icon(CupertinoIcons.add),
+                                      onPressed: () {
+                                        _changeGridSize(-1);
+                                      },
+                                      tooltip: 'Increase Image Size',
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+
+                            IconButton(
+                              icon: const Icon(CupertinoIcons.up_arrow),
+                              onPressed: () {
+                                // TODO implement top of page
+                              },
+                              tooltip: 'Go to the top of the page',
+                            )
+                          ],
+                        ),
+
+                      ],
+                    ),
+                  ),
+
+
+
                 ],
               );
               // return Column(
@@ -339,6 +553,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               // );
             }
             return const SizedBox();
+
           },
         )
     );

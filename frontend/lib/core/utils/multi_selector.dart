@@ -1,53 +1,61 @@
 import 'package:flutter/material.dart';
 
-class MultiSelectApparatus extends StatefulWidget {
-  final TextEditingController apparatusController;
+class MultiSelect<T> extends StatefulWidget {
+  final List<T> options;
+  final List<T> initialValues;
+  // final String label;
+  final String Function(T) getLabel;
+  final Function(List<T>) onSelectionChanged;
+  final String? Function(List<T>?)? validator;
 
-  const MultiSelectApparatus({Key? key, required this.apparatusController})
-      : super(key: key);
+  const MultiSelect({
+    Key? key,
+    required this.options,
+    required this.initialValues,
+    // required this.label,
+    required this.getLabel,
+    required this.onSelectionChanged,
+    this.validator,
+  }) : super(key: key);
 
   @override
-  State<MultiSelectApparatus> createState() => _MultiSelectApparatusState();
+  State<MultiSelect<T>> createState() => _MultiSelectState<T>();
 }
 
-class _MultiSelectApparatusState extends State<MultiSelectApparatus> {
-  List<String> selectedApparatus = []; // To store selected options
+class _MultiSelectState<T> extends State<MultiSelect<T>> {
+  late List<T> selectedItems;
 
   @override
   void initState() {
     super.initState();
-    // Initialize selectedApparatus from the controller if it has a value
-    if (widget.apparatusController.text.isNotEmpty) {
-      selectedApparatus = widget.apparatusController.text.split(',').map((e) => e.trim()).toList();
-    }
+    selectedItems = List<T>.from(widget.initialValues);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FormField<List<String>>(
-      initialValue: selectedApparatus,
-      builder: (FormFieldState<List<String>> state) {
+    return FormField<List<T>>(
+      initialValue: selectedItems,
+      validator: widget.validator,
+      builder: (FormFieldState<List<T>> state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Wrap(
-              spacing: 8.0, // Space between chips horizontally
-              runSpacing: 4.0, // Space between chip rows vertically
-              children: <String>['Lyra', 'Hammock'].map((String value) {
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: widget.options.map((T item) {
                 return ChoiceChip(
-                  label: Text(value),
-                  selected: selectedApparatus.contains(value),
+                  label: Text(widget.getLabel(item)),
+                  selected: selectedItems.contains(item),
                   onSelected: (bool selected) {
                     setState(() {
                       if (selected) {
-                        selectedApparatus.add(value);
+                        selectedItems.add(item);
                       } else {
-                        selectedApparatus.remove(value);
+                        selectedItems.remove(item);
                       }
-                      // Update the controller with the selected values
-                      widget.apparatusController.text =
-                          selectedApparatus.join(',');
-                      state.didChange(selectedApparatus); // Notify FormField of change
+                      widget.onSelectionChanged(selectedItems);
+                      state.didChange(selectedItems);
                     });
                   },
                 );
@@ -61,22 +69,15 @@ class _MultiSelectApparatusState extends State<MultiSelectApparatus> {
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),
-            // const Padding(
-            //   padding: EdgeInsets.only(top: 8.0),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 8.0),
             //   child: Text(
-            //     'Apparatus', // Your label
+            //     widget.label, // Use the provided label
             //     style: TextStyle(fontSize: 12, color: Colors.grey),
             //   ),
             // ),
           ],
         );
-      },
-      validator: (value) {
-        // Validation logic: optional, but returns error if empty
-        if (value == null || value.isEmpty) {
-          return 'Please select at least one apparatus';
-        }
-        return null;
       },
     );
   }
