@@ -7,7 +7,8 @@ import 'package:frontend/core/constants/utils.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
-import 'package:frontend/features/poses/widgets/media_grid.dart';
+import 'package:frontend/core/utils/media_grid.dart';
+// import 'package:frontend/features/poses/widgets/media_grid.dart';
 import 'package:frontend/features/poses/widgets/pose_card.dart';
 import 'package:intl/intl.dart';
 
@@ -124,32 +125,68 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       IconButton(
-                          onPressed: () {
-                            _changeGridSize(1);
-                            // Navigator.push(context, AddNewPosePage.route());
-                          },
-                          icon: const Icon(CupertinoIcons.minus,
-                          )
+                        icon: const Icon(CupertinoIcons.minus),
+                        onPressed: () {
+                          _changeGridSize(1);
+                        },
+                        tooltip: 'Decrease Image Size',
                       ),
 
-                      Text(
-                          "Adjust Grid Size"
-                      ),
+                      const Text("Adjust Grid Size"),
 
                       IconButton(
-                          onPressed: () {
-                            _changeGridSize(-1);
-                            // Navigator.push(context, AddNewPosePage.route());
-                          },
-                          icon: const Icon(CupertinoIcons.add,
-                          )
+                        icon: const Icon(CupertinoIcons.add),
+                        onPressed: () {
+                          _changeGridSize(-1);
+                        },
+                        tooltip: 'Increase Image Size',
+
                       )
 
 
                     ],
 
                   ),
-                  Expanded(child: MediaGrid(poses, _gridSize, "", "")), // TODO remove ""s
+
+            // Container(
+            // margin: const EdgeInsets.symmetric(
+            // horizontal: 20,
+            // vertical: 10,
+            // ),
+            // padding: const EdgeInsets.all(20),
+            // decoration: BoxDecoration(
+            // color: Colors.purple.shade100,
+            // borderRadius: BorderRadius.circular(15)
+            // ),
+            // child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            // children: [
+            // Text(
+            // "HEAD",
+            // style: const TextStyle(
+            // fontSize: 20,
+            // fontWeight: FontWeight.bold,
+            // ),
+            // ),
+            // Text(
+            // "DESC",
+            // style: const TextStyle(
+            // fontSize: 14,
+            // ),
+            // maxLines: 4,
+            // overflow: TextOverflow.ellipsis,
+            // ),
+            //
+            // ],
+            // ),
+            //
+            // ),
+
+
+                  Expanded(
+                    child: MediaGrid(poses, _gridSize, "", "")
+                    // TODO remove ""s
+                  ),
                 ],
               );
               // return Column(
