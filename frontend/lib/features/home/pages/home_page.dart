@@ -7,6 +7,7 @@ import 'package:frontend/core/constants/utils.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
+import 'package:frontend/features/poses/pages/pose_library_page.dart';
 import 'package:frontend/features/poses/widgets/media_grid.dart';
 import 'package:frontend/features/poses/widgets/pose_card.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
+
   int _gridSize = 3; // Start at 0 and set during the first build
   int _gridSizeMax = 10; // TODO set this dynamically when building
 
@@ -75,7 +76,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text("My Poses"),
+            title: const Text("My Dashboard"),
             actions: [
               IconButton(
                   onPressed: () {
@@ -120,36 +121,15 @@ class _HomePageState extends State<HomePage> {
 
               return Column(
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            _changeGridSize(1);
-                            // Navigator.push(context, AddNewPosePage.route());
-                          },
-                          icon: const Icon(CupertinoIcons.minus,
-                          )
-                      ),
 
-                      Text(
-                        "Adjust Grid Size"
-                      ),
-
-                      IconButton(
-                          onPressed: () {
-                            _changeGridSize(-1);
-                            // Navigator.push(context, AddNewPosePage.route());
-                          },
-                          icon: const Icon(CupertinoIcons.add,
-                          )
-                      )
-
-
-                    ],
-
+                  // Pose Library Navigation
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, PoseLibraryPage.route());
+                      },
+                      child: Text("GO TO POSE LIBRARY")
                   ),
-                  Expanded(child: MediaGrid(poses, _gridSize, "", "")), // TODO remove ""s
+
                 ],
               );
               // return Column(
