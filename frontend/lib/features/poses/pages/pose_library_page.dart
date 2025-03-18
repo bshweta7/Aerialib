@@ -39,6 +39,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   List<int> initialLevels = Constants.levelOptions;
   bool _isContainerVisible = false; // Initially hidden
   final ScrollController _myScrollController = ScrollController();
+  bool _areOptionsVisible = false; // Track visibility
 
   @override
   void initState() {
@@ -184,14 +185,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             ),
 
                             IconButton(
-                              icon: const Icon(CupertinoIcons.refresh),
-                              onPressed: () {
-                                // TODO Reset all filter states
-                              },
-                              tooltip: 'Reset filters',
-                            ),
-
-                            IconButton(
                               icon: Icon(_isContainerVisible
                                   ? Icons.arrow_drop_up
                                   : Icons.arrow_drop_down), // Change icon based on visibility
@@ -200,7 +193,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                   _isContainerVisible = !_isContainerVisible; // Toggle visibility
                                 });
                               },
-                              tooltip: 'Toggle filters',
+                              tooltip: 'Show or hide filter options',
                             ),
                           ],
                         ),
@@ -301,96 +294,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     ),
                   ),
 
-                  Container(
-                    width: double.infinity, // Expand horizontally
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 10.0
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.purple.shade100,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Column(
-                              children: [
-                                const Text(
-                                  "Grid Size: ",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(CupertinoIcons.minus),
-                                      onPressed: () {
-                                        _changeGridSize(1);
-                                      },
-                                      tooltip: 'Decrease Image Size',
-                                    ),
-
-                                    IconButton(
-                                      icon: const Icon(CupertinoIcons.add),
-                                      onPressed: () {
-                                        _changeGridSize(-1);
-                                      },
-                                      tooltip: 'Increase Image Size',
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-
-                            IconButton(
-                              icon: const Icon(CupertinoIcons.up_arrow),
-                              onPressed: () {
-                                // TODO implement top of page
-                              },
-                              tooltip: 'Go to the top of the page',
-                            )
-                          ],
-                        ),
-
-                      ],
-                    ),
-                  ),
-
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(CupertinoIcons.minus),
-                        onPressed: () {
-                          _changeGridSize(1);
-                        },
-                        tooltip: 'Decrease Image Size',
-                      ),
-
-                      const Text("Adjust Grid Size"),
-
-                      IconButton(
-                        icon: const Icon(CupertinoIcons.add),
-                        onPressed: () {
-                          _changeGridSize(-1);
-                        },
-                        tooltip: 'Increase Image Size',
-
-                      )
-
-
-                    ],
-
-                  ),
-
                   // TODO implement search
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -401,46 +304,19 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                         setState(() {
                           _searchQuery = query;
                           // Update your UI based on _searchQuery
-                          print('Search query: $query');
+                          SnackBar(content: Text('Search query: $query'));
                         });
                       },
                       onSearchSubmitted: () {
                         // Handle search submission (e.g., perform a search)
-                        print('Search submitted!');
+                        const SnackBar(content: Text('Search submitted!'));
                       },
                     ),
                   ),
 
-                  SizedBox(height: 15,),
-                  // SearchBar(
-                  //   controller: controller,
-                  //   padding: const WidgetStatePropertyAll<EdgeInsets>(
-                  //     EdgeInsets.symmetric(horizontal: 16.0),
-                  //   ),
-                  //   onTap: () {
-                  //     controller.openView();
-                  //   },
-                  //   onChanged: (_) {
-                  //     controller.openView();
-                  //   },
-                  //   leading: const Icon(Icons.search),
-                  //   // trailing: <Widget>[
-                  //   // Tooltip(
-                  //   //   message: 'Change brightness mode',
-                  //   //   child: IconButton(
-                  //   //     isSelected: isDark,
-                  //   //     onPressed: () {
-                  //   //       setState(() {
-                  //   //         isDark = !isDark;
-                  //   //       });
-                  //   //     },
-                  //   //   icon: const Icon(Icons.wb_sunny_outlined),
-                  //   //   selectedIcon: const Icon(Icons.brightness_2_outlined),
-                  //   //   ),
-                  //   // ),
-                  // ],
-                  // ),
+                  const SizedBox(height: 15,),
 
+                  // TODO Move floating buttons to be attached to entire thing, not just media box
                   Expanded(
                     child: Stack(
                       children: [
@@ -453,135 +329,78 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             "",
                           ),
                         ),
+
                         Positioned(
-                          bottom: 20, // Adjust position as needed
-                          right: 20,  // Adjust position as needed
+                          bottom: 20,
+                          right: 20,
+
+                          // Options Button
                           child: FloatingActionButton(
+                            child: const Icon(Icons.settings),
+                            tooltip: 'Open page options',
                             onPressed: () {
-                              _myScrollController.animateTo(
-                                0,
-                                duration: Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
+                              setState(() {
+                                _areOptionsVisible = !_areOptionsVisible; // Toggle visibility
+                              });
                             },
-                            child: Icon(Icons.arrow_upward),
                           ),
                         ),
+
+                        // Show refresh filters button
+                        if (_areOptionsVisible) // Conditional rendering of other buttons
+                          Positioned(
+                            bottom: 260,
+                            right: 20,
+                            child: FloatingActionButton(
+                              child: const Icon(CupertinoIcons.refresh),
+                              tooltip: 'Reset filters',
+                              onPressed: () {
+                                // TODO implement reset filters
+                                initialApparatus = Constants.apparatusOptions;
+                                initialLevels = Constants.levelOptions;
+                              },
+                            ),
+                          ),
+
+                        // Show add new pose button
+                        if (_areOptionsVisible) // Conditional rendering of other buttons
+                          Positioned(
+                            bottom: 180,
+                            right: 20,
+                            child: FloatingActionButton(
+                              child: const Icon(CupertinoIcons.add),
+                              tooltip: 'Add new pose',
+                              onPressed: () {
+                                Navigator.push(context, AddNewPosePage.route());
+                              },
+                            ),
+                          ),
+
+                        // Show scroll to top of page button
+                        if (_areOptionsVisible)
+                          Positioned(
+                            bottom: 100, // Adjust position as needed to prevent overlap
+                            right: 20,
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                _myScrollController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                              },
+                              child: const Icon(CupertinoIcons.arrow_up),
+                              tooltip: 'Scroll to the top of the page',
+                            ),
+
+
+                          ),
                       ],
                     ),
                   )
 
-                  // Container(
-                  //   width: double.infinity, // Expand horizontally
-                  //   margin: const EdgeInsets.symmetric(
-                  //     vertical: 10,
-                  //   ),
-                  //   padding: const EdgeInsets.symmetric(
-                  //       vertical: 10.0,
-                  //       horizontal: 10.0
-                  //   ),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.purple.shade100,
-                  //   ),
-                  //   child: Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Row(
-                  //         children: [
-                  //           Column(
-                  //             children: [
-                  //               const Text(
-                  //                 "Grid Size: ",
-                  //                 style: TextStyle(
-                  //                   fontSize: 14,
-                  //                   fontWeight: FontWeight.bold,
-                  //                 ),
-                  //               ),
-                  //               Row(
-                  //                 crossAxisAlignment: CrossAxisAlignment.center,
-                  //                 children: [
-                  //                   IconButton(
-                  //                     icon: const Icon(CupertinoIcons.minus),
-                  //                     onPressed: () {
-                  //                       _changeGridSize(1);
-                  //                     },
-                  //                     tooltip: 'Decrease Image Size',
-                  //                   ),
-                  //
-                  //                   IconButton(
-                  //                     icon: const Icon(CupertinoIcons.add),
-                  //                     onPressed: () {
-                  //                       _changeGridSize(-1);
-                  //                     },
-                  //                     tooltip: 'Increase Image Size',
-                  //                   )
-                  //                 ],
-                  //               ),
-                  //             ],
-                  //           ),
-                  //
-                  //           IconButton(
-                  //             icon: const Icon(CupertinoIcons.up_arrow),
-                  //             onPressed: () {
-                  //               // TODO implement top of page
-                  //             },
-                  //             tooltip: 'Go to the top of the page',
-                  //           )
-                  //         ],
-                  //       ),
-                  //
-                  //     ],
-                  //   ),
-                  // ),
-
-
-
                 ],
               );
-              // return Column(
-              //     children: [
-              //       Expanded(
-              //         child: ListView.builder(
-              //             itemCount: poses.length,
-              //             itemBuilder: (context, index) {
-              //               final pose = poses[index];
-              //               return Row(
-              //                 children: [
-              //                   Expanded(
-              //                     child: PoseCard(
-              //                         color: pose.color,
-              //                         headerText: pose.title,
-              //                         descriptionText: pose.description
-              //                     ),
-              //                   ),
-              //                   // Container(
-              //                   //   height: 10,
-              //                   //   width: 10,
-              //                   //   decoration: BoxDecoration(
-              //                   //     color: strengthenColor(
-              //                   //       pose.color,
-              //                   //       0.69,
-              //                   //     ),
-              //                   //     shape: BoxShape.circle,
-              //                   //   ),
-              //                   // ),
-              //                   // Padding(
-              //                   //   padding: const EdgeInsets.all(12.0),
-              //                   //   child: Text(
-              //                   //       DateFormat.jm().format(pose.dueAt),
-              //                   //       style: const TextStyle(
-              //                   //         fontSize: 17,
-              //                   //       )
-              //                   //   ),
-              //                   // )
-              //
-              //                 ],
-              //               );
-              //             }
-              //         ),
-              //       )
-              //     ]
-              // );
             }
             return const SizedBox();
 
