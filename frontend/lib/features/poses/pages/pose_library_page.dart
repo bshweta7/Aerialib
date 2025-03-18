@@ -12,6 +12,9 @@ import 'package:frontend/core/utils/media_grid.dart';
 import 'package:frontend/features/poses/widgets/pose_card.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/utils/multi_selector.dart';
+import '../../../core/utils/search_bar.dart';
+
 
 class PoseLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -28,6 +31,9 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   int _gridSize = 3; // Start at 0 and set during the first build
   int _gridSizeMax = 10; // TODO set this dynamically when building
+  String _searchQuery = ''; // To store the current search query
+  final _apparatusController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
 
   @override
   void initState() {
@@ -76,17 +82,40 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text("My Poses"),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(context, AddNewPosePage.route());
-                  },
-                  icon: const Icon(CupertinoIcons.add,
-                  )
-              )
-            ]
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: const Text("Pose Library"),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.remove_circle_outline),
+              onPressed: () {
+                _changeGridSize(1);
+              },
+              tooltip: 'Decrease Image Size',
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              onPressed: () {
+                _changeGridSize(-1);
+              },
+              tooltip: 'Increase Image Size',
+            ),
+          ],
         ),
+
+        // appBar: AppBar(
+        //     title: const Text("My Poses"),
+        //     actions: [
+        //       IconButton(
+        //           onPressed: () {
+        //             Navigator.push(context, AddNewPosePage.route());
+        //           },
+        //           icon: const Icon(CupertinoIcons.add,
+        //           )
+        //       )
+        //     ]
+        // ),
 
         body: BlocBuilder<PosesCubit, PosesState>(
           builder: (context, state) {
@@ -121,6 +150,66 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
               return Column(
                 children: [
+
+                  // Filters Section
+                  Container(
+                    width: double.infinity, // Expand horizontally
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 10.0
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.purple.shade100,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        const Text(
+                          "Filters",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        // Apparatus Filter
+                        Row(
+                          children: [
+                            const Text(
+                              "Apparatus: ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            MultiSelectApparatus(
+                              apparatusController: _apparatusController,
+                            ),
+                            // const SizedBox(height: 20),
+                            // ElevatedButton(
+                            //   onPressed: () {
+                            //     if (_formKey.currentState!.validate()) {
+                            //       SnackBar(content: Text('Selected Apparatus: ${_apparatusController.text}'));
+                            //       // Process the data
+                            //     }
+                            //   },
+                            //   child: const Text('Submit'),
+                            // ),
+
+                          ],
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -148,40 +237,55 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                   ),
 
-            // Container(
-            // margin: const EdgeInsets.symmetric(
-            // horizontal: 20,
-            // vertical: 10,
-            // ),
-            // padding: const EdgeInsets.all(20),
-            // decoration: BoxDecoration(
-            // color: Colors.purple.shade100,
-            // borderRadius: BorderRadius.circular(15)
-            // ),
-            // child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            // children: [
-            // Text(
-            // "HEAD",
-            // style: const TextStyle(
-            // fontSize: 20,
-            // fontWeight: FontWeight.bold,
-            // ),
-            // ),
-            // Text(
-            // "DESC",
-            // style: const TextStyle(
-            // fontSize: 14,
-            // ),
-            // maxLines: 4,
-            // overflow: TextOverflow.ellipsis,
-            // ),
-            //
-            // ],
-            // ),
-            //
-            // ),
+                  // TODO implement search
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0
+                    ),
+                    child: SearchBarWidget(
+                      onSearchChanged: (query) {
+                        setState(() {
+                          _searchQuery = query;
+                          // Update your UI based on _searchQuery
+                          print('Search query: $query');
+                        });
+                      },
+                      onSearchSubmitted: () {
+                        // Handle search submission (e.g., perform a search)
+                        print('Search submitted!');
+                      },
+                    ),
+                  ),
 
+                  SizedBox(height: 15,),
+                  // SearchBar(
+                  //   controller: controller,
+                  //   padding: const WidgetStatePropertyAll<EdgeInsets>(
+                  //     EdgeInsets.symmetric(horizontal: 16.0),
+                  //   ),
+                  //   onTap: () {
+                  //     controller.openView();
+                  //   },
+                  //   onChanged: (_) {
+                  //     controller.openView();
+                  //   },
+                  //   leading: const Icon(Icons.search),
+                  //   // trailing: <Widget>[
+                  //   // Tooltip(
+                  //   //   message: 'Change brightness mode',
+                  //   //   child: IconButton(
+                  //   //     isSelected: isDark,
+                  //   //     onPressed: () {
+                  //   //       setState(() {
+                  //   //         isDark = !isDark;
+                  //   //       });
+                  //   //     },
+                  //   //   icon: const Icon(Icons.wb_sunny_outlined),
+                  //   //   selectedIcon: const Icon(Icons.brightness_2_outlined),
+                  //   //   ),
+                  //   // ),
+                  // ],
+                  // ),
 
                   Expanded(
                     child: MediaGrid(poses, _gridSize, "", "")

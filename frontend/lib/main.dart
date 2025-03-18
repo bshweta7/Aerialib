@@ -38,6 +38,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Aerialib',
       theme: ThemeData(
+        // TODO add dark mode. reference: https://api.flutter.dev/flutter/material/SearchBar-class.html
+        appBarTheme: const AppBarTheme(
+          // color: Colors.indigo,
+          // titleTextStyle: TextStyle(
+          //   color: Colors.white
+          // )
+          // TODO update text style for title and make icons white
+        ),
         fontFamily: "Cera Pro",
         inputDecorationTheme: InputDecorationTheme(
           contentPadding: const EdgeInsets.all(27),
