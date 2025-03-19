@@ -40,7 +40,7 @@ export type NewPose = typeof posesTable.$inferInsert;
 
 export const mediaTable = pgTable("media", {
     id: uuid("id").primaryKey().defaultRandom(),
-    mediaURL: text("media_url").notNull(),
+    mediaURL: text("media_url").notNull(), // TODO should this be mediaPath instead? 
     name: text("name"),
     description: text("description"),
     apparatus: text("apparatus"),

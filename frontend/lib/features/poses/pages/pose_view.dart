@@ -5,6 +5,7 @@ import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// TODO Make this page!!!
 
 class PoseViewPage extends StatefulWidget {
   static MaterialPageRoute route() => MaterialPageRoute(

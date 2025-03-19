@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 // import 'package:aperturama/utils/main_drawer.dart';
 // import '../utils/user.dart';
+
+// TODO Move this to media widgets, make it take in a custom POSE card for formatting from pose widget
 import 'package:frontend/core/utils/media.dart';
 
 class MediaList extends StatefulWidget {
