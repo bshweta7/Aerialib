@@ -3,6 +3,7 @@ import logger from "morgan";
 import cors from 'cors';
 import authRouter from "./routes/auth";
 import poseRouter from "./routes/pose";
+import mediaRouter from "./routes/media";
 
 // Load values from .env file
 import 'dotenv/config'
@@ -19,6 +20,7 @@ app.use(express.json());
 // bind route with prefix of /auth
 app.use("/poses", poseRouter);
 app.use("/auth", authRouter);
+app.use("/media", mediaRouter);
 
 // create rest api
 app.get("/", (req, res) => {

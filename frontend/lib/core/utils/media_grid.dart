@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:frontend/features/poses/pages/pose_view.dart';
 import 'package:frontend/models/pose_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -66,16 +67,19 @@ class MediaGrid extends StatelessWidget {
   Widget _createTappableMediaIcon(BuildContext context, PoseModel poses) { // FIXME why posemodel?
     // Make a nice button that has the thumbnail inside it
     return GestureDetector(
-      onTap: () =>
-      { Navigator.pushNamed(
-        context,
-        '/media_viewer',
-        arguments: <String, dynamic>{
-          'media': poses,
-          'jwt': jwt,
-          'code': "",
+        onTap: () {
+          Navigator.push(context, PoseViewPage.route());
         },
-      )},
+        // onTap: () => {
+        //   Navigator.pushNamed(
+        //   context,
+        //   '/media_viewer',
+        //   arguments: <String, dynamic>{
+        //     'media': poses,
+        //     'jwt': jwt,
+        //     'code': "",
+        //   },
+        // )},
       child: MediaIcon(poses, jwt, code),
     );
   }

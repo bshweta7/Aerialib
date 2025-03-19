@@ -1,10 +1,17 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
 import { NewPose, posesTable } from "../db/schema";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
+import path from "path";
 
 const poseRouter = Router();
+
+// Serve static files related to poses from a 'pose-images' directory
+const imagesDirectory = path.join(__dirname, "../../../data"); 
+console.log("Images directory:", imagesDirectory);
+
+poseRouter.use('/data', express.static(imagesDirectory));
 
 poseRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
@@ -30,6 +37,13 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
         const allPoses = await db.select().from(posesTable);
         // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
 
+        // extract the thumnail PATH
+        // convert to url
+        // add onto 
+        for (let index = 0; index < allPoses.length; index++) {
+          const pose = allPoses[index];
+          pose.thumbnailURL = pose.thumbnailURL; // TODO Assign the imagePath to thumbnailURL
+        }
         res.json(allPoses);
 
     } catch (e) {
