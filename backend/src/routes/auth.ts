@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { Router, Request, Response } from "express";
-import { NewUser, users } from "../db/schema";
+import { NewUser, usersTable } from "../db/schema";
 import { db } from "../db";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -28,8 +28,8 @@ authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Respons
         //check if user already exists
         const existingUser = await db
             .select()
-            .from(users)
-            .where(eq(users.email, email));
+            .from(usersTable)
+            .where(eq(usersTable.email, email));
 
         if (existingUser.length) {
             res
@@ -48,7 +48,7 @@ authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Respons
             password: hashedPassword
         }
 
-        const [user] = await db.insert(users).values(newUser).returning()
+        const [user] = await db.insert(usersTable).values(newUser).returning()
         res.status(201).json(user);
 
     } catch (e) {
@@ -66,8 +66,8 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
         //check if user doesn't exists
         const [existingUser] = await db
             .select()
-            .from(users)
-            .where(eq(users.email, email));
+            .from(usersTable)
+            .where(eq(usersTable.email, email));
 
         if (!existingUser) {
             res
@@ -118,8 +118,8 @@ authRouter.post("/tokenIsValid", async (req, res) => {
 
         const [user] = await db
             .select()
-            .from(users)
-            .where(eq(users.id, verifiedToken.id));
+            .from(usersTable)
+            .where(eq(usersTable.id, verifiedToken.id));
 
         // if no user, return false
         if (!user) {
@@ -146,7 +146,7 @@ authRouter.get("/", auth, async (req: AuthRequest, res) => {
             return;
         }
 
-        const [user] = await db.select().from(users).where(eq(users.id, req.user));
+        const [user] = await db.select().from(usersTable).where(eq(usersTable.id, req.user));
 
         res.json({ ...user, token: req.token })
     } catch (e) {

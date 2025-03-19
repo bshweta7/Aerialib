@@ -80,9 +80,21 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
       }
     }
     setState(() {
-      _gridSize;
+      _gridSize; // TODO should this be cubit-ified?
     });
-  } // TODO MOve this to media_grid.dart and have it all in one.
+  } // TODO Move this to utils.dart
+
+
+  // // Store the URLs for all the photos the app needs to download and cache
+// Future<List> _getMediaList(List<PoseModel> poses) async {
+//
+
+//   List<String> thumbnailURLs = poses.map((pose) => pose.thumbnailURL).toList();
+//   print("THUMBNAILS");
+//   print(thumbnailURLs); // Output the list to verify.
+//   return thumbnailURLs;
+
+  // TODO
 
   @override
   Widget build(BuildContext context) {
