@@ -42,7 +42,10 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
           level: level, // Use the parsed integer
           description: descriptionController.text.trim(),
           cues: cuesController.text.trim(),
-          primaryImageId: user.user.id, // TODO add upload image portion on create new pose page
+          primaryImageId: 'ba18dbe7-aa6e-446c-a1ee-0778d1e14f82',
+          // TODO add upload image portion on create new pose page
+          // TODO OR allow image selection
+          // TODO this should be default to exclamation point
           token: user.user.token,
           createdBy: user.user.id,
         );
@@ -78,7 +81,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
               );
               Navigator.pushAndRemoveUntil(
                   context,
-                  PoseLibraryPage.route(),
+                  HomePage.route(),
                       (_) => false
                   // TODO should this go to pose specific PoseViewPage instead?
               );

@@ -122,19 +122,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
           ],
         ),
 
-        // appBar: AppBar(
-        //     title: const Text("My Poses"),
-        //     actions: [
-        //       IconButton(
-        //           onPressed: () {
-        //             Navigator.push(context, AddNewPosePage.route());
-        //           },
-        //           icon: const Icon(CupertinoIcons.add,
-        //           )
-        //       )
-        //     ]
-        // ),
-
         body: BlocBuilder<PosesCubit, PosesState>(
           builder: (context, state) {
 
@@ -348,6 +335,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                           // Options Button
                           child: FloatingActionButton(
+                            heroTag: 'pageOptionsFAB',
                             tooltip: 'Open page options',
                             onPressed: () {
                               setState(() {
@@ -364,6 +352,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             bottom: 260,
                             right: 20,
                             child: FloatingActionButton(
+                              heroTag: 'resetFiltersFAB',
                               tooltip: 'Reset filters',
                               onPressed: () {
                                 // TODO implement reset filters
@@ -380,6 +369,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             bottom: 180,
                             right: 20,
                             child: FloatingActionButton(
+                              heroTag: 'newPoseFAB',
                               tooltip: 'Add new pose',
                               onPressed: () {
                                 Navigator.push(context, AddNewPosePage.route());
@@ -394,6 +384,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             bottom: 100, // Adjust position as needed to prevent overlap
                             right: 20,
                             child: FloatingActionButton(
+                              heroTag: 'scrollTopFAB',
                               onPressed: () {
                                 _myScrollController.animateTo(
                                   0,

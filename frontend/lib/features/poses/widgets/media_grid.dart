@@ -215,7 +215,8 @@ class MediaIcon extends StatelessWidget {
       child: Center(
         child: CachedNetworkImage(
             httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
-            imageUrl: poses.primaryImageId + (code.isEmpty ? "" : "?code=" + code),
+            //imageUrl: poses.primaryImageId + (code.isEmpty ? "" : "?code=" + code),
+            imageUrl: "https://hbh7.com/resume/resources/logo.png",
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 SizedBox(width: 32, height: 32, child: CircularProgressIndicator(value: downloadProgress.progress)),
             errorWidget: (context, url, error) => const Icon(Icons.error),

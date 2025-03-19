@@ -32,7 +32,7 @@ class PoseLocalRepository {
 
     return openDatabase(
       path,
-      version: 4,
+      version: 5,
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < newVersion) {
           await db.execute(
@@ -50,8 +50,8 @@ class PoseLocalRepository {
               updatedBy TEXT, 
               createdAt TEXT NOT NULL,
               updatedAt TEXT NOT NULL,
-              isSynced INTEGER NOT NULL,
-              primaryImageId TEXT NOT NULL
+              primaryImageId TEXT NOT NULL,
+              isSynced INTEGER NOT NULL
             )'''
           );
         }
@@ -69,8 +69,8 @@ class PoseLocalRepository {
             updatedBy TEXT, 
             createdAt TEXT NOT NULL,
             updatedAt TEXT NOT NULL,
-            isSynced INTEGER NOT NULL,
-            primaryImageId TEXT NOT NULL
+            primaryImageId TEXT NOT NULL,
+            isSynced INTEGER NOT NULL
           )'''
         );
       },

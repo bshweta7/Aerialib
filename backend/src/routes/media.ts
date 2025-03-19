@@ -17,7 +17,9 @@ mediaRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
         // TODO: check that the values were actually provided because it error if you dont
         //creates new media in db 
-        req.body = { ...req.body, dueAt: new Date(req.body.dueAt), uid: req.user };
+        req.body = { ...req.body, uid: req.user };
+        
+        // TODO try const NewMedia, catch if format doesnt match return 400 class error
         const NewMedia: NewMedia = req.body;
         console.log(NewMedia);
 
