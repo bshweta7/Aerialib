@@ -38,7 +38,7 @@ class PoseRemoteRepository {
             'apparatus': apparatus,
             'level': level,
             'createdBy': createdBy,
-            'thumbnailURL': primaryImageId,
+            'primaryImageId': primaryImageId,
             // TODO why doesnt this include everything? POST thunderclient didnt work when i added a nullable one like description - gave error.
           })
       );

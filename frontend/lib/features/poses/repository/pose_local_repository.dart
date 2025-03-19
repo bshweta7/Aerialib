@@ -51,7 +51,7 @@ class PoseLocalRepository {
               createdAt TEXT NOT NULL,
               updatedAt TEXT NOT NULL,
               isSynced INTEGER NOT NULL,
-              thumbnailURL TEXT NOT NULL
+              primaryImageId TEXT NOT NULL
             )'''
           );
         }
@@ -70,7 +70,7 @@ class PoseLocalRepository {
             createdAt TEXT NOT NULL,
             updatedAt TEXT NOT NULL,
             isSynced INTEGER NOT NULL,
-            thumbnailURL TEXT NOT NULL
+            primaryImageId TEXT NOT NULL
           )'''
         );
       },

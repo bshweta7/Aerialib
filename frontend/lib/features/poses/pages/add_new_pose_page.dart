@@ -23,7 +23,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
   TextEditingController cuesController = TextEditingController();
   TextEditingController apparatusController = TextEditingController();
   TextEditingController levelController = TextEditingController();
-  TextEditingController thumbnailURLController = TextEditingController();
+  // TextEditingController thumbnailURLController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -42,7 +42,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
           level: level, // Use the parsed integer
           description: descriptionController.text.trim(),
           cues: cuesController.text.trim(),
-          thumbnailURL: '', // TODO
+          primaryImageId: user.user.id, // TODO add upload image portion on create new pose page
           token: user.user.token,
           createdBy: user.user.id,
         );

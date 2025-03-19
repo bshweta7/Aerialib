@@ -18,7 +18,7 @@ class PosesCubit extends Cubit<PosesState>{
     required String cues,
     required String apparatus,
     required int level,
-    required String thumbnailURL,
+    required String primaryImageId,
     required String token,
     required String createdBy,
   }) async {
@@ -30,7 +30,7 @@ class PosesCubit extends Cubit<PosesState>{
         cues: cues,
         apparatus: apparatus,
         level: level,
-        primaryImageId: thumbnailURL,
+        primaryImageId: primaryImageId,
         token: token,
         createdBy: createdBy,
       );

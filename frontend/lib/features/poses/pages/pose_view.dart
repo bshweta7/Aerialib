@@ -22,7 +22,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
   TextEditingController cuesController = TextEditingController();
   TextEditingController apparatusController = TextEditingController();
   TextEditingController levelController = TextEditingController();
-  TextEditingController thumbnailURLController = TextEditingController();
+  // TextEditingController thumbnailURLController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -41,7 +41,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
           level: level, // Use the parsed integer
           description: descriptionController.text.trim(),
           cues: cuesController.text.trim(),
-          thumbnailURL: '', // TODO
+          primaryImageId: '', // TODO
           token: user.user.token,
           createdBy: user.user.id,
         );
