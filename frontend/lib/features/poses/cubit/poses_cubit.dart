@@ -30,7 +30,7 @@ class PosesCubit extends Cubit<PosesState>{
         cues: cues,
         apparatus: apparatus,
         level: level,
-        thumbnailURL: thumbnailURL,
+        primaryImageId: thumbnailURL,
         token: token,
         createdBy: createdBy,
       );

@@ -124,21 +124,24 @@ class MediaIcon extends StatelessWidget {
         child: Column(
           children: [
             CachedNetworkImage(
-                httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
-                imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    SizedBox(width: 32, height: 32, child: CircularProgressIndicator(value: downloadProgress.progress)),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                imageBuilder: (context, imageProvider) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.fitWidth,
-                      ),
+              // TODO see below code for authenticated images (permissions):
+              // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
+              // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
+
+              imageUrl: "http://localhost:8000/media/data/testing/clock.jpg",
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                SizedBox(width: 32, height: 32, child: CircularProgressIndicator(value: downloadProgress.progress)),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+              imageBuilder: (context, imageProvider) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.fitWidth,
                     ),
-                  );
-                }
+                  ),
+                );
+              }
             ),
             Text(
               poses.name,

@@ -18,7 +18,7 @@ class PoseRemoteRepository {
     required String cues,
     required String apparatus,
     required int level,
-    required String thumbnailURL,
+    required String primaryImageId,
     required String token,
     required String createdBy,
   }) async {
@@ -38,7 +38,7 @@ class PoseRemoteRepository {
             'apparatus': apparatus,
             'level': level,
             'createdBy': createdBy,
-            'thumbnailURL': thumbnailURL,
+            'thumbnailURL': primaryImageId,
             // TODO why doesnt this include everything? POST thunderclient didnt work when i added a nullable one like description - gave error.
           })
       );
@@ -65,7 +65,7 @@ class PoseRemoteRepository {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           isSynced: 0,
-          thumbnailURL: thumbnailURL,
+          primaryImageId: primaryImageId,
         );
         // await poseLocalRepository.insertPose(poseModel); // TODO shouldnt this insert???
         return poseModel;

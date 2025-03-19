@@ -15,6 +15,7 @@ export type User = typeof usersTable.$inferSelect;
 export type NewUser = typeof usersTable.$inferInsert;
 
 
+// TODO posesTable should store primaryImageID as foreign key to media.
 export const posesTable = pgTable("poses", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
@@ -28,7 +29,7 @@ export const posesTable = pgTable("poses", {
     updatedBy: uuid("updated_by").references(() => usersTable.id),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
-    thumbnailURL: text("thumbnail_url").notNull(),
+    primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id),
 
 });
 

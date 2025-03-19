@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
+import 'package:frontend/features/poses/pages/pose_library_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -61,44 +62,25 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
     return Scaffold(
         appBar: AppBar(
             title: const Text("Add New Pose"),
-            actions: const [
-              // GestureDetector(
-              //   onTap: () async {
-              //     final _selectedDate = await showDatePicker(
-              //         context: context,
-              //         firstDate: DateTime.now(),
-              //         lastDate: DateTime.now().add(
-              //             const Duration(days:90)
-              //         )
-              //     );
-              //     if(_selectedDate!=null) {
-              //       setState(() {
-              //         selectedDate = _selectedDate;
-              //       });
-              //     }
-              //   },
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(8.0),
-              //     child: Text(DateFormat("MM-d-y").format(selectedDate)),
-              //   ),
-              // )
-            ]
         ),
         body: BlocConsumer<PosesCubit, PosesState>(
           listener: (context, state) {
             if (state is PoseError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("There was an error adding the pose"))
+                const SnackBar(
+                    content: Text("There was an error adding the pose")
+                )
                 // SnackBar(content: Text(state.error))
               );
             } else if (state is AddNewPoseSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Pose added successfully"))
+                const SnackBar(content: Text("Pose added successfully"))
               );
               Navigator.pushAndRemoveUntil(
                   context,
-                  HomePage.route(),
+                  PoseLibraryPage.route(),
                       (_) => false
+                  // TODO should this go to pose specific PoseViewPage instead?
               );
             }
           },

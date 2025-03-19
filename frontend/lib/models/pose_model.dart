@@ -7,12 +7,12 @@ class PoseModel {
   final String? cues;
   final String apparatus;
   final int level;
-  final String createdBy;
+  final String createdBy; // TODO why is this not UUID Type?
   final String? updatedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
   final int isSynced;
-  final String thumbnailURL;
+  final String primaryImageId;
 
   PoseModel({
     required this.id,
@@ -26,7 +26,7 @@ class PoseModel {
     required this.createdAt,
     required this.updatedAt,
     required this.isSynced,
-    required this.thumbnailURL,
+    required this.primaryImageId,
   });
 
   PoseModel copyWith({
@@ -41,7 +41,7 @@ class PoseModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     int? isSynced,
-    String? thumbnailURL,
+    String? primaryImageId,
   }) {
     return PoseModel(
       id: id ?? this.id,
@@ -55,7 +55,7 @@ class PoseModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,
-      thumbnailURL: thumbnailURL ?? this.thumbnailURL,
+      primaryImageId: primaryImageId ?? this.primaryImageId,
     );
   }
 
@@ -72,7 +72,7 @@ class PoseModel {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'isSynced': isSynced,
-      'thumbnailURL': thumbnailURL,
+      'primaryImageId': primaryImageId,
     };
   }
 
@@ -89,7 +89,7 @@ class PoseModel {
       createdAt: DateTime.parse(map['createdAt']),
       updatedAt: DateTime.parse(map['updatedAt']),
       isSynced: map['isSynced'] ?? 1,
-      thumbnailURL: map['thumbnailURL'] ?? '', // TODO make default thumbnailURL point to a exclamation mark image
+      primaryImageId: map['primaryImageId'] ?? '', // TODO make default primaryImageId point to a exclamation mark image
     );
   }
 
@@ -112,7 +112,7 @@ class PoseModel {
         'createdAt: $createdAt, '
         'updatedAt: $updatedAt, '
         'isSynced: $isSynced, '
-        'thumbnailURL: $thumbnailURL)'; // Added thumbnailURL
+        'primaryImageId: $primaryImageId)';
   }
 
   @override
@@ -130,7 +130,7 @@ class PoseModel {
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
         other.isSynced == isSynced &&
-        other.thumbnailURL == thumbnailURL; // Added thumbnailURL
+        other.primaryImageId == primaryImageId;
   }
 
   @override
@@ -146,6 +146,6 @@ class PoseModel {
     createdAt.hashCode ^
     updatedAt.hashCode ^
     isSynced.hashCode ^
-    thumbnailURL.hashCode; // Added thumbnailURL
+    primaryImageId.hashCode;
   }
 }
