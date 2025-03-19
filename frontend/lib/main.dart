@@ -6,11 +6,14 @@ import 'package:frontend/features/home/pages/home_page.dart';
 
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 
+import 'features/media/cubit/media_cubit.dart';
+
 void main() {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit()),
       BlocProvider(create: (_) => PosesCubit()),
+      BlocProvider(create: (_) => MediaCubit()),
     ],
     child: const MyApp(),
   ));

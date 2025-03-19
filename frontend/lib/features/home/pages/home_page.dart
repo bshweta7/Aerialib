@@ -12,6 +12,8 @@ import 'package:frontend/features/poses/widgets/media_grid.dart';
 import 'package:frontend/features/poses/widgets/pose_card.dart';
 import 'package:intl/intl.dart';
 
+import '../../media/pages/media_library_page.dart';
+
 
 class HomePage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -128,6 +130,14 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(context, PoseLibraryPage.route());
                       },
                       child: Text("GO TO POSE LIBRARY")
+                  ),
+
+                  // Test  Navigation
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MediaLibraryPage.route());
+                      },
+                      child: Text("GO TO MEDIA LIBRARY")
                   ),
 
                 ],
