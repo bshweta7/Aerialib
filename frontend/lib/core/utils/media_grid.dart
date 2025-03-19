@@ -123,39 +123,51 @@ class MediaIcon extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
+            const SizedBox(height: 10),
+
             Text(
               poses.name,
+              style: const TextStyle(
+                fontSize: 20,
+                // fontWeight: FontWeight.bold,
+              ),
               // TODO styling - dynamically change font size based on the grid size
               // TODO styling - separate text within the card
               // TODO should any filters be shown here?
             ),
 
-            // TODO DELETE THIS SECTION (left for reference)
-             Image.network(
-              'http://localhost:8000/media/data/testing/clock.jpg', // Replace with your image URL
-              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                }
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Text('Could not load image');
-              },
-            ),
+            // TODO thumbnail should always be the right size?
+
+            // TODO if no connectivity, either show no image or missing image pic if it can't get the actual image
+             Expanded(
+               child: Image.network(
+                'http://localhost:8000/media/data/testing/clock.jpg',
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
+                 // TODO Round edges of image
+                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Text('Could not load image');
+                },
+                           ),
+             ),
+
+            const SizedBox(height: 10)
 
 
-            // CachedNetworkImage(
+            // CachedNetworkImage( // TODO figure out CachedNetworkImage for offline first - seems to work if we remove column but need to update media icon to make text still appear
             //   // TODO see below code for authenticated images (permissions):
             //   // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
             //   // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
-            //
             //   // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
             //   imageUrl: 'https://hbh7.com/resume/resources/logo.png',
             //   progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -178,5 +190,6 @@ class MediaIcon extends StatelessWidget {
         ),
       ),
     );
+    //   progressIndicatorBuilder: (context, url, downloadProgress) =>
   }
 }

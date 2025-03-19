@@ -42,7 +42,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
           level: level, // Use the parsed integer
           description: descriptionController.text.trim(),
           cues: cuesController.text.trim(),
-          primaryImageId: 'ba18dbe7-aa6e-446c-a1ee-0778d1e14f82',
+          primaryImageId: '6a8e2421-5aa5-48a4-a0b2-73d6a28ef5d3',
           // TODO add upload image portion on create new pose page
           // TODO OR allow image selection
           // TODO this should be default to exclamation point
