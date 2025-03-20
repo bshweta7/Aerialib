@@ -8,6 +8,8 @@ import 'package:frontend/features/home/pages/home_page.dart';
 // TODO allow tab to go from username textbox to password textbox
 // TODO arrows don't work in textboxes?
 
+// TODO weird error message if trying to login without connection to db
+
 class LoginPage extends StatefulWidget {
   static MaterialPageRoute route() => MaterialPageRoute(
       builder: (context) => const LoginPage()

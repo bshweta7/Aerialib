@@ -39,7 +39,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   final _apparatusController = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
   List<String> selectedApparatus = Constants.apparatusOptions;
-  List<int> initialLevels = Constants.levelOptions;
+  List<int> selectedLevels = Constants.levelOptions;
   bool _isContainerVisible = false; // Initially hidden
   final ScrollController _myScrollController = ScrollController();
   bool _areOptionsVisible = false; // Track visibility
@@ -138,17 +138,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
             if (state is GetPosesSuccess) {
               final poses = state.poses.toList();
-              // TODO FILTERING: final poses = state.poses.where(
-              //                       (elem) =>
-              //                   DateFormat('d').format(elem.dueAt) == DateFormat('d').format(selectedDate) &&
-              //                       selectedDate.month == elem.dueAt.month &&
-              //                       selectedDate.year == elem.dueAt.year
-              //               ).toList();
-
               // TODO see why this doesn't reload when
               // Filter poses based on selectedApparatus
               List<PoseModel> filteredPoses = state.poses.where(
-                    (elem) => selectedApparatus.contains(elem.apparatus),
+                    (elem) =>
+                selectedApparatus.contains(elem.apparatus) &&
+                    selectedLevels.contains(elem.level),
               ).toList();
 
               print("AAACK");
@@ -264,11 +259,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                         setState(() {
                                           selectedApparatus = selected;
                                         });
-                                        // Update your apparatus controller or state here
                                       },
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          // const SnackBar(content: Text('Please select at least one apparatus'));
+                                          const SnackBar(content: Text('Please select at least one apparatus'));
                                           return 'Please select at least one apparatus';
                                         }
                                         return null;
@@ -295,14 +289,19 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                                     MultiSelect<int>(
                                       options: Constants.levelOptions,
-                                      initialValues: initialLevels,
-                                      getLabel: (int level) => 'Level $level', // Format the label
+                                      initialValues: selectedLevels,
+                                      getLabel: (int level) => 'Level $level',
+                                      // TODO Format level 0 to intro
+                                      // TODO should level even be an int? consider "level 1+" terminology
                                       onSelectionChanged: (List<int> selected) {
                                         print('Selected Levels: $selected');
-                                        // Update your levels state here
+                                        setState(() {
+                                          selectedLevels = selected;
+                                        });
                                       },
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
+                                          const SnackBar(content: Text('Please select at least one level'));
                                           return 'Please select at least one level';
                                         }
                                         return null;
@@ -386,7 +385,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                               onPressed: () {
                                 // TODO implement reset filters
                                 selectedApparatus = Constants.apparatusOptions;
-                                initialLevels = Constants.levelOptions;
+                                selectedLevels = Constants.levelOptions;
                               },
                               child: const Icon(CupertinoIcons.refresh),
                             ),
