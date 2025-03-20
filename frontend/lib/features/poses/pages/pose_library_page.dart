@@ -38,7 +38,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   String _searchQuery = ''; // To store the current search query
   final _apparatusController = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
-  List<String> initialApparatus = Constants.apparatusOptions;
+  List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> initialLevels = Constants.levelOptions;
   bool _isContainerVisible = false; // Initially hidden
   final ScrollController _myScrollController = ScrollController();
@@ -48,9 +48,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   void initState() {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
-    // final media = context.read<MediaCubit>().getAllMedia(token: user.user.token);
-    print("MEDIAAAAAAAAAAAAAAAAA");
-    // print(media);
 
     context.read<PosesCubit>().getAllPoses(token: user.user.token);
 
@@ -93,11 +90,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   } // TODO Move this to utils.dart
 
-
-  // Store the URLs for all of the photos that the app needs to download and cache
-  // Future<List<MediaModel>> _getMediaList(List<PoseModel> poses) async {
-  //   return [];//TODO
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -153,13 +145,22 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               //                       selectedDate.year == elem.dueAt.year
               //               ).toList();
 
+              // TODO see why this doesn't reload when
+              // Filter poses based on selectedApparatus
+              List<PoseModel> filteredPoses = state.poses.where(
+                    (elem) => selectedApparatus.contains(elem.apparatus),
+              ).toList();
+
+              print("AAACK");
+              print(poses);
+              print(filteredPoses);
+
               List<String> posesNamesList = [];
               List<String> mediaPathsList = [];
 
-              for (int i = 0; i < poses.length; i++) {
-                posesNamesList.add(poses[i].name);
-                mediaPathsList.add("http://localhost:8000/media/data"+poses[i].primaryImageUrl);
-                // mediaPathsList.add('http://localhost:8000/media/data/testing/clock.jpg'); // TODO
+              for (int i = 0; i < filteredPoses.length; i++) {
+                posesNamesList.add(filteredPoses[i].name);
+                mediaPathsList.add("http://localhost:8000/media/data"+filteredPoses[i].primaryImageUrl);
               }
                 //       media.add(Media(
                 //         responseJson[i]["media_id"].toString(), MediaType.photo,
@@ -170,10 +171,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                 //       media[i].takenTimestamp = (responseJson[i]["date_taken"] != null) ? DateTime.parse(responseJson[i]["date_taken"]) : DateTime.now();
                 //     }
 
-              print("POSES FROM HOME PAGE");
-              print(poses);
-              print("NAMES");
-              print(posesNamesList);
+              // print("POSES FROM HOME PAGE");
+              // print(poses);
+              // print("NAMES");
+              // print(posesNamesList);
 
               return Column(
                 children: [
@@ -249,7 +250,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                                     MultiSelect(
                                       options: Constants.apparatusOptions,
-                                      initialValues: initialApparatus,
+                                      initialValues: selectedApparatus,
                                       getLabel: (String apparatus) {
                                         if (apparatus.isEmpty) {
                                           return apparatus; // Or return some default string if needed
@@ -258,7 +259,11 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                       },
                                       // getLabel: (String apparatus) => apparatus, // Simple string case
                                       onSelectionChanged: (List<String> selected) {
+                                        // TODO update the poses visible
                                         print('Selected Apparatus: $selected');
+                                        setState(() {
+                                          selectedApparatus = selected;
+                                        });
                                         // Update your apparatus controller or state here
                                       },
                                       validator: (value) {
@@ -380,7 +385,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                               tooltip: 'Reset filters',
                               onPressed: () {
                                 // TODO implement reset filters
-                                initialApparatus = Constants.apparatusOptions;
+                                selectedApparatus = Constants.apparatusOptions;
                                 initialLevels = Constants.levelOptions;
                               },
                               child: const Icon(CupertinoIcons.refresh),
