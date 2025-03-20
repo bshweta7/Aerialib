@@ -323,6 +323,7 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                           controller: _myScrollController,
                           child: MediaGrid(
                             mediaList,
+                            mediaList, // TODO THIS IS COMPLETELY WRONG!!! SEE POSE LIBRARY
                             _gridSize,
                             "",
                             "",

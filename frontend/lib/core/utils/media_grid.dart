@@ -52,19 +52,24 @@ import 'package:flutter/foundation.dart';
 class MediaGrid extends StatelessWidget {
 
   const MediaGrid(
-      this.media,
+      this.titlesList,
+      this.mediaPathsList,
       this.gridSize,
       this.jwt,
       this.code,
       {super.key}
       );
 
-  final List media;
+  final List titlesList;
+  final List mediaPathsList;
   final int gridSize;
   final String jwt;
   final String code;
 
-  Widget _createTappableMediaIcon(BuildContext context, PoseModel poses) { // FIXME why posemodel?
+  Widget _createTappableMediaIcon(
+      BuildContext context,
+      String title,
+      String imageUrl) {
     // Make a nice button that has the thumbnail inside it
     return GestureDetector(
         onTap: () {
@@ -80,7 +85,7 @@ class MediaGrid extends StatelessWidget {
         //     'code': "",
         //   },
         // )},
-      child: MediaIcon(poses, jwt, code),
+      child: MediaIcon(title, imageUrl, jwt, code),
     );
   }
 
@@ -94,22 +99,28 @@ class MediaGrid extends StatelessWidget {
       gridDelegate:
       SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: gridSize),
       itemBuilder: (BuildContext context, int index) {
-        return _createTappableMediaIcon(context, media[index]);
+        return _createTappableMediaIcon(
+          context,
+          titlesList[index],
+          mediaPathsList[index]
+        );
       },
-      itemCount: media.length,
+      itemCount: titlesList.length,
     );
   }
 }
 
 class MediaIcon extends StatelessWidget {
   const MediaIcon(
-      this.poses,
+      this.title,
+      this.imageUrl,
       this.jwt,
       this.code,
       {super.key}
       );
 
-  final PoseModel poses;
+  final String title;
+  final String imageUrl;
   final String jwt;
   final String code;
 
@@ -126,7 +137,7 @@ class MediaIcon extends StatelessWidget {
             const SizedBox(height: 10),
 
             Text(
-              poses.name,
+              title,
               style: const TextStyle(
                 fontSize: 20,
                 // fontWeight: FontWeight.bold,
@@ -141,7 +152,7 @@ class MediaIcon extends StatelessWidget {
             // TODO if no connectivity, either show no image or missing image pic if it can't get the actual image
              Expanded(
                child: Image.network(
-                'http://localhost:8000/media/data/testing/clock.jpg',
+                imageUrl,
                 loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                   if (loadingProgress == null) {
                     return child;

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
 import { NewPose, posesTable } from "../db/schema";
 import { db } from "../db";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const poseRouter = Router();
 
@@ -26,11 +26,31 @@ poseRouter.post("/", auth, async (req: AuthRequest, res) => {
 })
 
 poseRouter.get("/", auth, async (req: AuthRequest, res) => {
-    try {
-        const allPoses = await db.select().from(posesTable);
-        // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
+    
+  try {
+    const query = sql`
+            SELECT 
+                poses.*, 
+                media.media_url
+            FROM 
+                poses
+            JOIN 
+                media ON poses.primary_image_id = media.id;
+        `;
+
+        // Execute the raw SQL query using db.execute()
+        const result = await db.execute(query); 
+
+        // Access the rows from the result
+        const allPoses = result.rows; // Adjust this based on your Drizzle version
 
         res.json(allPoses);
+
+        
+        // const allPoses = await db.select().from(posesTable);
+        // // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
+
+        // res.json(allPoses);
 
     } catch (e) {
         res.status(500).json({ error: e })

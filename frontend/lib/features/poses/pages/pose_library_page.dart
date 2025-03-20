@@ -11,10 +11,13 @@ import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
 import 'package:frontend/core/utils/media_grid.dart';
 // import 'package:frontend/features/poses/widgets/media_grid.dart';
 import 'package:frontend/features/poses/widgets/pose_card.dart';
+import 'package:frontend/models/media_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/utils/multi_selector.dart';
 import '../../../core/utils/search_bar.dart';
+import '../../../models/pose_model.dart';
+import '../../media/cubit/media_cubit.dart';
 
 
 class PoseLibraryPage extends StatefulWidget {
@@ -45,12 +48,18 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   void initState() {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
+    // final media = context.read<MediaCubit>().getAllMedia(token: user.user.token);
+    print("MEDIAAAAAAAAAAAAAAAAA");
+    // print(media);
 
     context.read<PosesCubit>().getAllPoses(token: user.user.token);
+
+
     Connectivity().onConnectivityChanged.listen((data) async {
       if (data.contains(ConnectivityResult.wifi)) {
         print("Wifi Available");
         await context.read<PosesCubit>().syncPoses(user.user.token);
+        // TODO Sync poses when coming back to the page, even if there is no change in wifi connectivity -- accounts for adding a new pose and returning to the pose library (maybe ??)
 
       } else {
         print("No wifi available");
@@ -85,16 +94,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   } // TODO Move this to utils.dart
 
 
-  // // Store the URLs for all the photos the app needs to download and cache
-// Future<List> _getMediaList(List<PoseModel> poses) async {
-//
-
-//   List<String> thumbnailURLs = poses.map((pose) => pose.thumbnailURL).toList();
-//   print("THUMBNAILS");
-//   print(thumbnailURLs); // Output the list to verify.
-//   return thumbnailURLs;
-
-  // TODO
+  // Store the URLs for all of the photos that the app needs to download and cache
+  // Future<List<MediaModel>> _getMediaList(List<PoseModel> poses) async {
+  //   return [];//TODO
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,8 +153,26 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               //                       selectedDate.year == elem.dueAt.year
               //               ).toList();
 
+              List<String> posesNamesList = [];
+              List<String> mediaPathsList = [];
+
+              for (int i = 0; i < poses.length; i++) {
+                posesNamesList.add(poses[i].name);
+                mediaPathsList.add('http://localhost:8000/media/data/testing/clock.jpg'); // TODO
+              }
+                //       media.add(Media(
+                //         responseJson[i]["media_id"].toString(), MediaType.photo,
+                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/thumbnail',
+                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/media',
+                //       ));
+                //       media[i].filename = responseJson[i]["filename"];
+                //       media[i].takenTimestamp = (responseJson[i]["date_taken"] != null) ? DateTime.parse(responseJson[i]["date_taken"]) : DateTime.now();
+                //     }
+
               print("POSES FROM HOME PAGE");
               print(poses);
+              print("NAMES");
+              print(posesNamesList);
 
               return Column(
                 children: [
@@ -322,7 +343,8 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                         SingleChildScrollView(
                           controller: _myScrollController,
                           child: MediaGrid(
-                            poses,
+                            posesNamesList,
+                            mediaPathsList,
                             _gridSize,
                             "",
                             "",
