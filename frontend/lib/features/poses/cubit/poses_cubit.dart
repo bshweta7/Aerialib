@@ -76,7 +76,25 @@ class PosesCubit extends Cubit<PosesState>{
         poseLocalRepository.updateRowValue(pose.id, 1);
       }
     }
+  }
 
+  Future<void> updatePoseInfo({
+    required PoseModel updatedPose,
+    required String token,
+  }) async {
+    try {
+      emit(PoseLoading());
+      final poseModel = await poseRemoteRepository.updatePose(
+        updatedPose: updatedPose,
+        token: token,
+      );
+      await poseLocalRepository.updatePose(poseModel); // Update local repository
+
+      emit(UpdatePoseSuccess(poseModel)); // Emit success state
+    } catch (e) {
+      print(e.toString());
+      emit(PoseError(e.toString()));
+    }
   }
 }
 

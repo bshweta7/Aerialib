@@ -123,7 +123,6 @@ class PoseRemoteRepository {
       for (final pose in poses) {
         poseListInMap.add(pose.toMap());
       }
-      print("TEST");
       final res = await http.post(
         Uri.parse("${Constants.backendUri}/poses/sync"),
         headers: {
@@ -141,6 +140,38 @@ class PoseRemoteRepository {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+
+  Future<PoseModel> updatePose({
+    required PoseModel updatedPose,
+    required String token,
+  }) async {
+    try {
+      final res = await http.put(
+        Uri.parse("${Constants.backendUri}/poses/update/${updatedPose.id}"),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token,
+        },
+        body: jsonEncode(updatedPose.toJson()), // Convert PoseModel to JSON
+      );
+
+      if (res.statusCode != 200) {
+        print("ERROR: Could not update pose --> PUT /poses/update/${updatedPose.id}");
+        throw jsonDecode(res.body)['error'];
+      } else {
+        return PoseModel.fromJson(res.body);
+      }
+    } catch (e) {
+      try {
+        // Handle local update
+        await poseLocalRepository.updatePose(updatedPose);
+        return updatedPose;
+      } catch (localUpdateError){
+        rethrow;
+      }
     }
   }
 

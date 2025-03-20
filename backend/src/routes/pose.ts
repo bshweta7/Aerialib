@@ -70,30 +70,58 @@ poseRouter.delete("/", auth, async (req: AuthRequest, res) => {
 })
 
 poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
-    try {
-      const posesList = req.body;
-      const filteredPoses: NewPose[] = [];
-  
-      for (let t of posesList) {
-        t = {
-          ...t,
-          createdAt: new Date(t.createdAt),
-          updatedAt: new Date(t.updatedAt),
-          createdBy: req.user, // TODO Double check if this is right 
-        };
-        filteredPoses.push(t);
-      }
-  
-      const pushedPoses = await db
-        .insert(posesTable)
-        .values(posesList)
-        .returning();
-  
-      res.status(201).json(pushedPoses);
-    } catch (e) {
-      console.log(e);
-      res.status(500).json({ error: e });
+  try {
+    const posesList = req.body;
+    const filteredPoses: NewPose[] = [];
+
+    for (let t of posesList) {
+      t = {
+        ...t,
+        createdAt: new Date(t.createdAt),
+        updatedAt: new Date(t.updatedAt),
+        createdBy: req.user, // TODO Double check if this is right 
+      };
+      filteredPoses.push(t);
     }
-  });
+
+    const pushedPoses = await db
+      .insert(posesTable)
+      .values(posesList)
+      .returning();
+
+    res.status(201).json(pushedPoses);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+  }
+});
   
+
+poseRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
+  try {
+    const poseId = req.params.id; // Get the pose ID from the URL
+    req.body = { ...req.body, uid: req.user };
+    const updatedPose: NewPose = req.body;
+    console.log("Updating Pose:", updatedPose);
+
+    const [pose] = await db
+      .update(posesTable)
+      .set(updatedPose) // Use set to update the values
+      .where(eq(posesTable.id, poseId)) // Use where to target the pose
+      .returning();
+
+    if (!pose) {
+        res.status(404).json({error: "Pose not found"});
+        return;
+    }
+
+    res.status(200).json(pose); // Change status to 200 (OK)
+
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+  }
+});
+
+
 export default poseRouter;

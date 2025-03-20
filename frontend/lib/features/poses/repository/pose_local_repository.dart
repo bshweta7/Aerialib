@@ -143,4 +143,15 @@ class PoseLocalRepository {
       whereArgs: [id],
     );
   }
+
+  Future<void> updatePose(PoseModel pose) async {
+    final db = await database;
+    await db.update(
+      tableName,
+      pose.toMap(),
+      where: 'id = ?',
+      whereArgs: [pose.id],
+    );
+  }
+
 }

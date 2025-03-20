@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/utils/media_grid.dart';
+import 'package:frontend/features/poses/pages/edit_pose_page.dart';
 import 'package:frontend/models/pose_model.dart';
 
 class PoseViewPage extends StatefulWidget {
@@ -37,27 +38,17 @@ class _PoseViewPageState extends State<PoseViewPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.pose.name),
-        actions: const [
-            // GestureDetector(
-            //   onTap: () async {
-            //     final _selectedDate = await showDatePicker(
-            //         context: context,
-            //         firstDate: DateTime.now(),
-            //         lastDate: DateTime.now().add(
-            //             const Duration(days:90)
-            //         )
-            //     );
-            //     if(_selectedDate!=null) {
-            //       setState(() {
-            //         selectedDate = _selectedDate;
-            //       });
-            //     }
-            //   },
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(8.0),
-            //     child: Text(DateFormat("MM-d-y").format(selectedDate)),
-            //   ),
-            // )
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  UpdatePosePage.route(widget.pose)
+              );
+            },
+            tooltip: 'Edit this pose',
+          ),
           ] // TODO ADD EDITING
       ),
       body: Expanded(

@@ -21,3 +21,11 @@ final class GetPosesSuccess extends PosesState {
   final List<PoseModel> poses;
   const GetPosesSuccess(this.poses);
 }
+
+final class UpdatePoseSuccess extends PosesState { // Assuming your states extend PosesState
+  final PoseModel poseModel;
+  const UpdatePoseSuccess(this.poseModel);
+
+  @override
+  List<Object?> get props => [poseModel]; // If you are using equatable, add this.
+}
