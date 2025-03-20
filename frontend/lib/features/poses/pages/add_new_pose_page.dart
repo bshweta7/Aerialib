@@ -7,6 +7,8 @@ import 'package:frontend/features/poses/pages/pose_library_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/constants/constants.dart';
+
 class AddNewPosePage extends StatefulWidget {
   static MaterialPageRoute route() => MaterialPageRoute(
     builder: (context) => const AddNewPosePage(),
@@ -42,7 +44,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
           level: level, // Use the parsed integer
           description: descriptionController.text.trim(),
           cues: cuesController.text.trim(),
-          primaryImageId: '6a8e2421-5aa5-48a4-a0b2-73d6a28ef5d3',
+          primaryImageId: Constants.missingImageId,
           // TODO add upload image portion on create new pose page
           // TODO OR allow image selection
           // TODO this should be default to exclamation point
@@ -57,6 +59,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
+    // TODO add other controllers here
     super.dispose();
   }
 

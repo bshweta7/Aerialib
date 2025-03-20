@@ -8,7 +8,7 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 // import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
 import 'package:frontend/features/poses/pages/pose_library_page.dart';
-import 'package:frontend/features/poses/widgets/media_grid.dart';
+import 'package:frontend/features/poses/widgets/pose_media_grid.dart';
 import 'package:frontend/features/poses/widgets/pose_card.dart';
 import 'package:intl/intl.dart';
 
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _gridSize;
     });
-  } // TODO MOve this to media_grid.dart and have it all in one.
+  } // TODO MOve this to pose_media_grid.dart and have it all in one.
 
   @override
   Widget build(BuildContext context) {

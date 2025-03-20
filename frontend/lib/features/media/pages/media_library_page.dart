@@ -9,7 +9,7 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/media/cubit/media_cubit.dart';
 import 'package:frontend/features/media/pages/upload_new_media_page.dart';
 import 'package:frontend/core/utils/media_grid.dart';
-// import 'package:frontend/features/medias/widgets/media_grid.dart';
+// import 'package:frontend/features/medias/widgets/pose_media_grid.dart';
 // import 'package:frontend/features/media/widgets/media_card.dart';
 import 'package:intl/intl.dart';
 
@@ -319,16 +319,16 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                   Expanded(
                     child: Stack(
                       children: [
-                        SingleChildScrollView(
-                          controller: _myScrollController,
-                          child: MediaGrid(
-                            mediaList,
-                            mediaList, // TODO THIS IS COMPLETELY WRONG!!! SEE POSE LIBRARY
-                            _gridSize,
-                            "",
-                            "",
-                          ),
-                        ),
+                        // SingleChildScrollView(
+                        //   controller: _myScrollController,
+                        //   child: MediaGrid(
+                        //     mediaList,
+                        //     mediaList, // TODO THIS IS COMPLETELY WRONG!!! SEE POSE LIBRARY
+                        //     _gridSize,
+                        //     "",
+                        //     "",
+                        //   ),
+                        // ),
 
                         Positioned(
                           bottom: 20,

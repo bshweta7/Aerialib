@@ -1,24 +1,20 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/constants/utils.dart';
+import 'package:frontend/core/utils/media_grid.dart';
+import 'package:frontend/core/utils/multi_selector.dart';
+import 'package:frontend/core/utils/search_bar.dart';
+
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
-import 'package:frontend/core/utils/media_grid.dart';
-// import 'package:frontend/features/poses/widgets/media_grid.dart';
-import 'package:frontend/features/poses/widgets/pose_card.dart';
-import 'package:frontend/models/media_model.dart';
-import 'package:intl/intl.dart';
 
-import '../../../core/utils/multi_selector.dart';
-import '../../../core/utils/search_bar.dart';
-import '../../../models/pose_model.dart';
-import '../../media/cubit/media_cubit.dart';
-
+import 'package:frontend/models/pose_model.dart';
 
 class PoseLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -36,7 +32,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   int _gridSize = 3; // Start at 0 and set during the first build
   int _gridSizeMax = 10; // TODO set this dynamically when building
   String _searchQuery = ''; // To store the current search query
-  final _apparatusController = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
@@ -150,13 +145,16 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               print(poses);
               print(filteredPoses);
 
-              List<String> posesNamesList = [];
-              List<String> mediaPathsList = [];
+              // List<String> posesNamesList = [];
+              // List<String> mediaPathsList = [];
+              //
+              // for (int i = 0; i < filteredPoses.length; i++) {
+              //   posesNamesList.add(filteredPoses[i].name);
+              //   mediaPathsList.add("http://localhost:8000/media/data"+filteredPoses[i].primaryImageUrl);
+              // }
 
-              for (int i = 0; i < filteredPoses.length; i++) {
-                posesNamesList.add(filteredPoses[i].name);
-                mediaPathsList.add("http://localhost:8000/media/data"+filteredPoses[i].primaryImageUrl);
-              }
+              // TODO REMOVE THE NAMES LIST ABOVE
+
                 //       media.add(Media(
                 //         responseJson[i]["media_id"].toString(), MediaType.photo,
                 //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/thumbnail',
@@ -349,12 +347,20 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                         SingleChildScrollView(
                           controller: _myScrollController,
                           child: MediaGrid(
-                            posesNamesList,
-                            mediaPathsList,
+                            filteredPoses,
                             _gridSize,
                             "",
                             "",
                           ),
+
+                          // child: MediaGrid(
+                          //   posesNamesList,
+                          //   mediaPathsList,
+                          //   _gridSize,
+                          //   "",
+                          //   "",
+                          // ),
+
                         ),
 
                         Positioned(

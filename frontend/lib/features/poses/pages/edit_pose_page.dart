@@ -1,23 +1,23 @@
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// TODO Make this page!!!
 
-class PoseViewPage extends StatefulWidget {
+import '../../../core/constants/constants.dart';
+
+// TODO MAKE EDIT POSE FUNCTION
+class EditPosePage extends StatefulWidget {
   static MaterialPageRoute route() => MaterialPageRoute(
-    builder: (context) => const PoseViewPage(),
+    builder: (context) => const EditPosePage(),
   );
-  const PoseViewPage({super.key});
+  const EditPosePage({super.key});
 
   @override
-  State<PoseViewPage> createState() => _PoseViewPageState();
+  State<EditPosePage> createState() => _EditPosePageState();
 }
 
-class _PoseViewPageState extends State<PoseViewPage> {
+class _EditPosePageState extends State<EditPosePage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController cuesController = TextEditingController();
@@ -27,7 +27,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
 
   final formKey = GlobalKey<FormState>();
 
-  void createNewPose() async {
+  void updatePoseInfo() async {
     if (formKey.currentState!.validate()) {
       AuthLoggedIn user = context
           .read<AuthCubit>()
@@ -36,13 +36,13 @@ class _PoseViewPageState extends State<PoseViewPage> {
           levelController.text.trim()); // Parse level to int
 
       if (level != null) { // Check if level is a valid integer
-        await context.read<PosesCubit>().createNewPose(
+        await context.read<PosesCubit>().updatePoseInfo(
           name: nameController.text.trim(),
           apparatus: apparatusController.text.trim(),
           level: level, // Use the parsed integer
           description: descriptionController.text.trim(),
           cues: cuesController.text.trim(),
-          primaryImageId: '', // TODO
+          primaryImageId: Constants.missingImageId,
           token: user.user.token,
           createdBy: user.user.id,
         );
@@ -54,6 +54,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
+    // TODO add other controllers here
     super.dispose();
   }
 
@@ -61,35 +62,15 @@ class _PoseViewPageState extends State<PoseViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text("POSE VIEW"),
-            actions: const [
-              // GestureDetector(
-              //   onTap: () async {
-              //     final _selectedDate = await showDatePicker(
-              //         context: context,
-              //         firstDate: DateTime.now(),
-              //         lastDate: DateTime.now().add(
-              //             const Duration(days:90)
-              //         )
-              //     );
-              //     if(_selectedDate!=null) {
-              //       setState(() {
-              //         selectedDate = _selectedDate;
-              //       });
-              //     }
-              //   },
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(8.0),
-              //     child: Text(DateFormat("MM-d-y").format(selectedDate)),
-              //   ),
-              // )
-            ]
+          title: const Text("Add New Pose"),
         ),
         body: BlocConsumer<PosesCubit, PosesState>(
           listener: (context, state) {
             if (state is PoseError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("There was an error adding the pose"))
+                  const SnackBar(
+                      content: Text("There was an error adding the pose")
+                  )
                 // SnackBar(content: Text(state.error))
               );
             } else if (state is AddNewPoseSuccess) {
@@ -100,6 +81,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
                   context,
                   HomePage.route(),
                       (_) => false
+                // TODO should this go to pose specific PoseViewPage instead?
               );
             }
           },
@@ -208,7 +190,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
 
                       const SizedBox(height: 10,),
                       ElevatedButton(
-                          onPressed: createNewPose,
+                          onPressed: updatePoseInfo,
                           child: const Text(
                               "SUBMIT",
                               style: TextStyle(
