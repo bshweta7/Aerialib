@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class SearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
   final VoidCallback? onSearchSubmitted;
+  // final List<String> suggestionList;
 
   const SearchBarWidget({
     Key? key,
     required this.onSearchChanged,
     this.onSearchSubmitted,
+    // required this.suggestionList,
   }) : super(key: key);
 
   @override
@@ -42,7 +44,11 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         );
       },
       suggestionsBuilder: (BuildContext context, SearchController controller) {
-        return List<ListTile>.generate(5, (int index) {
+        // final suggestions = widget.suggestionList
+        //     .where((item) => item.toLowerCase().contains(controller.text.toLowerCase()))
+        //     .toList();
+
+        return List<ListTile>.generate(5, (int index){
           final String item = 'item $index';
           return ListTile(
             title: Text(item),
@@ -53,6 +59,18 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             },
           );
         }); // TODO update suggestion builder
+
+        // return List<ListTile>.generate(suggestionList.length, (int index) {
+        //   final String item = suggestionList[index];
+        //   return ListTile(
+        //     title: Text(item),
+        //     onTap: () {
+        //       setState(() {
+        //         controller.closeView(item);
+        //       });
+        //     },
+        //   );
+        // });
       },
     );
   }

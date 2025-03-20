@@ -321,6 +321,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                         horizontal: 20.0
                     ),
                     child: SearchBarWidget(
+                      // suggestionList: ['Test 1', 'Test 2', 'Test 3'],
                       onSearchChanged: (query) {
                         setState(() {
                           _searchQuery = query;
