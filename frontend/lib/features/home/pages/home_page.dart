@@ -121,46 +121,91 @@ class _HomePageState extends State<HomePage> {
               print("POSES FROM HOME PAGE");
               print(poses);
 
-              return Column(
-                children: [
+              return Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
 
-                  // Pose Library Navigation
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, PoseLibraryPage.route());
-                      },
-                      child: Text("GO TO POSE LIBRARY")
-                  ),
+                    // Pose Library Navigation
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, PoseLibraryPage.route());
+                        },
+                        child: const Text(
+                          "Pose Library",
+                          style: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20,
+                          )
+                        )
+                    ),
 
-                  // Test  Navigation
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MediaLibraryPage.route());
-                      },
-                      child: Text("GO TO MEDIA LIBRARY")
-                  ),
+                    const SizedBox(height:30),
 
-                  // TODO DELETE THIS SECTION (left for reference)
-                  //  Image.network(
-                  //   'http://localhost:8000/media/data/testing/clock.jpg', // Replace with your image URL
-                  //   loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                  //     if (loadingProgress == null) {
-                  //       return child;
-                  //     }
-                  //     return Center(
-                  //       child: CircularProgressIndicator(
-                  //         value: loadingProgress.expectedTotalBytes != null
-                  //             ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                  //             : null,
-                  //       ),
-                  //     );
-                  //   },
-                  //   errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                  //     return Text('Could not load image');
-                  //   },
-                  // ),
+                    const Text(
+                      "Dashboard is under development",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 24,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
 
-                ],
+                    // TODO add these to github tickets
+                    //  Expanded(
+                    //   child: Text(
+                    //     "Upcoming Features\n"
+                    //         "Flow Library (stores your flows)\n"
+                    //         "Share flows with other instructors\n"
+                    //         "Journal to keep a record of what flow you teach on which day (session) to which students\n"
+                    //         "Student profile pages (with level and past attendance and *personal goals*)\n"
+                    //         "Conditioning library\n"
+                    //         "Customized flow creation page - enter students and their goals pop up (potentially with suggested poses and conditioning to help)\n"
+                    //         "Upload your own images/videos and tag them by pose\n"
+                    //         "Share images/videos you upload with people who are tagged in it"
+                    //     ,
+                    //     style: TextStyle(
+                    //       // fontWeight: FontWeight.bold,
+                    //       color: Colors.purple.shade900,
+                    //       fontSize: 20,
+                    //     ),
+                    //     textAlign: TextAlign.center,
+                    //   ),
+                    // ),
+
+
+                    // Test  Navigation
+                    // ElevatedButton(
+                    //     onPressed: () {
+                    //       Navigator.push(context, MediaLibraryPage.route());
+                    //     },
+                    //     child: Text("GO TO MEDIA LIBRARY")
+                    // ),
+
+                    // TODO DELETE THIS SECTION (left for reference)
+                    //  Image.network(
+                    //   'http://localhost:8000/media/data/testing/clock.jpg', // Replace with your image URL
+                    //   loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    //     if (loadingProgress == null) {
+                    //       return child;
+                    //     }
+                    //     return Center(
+                    //       child: CircularProgressIndicator(
+                    //         value: loadingProgress.expectedTotalBytes != null
+                    //             ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                    //             : null,
+                    //       ),
+                    //     );
+                    //   },
+                    //   errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                    //     return Text('Could not load image');
+                    //   },
+                    // ),
+
+                  ],
+                ),
               );
               // return Column(
               //     children: [

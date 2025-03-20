@@ -158,7 +158,8 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
               for (int i = 0; i < poses.length; i++) {
                 posesNamesList.add(poses[i].name);
-                mediaPathsList.add('http://localhost:8000/media/data/testing/clock.jpg'); // TODO
+                mediaPathsList.add("http://localhost:8000/media/data"+poses[i].primaryImageUrl);
+                // mediaPathsList.add('http://localhost:8000/media/data/testing/clock.jpg'); // TODO
               }
                 //       media.add(Media(
                 //         responseJson[i]["media_id"].toString(), MediaType.photo,

@@ -66,6 +66,7 @@ class PoseRemoteRepository {
           updatedAt: DateTime.now(),
           isSynced: 0,
           primaryImageId: primaryImageId,
+          primaryImageUrl: Constants.missingImageUrl, // Note: This will update in backend but is required here because it is a required field in PoseModel
         );
         // await poseLocalRepository.insertPose(poseModel); // TODO shouldnt this insert???
         return poseModel;

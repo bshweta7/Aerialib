@@ -29,28 +29,28 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
     
   try {
     const query = sql`
-            SELECT 
-                poses.*, 
-                media.media_url
-            FROM 
-                poses
-            JOIN 
-                media ON poses.primary_image_id = media.id;
-        `;
+      SELECT 
+        poses.*, 
+        media.media_url AS primary_image_url
+      FROM 
+        poses
+      JOIN 
+        media ON poses.primary_image_id = media.id;
+      `;
 
-        // Execute the raw SQL query using db.execute()
-        const result = await db.execute(query); 
+    // Execute the raw SQL query using db.execute()
+    const result = await db.execute(query); 
 
-        // Access the rows from the result
-        const allPoses = result.rows; // Adjust this based on your Drizzle version
+    // Access the rows from the result
+    const allPoses = result.rows; 
 
-        res.json(allPoses);
+    res.json(allPoses);
 
-        
-        // const allPoses = await db.select().from(posesTable);
-        // // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
+    
+    // const allPoses = await db.select().from(posesTable);
+    // // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
 
-        // res.json(allPoses);
+    // res.json(allPoses);
 
     } catch (e) {
         res.status(500).json({ error: e })

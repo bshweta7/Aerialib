@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:frontend/core/constants/constants.dart';
+
 class PoseModel {
   final String id;
   final String name;
@@ -13,6 +15,7 @@ class PoseModel {
   final DateTime updatedAt;
   final int isSynced;
   final String primaryImageId;
+  final String primaryImageUrl;
 
   PoseModel({
     required this.id,
@@ -27,6 +30,7 @@ class PoseModel {
     required this.updatedAt,
     required this.isSynced,
     required this.primaryImageId,
+    required this.primaryImageUrl,
   });
 
   PoseModel copyWith({
@@ -42,6 +46,7 @@ class PoseModel {
     DateTime? updatedAt,
     int? isSynced,
     String? primaryImageId,
+    String? primaryImageUrl,
   }) {
     return PoseModel(
       id: id ?? this.id,
@@ -56,6 +61,7 @@ class PoseModel {
       updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,
       primaryImageId: primaryImageId ?? this.primaryImageId,
+      primaryImageUrl: primaryImageUrl ?? this.primaryImageUrl,
     );
   }
 
@@ -73,6 +79,7 @@ class PoseModel {
       'updatedAt': updatedAt.toIso8601String(),
       'isSynced': isSynced,
       'primaryImageId': primaryImageId,
+      'primaryImageUrl': primaryImageUrl,
     };
   }
 
@@ -84,12 +91,13 @@ class PoseModel {
       cues: map['cues'],
       apparatus: map['apparatus'] ?? '',
       level: map['level'] ?? -1,
-      createdBy: map['createdBy'] ?? '',
-      updatedBy: map['updatedBy'],
-      createdAt: DateTime.parse(map['createdAt']),
-      updatedAt: DateTime.parse(map['updatedAt']),
+      createdBy: map['created_by'] ?? '',
+      updatedBy: map['updated_by'] ?? '',
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt: DateTime.parse(map['updated_at']),
       isSynced: map['isSynced'] ?? 1,
-      primaryImageId: map['primaryImageId'] ?? '', // TODO make default primaryImageId point to a exclamation mark image
+      primaryImageId: map['primary_image_id'] ?? Constants.missingImageId,
+      primaryImageUrl: map['primary_image_url'] ?? Constants.missingImageUrl,
     );
   }
 
@@ -112,7 +120,8 @@ class PoseModel {
         'createdAt: $createdAt, '
         'updatedAt: $updatedAt, '
         'isSynced: $isSynced, '
-        'primaryImageId: $primaryImageId)';
+        'primaryImageId: $primaryImageId, '
+        'primaryImageUrl: $primaryImageUrl)';
   }
 
   @override
@@ -130,7 +139,8 @@ class PoseModel {
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
         other.isSynced == isSynced &&
-        other.primaryImageId == primaryImageId;
+        other.primaryImageId == primaryImageId &&
+        other.primaryImageUrl == primaryImageUrl;
   }
 
   @override
@@ -146,6 +156,7 @@ class PoseModel {
     createdAt.hashCode ^
     updatedAt.hashCode ^
     isSynced.hashCode ^
-    primaryImageId.hashCode;
+    primaryImageId.hashCode ^
+    primaryImageUrl.hashCode;
   }
 }
