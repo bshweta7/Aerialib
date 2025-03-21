@@ -46,7 +46,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
     context.read<PosesCubit>().getAllPoses(token: user.user.token);
 
-
     Connectivity().onConnectivityChanged.listen((data) async {
       if (data.contains(ConnectivityResult.wifi)) {
         print("Wifi Available");
@@ -132,9 +131,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             }
 
             if (state is GetPosesSuccess) {
-              final poses = state.poses.toList();
-              // TODO see why this doesn't reload when
-              // Filter poses based on selectedApparatus
               List<PoseModel> filteredPoses = state.poses.where(
                     (elem) =>
                 selectedApparatus.contains(elem.apparatus) &&
@@ -352,14 +348,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             "",
                             "",
                           ),
-
-                          // child: MediaGrid(
-                          //   posesNamesList,
-                          //   mediaPathsList,
-                          //   _gridSize,
-                          //   "",
-                          //   "",
-                          // ),
 
                         ),
 

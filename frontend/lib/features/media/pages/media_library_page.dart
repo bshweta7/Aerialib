@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/utils/multi_selector.dart';
 import '../../../core/utils/search_bar.dart';
+import '../../../models/media_model.dart';
 
 
 class MediaLibraryPage extends StatefulWidget {
@@ -33,10 +34,9 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
   int _gridSize = 3; // Start at 0 and set during the first build
   int _gridSizeMax = 10; // TODO set this dynamically when building
   String _searchQuery = ''; // To store the current search query
-  final _apparatusController = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
-  List<String> initialApparatus = Constants.apparatusOptions;
-  List<int> initialLevels = Constants.levelOptions;
+  List<String> selectedApparatus = Constants.apparatusOptions;
+  List<String> selectedShareStatus = Constants.shareOptions; // TODO
   bool _isContainerVisible = false; // Initially hidden
   final ScrollController _myScrollController = ScrollController();
   bool _areOptionsVisible = false; // Track visibility
@@ -45,8 +45,9 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
   void initState() {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
-// TODO Medias -> Media ?
+
     context.read<MediaCubit>().getAllMedia(token: user.user.token);
+
     Connectivity().onConnectivityChanged.listen((data) async {
       if (data.contains(ConnectivityResult.wifi)) {
         print("Wifi Available");
@@ -84,17 +85,6 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
     });
   } // TODO Move this to utils.dart
 
-
-  // // Store the URLs for all the photos the app needs to download and cache
-// Future<List> _getMediaList(List<MediaModel> medias) async {
-//
-
-//   List<String> thumbnailURLs = medias.map((media) => media.thumbnailURL).toList();
-//   print("THUMBNAILS");
-//   print(thumbnailURLs); // Output the list to verify.
-//   return thumbnailURLs;
-
-  // TODO
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +139,12 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
               //                       selectedDate.month == elem.dueAt.month &&
               //                       selectedDate.year == elem.dueAt.year
               //               ).toList();
+
+              List<MediaModel> filteredMedia = state.mediaList.where(
+                    (elem) =>
+                selectedApparatus.contains(elem.apparatus)
+                    // && selectedShareStatus.contains(elem.apparatus), // TODO USER - needs more work
+              ).toList();
 
 
               return Column(
@@ -227,7 +223,7 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
 
                                     MultiSelect(
                                       options: Constants.apparatusOptions,
-                                      initialValues: initialApparatus,
+                                      initialValues: selectedApparatus,
                                       getLabel: (String apparatus) {
                                         if (apparatus.isEmpty) {
                                           return apparatus; // Or return some default string if needed
@@ -237,9 +233,12 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                                       // getLabel: (String apparatus) => apparatus, // Simple string case
                                       onSelectionChanged: (List<String> selected) {
                                         print('Selected Apparatus: $selected');
-                                        // Update your apparatus controller or state here
+                                        setState(() {
+                                          selectedApparatus = selected;
+                                        });
                                       },
                                       validator: (value) {
+                                        // TODO Verify why this doesn't work or remove altogether (also see pose librarly)
                                         if (value == null || value.isEmpty) {
                                           // const SnackBar(content: Text('Please select at least one apparatus'));
                                           return 'Please select at least one apparatus';
@@ -252,37 +251,49 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
 
                                 SizedBox(height:10),
 
-                                // Level Filter
-                                Wrap( // Changed to Wrap
+                                // Shared Filter
+                                Wrap(
                                   alignment: WrapAlignment.start,
                                   spacing: 8.0, // Space between children horizontally
                                   runSpacing: 4.0, // Space between lines vertically
                                   children: [
                                     const Text(
-                                      "Level:   ",
+                                      "Share Option:   ",
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
 
-                                    MultiSelect<int>(
-                                      options: Constants.levelOptions,
-                                      initialValues: initialLevels,
-                                      getLabel: (int level) => 'Level $level', // Format the label
-                                      onSelectionChanged: (List<int> selected) {
-                                        print('Selected Levels: $selected');
-                                        // Update your levels state here
+                                    MultiSelect(
+                                      options: Constants.shareOptions,
+                                      initialValues: selectedShareStatus,
+                                      getLabel: (String shareStatus) {
+                                        if (shareStatus.isEmpty) {
+                                          return shareStatus; // Or return some default string if needed
+                                        }
+                                        return shareStatus[0].toUpperCase() + shareStatus.substring(1);
+                                        // TODO what is this doing
+                                      },
+                                      // getLabel: (String apparatus) => apparatus, // Simple string case
+                                      onSelectionChanged: (List<String> selected) {
+                                        print('Selected Share Status: $selected');
+                                        setState(() {
+                                          selectedShareStatus = selected;
+                                        });
                                       },
                                       validator: (value) {
+                                        // TODO Verify why this doesn't work or remove altogether (also see pose librarly)
                                         if (value == null || value.isEmpty) {
-                                          return 'Please select at least one level';
+                                          // const SnackBar(content: Text('Please select at least one apparatus'));
+                                          return 'Please select at least one share status';
                                         }
                                         return null;
                                       },
-                                    )
+                                    ),
                                   ],
                                 ),
+
                                 SizedBox(height:10),
 
                               ],
@@ -319,16 +330,15 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                   Expanded(
                     child: Stack(
                       children: [
-                        // SingleChildScrollView(
-                        //   controller: _myScrollController,
-                        //   child: MediaGrid(
-                        //     mediaList,
-                        //     mediaList, // TODO THIS IS COMPLETELY WRONG!!! SEE POSE LIBRARY
-                        //     _gridSize,
-                        //     "",
-                        //     "",
-                        //   ),
-                        // ),
+                        // TODO : need to update media Grid to take media not poseModel
+                        //  SingleChildScrollView(
+                        //     controller: _myScrollController,
+                        //     child: MediaGrid(
+                        //       filteredMedia,
+                        //       _gridSize,
+                        //       "",
+                        //       "",
+                        //     ),
 
                         Positioned(
                           bottom: 20,
@@ -358,8 +368,8 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                               tooltip: 'Reset filters',
                               onPressed: () {
                                 // TODO implement reset filters
-                                initialApparatus = Constants.apparatusOptions;
-                                initialLevels = Constants.levelOptions;
+                                selectedApparatus = Constants.apparatusOptions;
+                                selectedShareStatus = Constants.shareOptions;
                               },
                               child: const Icon(CupertinoIcons.refresh),
                             ),
