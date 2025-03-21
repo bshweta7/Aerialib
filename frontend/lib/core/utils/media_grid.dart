@@ -4,7 +4,7 @@ import 'package:frontend/features/poses/pages/pose_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../features/media/pages/media_view.dart';
+import '../../features/media/pages/media_view_page.dart';
 import '../../models/media_model.dart';
 import '../constants/constants.dart';
 
