@@ -1,21 +1,20 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/constants/utils.dart';
+
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/media/cubit/media_cubit.dart';
 import 'package:frontend/features/media/pages/upload_new_media_page.dart';
-import 'package:frontend/core/utils/media_grid.dart';
-// import 'package:frontend/features/medias/widgets/pose_media_grid.dart';
-// import 'package:frontend/features/media/widgets/media_card.dart';
-import 'package:intl/intl.dart';
 
-import '../../../core/utils/multi_selector.dart';
-import '../../../core/utils/search_bar.dart';
-import '../../../models/media_model.dart';
+import 'package:frontend/core/utils/media_grid.dart';
+import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/core/utils/multi_selector.dart';
+import 'package:frontend/core/utils/search_bar.dart';
+
+import 'package:frontend/models/media_model.dart';
 
 
 class MediaLibraryPage extends StatefulWidget {
@@ -331,14 +330,15 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                     child: Stack(
                       children: [
                         // TODO : need to update media Grid to take media not poseModel
-                        //  SingleChildScrollView(
-                        //     controller: _myScrollController,
-                        //     child: MediaGrid(
-                        //       filteredMedia,
-                        //       _gridSize,
-                        //       "",
-                        //       "",
-                        //     ),
+                        SingleChildScrollView(
+                          controller: _myScrollController,
+                          child: MediaGrid(
+                            filteredMedia,
+                            _gridSize,
+                            "",
+                            "",
+                          ),
+                        ),
 
                         Positioned(
                           bottom: 20,

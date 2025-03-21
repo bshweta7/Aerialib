@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:frontend/features/poses/pages/pose_view_page.dart';
+import 'package:frontend/models/pose_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../features/media/pages/media_view.dart';
-import '../../models/media_model.dart';
 import '../constants/constants.dart';
 
 
@@ -52,34 +51,44 @@ import '../constants/constants.dart';
 // }
 
 
-class MediaGrid extends StatelessWidget {
+class PoseMediaGrid extends StatelessWidget {
 
-  const MediaGrid(
-      this.mediaList,
+  const PoseMediaGrid(
+      this.poses,
       this.gridSize,
       this.jwt,
       this.code,
       {super.key}
       );
 
-  final List mediaList;
+  final List poses;
   final int gridSize;
   final String jwt;
   final String code;
 
   Widget _createTappableMediaIcon(
       BuildContext context,
-      MediaModel media
+      PoseModel pose
       ) {
     // Make a nice button that has the thumbnail inside it
     return GestureDetector(
         onTap: () {
           Navigator.push(
             context,
-            MediaViewPage.route(media)
+            PoseViewPage.route(pose)
           );
         },
-      child: MediaIcon(media, jwt, code),
+        // onTap: () => {
+        //   Navigator.pushNamed(
+        //   context,
+        //   '/media_viewer',
+        //   arguments: <String, dynamic>{
+        //     'media': poses,
+        //     'jwt': jwt,
+        //     'code': "",
+        //   },
+        // )},
+      child: MediaIcon(pose, jwt, code),
     );
   }
 
@@ -95,23 +104,23 @@ class MediaGrid extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return _createTappableMediaIcon(
           context,
-          mediaList[index]
+          poses[index]
         );
       },
-      itemCount: mediaList.length,
+      itemCount: poses.length,
     );
   }
 }
 
 class MediaIcon extends StatelessWidget {
   const MediaIcon(
-      this.media,
+      this.pose,
       this.jwt,
       this.code,
       {super.key}
       );
 
-  final MediaModel media;
+  final PoseModel pose;
   final String jwt;
   final String code;
 
@@ -128,7 +137,7 @@ class MediaIcon extends StatelessWidget {
             const SizedBox(height: 10),
 
             Text(
-              media.name,
+              pose.name,
               style: const TextStyle(
                 fontSize: 20,
                 // fontWeight: FontWeight.bold,
@@ -143,7 +152,7 @@ class MediaIcon extends StatelessWidget {
             // TODO if no connectivity, either show no image or missing image pic if it can't get the actual image
              Expanded(
                child: Image.network(
-                 Constants.mediaUrlPrefix + media.mediaURL,
+                 Constants.mediaUrlPrefix + pose.primaryImageUrl,
                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                    if (loadingProgress == null) {
                      return child;

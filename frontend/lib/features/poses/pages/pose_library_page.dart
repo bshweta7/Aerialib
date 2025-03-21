@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/utils/media_grid.dart';
+import 'package:frontend/core/utils/pose_media_grid.dart';
 import 'package:frontend/core/utils/multi_selector.dart';
 import 'package:frontend/core/utils/search_bar.dart';
 
@@ -342,7 +342,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       children: [
                         SingleChildScrollView(
                           controller: _myScrollController,
-                          child: MediaGrid(
+                          child: PoseMediaGrid(
                             filteredPoses,
                             _gridSize,
                             "",

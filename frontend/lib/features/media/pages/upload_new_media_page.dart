@@ -164,7 +164,7 @@ class _UploadNewMediaPageState extends State<UploadNewMediaPage> {
                       TextFormField(
                         controller: nameController,
                         decoration: const InputDecoration(
-                          hintText: 'Pose Name',
+                          hintText: 'Media Name',
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
