@@ -95,6 +95,7 @@ class PoseRemoteRepository {
       }
 
       final remotePosesList = jsonDecode(res.body);
+
       List<PoseModel> remotePosesListMapped = [];
 
       for (var element in remotePosesList) {

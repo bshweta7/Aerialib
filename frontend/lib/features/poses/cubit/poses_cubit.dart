@@ -48,9 +48,7 @@ class PosesCubit extends Cubit<PosesState>{
     try {
       emit(PoseLoading());
       final poses = await poseRemoteRepository.getPoses(token: token);
-
       emit(GetPosesSuccess(poses));
-
     } catch (e) {
       print(e.toString());
       emit(PoseError(e.toString()));

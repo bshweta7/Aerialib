@@ -93,11 +93,19 @@ class PoseModel {
       level: map['level'] ?? -1,
       createdBy: map['createdBy'] ?? '',
       updatedBy: map['updatedBy'] ?? '',
-      createdAt: DateTime.parse(map['createdAt']),
-      updatedAt: DateTime.parse(map['updatedAt']),
-      isSynced: map['isSynced'] ?? 1,
-      primaryImageId: map['primaryImageId'] ?? Constants.missingImageId,
-      primaryImageUrl: map['primaryImageUrl'] ?? Constants.missingImageUrl,
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt: DateTime.parse(map['updated_at']),
+      isSynced: map['is_synced'] ?? 1,
+      primaryImageId: map['primary_image_id'] ?? Constants.missingImageId,
+      primaryImageUrl: map['primary_image_url'] ?? Constants.missingImageUrl,
+      // createdBy: map['createdBy'] ?? '',
+      // updatedBy: map['updatedBy'] ?? '',
+      // createdAt: DateTime.parse(map['createdAt']),
+      // updatedAt: DateTime.parse(map['updatedAt']),
+      // isSynced: map['isSynced'] ?? 1,
+      // primaryImageId: map['primaryImageId'] ?? Constants.missingImageId,
+      // primaryImageUrl: map['primaryImageUrl'] ?? Constants.missingImageUrl,
+      // TODO update the mapping or local db so local and remote match
     );
   }
 

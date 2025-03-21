@@ -132,6 +132,7 @@ class _HomePageState extends State<HomePage> {
                           )
                         )
                     ),
+                    SizedBox(height: 10,),
 
                     // Media Library Navigation
                     ElevatedButton(
@@ -147,6 +148,7 @@ class _HomePageState extends State<HomePage> {
                             )
                         )
                     ),
+                    SizedBox(height: 10,),
 
                     const SizedBox(height:30),
 

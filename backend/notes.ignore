@@ -13,4 +13,4 @@ remember ; for sql
 
 \dt shows all of the available tables in a postgres db 
 
-run "npx drizzle-kit push" from src folder when you want to add a new database schema to the postgreSQL db (e.g. after adding a Tasks DB)
+run "npx drizzle-kit push" from src folder when you want to add a new database schema to the postgreSQL db (e.g. after adding a Tasks table)
