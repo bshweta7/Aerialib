@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/utils.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
+import 'package:frontend/features/home/pages/test_page.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 // import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
 import 'package:frontend/features/poses/pages/pose_library_page.dart';
@@ -161,6 +162,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+
+                    // TEST PAGE Navigation
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, TestPage.route());
+                        },
+                        child: const Text(
+                            "TEST PAGE",
+                            style: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 20,
+                            )
+                        )
+                    ),
+                    SizedBox(height: 10,),
 
                     // TODO add these to github tickets
                     //  Expanded(
