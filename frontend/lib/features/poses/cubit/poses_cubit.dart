@@ -60,10 +60,14 @@ class PosesCubit extends Cubit<PosesState>{
   Future<void> syncPoses(String token) async {
     // get all unsynced poses from our sqlite db
     final unsyncedPoses = await poseLocalRepository.getUnsyncedPoses();
-    print(unsyncedPoses);
+
     if (unsyncedPoses.isEmpty) {
       return;
     }
+
+    print("Unsynced poses:");
+    print(unsyncedPoses);
+
     // talk to our postgresql db to add the new pose
     final isSynced = await poseRemoteRepository.syncPoses(
         token: token,

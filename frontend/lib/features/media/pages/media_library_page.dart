@@ -150,8 +150,6 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
               //                       selectedDate.year == elem.dueAt.year
               //               ).toList();
 
-              print("MEDIA FROM HOME PAGE");
-              print(mediaList);
 
               return Column(
                 children: [

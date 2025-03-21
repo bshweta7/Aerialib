@@ -141,9 +141,9 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     selectedLevels.contains(elem.level),
               ).toList();
 
-              print("AAACK");
-              print(poses);
-              print(filteredPoses);
+              // print("AAACK");
+              // print(poses);
+              // print(filteredPoses);
 
               // List<String> posesNamesList = [];
               // List<String> mediaPathsList = [];

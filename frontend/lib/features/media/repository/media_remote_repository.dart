@@ -82,7 +82,7 @@ class MediaRemoteRepository {
 
       if(res.statusCode != 200) {
         print("ERROR: Remote repository fetch error - GET /media");
-        print(res.body);
+        // print(res.body);
         throw jsonDecode(res.body)['error'];
       }
 

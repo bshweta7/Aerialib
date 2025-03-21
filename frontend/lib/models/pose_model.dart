@@ -91,13 +91,13 @@ class PoseModel {
       cues: map['cues'],
       apparatus: map['apparatus'] ?? '',
       level: map['level'] ?? -1,
-      createdBy: map['created_by'] ?? '',
-      updatedBy: map['updated_by'] ?? '',
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
+      createdBy: map['createdBy'] ?? '',
+      updatedBy: map['updatedBy'] ?? '',
+      createdAt: DateTime.parse(map['createdAt']),
+      updatedAt: DateTime.parse(map['updatedAt']),
       isSynced: map['isSynced'] ?? 1,
-      primaryImageId: map['primary_image_id'] ?? Constants.missingImageId,
-      primaryImageUrl: map['primary_image_url'] ?? Constants.missingImageUrl,
+      primaryImageId: map['primaryImageId'] ?? Constants.missingImageId,
+      primaryImageUrl: map['primaryImageUrl'] ?? Constants.missingImageUrl,
     );
   }
 
