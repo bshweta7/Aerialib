@@ -85,52 +85,53 @@ export type NewTransition = typeof transitionsTable.$inferInsert;
 
 
 
-// TODO flows table
-// export const flowsTable = pgTable("flows", {
-//     id: uuid("id").primaryKey().defaultRandom(),
-//     name: text("name").notNull(),
+export const flowsTable = pgTable("flows", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
 
-//     description: text("description"),
-//     apparatus: text("apparatus"),
+    description: text("description"),
+    apparatus: text("apparatus"),
 
-//     createdBy: uuid("created_by").notNull().references(() => usersTable.id, {onDelete: "cascade"}),
-//     updatedBy: uuid("updated_by").references(() => usersTable.id),
-//     createdAt: timestamp("created_at").defaultNow(),
-//     updatedAt: timestamp("updated_at").defaultNow(),
+    createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "set default" }), // TODO Figure out what is set default
+    updatedBy: uuid("updated_by").references(() => usersTable.id),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
 
-//     primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id),
-// });
+    primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id),
+});
 
-// export type Flow = typeof flowsTable.$inferSelect;
-// export type NewFlow = typeof flowsTable.$inferInsert;
+export type Flow = typeof flowsTable.$inferSelect;
+export type NewFlow = typeof flowsTable.$inferInsert;
+
+// TODO may need a "media Connector table" that converts pose uuid and flow uuid into a standard uuid that can be put into media? or add a column in media for flow id ? 
+
+export const flowPosesTable = pgTable("flow_poses", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    flowId: uuid('flow_id')
+        .notNull()
+        .references(() => flowsTable.id, {
+            onDelete: 'cascade',
+            onUpdate: 'no action',
+        }),
+    poseId: uuid('pose_id')
+        .notNull()
+        .references(() => posesTable.id, {
+            onDelete: 'cascade', // TODO check this - need better way of handling this  
+            onUpdate: 'no action',
+        }),
+    order: integer('order').notNull(),
+    transitionId: uuid('transition_id')
+        .references(() => transitionsTable.id, {
+            onDelete: 'cascade',
+            onUpdate: 'no action',
+        }),
+},
+    // TODO Can add which pose was added by which user (if sharing collections)
+);
 
 
-// export const flowPosesTable = pgTable("collection_poses", {
-//     collectionId: uuid('collection_id')
-//       .notNull()
-//       .references(() => collectionsTable.id, {
-//         onDelete: 'cascade',
-//         onUpdate: 'no action',
-//       }),
-//     poseId: uuid('pose_id')
-//       .notNull()
-//       .references(() => posesTable.id, {
-//         onDelete: 'cascade',
-//         onUpdate: 'no action',
-//       }),
-//     // order: integer('order').notNull(),
-//   },
-//   // TODO Can add which pose was added by which user (if sharing collections)
-//   (table) => {
-//     return {
-//       pk: primaryKey({ columns: [table.collectionId, table.poseId] }),
-//     };
-//   }
-// );
-
-
-// export type CollectionPose = typeof collectionPosesTable.$inferSelect;
-// export type NewCollectionPose = typeof collectionPosesTable.$inferInsert;
+export type FlowPose = typeof flowPosesTable.$inferSelect;
+export type NewFlowPose = typeof flowPosesTable.$inferInsert;
 
 
 

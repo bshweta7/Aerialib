@@ -148,17 +148,17 @@ class _UploadNewMediaPageState extends State<UploadNewMediaPage> {
                     children: [
 
                       // TODO enable upload image for when users are uploading their own images
-                      // Expanded(
-                      //     child: _image == null ? Text('No image selected.') : Image.file(_image!)
-                      // ), // TODO show missing image if no image selected
-                      // ElevatedButton(
-                      //   onPressed: getImage,
-                      //   child: Text('Select Image'),
-                      // ),
-                      // ElevatedButton(
-                      //   onPressed: uploadImage,
-                      //   child: Text('Upload Image'),
-                      // ),
+                      Expanded(
+                          child: _image == null ? Text('No image selected.') : Image.file(_image!)
+                      ), // TODO show missing image if no image selected
+                      ElevatedButton(
+                        onPressed: getImage,
+                        child: Text('Select Image'),
+                      ),
+                      ElevatedButton(
+                        onPressed: uploadImage,
+                        child: Text('Upload Image'),
+                      ),
 
                       // Name Textbox
                       TextFormField(

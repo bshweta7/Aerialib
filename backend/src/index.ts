@@ -4,6 +4,8 @@ import cors from 'cors';
 import authRouter from "./routes/auth";
 import poseRouter from "./routes/pose";
 import mediaRouter from "./routes/media";
+import flowRouter from "./routes/flow";
+import flowPoseRouter from "./routes/flow_poses";
 
 // Load values from .env file
 import 'dotenv/config'
@@ -21,6 +23,8 @@ app.use(express.json());
 app.use("/poses", poseRouter);
 app.use("/auth", authRouter);
 app.use("/media", mediaRouter);
+app.use("/flows", flowRouter);
+app.use("/flow_pose", flowPoseRouter);
 
 // create rest api
 app.get("/", (req, res) => {
