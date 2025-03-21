@@ -155,6 +155,8 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                 children: [
 
                   // Filters Section
+                  // TODO Remove levels filtering
+                  // TODO Add filter by UploadedBy (maybe Uploaded by me vs shared with me vs default)
                   Container(
                     width: double.infinity, // Expand horizontally
                     margin: const EdgeInsets.symmetric(
@@ -333,7 +335,9 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                           right: 20,
 
                           // Options Button
+                          // TODO Make a Floating Action Button widget so its easy to remember the hero tag
                           child: FloatingActionButton(
+                            heroTag: 'pageOptionsFAB',
                             tooltip: 'Open page options',
                             onPressed: () {
                               setState(() {
@@ -350,6 +354,7 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                             bottom: 260,
                             right: 20,
                             child: FloatingActionButton(
+                              heroTag: 'resetFiltersFAB',
                               tooltip: 'Reset filters',
                               onPressed: () {
                                 // TODO implement reset filters
@@ -366,6 +371,7 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                             bottom: 180,
                             right: 20,
                             child: FloatingActionButton(
+                              heroTag: 'newMediaFAB',
                               tooltip: 'Upload new media',
                               onPressed: () {
                                 Navigator.push(context, UploadNewMediaPage.route());
@@ -380,6 +386,8 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                             bottom: 100, // Adjust position as needed to prevent overlap
                             right: 20,
                             child: FloatingActionButton(
+                              heroTag: 'scrollTopFAB',
+                              tooltip: 'Scroll to the top of the page',
                               onPressed: () {
                                 _myScrollController.animateTo(
                                   0,
@@ -387,7 +395,6 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                                   curve: Curves.easeInOut,
                                 );
                               },
-                              tooltip: 'Scroll to the top of the page',
                               child: const Icon(CupertinoIcons.arrow_up),
                             ),
 

@@ -18,7 +18,7 @@ class MediaCubit extends Cubit<MediaState>{
     required String description,
     required String apparatus,
     required String uploadedBy,
-    required String token, // TODO why is this here (also check pose_cubit.dart)
+    required String token,
   }) async {
     try {
       emit(MediaLoading());
@@ -30,7 +30,7 @@ class MediaCubit extends Cubit<MediaState>{
         uploadedBy: uploadedBy,
         token: token,
       );
-      await mediaLocalRepository.insertMedia(mediaModel);
+      await mediaLocalRepository.insertMedia(mediaModel); // TODO isSynced = 0 when remote failed - is this defined?
 
       emit(AddNewMediaSuccess(mediaModel));
     } catch (e) {

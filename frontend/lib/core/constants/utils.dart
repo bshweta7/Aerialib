@@ -24,3 +24,16 @@ Color hexToRgb(String hex) {
   return Color(int.parse(hex, radix: 16) + 0xFF000000);
 }
 
+
+String formatUrlFromName(String name) {
+  // 1. Trim whitespace:
+  String trimmedName = name.trim();
+
+  // 2. Replace spaces with underscores:
+  String underscoredName = trimmedName.replaceAll(' ', '_');
+
+  // 3. Convert to lowercase:
+  String formattedName = underscoredName.toLowerCase();
+
+  return formattedName;
+}

@@ -30,11 +30,10 @@ class MediaRemoteRepository {
           },
           body: jsonEncode({
             'mediaURL': mediaURL,
-            // 'name': name,
-            // 'description': description,
-            // 'apparatus': apparatus,
+            'name': name,
+            'description': description,
+            'apparatus': apparatus,
             'uploadedBy': uploadedBy,
-            // TODO include everything? see error from poses remote repo: POST thunderclient didnt work when i added a nullable one like description - gave error.
           })
       );
 

@@ -133,6 +133,21 @@ class _HomePageState extends State<HomePage> {
                         )
                     ),
 
+                    // Media Library Navigation
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MediaLibraryPage.route());
+                        },
+                        child: const Text(
+                            "Media Library",
+                            style: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 20,
+                            )
+                        )
+                    ),
+
                     const SizedBox(height:30),
 
                     const Text(
