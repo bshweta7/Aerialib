@@ -1,3 +1,4 @@
 # TODO IMPLEMENT PROPERLY
-#!/bin/bash
-# PGPASSWORD="$POSTGRES_PASSWORD" pg_dump -h "$POSTGRES_HOST" -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -t your_table -Fc -f /backups/your_table_$(date +%Y%m%d_%H%M%S).dump
+# !/bin/bash
+
+docker compose exec -it db /bin/pg_dump -U postgres -d aerialib -Fc -f /db_backups/db_$(date +%Y%m%d_%H%M%S).dump

@@ -8,7 +8,7 @@ docker compose exec -it backend /bin/bash --> lets you write things into the Exe
 
 docker compose ps --> shows the containers. Service shows the name you would put into the command below. 
 
-psql -U postgres -d aerialib; --> To get database for sql queries
+psql -U postgres -d aerialib --> To get database for sql queries
 remember ; for sql
 
 \dt shows all of the available tables in a postgres db 
