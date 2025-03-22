@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/core/constants/utils.dart';
 
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/media/cubit/media_cubit.dart';
@@ -57,67 +58,21 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
     });
   }
 
-  // Function to handle changing the size of the photo grid
-  // TODO: THIS IS THE NEW AND GOOD ONE! Duplicate it elsewhere if needed
-  void _changeGridSize(int amount) {
-    // Adjust this variable higher to allow less items on screen per a given width
-    // Basically its doing (windowWidth / windowSizeFactor)
-    int windowSizeFactor = 205;
 
+  void changeGridSize(int amount) {
     // Detect current width and calculate a maximum grid size (column count)
     Size windowSize = MediaQuery.of(context).size;
-    int gridSizeMax = (windowSize.width / windowSizeFactor).ceil();
-    if (kDebugMode) {
-      print("Window Size: $windowSize");
-      print("Width: ${windowSize.width}");
-      print("Grid Size Max: $gridSizeMax");
-    }
-
-    // Set the grid size to the maximum on first startup
-    if (_gridSize == 0) {
-      _gridSize = gridSizeMax;
-    }
-
-    // Make sure the grid size isn't currently invalid (too many columns)
-    // such as due to a window size change
-    else if (_gridSize > gridSizeMax) {
-      _gridSize = gridSizeMax;
-    }
-
-    // Otherwise adjust by provided amount
-    else if (_gridSize > 0) {
-      // Scale the amount increase on larger screens
-      amount *= gridSizeMax > 10 ? 2 : 1;
-
-      // If removing columns
-      if (amount < 0) {
-        // Make sure the grid size can't go below 1
-        if (_gridSize + amount <= 0) {
-          _gridSize = 1;
-        } else {
-          _gridSize += amount;
-        }
-
-        // If adding columns
-      } else if (amount > 0) {
-        // Make sure the grid size can't go above the max size
-        if (_gridSize + amount > gridSizeMax) {
-          _gridSize = gridSizeMax;
-        } else {
-          _gridSize += amount;
-        }
-      }
-    }
+    _gridSize = MediaGrid.calculateNewGridSize(amount, _gridSize, windowSize, kDebugMode);
     setState(() {
-      _gridSize; // TODO should this be cubit-ified?
+      _gridSize;
     });
-  } // TODO Move this to utils.dart
+  }
 
 
   @override
   Widget build(BuildContext context) {
     // Refresh the grid minimum size
-    _changeGridSize(0);
+    changeGridSize(0);
 
     // Normal widget building
     return Scaffold(
@@ -130,14 +85,14 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
             IconButton(
               icon: const Icon(Icons.remove_circle_outline),
               onPressed: () {
-                _changeGridSize(1);
+                changeGridSize(1);
               },
               tooltip: 'Decrease Image Size',
             ),
             IconButton(
               icon: const Icon(Icons.add_circle_outline),
               onPressed: () {
-                _changeGridSize(-1);
+                changeGridSize(-1);
               },
               tooltip: 'Increase Image Size',
             ),

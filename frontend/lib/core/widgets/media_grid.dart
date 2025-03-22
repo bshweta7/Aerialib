@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:frontend/features/poses/pages/pose_view_page.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
@@ -8,50 +7,8 @@ import '../../features/media/pages/media_view_page.dart';
 import '../../models/media_model.dart';
 import '../constants/constants.dart';
 
-// TODO reference media.dart in apeturama
 // TODO clean up media grid across all features
-
-// TODO: Enable swipe down to reload
-// TODO will eventually need to call media with jwt auth to ensure permissions
-// See if code below is helpful ----
-
-  //   // Send a request to the backend
-  //   String serverAddress = await User.getServerAddress();
-  //   jwt = await User.getJWT();
-  //   http.Response resp;
-  //   try {
-  //     resp = await http.get(Uri.parse(serverAddress + '/api/v1/media'),
-  //         headers: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt });
-  //
-  //     if(resp.statusCode != 200) {
-  //       log("Media listing failed: Code " + resp.statusCode.toString());
-  //       return media;
-  //     }
-  //
-  //     final responseJson = jsonDecode(resp.body);
-  //
-  //     // For each media item we got
-  //     for (int i = 0; i < responseJson.length; i++) {
-  //       media.add(Media(
-  //         responseJson[i]["media_id"].toString(), MediaType.photo,
-  //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/thumbnail',
-  //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/media',
-  //       ));
-  //       media[i].filename = responseJson[i]["filename"];
-  //       media[i].takenTimestamp = (responseJson[i]["date_taken"] != null) ? DateTime.parse(responseJson[i]["date_taken"]) : DateTime.now();
-  //     }
-  //
-  //   } on SocketException {
-  //     log("Media listing failed: Socket exception");
-  //     return media;
-  //   }
-  //
-  //   // TODO: Save and load from disk if network is unavailable
-  //
-  //   return media;
-  // }
-// }
-
+// TODO if the screen is too small, only show name if tapped on ?
 
 // THIS IS THE GOOD ONE BTW USE IT ELSEWHERE :D
 class MediaGrid extends StatelessWidget {
@@ -68,6 +25,63 @@ class MediaGrid extends StatelessWidget {
   final int gridSize;
   final String jwt;
   final String code;
+
+  static int calculateNewGridSize(
+      int amount,
+      int gridSize,
+      Size windowSize,
+      bool kDebugMode
+      ) {
+    /// Function to handle changing the size of the photo grid ///
+
+    // Adjust this variable higher to allow less items on screen per a given width
+    // Basically its doing (windowWidth / windowSizeFactor)
+    int windowSizeFactor = 205;
+
+    int gridSizeMax = (windowSize.width / windowSizeFactor).ceil();
+    if (kDebugMode) {
+      print("Window Size: $windowSize");
+      print("Width: ${windowSize.width}");
+      print("Grid Size Max: $gridSizeMax");
+    }
+
+    // Set the grid size to the maximum on first startup
+    if (gridSize == 0) {
+      gridSize = gridSizeMax;
+    }
+
+    // Make sure the grid size isn't currently invalid (too many columns)
+    // such as due to a window size change
+    else if (gridSize > gridSizeMax) {
+      gridSize = gridSizeMax;
+    }
+
+    // Otherwise adjust by provided amount
+    else if (gridSize > 0) {
+      // Scale the amount increase on larger screens
+      amount *= gridSizeMax > 10 ? 2 : 1;
+
+      // If removing columns
+      if (amount < 0) {
+        // Make sure the grid size can't go below 1
+        if (gridSize + amount <= 0) {
+          gridSize = 1;
+        } else {
+          gridSize += amount;
+        }
+
+        // If adding columns
+      } else if (amount > 0) {
+        // Make sure the grid size can't go above the max size
+        if (gridSize + amount > gridSizeMax) {
+          gridSize = gridSizeMax;
+        } else {
+          gridSize += amount;
+        }
+      }
+    }
+    return gridSize;
+  }
 
   Widget _createTappableMediaIcon(
       BuildContext context,
@@ -196,11 +210,6 @@ class MediaIcon extends StatelessWidget {
              ),
 
             const SizedBox(height: 10)
-
-
-
-
-
           ],
         ),
       ),
@@ -208,3 +217,7 @@ class MediaIcon extends StatelessWidget {
     //   progressIndicatorBuilder: (context, url, downloadProgress) =>
   }
 }
+
+// TODO reference media.dart in apeturama
+// TODO: Enable swipe down to reload
+// TODO will eventually need to call media with jwt auth to ensure permissions
