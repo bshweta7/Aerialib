@@ -13,6 +13,7 @@ import 'package:frontend/features/poses/widgets/pose_media_grid.dart';
 import 'package:frontend/features/poses/widgets/pose_card.dart';
 import 'package:intl/intl.dart';
 
+import '../../flows/pages/flow_library_page.dart';
 import '../../media/pages/media_library_page.dart';
 
 
@@ -142,6 +143,22 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: const Text(
                             "Media Library",
+                            style: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 20,
+                            )
+                        )
+                    ),
+                    SizedBox(height: 10,),
+
+                    // Flow Library Navigation
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, FlowLibraryPage.route());
+                        },
+                        child: const Text(
+                            "Flow Library",
                             style: TextStyle(
                               // fontWeight: FontWeight.bold,
                               color: Colors.white,

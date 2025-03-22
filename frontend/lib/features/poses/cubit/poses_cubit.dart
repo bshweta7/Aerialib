@@ -5,6 +5,9 @@ import 'package:frontend/features/poses/repository/pose_remote_repository.dart';
 import 'package:frontend/models/pose_model.dart';
 import 'package:frontend/features/poses/repository/pose_local_repository.dart';
 
+
+// TODO note - maybe i shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
+
 part 'poses_state.dart';
 
 class PosesCubit extends Cubit<PosesState>{

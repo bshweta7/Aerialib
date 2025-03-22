@@ -25,17 +25,35 @@ flowRouter.post("/", auth, async (req: AuthRequest, res) => {
 })
 
 flowRouter.get("/", auth, async (req: AuthRequest, res) => {
-    try {
-        const allFlows = await db.select().from(flowsTable);
-        // const allMedia = await db.select().from(mediaTable).where(eq(mediaTable.createdBy, req.user!));
+  try {
+    const query = sql`
+      SELECT 
+        flows.*, 
+        media.media_url AS primary_image_url
+      FROM 
+        flows
+      JOIN 
+        media ON flows.primary_image_id = media.id;
+      `;
 
-        res.json(allFlows); // TODO filter by permissions
+      // Execute the raw SQL query using db.execute()
+      const result = await db.execute(query); 
 
-    } catch (e) {
-        res.status(500).json({ error: e })
-    }
+      // Access the rows from the result
+      const allFlows = result.rows; 
+
+      res.json(allFlows);
+
+      
+      // const allPoses = await db.select().from(posesTable);
+      // // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
+
+      // res.json(allPoses);
+
+      } catch (e) {
+          res.status(500).json({ error: e })
+      }
 })
-
 
 flowRouter.delete("/", auth, async (req: AuthRequest, res) => {
     try {

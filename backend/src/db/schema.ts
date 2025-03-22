@@ -90,14 +90,14 @@ export const flowsTable = pgTable("flows", {
     name: text("name").notNull(),
 
     description: text("description"),
-    apparatus: text("apparatus"),
+    apparatus: text("apparatus"),// TODO should this be nullable? 
 
     createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "set default" }), // TODO Figure out what is set default
     updatedBy: uuid("updated_by").references(() => usersTable.id),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 
-    primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id),
+    primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id), 
 });
 
 export type Flow = typeof flowsTable.$inferSelect;
