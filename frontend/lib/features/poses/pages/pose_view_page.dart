@@ -59,7 +59,15 @@ class _PoseViewPageState extends State<PoseViewPage> {
           child:
             Column(
               children: [
-                Expanded(child: MediaIcon(widget.pose.name, widget.pose.primaryImageUrl, "", "")),
+                Expanded(
+                  child: MediaIcon(
+                    widget.pose.name,
+                    widget.pose.primaryImageUrl,
+                    () {},
+                    "",
+                    "",
+                  )
+                ),
 
                 // // TODO Alternative Names
                 // Row(

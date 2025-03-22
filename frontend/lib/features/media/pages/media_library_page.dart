@@ -17,6 +17,8 @@ import 'package:frontend/core/widgets/search_bar.dart';
 
 import 'package:frontend/models/media_model.dart';
 
+import '../../../core/widgets/media_display/utils.dart';
+
 
 class MediaLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -62,7 +64,7 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
   void changeGridSize(int amount) {
     // Detect current width and calculate a maximum grid size (column count)
     Size windowSize = MediaQuery.of(context).size;
-    _gridSize = MediaGrid.calculateNewGridSize(amount, _gridSize, windowSize, kDebugMode);
+    _gridSize = calculateNewGridSize(amount, _gridSize, windowSize, kDebugMode);
     setState(() {
       _gridSize;
     });
