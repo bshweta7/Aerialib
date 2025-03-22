@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/core/utils/media_grid.dart';
+import 'package:frontend/core/widgets/media_grid.dart';
 import 'package:frontend/models/media_model.dart';
 
 

@@ -1,15 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:frontend/features/flows/repository/flow_remote_repository.dart';
-import 'package:frontend/models/flow_model.dart';
 import 'package:frontend/features/flows/repository/flow_local_repository.dart';
+
+import 'package:frontend/models/flow_model.dart';
 
 part 'flow_state.dart';
 
-class FlowsCubit extends Cubit<FlowsState>{
+class FlowsCubit extends Cubit<FlowsState> {
   FlowsCubit() : super(FlowInitial());
   final flowRemoteRepository = FlowRemoteRepository();
   final flowLocalRepository = FlowLocalRepository();
 
+  // FLOWS ONLY
   Future<void> createNewFlow({
     required String name,
     required String description,
@@ -41,9 +44,7 @@ class FlowsCubit extends Cubit<FlowsState>{
   }) async {
     try {
       emit(FlowLoading());
-      print("MOO");
       final flows = await flowRemoteRepository.getFlows(token: token);
-      print("MOO");
       emit(GetFlowsSuccess(flows));
     } catch (e) {
       print(e.toString());
@@ -86,7 +87,8 @@ class FlowsCubit extends Cubit<FlowsState>{
         updatedFlow: updatedFlow,
         token: token,
       );
-      await flowLocalRepository.updateFlow(flowModel); // Update local repository
+      await flowLocalRepository.updateFlow(
+          flowModel); // Update local repository
 
       emit(UpdateFlowSuccess(flowModel)); // Emit success state
     } catch (e) {
@@ -95,5 +97,3 @@ class FlowsCubit extends Cubit<FlowsState>{
     }
   }
 }
-
-// TODO see his next video on background plugin that syncs every 7 days.
