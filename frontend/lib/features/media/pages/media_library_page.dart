@@ -30,8 +30,7 @@ class MediaLibraryPage extends StatefulWidget {
 
 class _MediaLibraryPageState extends State<MediaLibraryPage> {
 
-  int _gridSize = 3; // Start at 0 and set during the first build
-  int _gridSizeMax = 10; // TODO set this dynamically when building
+  int _gridSize = 0; // Start at 0 and set automatically during the first build
   String _searchQuery = ''; // To store the current search query
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
   List<String> selectedApparatus = Constants.apparatusOptions;
@@ -59,24 +58,54 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
   }
 
   // Function to handle changing the size of the photo grid
+  // TODO: THIS IS THE NEW AND GOOD ONE! Duplicate it elsewhere if needed
   void _changeGridSize(int amount) {
-    // Make sure the grid size can't go below 1 or above the max size
+    // Adjust this variable higher to allow less items on screen per a given width
+    // Basically its doing (windowWidth / windowSizeFactor)
+    int windowSizeFactor = 205;
 
-    if (_gridSize > 10) {
-      amount *= kIsWeb ? 2 : 1;
+    // Detect current width and calculate a maximum grid size (column count)
+    Size windowSize = MediaQuery.of(context).size;
+    int gridSizeMax = (windowSize.width / windowSizeFactor).ceil();
+    if (kDebugMode) {
+      print("Window Size: $windowSize");
+      print("Width: ${windowSize.width}");
+      print("Grid Size Max: $gridSizeMax");
     }
 
-    if (amount < 0) {
-      if (_gridSize + amount <= 0) {
-        _gridSize = 1;
-      } else {
-        _gridSize += amount;
-      }
-    } else if (amount > 0) {
-      if (_gridSize + amount >= _gridSizeMax) {
-        _gridSize = _gridSizeMax;
-      } else {
-        _gridSize += amount;
+    // Set the grid size to the maximum on first startup
+    if (_gridSize == 0) {
+      _gridSize = gridSizeMax;
+    }
+
+    // Make sure the grid size isn't currently invalid (too many columns)
+    // such as due to a window size change
+    else if (_gridSize > gridSizeMax) {
+      _gridSize = gridSizeMax;
+    }
+
+    // Otherwise adjust by provided amount
+    else if (_gridSize > 0) {
+      // Scale the amount increase on larger screens
+      amount *= gridSizeMax > 10 ? 2 : 1;
+
+      // If removing columns
+      if (amount < 0) {
+        // Make sure the grid size can't go below 1
+        if (_gridSize + amount <= 0) {
+          _gridSize = 1;
+        } else {
+          _gridSize += amount;
+        }
+
+        // If adding columns
+      } else if (amount > 0) {
+        // Make sure the grid size can't go above the max size
+        if (_gridSize + amount > gridSizeMax) {
+          _gridSize = gridSizeMax;
+        } else {
+          _gridSize += amount;
+        }
       }
     }
     setState(() {
@@ -87,6 +116,10 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Refresh the grid minimum size
+    _changeGridSize(0);
+
+    // Normal widget building
     return Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by

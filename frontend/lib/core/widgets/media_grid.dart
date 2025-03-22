@@ -53,6 +53,7 @@ import '../constants/constants.dart';
 // }
 
 
+// THIS IS THE GOOD ONE BTW USE IT ELSEWHERE :D
 class MediaGrid extends StatelessWidget {
 
   const MediaGrid(
@@ -70,16 +71,16 @@ class MediaGrid extends StatelessWidget {
 
   Widget _createTappableMediaIcon(
       BuildContext context,
-      MediaModel media
+      MediaModel media,
+      GestureTapCallback? onTapForGesture,
       ) {
+    // Debug print out the url
+    if (kDebugMode) {
+      print(Constants.mediaUrlPrefix + media.mediaURL);
+    }
     // Make a nice button that has the thumbnail inside it
     return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MediaViewPage.route(media)
-          );
-        },
+      onTap: onTapForGesture,
       child: MediaIcon(media, jwt, code),
     );
   }
@@ -96,7 +97,16 @@ class MediaGrid extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return _createTappableMediaIcon(
           context,
-          mediaList[index]
+          mediaList[index],
+          () {
+            if (kDebugMode) {
+              print("FUNCTIONALOOOONNEEYNNEYEYEEYYYYNNNNYETTTTTTTT");
+            }
+            Navigator.push(
+              context,
+              MediaViewPage.route(mediaList[index])
+            );
+          }
         );
       },
       itemCount: mediaList.length,
@@ -143,7 +153,28 @@ class MediaIcon extends StatelessWidget {
 
             // TODO if no connectivity, either show no image or missing image pic if it can't get the actual image
              Expanded(
-               child: Image.network(
+               child:
+                 CachedNetworkImage( // TODO figure out CachedNetworkImage for offline first - seems to work if we remove column but need to update media icon to make text still appear
+                   // TODO see below code for authenticated images (permissions):
+                   // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
+                   // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
+                   // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
+                     imageUrl: Constants.mediaUrlPrefix + media.mediaURL,
+                     progressIndicatorBuilder: (context, url, downloadProgress) =>
+                         SizedBox(width: 32, height: 32, child: CircularProgressIndicator(value: downloadProgress.progress)),
+                     errorWidget: (context, url, error) => const Icon(Icons.error),
+                     imageBuilder: (context, imageProvider) {
+                       return Container(
+                         decoration: BoxDecoration(
+                           image: DecorationImage(
+                             image: imageProvider,
+                             fit: BoxFit.fitWidth,
+                           ),
+                         ),
+                       );
+                     }
+                 ),
+               /*Image.network(
                  Constants.mediaUrlPrefix + media.mediaURL,
                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                    if (loadingProgress == null) {
@@ -161,32 +192,13 @@ class MediaIcon extends StatelessWidget {
                 errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                   return Text('Could not load image');
                 },
-                           ),
+                           ),*/
              ),
 
             const SizedBox(height: 10)
 
 
-            // CachedNetworkImage( // TODO figure out CachedNetworkImage for offline first - seems to work if we remove column but need to update media icon to make text still appear
-            //   // TODO see below code for authenticated images (permissions):
-            //   // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
-            //   // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
-            //   // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
-            //   imageUrl: 'https://hbh7.com/resume/resources/logo.png',
-            //   progressIndicatorBuilder: (context, url, downloadProgress) =>
-            //     SizedBox(width: 32, height: 32, child: CircularProgressIndicator(value: downloadProgress.progress)),
-            //   errorWidget: (context, url, error) => const Icon(Icons.error),
-            //   imageBuilder: (context, imageProvider) {
-            //     return Container(
-            //       decoration: BoxDecoration(
-            //         image: DecorationImage(
-            //           image: imageProvider,
-            //           fit: BoxFit.fitWidth,
-            //         ),
-            //       ),
-            //     );
-            //   }
-            // ),
+
 
 
           ],

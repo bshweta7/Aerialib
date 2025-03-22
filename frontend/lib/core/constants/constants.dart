@@ -1,6 +1,13 @@
+import 'package:flutter/foundation.dart';
+import 'dart:io' show Platform;
+
 class Constants {
   // Urls
-  static String backendUri = "http://localhost:8000";
+  /*static String backendUri = "http://10.20.29.99:8000";*/
+  static String backendUri =
+    kReleaseMode ? "https://aerialib.com/api"
+      : (Platform.isAndroid || Platform.isIOS)
+        ? "http://10.20.30.203:8000" : "http://localhost:8000";
   // TODO rename to Url
   static String mediaUrlPrefix = "$backendUri/media/data";
 
