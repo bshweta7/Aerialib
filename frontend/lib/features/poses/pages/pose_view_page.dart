@@ -3,6 +3,8 @@ import 'package:frontend/core/widgets/pose_media_grid.dart';
 import 'package:frontend/features/poses/pages/edit_pose_page.dart';
 import 'package:frontend/models/pose_model.dart';
 
+import '../../../core/widgets/media_icon.dart';
+
 class PoseViewPage extends StatefulWidget {
   final PoseModel pose;
 
@@ -57,7 +59,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
           child:
             Column(
               children: [
-                Expanded(child: MediaIcon(widget.pose, "", "")),
+                Expanded(child: MediaIcon(widget.pose.name, widget.pose.primaryImageUrl, "", "")),
 
                 // // TODO Alternative Names
                 // Row(

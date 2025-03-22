@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/core/widgets/media_grid.dart';
+import 'package:frontend/core/widgets/media_icon.dart'; // TODO shouldn't use media icon here... use sliding image display
 import 'package:frontend/models/media_model.dart';
 
 
