@@ -10,7 +10,7 @@ import flowPoseRouter from "./routes/flow_poses";
 // Load values from .env file
 import 'dotenv/config'
 
-const app = express(); // TODO should this be let instaed of const
+const app = express(); // TODO should this be let instead of const
 
 app.use(logger('dev'));
 app.use(express.json());
