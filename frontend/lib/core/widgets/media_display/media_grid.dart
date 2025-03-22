@@ -1,13 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../features/media/pages/media_view_page.dart';
-import '../../models/media_model.dart';
-import '../constants/constants.dart';
+import 'package:frontend/models/media_model.dart';
+import 'package:frontend/features/media/pages/media_view_page.dart';
 
-import 'package:frontend/core/widgets/media_icon.dart';
+import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/core/widgets/media_display/media_icon.dart';
 
 // TODO if the screen is too small, only show name if tapped on ?
 

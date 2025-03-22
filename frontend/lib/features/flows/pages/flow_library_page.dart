@@ -21,7 +21,7 @@ import 'package:frontend/features/flows/widgets/poses_in_flow_card.dart';
 
 import 'package:frontend/models/flow_model.dart';
 
-import '../../../core/widgets/pose_media_grid.dart';
+import '../../../core/widgets/media_display/pose_grid.dart';
 import '../cubit/flow_pose_cubit.dart';
 
 class FlowLibraryPage extends StatefulWidget {

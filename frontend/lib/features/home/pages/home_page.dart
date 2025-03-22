@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _gridSize;
     });
-  } // TODO MOve this to pose_media_grid.dart and have it all in one.
+  } // TODO MOve this to pose_grid.dart and have it all in one.
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/media/cubit/media_cubit.dart';
 import 'package:frontend/features/media/pages/upload_new_media_page.dart';
 
-import 'package:frontend/core/widgets/media_grid.dart';
+import 'package:frontend/core/widgets/media_display/media_grid.dart';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/widgets/multi_selector.dart';
 import 'package:frontend/core/widgets/search_bar.dart';

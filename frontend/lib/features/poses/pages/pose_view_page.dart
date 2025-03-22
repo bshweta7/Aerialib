@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/core/widgets/pose_media_grid.dart';
+import 'package:frontend/core/widgets/media_display/pose_grid.dart';
 import 'package:frontend/features/poses/pages/edit_pose_page.dart';
 import 'package:frontend/models/pose_model.dart';
 
-import '../../../core/widgets/media_icon.dart';
+import '../../../core/widgets/media_display/media_icon.dart';
 
 class PoseViewPage extends StatefulWidget {
   final PoseModel pose;

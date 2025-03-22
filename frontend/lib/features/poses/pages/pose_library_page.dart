@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/widgets/pose_media_grid.dart';
+import 'package:frontend/core/widgets/media_display/pose_grid.dart';
 import 'package:frontend/core/widgets/multi_selector.dart';
 import 'package:frontend/core/widgets/search_bar.dart';
 

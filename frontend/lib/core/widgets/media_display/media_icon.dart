@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
-import '../constants/constants.dart';
+import '../../constants/constants.dart';
 
 class MediaIcon extends StatelessWidget {
   const MediaIcon(
