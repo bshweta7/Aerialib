@@ -15,6 +15,8 @@ import 'package:frontend/core/utils/search_bar.dart';
 
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/flows/cubit/flow_cubit.dart';
+import 'package:frontend/features/flows/widgets/flow_card.dart';
+import 'package:frontend/features/flows/widgets/poses_in_flow_card.dart';
 // import 'package:frontend/features/flows/pages/add_new_flow_page.dart';
 
 import 'package:frontend/models/flow_model.dart';
@@ -137,14 +139,22 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
             if (state is GetFlowsSuccess) {
               List<FlowModel> filteredFlows = state.flows.toList();
+              List<List<String>> posesInFilteredFlows = [[
+                "/default/clock.jpg",
+                "/default/man_in_the_moon.jpg"
+              ]];
+
+              // TODO take pose model not pose urls as string
+              //  List<PoseModel> posesInFilteredFlows = [[]]
+
               //     .where(
               //       (elem) =>
               //   selectedApparatus.contains(elem.apparatus)
               // ).toList();
 
-              print("AAACK");
+
               // print(flows);
-              print(filteredFlows);
+              // print(filteredFlows);
 
               // List<String> flowsNamesList = [];
               // List<String> mediaPathsList = [];
@@ -345,6 +355,11 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                   Expanded(
                     child: Stack(
                       children: [
+                        FlowCardList(
+                          flowsList: filteredFlows,
+                          posesInFlowsList: posesInFilteredFlows,
+                        ),
+                        // PosesInFlowCard(posesInFlowsList: posesInFilteredFlows),
                         // SingleChildScrollView(
                         //   controller: _myScrollController,
                         //   child:
