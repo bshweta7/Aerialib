@@ -58,7 +58,7 @@ class _MediaViewPageState extends State<MediaViewPage> {
               child:
               Column(
                 children: [
-                  Expanded(child: MediaIcon(widget.media, "", "")),
+                  Expanded(child: MediaIcon(widget.media.name, widget.media.mediaURL, "", "")),
 
                   // // TODO Alternative Names
                   // Row(

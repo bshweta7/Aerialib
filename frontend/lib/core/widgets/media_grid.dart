@@ -26,6 +26,7 @@ class MediaGrid extends StatelessWidget {
   final String jwt;
   final String code;
 
+
   static int calculateNewGridSize(
       int amount,
       int gridSize,
@@ -95,7 +96,7 @@ class MediaGrid extends StatelessWidget {
     // Make a nice button that has the thumbnail inside it
     return GestureDetector(
       onTap: onTapForGesture,
-      child: MediaIcon(media, jwt, code),
+      child: MediaIcon(media.name, media.mediaURL, jwt, code),
     );
   }
 
@@ -130,13 +131,15 @@ class MediaGrid extends StatelessWidget {
 
 class MediaIcon extends StatelessWidget {
   const MediaIcon(
-      this.media,
+      this.title,
+      this.mediaUrl,
       this.jwt,
       this.code,
       {super.key}
       );
 
-  final MediaModel media;
+  final String title;
+  final String mediaUrl;
   final String jwt;
   final String code;
 
@@ -153,29 +156,34 @@ class MediaIcon extends StatelessWidget {
             const SizedBox(height: 10),
 
             Text(
-              media.name,
+              title,
               style: const TextStyle(
                 fontSize: 20,
                 // fontWeight: FontWeight.bold,
               ),
               // TODO styling - dynamically change font size based on the grid size
               // TODO styling - separate text within the card
-              // TODO should any filters be shown here?
             ),
 
-            // TODO thumbnail should always be the right size?
+            // TODO thumbnail should always be the right size (square)
 
             // TODO if no connectivity, either show no image or missing image pic if it can't get the actual image
              Expanded(
                child:
-                 CachedNetworkImage( // TODO figure out CachedNetworkImage for offline first - seems to work if we remove column but need to update media icon to make text still appear
+                 CachedNetworkImage(
                    // TODO see below code for authenticated images (permissions):
                    // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
                    // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
                    // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
-                     imageUrl: Constants.mediaUrlPrefix + media.mediaURL,
+                     imageUrl: Constants.mediaUrlPrefix + mediaUrl,
                      progressIndicatorBuilder: (context, url, downloadProgress) =>
-                         SizedBox(width: 32, height: 32, child: CircularProgressIndicator(value: downloadProgress.progress)),
+                         SizedBox(
+                             width: 32,
+                             height: 32,
+                             child: CircularProgressIndicator(
+                              value: downloadProgress.progress
+                             )
+                         ),
                      errorWidget: (context, url, error) => const Icon(Icons.error),
                      imageBuilder: (context, imageProvider) {
                        return Container(
@@ -188,26 +196,7 @@ class MediaIcon extends StatelessWidget {
                        );
                      }
                  ),
-               /*Image.network(
-                 Constants.mediaUrlPrefix + media.mediaURL,
-                 loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                   if (loadingProgress == null) {
-                     return child;
-                   }
-                   return Center(
-                     child: CircularProgressIndicator(
-                       value: loadingProgress.expectedTotalBytes != null
-                         ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                           : null,
-                    ),
-                  );
-                },
-                 // TODO Round edges of image
-                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                  return Text('Could not load image');
-                },
-                           ),*/
-             ),
+               ),
 
             const SizedBox(height: 10)
           ],
