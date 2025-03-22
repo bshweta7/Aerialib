@@ -69,16 +69,18 @@ class MediaGrid extends StatelessWidget {
 
   Widget _createTappableMediaIcon(
       BuildContext context,
-      MediaModel media
+      MediaModel media,
+      Function onTapForGesture,
       ) {
     // Make a nice button that has the thumbnail inside it
     return GestureDetector(
-        onTap: () {
+      onTap: onTapForGesture(),
+       /* onTap: () {
           Navigator.push(
             context,
             MediaViewPage.route(media)
           );
-        },
+        },*/
       child: MediaIcon(media, jwt, code),
     );
   }
@@ -142,7 +144,28 @@ class MediaIcon extends StatelessWidget {
 
             // TODO if no connectivity, either show no image or missing image pic if it can't get the actual image
              Expanded(
-               child: Image.network(
+               child:
+                 CachedNetworkImage( // TODO figure out CachedNetworkImage for offline first - seems to work if we remove column but need to update media icon to make text still appear
+                   // TODO see below code for authenticated images (permissions):
+                   // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
+                   // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
+                   // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
+                     imageUrl: Constants.mediaUrlPrefix + media.mediaURL,
+                     progressIndicatorBuilder: (context, url, downloadProgress) =>
+                         SizedBox(width: 32, height: 32, child: CircularProgressIndicator(value: downloadProgress.progress)),
+                     errorWidget: (context, url, error) => const Icon(Icons.error),
+                     imageBuilder: (context, imageProvider) {
+                       return Container(
+                         decoration: BoxDecoration(
+                           image: DecorationImage(
+                             image: imageProvider,
+                             fit: BoxFit.fitWidth,
+                           ),
+                         ),
+                       );
+                     }
+                 ),
+               /*Image.network(
                  Constants.mediaUrlPrefix + media.mediaURL,
                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                    if (loadingProgress == null) {
@@ -160,32 +183,13 @@ class MediaIcon extends StatelessWidget {
                 errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                   return Text('Could not load image');
                 },
-                           ),
+                           ),*/
              ),
 
             const SizedBox(height: 10)
 
 
-            // CachedNetworkImage( // TODO figure out CachedNetworkImage for offline first - seems to work if we remove column but need to update media icon to make text still appear
-            //   // TODO see below code for authenticated images (permissions):
-            //   // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
-            //   // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
-            //   // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
-            //   imageUrl: 'https://hbh7.com/resume/resources/logo.png',
-            //   progressIndicatorBuilder: (context, url, downloadProgress) =>
-            //     SizedBox(width: 32, height: 32, child: CircularProgressIndicator(value: downloadProgress.progress)),
-            //   errorWidget: (context, url, error) => const Icon(Icons.error),
-            //   imageBuilder: (context, imageProvider) {
-            //     return Container(
-            //       decoration: BoxDecoration(
-            //         image: DecorationImage(
-            //           image: imageProvider,
-            //           fit: BoxFit.fitWidth,
-            //         ),
-            //       ),
-            //     );
-            //   }
-            // ),
+
 
 
           ],

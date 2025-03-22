@@ -1,5 +1,5 @@
 class Constants {
-  static String backendUri = "http://localhost:8000";
+  static String backendUri = "http://10.20.29.99:8000";
   static List<String> apparatusOptions = ["Lyra", "Hammock", "Conditioning"];
   static List<int> levelOptions = [0, 1, 2, 3, 4];
   static List<String> shareOptions = ["Default", "My Images", "Shared with Me"];
