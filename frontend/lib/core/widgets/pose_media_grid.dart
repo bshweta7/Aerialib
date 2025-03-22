@@ -1,12 +1,10 @@
-import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:frontend/features/poses/pages/pose_view_page.dart';
 import 'package:frontend/models/pose_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 import '../constants/constants.dart';
 
+// TODO combine with media_grid
 
 // TODO: Enable swipe down to reload
 

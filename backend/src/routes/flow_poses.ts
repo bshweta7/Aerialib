@@ -4,6 +4,9 @@ import { NewFlowPose, flowPosesTable } from "../db/schema";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
 
+
+// TODO THIS MIGHT NOT BE NECESSARY (MERGE INTO FLOW.TS)
+
 const flowPoseRouter = Router();
 
 flowPoseRouter.post("/", auth, async (req: AuthRequest, res) => {

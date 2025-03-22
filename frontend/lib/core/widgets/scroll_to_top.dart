@@ -4,9 +4,9 @@ class ScrollToTopButton extends StatefulWidget {
   final ScrollController scrollController;
 
   const ScrollToTopButton({
-    Key? key,
+    super.key,
     required this.scrollController,
-  }) : super(key: key);
+  });
 
   @override
   _ScrollToTopButtonState createState() => _ScrollToTopButtonState();

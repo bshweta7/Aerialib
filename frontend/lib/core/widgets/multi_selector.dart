@@ -9,14 +9,14 @@ class MultiSelect<T> extends StatefulWidget {
   final String? Function(List<T>?)? validator;
 
   const MultiSelect({
-    Key? key,
+    super.key,
     required this.options,
     required this.initialValues,
     // required this.label,
     required this.getLabel,
     required this.onSelectionChanged,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   State<MultiSelect<T>> createState() => _MultiSelectState<T>();

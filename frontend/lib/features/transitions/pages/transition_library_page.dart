@@ -9,8 +9,8 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/transitions/cubit/transition_cubit.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/utils/multi_selector.dart';
-import 'package:frontend/core/utils/search_bar.dart';
+import 'package:frontend/core/widgets/multi_selector.dart';
+import 'package:frontend/core/widgets/search_bar.dart';
 
 import 'package:frontend/models/transition_model.dart';
 

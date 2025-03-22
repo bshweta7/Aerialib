@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// NOTE: this page is reserved for quick-testing features
 // TESTING REORDERABLE WIDGETS
 
 class TestPage extends StatefulWidget {

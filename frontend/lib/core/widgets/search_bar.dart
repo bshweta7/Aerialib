@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+
+// TODO finish implementing this - search functionality and suggestions
+
 class SearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
   final VoidCallback? onSearchSubmitted;

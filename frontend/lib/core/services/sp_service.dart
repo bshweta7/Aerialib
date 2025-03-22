@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TODO understand this portion more
 /// Shared Preferences Service
 class SpService {
   /// Set the token

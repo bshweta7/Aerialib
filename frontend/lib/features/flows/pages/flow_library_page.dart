@@ -1,3 +1,6 @@
+// TODO this page will show all of the flows accessible to user, with filters for apparatus
+
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -5,36 +8,40 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/media/cubit/media_cubit.dart';
-import 'package:frontend/features/media/pages/upload_new_media_page.dart';
-
-import 'package:frontend/core/widgets/media_grid.dart';
 import 'package:frontend/core/constants/constants.dart';
+// import 'package:frontend/core/utils/flow_media_grid.dart';
 import 'package:frontend/core/widgets/multi_selector.dart';
 import 'package:frontend/core/widgets/search_bar.dart';
 
-import 'package:frontend/models/media_model.dart';
+import 'package:frontend/features/auth/cubit/auth_cubit.dart';
+import 'package:frontend/features/flows/cubit/flow_cubit.dart';
+import 'package:frontend/features/flows/widgets/flow_card.dart';
+import 'package:frontend/features/flows/widgets/poses_in_flow_card.dart';
+// import 'package:frontend/features/flows/pages/add_new_flow_page.dart';
 
+import 'package:frontend/models/flow_model.dart';
 
-class MediaLibraryPage extends StatefulWidget {
+import '../../../core/widgets/pose_media_grid.dart';
+
+class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
       MaterialPageRoute(
-        builder: (context) => const MediaLibraryPage(),
+        builder: (context) => const FlowLibraryPage(),
       );
-  const MediaLibraryPage({super.key});
+  const FlowLibraryPage({super.key});
 
   @override
-  State<MediaLibraryPage> createState() => _MediaLibraryPageState();
+  State<FlowLibraryPage> createState() => _FlowLibraryPageState();
 }
 
-class _MediaLibraryPageState extends State<MediaLibraryPage> {
+class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
-  int _gridSize = 0; // Start at 0 and set automatically during the first build
+  int _gridSize = 3; // Start at 0 and set during the first build
+  int _gridSizeMax = 10; // TODO set this dynamically when building
   String _searchQuery = ''; // To store the current search query
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
   List<String> selectedApparatus = Constants.apparatusOptions;
-  List<String> selectedShareStatus = Constants.shareOptions; // TODO
+  List<int> selectedLevels = Constants.levelOptions;
   bool _isContainerVisible = false; // Initially hidden
   final ScrollController _myScrollController = ScrollController();
   bool _areOptionsVisible = false; // Track visibility
@@ -44,12 +51,13 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    context.read<MediaCubit>().getAllMedia(token: user.user.token);
+    context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
     Connectivity().onConnectivityChanged.listen((data) async {
       if (data.contains(ConnectivityResult.wifi)) {
         print("Wifi Available");
-        await context.read<MediaCubit>().syncMedia(user.user.token);
+        await context.read<FlowsCubit>().syncFlows(user.user.token);
+        // TODO Sync flows when coming back to the page, even if there is no change in wifi connectivity -- accounts for adding a new flow and returning to the flow library (maybe ??)
 
       } else {
         print("No wifi available");
@@ -58,54 +66,24 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
   }
 
   // Function to handle changing the size of the photo grid
-  // TODO: THIS IS THE NEW AND GOOD ONE! Duplicate it elsewhere if needed
   void _changeGridSize(int amount) {
-    // Adjust this variable higher to allow less items on screen per a given width
-    // Basically its doing (windowWidth / windowSizeFactor)
-    int windowSizeFactor = 205;
+    // Make sure the grid size can't go below 1 or above the max size
 
-    // Detect current width and calculate a maximum grid size (column count)
-    Size windowSize = MediaQuery.of(context).size;
-    int gridSizeMax = (windowSize.width / windowSizeFactor).ceil();
-    if (kDebugMode) {
-      print("Window Size: $windowSize");
-      print("Width: ${windowSize.width}");
-      print("Grid Size Max: $gridSizeMax");
+    if (_gridSize > 10) {
+      amount *= kIsWeb ? 2 : 1;
     }
 
-    // Set the grid size to the maximum on first startup
-    if (_gridSize == 0) {
-      _gridSize = gridSizeMax;
-    }
-
-    // Make sure the grid size isn't currently invalid (too many columns)
-    // such as due to a window size change
-    else if (_gridSize > gridSizeMax) {
-      _gridSize = gridSizeMax;
-    }
-
-    // Otherwise adjust by provided amount
-    else if (_gridSize > 0) {
-      // Scale the amount increase on larger screens
-      amount *= gridSizeMax > 10 ? 2 : 1;
-
-      // If removing columns
-      if (amount < 0) {
-        // Make sure the grid size can't go below 1
-        if (_gridSize + amount <= 0) {
-          _gridSize = 1;
-        } else {
-          _gridSize += amount;
-        }
-
-        // If adding columns
-      } else if (amount > 0) {
-        // Make sure the grid size can't go above the max size
-        if (_gridSize + amount > gridSizeMax) {
-          _gridSize = gridSizeMax;
-        } else {
-          _gridSize += amount;
-        }
+    if (amount < 0) {
+      if (_gridSize + amount <= 0) {
+        _gridSize = 1;
+      } else {
+        _gridSize += amount;
+      }
+    } else if (amount > 0) {
+      if (_gridSize + amount >= _gridSizeMax) {
+        _gridSize = _gridSizeMax;
+      } else {
+        _gridSize += amount;
       }
     }
     setState(() {
@@ -116,15 +94,11 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Refresh the grid minimum size
-    _changeGridSize(0);
-
-    // Normal widget building
     return Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: const Text("Media Library"),
+          title: const Text("Flow Library"),
           centerTitle: true,
           actions: [
             IconButton(
@@ -144,55 +118,80 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
           ],
         ),
 
-        body: BlocBuilder<MediaCubit, MediaState>(
+        body: BlocBuilder<FlowsCubit, FlowsState>(
           builder: (context, state) {
 
-            if (state is MediaLoading) {
+            if (state is FlowLoading) {
               return const Center(child: CircularProgressIndicator(),);
             }
 
-            if (state is MediaError) {
-              print("Error: State is Media Error");
+            if (state is FlowError) {
+              print("Error: State is Flow Error");
               return Center(
                 child: Column(
                   children: [
-                    const Text("State media error"),
+                    const Text("State flow error"),
                     Text(state.error),
                   ],
                 ),
               );
             }
 
-            if (state is GetMediaListSuccess) {
-              final mediaList = state.mediaList.toList();
-              // TODO FILTERING: final medias = state.medias.where(
-              //                       (elem) =>
-              //                   DateFormat('d').format(elem.dueAt) == DateFormat('d').format(selectedDate) &&
-              //                       selectedDate.month == elem.dueAt.month &&
-              //                       selectedDate.year == elem.dueAt.year
-              //               ).toList();
+            if (state is GetFlowsSuccess) {
+              List<FlowModel> filteredFlows = state.flows.toList();
+              List<List<String>> posesInFilteredFlows = [[
+                "/default/clock.jpg",
+                "/default/man_in_the_moon.jpg"
+              ]];
 
-              List<MediaModel> filteredMedia = state.mediaList.where(
-                    (elem) =>
-                selectedApparatus.contains(elem.apparatus)
-                    // && selectedShareStatus.contains(elem.apparatus), // TODO USER - needs more work
-              ).toList();
+              // TODO take pose model not pose urls as string
+              //  List<PoseModel> posesInFilteredFlows = [[]]
 
+              //     .where(
+              //       (elem) =>
+              //   selectedApparatus.contains(elem.apparatus)
+              // ).toList();
+
+
+              // print(flows);
+              // print(filteredFlows);
+
+              // List<String> flowsNamesList = [];
+              // List<String> mediaPathsList = [];
+              //
+              // for (int i = 0; i < filteredFlows.length; i++) {
+              //   flowsNamesList.add(filteredFlows[i].name);
+              //   mediaPathsList.add("http://localhost:8000/media/data"+filteredFlows[i].primaryImageUrl);
+              // }
+
+              // TODO REMOVE THE NAMES LIST ABOVE
+
+                //       media.add(Media(
+                //         responseJson[i]["media_id"].toString(), MediaType.photo,
+                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/thumbnail',
+                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/media',
+                //       ));
+                //       media[i].filename = responseJson[i]["filename"];
+                //       media[i].takenTimestamp = (responseJson[i]["date_taken"] != null) ? DateTime.parse(responseJson[i]["date_taken"]) : DateTime.now();
+                //     }
+
+              // print("FLOWS FROM HOME PAGE");
+              // print(flows);
+              // print("NAMES");
+              // print(flowsNamesList);
 
               return Column(
                 children: [
 
                   // Filters Section
-                  // TODO Remove levels filtering
-                  // TODO Add filter by UploadedBy (maybe Uploaded by me vs shared with me vs default)
                   Container(
                     width: double.infinity, // Expand horizontally
                     margin: const EdgeInsets.symmetric(
                       vertical: 10,
                     ),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 10.0
+                      vertical: 10.0,
+                      horizontal: 10.0
                     ),
                     decoration: BoxDecoration(
                       color: Colors.purple.shade100,
@@ -264,15 +263,15 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                                       },
                                       // getLabel: (String apparatus) => apparatus, // Simple string case
                                       onSelectionChanged: (List<String> selected) {
+                                        // TODO update the flows visible
                                         print('Selected Apparatus: $selected');
                                         setState(() {
                                           selectedApparatus = selected;
                                         });
                                       },
                                       validator: (value) {
-                                        // TODO Verify why this doesn't work or remove altogether (also see pose librarly)
                                         if (value == null || value.isEmpty) {
-                                          // const SnackBar(content: Text('Please select at least one apparatus'));
+                                          const SnackBar(content: Text('Please select at least one apparatus'));
                                           return 'Please select at least one apparatus';
                                         }
                                         return null;
@@ -283,49 +282,42 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
 
                                 SizedBox(height:10),
 
-                                // Shared Filter
-                                Wrap(
+                                // Level Filter
+                                Wrap( // Changed to Wrap
                                   alignment: WrapAlignment.start,
                                   spacing: 8.0, // Space between children horizontally
                                   runSpacing: 4.0, // Space between lines vertically
                                   children: [
                                     const Text(
-                                      "Share Option:   ",
+                                      "Level:   ",
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
 
-                                    MultiSelect(
-                                      options: Constants.shareOptions,
-                                      initialValues: selectedShareStatus,
-                                      getLabel: (String shareStatus) {
-                                        if (shareStatus.isEmpty) {
-                                          return shareStatus; // Or return some default string if needed
-                                        }
-                                        return shareStatus[0].toUpperCase() + shareStatus.substring(1);
-                                        // TODO what is this doing
-                                      },
-                                      // getLabel: (String apparatus) => apparatus, // Simple string case
-                                      onSelectionChanged: (List<String> selected) {
-                                        print('Selected Share Status: $selected');
+                                    MultiSelect<int>(
+                                      options: Constants.levelOptions,
+                                      initialValues: selectedLevels,
+                                      getLabel: (int level) => 'Level $level',
+                                      // TODO Format level 0 to intro
+                                      // TODO should level even be an int? consider "level 1+" terminology
+                                      onSelectionChanged: (List<int> selected) {
+                                        print('Selected Levels: $selected');
                                         setState(() {
-                                          selectedShareStatus = selected;
+                                          selectedLevels = selected;
                                         });
                                       },
                                       validator: (value) {
-                                        // TODO Verify why this doesn't work or remove altogether (also see pose librarly)
                                         if (value == null || value.isEmpty) {
-                                          // const SnackBar(content: Text('Please select at least one apparatus'));
-                                          return 'Please select at least one share status';
+                                          const SnackBar(content: Text('Please select at least one level'));
+                                          return 'Please select at least one level';
                                         }
                                         return null;
                                       },
-                                    ),
+                                    )
                                   ],
                                 ),
-
                                 SizedBox(height:10),
 
                               ],
@@ -342,6 +334,7 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                         horizontal: 20.0
                     ),
                     child: SearchBarWidget(
+                      // suggestionList: ['Test 1', 'Test 2', 'Test 3'],
                       onSearchChanged: (query) {
                         setState(() {
                           _searchQuery = query;
@@ -362,23 +355,28 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                   Expanded(
                     child: Stack(
                       children: [
-                        // TODO : need to update media Grid to take media not poseModel
-                        SingleChildScrollView(
-                          controller: _myScrollController,
-                          child: MediaGrid(
-                            filteredMedia,
-                            _gridSize,
-                            "",
-                            "",
-                          ),
+                        FlowCardList(
+                          flowsList: filteredFlows,
+                          posesInFlowsList: posesInFilteredFlows,
                         ),
+                        // PosesInFlowCard(posesInFlowsList: posesInFilteredFlows),
+                        // SingleChildScrollView(
+                        //   controller: _myScrollController,
+                        //   child:
+                        //   PoseMediaGrid( // TODO MAKE FLOW MEDIA GRID
+                        //     filteredFlows,
+                        //     _gridSize,
+                        //     "",
+                        //     "",
+                        //   ),
+                        //
+                        // ),
 
                         Positioned(
                           bottom: 20,
                           right: 20,
 
                           // Options Button
-                          // TODO Make a Floating Action Button widget so its easy to remember the hero tag
                           child: FloatingActionButton(
                             heroTag: 'pageOptionsFAB',
                             tooltip: 'Open page options',
@@ -402,26 +400,26 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                               onPressed: () {
                                 // TODO implement reset filters
                                 selectedApparatus = Constants.apparatusOptions;
-                                selectedShareStatus = Constants.shareOptions;
+                                selectedLevels = Constants.levelOptions;
                               },
                               child: const Icon(CupertinoIcons.refresh),
                             ),
                           ),
 
-                        // Show add new media button
-                        if (_areOptionsVisible) // Conditional rendering of other buttons
-                          Positioned(
-                            bottom: 180,
-                            right: 20,
-                            child: FloatingActionButton(
-                              heroTag: 'newMediaFAB',
-                              tooltip: 'Upload new media',
-                              onPressed: () {
-                                Navigator.push(context, UploadNewMediaPage.route());
-                              },
-                              child: const Icon(CupertinoIcons.add),
-                            ),
-                          ),
+                        // // Show add new flow button
+                        // if (_areOptionsVisible) // Conditional rendering of other buttons
+                        //   Positioned(
+                        //     bottom: 180,
+                        //     right: 20,
+                        //     child: FloatingActionButton(
+                        //       heroTag: 'newFlowFAB',
+                        //       tooltip: 'Add new flow',
+                        //       onPressed: () {
+                        //         Navigator.push(context, AddNewFlowPage.route());
+                        //       },
+                        //       child: const Icon(CupertinoIcons.add),
+                        //     ),
+                        //   ),
 
                         // Show scroll to top of page button
                         if (_areOptionsVisible)
@@ -430,7 +428,6 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                             right: 20,
                             child: FloatingActionButton(
                               heroTag: 'scrollTopFAB',
-                              tooltip: 'Scroll to the top of the page',
                               onPressed: () {
                                 _myScrollController.animateTo(
                                   0,
@@ -438,6 +435,7 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
                                   curve: Curves.easeInOut,
                                 );
                               },
+                              tooltip: 'Scroll to the top of the page',
                               child: const Icon(CupertinoIcons.arrow_up),
                             ),
 
