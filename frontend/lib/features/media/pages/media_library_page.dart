@@ -62,7 +62,7 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
   void _changeGridSize(int amount) {
     // Adjust this variable higher to allow less items on screen per a given width
     // Basically its doing (windowWidth / windowSizeFactor)
-    int windowSizeFactor = 300;
+    int windowSizeFactor = 205;
 
     // Detect current width and calculate a maximum grid size (column count)
     Size windowSize = MediaQuery.of(context).size;

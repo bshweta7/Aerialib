@@ -52,6 +52,7 @@ import '../constants/constants.dart';
 // }
 
 
+// THIS IS THE GOOD ONE BTW USE IT ELSEWHERE :D
 class MediaGrid extends StatelessWidget {
 
   const MediaGrid(
@@ -70,17 +71,15 @@ class MediaGrid extends StatelessWidget {
   Widget _createTappableMediaIcon(
       BuildContext context,
       MediaModel media,
-      Function onTapForGesture,
+      GestureTapCallback? onTapForGesture,
       ) {
+    // Debug print out the url
+    if (kDebugMode) {
+      print(Constants.mediaUrlPrefix + media.mediaURL);
+    }
     // Make a nice button that has the thumbnail inside it
     return GestureDetector(
-      onTap: onTapForGesture(),
-       /* onTap: () {
-          Navigator.push(
-            context,
-            MediaViewPage.route(media)
-          );
-        },*/
+      onTap: onTapForGesture,
       child: MediaIcon(media, jwt, code),
     );
   }
@@ -97,7 +96,16 @@ class MediaGrid extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return _createTappableMediaIcon(
           context,
-          mediaList[index]
+          mediaList[index],
+          () {
+            if (kDebugMode) {
+              print("FUNCTIONALOOOONNEEYNNEYEYEEYYYYNNNNYETTTTTTTT");
+            }
+            Navigator.push(
+              context,
+              MediaViewPage.route(mediaList[index])
+            );
+          }
         );
       },
       itemCount: mediaList.length,
