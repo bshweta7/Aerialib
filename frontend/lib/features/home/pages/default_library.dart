@@ -1,1 +1,0 @@
-// TODO make offline/not logged in pose library

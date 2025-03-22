@@ -8,9 +8,10 @@ import '../../features/media/pages/media_view_page.dart';
 import '../../models/media_model.dart';
 import '../constants/constants.dart';
 
+// TODO reference media.dart in apeturama
+// TODO clean up media grid across all features
 
 // TODO: Enable swipe down to reload
-
 // TODO will eventually need to call media with jwt auth to ensure permissions
 // See if code below is helpful ----
 

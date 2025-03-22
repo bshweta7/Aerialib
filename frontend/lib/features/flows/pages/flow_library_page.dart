@@ -10,8 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 // import 'package:frontend/core/utils/flow_media_grid.dart';
-import 'package:frontend/core/utils/multi_selector.dart';
-import 'package:frontend/core/utils/search_bar.dart';
+import 'package:frontend/core/widgets/multi_selector.dart';
+import 'package:frontend/core/widgets/search_bar.dart';
 
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/flows/cubit/flow_cubit.dart';
@@ -21,7 +21,7 @@ import 'package:frontend/features/flows/widgets/poses_in_flow_card.dart';
 
 import 'package:frontend/models/flow_model.dart';
 
-import '../../../core/utils/pose_media_grid.dart';
+import '../../../core/widgets/pose_media_grid.dart';
 
 class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>

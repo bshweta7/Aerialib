@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/core/utils/pose_media_grid.dart';
+import 'package:frontend/core/widgets/pose_media_grid.dart';
 import 'package:frontend/features/poses/pages/edit_pose_page.dart';
 import 'package:frontend/models/pose_model.dart';
 
