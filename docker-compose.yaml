@@ -14,7 +14,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/data
+      - ./backend/data:/app/data
     depends_on:
       - db
 
