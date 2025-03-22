@@ -22,6 +22,7 @@ import 'package:frontend/features/flows/widgets/poses_in_flow_card.dart';
 import 'package:frontend/models/flow_model.dart';
 
 import '../../../core/widgets/pose_media_grid.dart';
+import '../cubit/flow_pose_cubit.dart';
 
 class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -144,18 +145,6 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                 "/default/man_in_the_moon.jpg"
               ]];
 
-              // TODO take pose model not pose urls as string
-              //  List<PoseModel> posesInFilteredFlows = [[]]
-
-              //     .where(
-              //       (elem) =>
-              //   selectedApparatus.contains(elem.apparatus)
-              // ).toList();
-
-
-              // print(flows);
-              // print(filteredFlows);
-
               // List<String> flowsNamesList = [];
               // List<String> mediaPathsList = [];
               //
@@ -163,22 +152,6 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
               //   flowsNamesList.add(filteredFlows[i].name);
               //   mediaPathsList.add("http://localhost:8000/media/data"+filteredFlows[i].primaryImageUrl);
               // }
-
-              // TODO REMOVE THE NAMES LIST ABOVE
-
-                //       media.add(Media(
-                //         responseJson[i]["media_id"].toString(), MediaType.photo,
-                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/thumbnail',
-                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/media',
-                //       ));
-                //       media[i].filename = responseJson[i]["filename"];
-                //       media[i].takenTimestamp = (responseJson[i]["date_taken"] != null) ? DateTime.parse(responseJson[i]["date_taken"]) : DateTime.now();
-                //     }
-
-              // print("FLOWS FROM HOME PAGE");
-              // print(flows);
-              // print("NAMES");
-              // print(flowsNamesList);
 
               return Column(
                 children: [
