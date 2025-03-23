@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:frontend/models/media_model.dart';
 import 'package:frontend/features/media/pages/media_view_page.dart';
 import 'package:frontend/core/widgets/media_display/media_icon.dart';

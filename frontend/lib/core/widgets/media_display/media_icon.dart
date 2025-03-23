@@ -31,41 +31,44 @@ class MediaIcon extends StatelessWidget {
         ),
         child: Center(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 10),
 
               // TODO thumbnail should always be the right size (square)
 
               // TODO if no connectivity, either show no image or missing image pic if it can't get the actual image
-              Expanded(
-                child:
-                CachedNetworkImage(
-                  // TODO see below code for authenticated images (permissions):
-                  // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
-                  // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
-                  // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
-                    imageUrl: Constants.mediaUrlPrefix + mediaUrl,
-                    progressIndicatorBuilder: (context, url, downloadProgress) =>
-                        SizedBox(
-                            width: 32,
-                            height: 32,
-                            child: CircularProgressIndicator(
-                                value: downloadProgress.progress
-                            )
-                        ),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.fitWidth,
+              // AspectRatio(
+              //   aspectRatio: 1.0,
+              //   child: CachedNetworkImage(
+                Expanded( // TODO remove this and add aspect ratio back to make it take the whole space
+                  child: CachedNetworkImage(
+                    // TODO see below code for authenticated images (permissions):
+                    // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
+                    // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
+                    // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
+                      imageUrl: Constants.mediaUrlPrefix + mediaUrl,
+                      progressIndicatorBuilder: (context, url, downloadProgress) =>
+                          SizedBox(
+                              width: 32,
+                              height: 32,
+                              child: CircularProgressIndicator(
+                                  value: downloadProgress.progress
+                              )
                           ),
-                        ),
-                      );
-                    }
+                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                      imageBuilder: (context, imageProvider) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        );
+                      }
+                  ),
                 ),
-              ),
+              // ),
 
               Text(
                 caption,
@@ -76,8 +79,6 @@ class MediaIcon extends StatelessWidget {
                 // TODO styling - dynamically change font size based on the grid size
                 // TODO styling - separate text within the card
               ),
-
-              const SizedBox(height: 10)
             ],
           ),
         ),
