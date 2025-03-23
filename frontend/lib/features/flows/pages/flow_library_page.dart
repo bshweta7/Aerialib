@@ -9,20 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-// import 'package:frontend/core/utils/flow_media_grid.dart';
 import 'package:frontend/core/widgets/multi_selector.dart';
 import 'package:frontend/core/widgets/search_bar.dart';
+import 'package:frontend/core/widgets/media_display/media_utils.dart';
 
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/flows/cubit/flow_cubit.dart';
 import 'package:frontend/features/flows/widgets/flow_card.dart';
-import 'package:frontend/features/flows/widgets/poses_in_flow_card.dart';
-// import 'package:frontend/features/flows/pages/add_new_flow_page.dart';
 
 import 'package:frontend/models/flow_model.dart';
 
-import '../../../core/widgets/media_display/pose_grid.dart';
-import '../cubit/flow_pose_cubit.dart';
+import '../../../core/widgets/media_display/media_card.dart';
+
 
 class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -38,7 +36,6 @@ class FlowLibraryPage extends StatefulWidget {
 class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
   int _gridSize = 3; // Start at 0 and set during the first build
-  int _gridSizeMax = 10; // TODO set this dynamically when building
   String _searchQuery = ''; // To store the current search query
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
   List<String> selectedApparatus = Constants.apparatusOptions;
@@ -66,32 +63,14 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
     });
   }
 
-  // Function to handle changing the size of the photo grid
-  void _changeGridSize(int amount) {
-    // Make sure the grid size can't go below 1 or above the max size
-
-    if (_gridSize > 10) {
-      amount *= kIsWeb ? 2 : 1;
-    }
-
-    if (amount < 0) {
-      if (_gridSize + amount <= 0) {
-        _gridSize = 1;
-      } else {
-        _gridSize += amount;
-      }
-    } else if (amount > 0) {
-      if (_gridSize + amount >= _gridSizeMax) {
-        _gridSize = _gridSizeMax;
-      } else {
-        _gridSize += amount;
-      }
-    }
+  void changeGridSize(int amount) {
+    // Detect current width and calculate a maximum grid size (column count)
+    Size windowSize = MediaQuery.of(context).size;
+    _gridSize = calculateNewGridSize(amount, _gridSize, windowSize, kDebugMode);
     setState(() {
-      _gridSize; // TODO should this be cubit-ified?
+      _gridSize;
     });
-  } // TODO Move this to utils.dart
-
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,14 +84,14 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
             IconButton(
               icon: const Icon(Icons.remove_circle_outline),
               onPressed: () {
-                _changeGridSize(1);
+                changeGridSize(1);
               },
               tooltip: 'Decrease Image Size',
             ),
             IconButton(
               icon: const Icon(Icons.add_circle_outline),
               onPressed: () {
-                _changeGridSize(-1);
+                changeGridSize(-1);
               },
               tooltip: 'Increase Image Size',
             ),
@@ -140,6 +119,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
             if (state is GetFlowsSuccess) {
               List<FlowModel> filteredFlows = state.flows.toList();
+              print(filteredFlows);
               List<List<String>> posesInFilteredFlows = [[
                 "/default/clock.jpg",
                 "/default/man_in_the_moon.jpg"
@@ -256,6 +236,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                                 SizedBox(height:10),
 
                                 // Level Filter
+                                // TODO - add level column to flows table
                                 Wrap( // Changed to Wrap
                                   alignment: WrapAlignment.start,
                                   spacing: 8.0, // Space between children horizontally
@@ -332,6 +313,10 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                           flowsList: filteredFlows,
                           posesInFlowsList: posesInFilteredFlows,
                         ),
+
+                      // MediaCard(
+                      //   flow
+                      // )
                         // PosesInFlowCard(posesInFlowsList: posesInFilteredFlows),
                         // SingleChildScrollView(
                         //   controller: _myScrollController,

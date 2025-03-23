@@ -16,6 +16,8 @@ import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
 
 import 'package:frontend/models/pose_model.dart';
 
+import '../../../core/widgets/media_display/media_utils.dart';
+
 class PoseLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
       MaterialPageRoute(
@@ -58,32 +60,14 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
-  // Function to handle changing the size of the photo grid
-  void _changeGridSize(int amount) {
-    // Make sure the grid size can't go below 1 or above the max size
-
-    if (_gridSize > 10) {
-      amount *= kIsWeb ? 2 : 1;
-    }
-
-    if (amount < 0) {
-      if (_gridSize + amount <= 0) {
-        _gridSize = 1;
-      } else {
-        _gridSize += amount;
-      }
-    } else if (amount > 0) {
-      if (_gridSize + amount >= _gridSizeMax) {
-        _gridSize = _gridSizeMax;
-      } else {
-        _gridSize += amount;
-      }
-    }
+  void changeGridSize(int amount) {
+    // Detect current width and calculate a maximum grid size (column count)
+    Size windowSize = MediaQuery.of(context).size;
+    _gridSize = calculateNewGridSize(amount, _gridSize, windowSize, kDebugMode);
     setState(() {
-      _gridSize; // TODO should this be cubit-ified?
+      _gridSize;
     });
-  } // TODO Move this to utils.dart
-
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,14 +81,14 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             IconButton(
               icon: const Icon(Icons.remove_circle_outline),
               onPressed: () {
-                _changeGridSize(1);
+                changeGridSize(1);
               },
               tooltip: 'Decrease Image Size',
             ),
             IconButton(
               icon: const Icon(Icons.add_circle_outline),
               onPressed: () {
-                _changeGridSize(-1);
+                changeGridSize(-1);
               },
               tooltip: 'Increase Image Size',
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:frontend/core/constants/constants.dart';
+
+import 'cached_network_image.dart';
 
 class MediaIcon extends StatelessWidget {
   // Creates tappable media icon
@@ -41,32 +41,7 @@ class MediaIcon extends StatelessWidget {
               //   aspectRatio: 1.0,
               //   child: CachedNetworkImage(
                 Expanded( // TODO remove this and add aspect ratio back to make it take the whole space
-                  child: CachedNetworkImage(
-                    // TODO see below code for authenticated images (permissions):
-                    // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
-                    // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code),
-                    // imageUrl: 'http://localhost:8000/media/data/testing/clock.jpg',
-                      imageUrl: Constants.mediaUrlPrefix + mediaUrl,
-                      progressIndicatorBuilder: (context, url, downloadProgress) =>
-                          SizedBox(
-                              width: 32,
-                              height: 32,
-                              child: CircularProgressIndicator(
-                                  value: downloadProgress.progress
-                              )
-                          ),
-                      errorWidget: (context, url, error) => const Icon(Icons.error),
-                      imageBuilder: (context, imageProvider) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        );
-                      }
-                  ),
+                  child: CustomizedCachedNetworkImage(mediaUrl),
                 ),
               // ),
 
