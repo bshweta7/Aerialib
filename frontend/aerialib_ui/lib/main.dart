@@ -4,6 +4,7 @@ import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/auth/pages/login_page.dart';
 import 'package:frontend/features/auth/pages/signup_page.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
+import 'package:frontend/features/home/pages/web_landing_page.dart';
 
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 
@@ -96,7 +97,8 @@ class _MyAppState extends State<MyApp> {
             if (state is AuthLoggedIn) {
               return const HomePage();
             } else {
-              return const LoginPage();
+              // TODO  return const LoginPage();
+              return const WebLandingPage();
             }
 
           }

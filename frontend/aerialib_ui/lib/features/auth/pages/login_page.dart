@@ -54,9 +54,9 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           if(state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Could not login"),
-                // content: Text(state.error), //TODO update snackbar to show more specific error message
+              SnackBar(
+                // content: Text("Could not login"),
+                content: Text(state.error), //TODO update snackbar to show more specific error message
               ),
             );
             resetPage(); // TODO test this

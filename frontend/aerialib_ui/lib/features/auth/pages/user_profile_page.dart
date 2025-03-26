@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/utils.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
+import 'package:frontend/features/auth/pages/login_page.dart';
 import 'package:frontend/features/home/pages/test_page.dart';
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 // import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
@@ -84,70 +85,13 @@ class _UserProfilePage extends State<UserProfilePage> {
                     // Pose Library Navigation
                     ElevatedButton(
                         onPressed: () {
-                          Navigator.push(context, PoseLibraryPage.route());
+                          setState(() {
+                            AuthInitial;
+                          });
+                          Navigator.push(context, LoginPage.route());
                         },
                         child: Text(
-                            state.user.name,
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 20,
-                            )
-                        )
-                    ),
-                    SizedBox(height: 10,),
-
-                    // Media Library Navigation
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, MediaLibraryPage.route());
-                        },
-                        child: const Text(
-                            "Media Library",
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 20,
-                            )
-                        )
-                    ),
-                    SizedBox(height: 10,),
-
-                    // Flow Library Navigation
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, FlowLibraryPage.route());
-                        },
-                        child: const Text(
-                            "Flow Library",
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 20,
-                            )
-                        )
-                    ),
-                    SizedBox(height: 10,),
-
-                    const SizedBox(height:30),
-
-                    const Text(
-                      "Dashboard is under development",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 24,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-
-                    // TEST PAGE Navigation
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, TestPage.route());
-                        },
-                        child: const Text(
-                            "TEST PAGE",
+                            "Log Out",
                             style: TextStyle(
                               // fontWeight: FontWeight.bold,
                               color: Colors.white,

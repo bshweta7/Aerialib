@@ -85,7 +85,7 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
 
         const token = jwt.sign({ id: existingUser.id }, "passwordKey") //TODO: move secret key to .env file
 
-        res.json({ token, ...existingUser });
+        res.json({ token, name: existingUser.name, email: existingUser.email });
 
     } catch (e) {
         console.log(e)
