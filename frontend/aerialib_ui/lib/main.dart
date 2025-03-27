@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
@@ -97,8 +98,14 @@ class _MyAppState extends State<MyApp> {
             if (state is AuthLoggedIn) {
               return const HomePage();
             } else {
-              // TODO  return const LoginPage();
-              return const WebLandingPage();
+              if (kIsWeb) {
+                // running on the web!
+                return const WebLandingPage();
+              } else {
+                // TODO Mobile landing page
+                return const LoginPage();
+                // NOT running on the web! You can check for additional platforms here.
+              }
             }
 
           }

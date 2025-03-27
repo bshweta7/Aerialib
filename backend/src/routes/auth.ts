@@ -139,6 +139,8 @@ authRouter.post("/tokenIsValid", async (req, res) => {
 // TODO pose search can use the query string: authRouter.post("/profile?level=1", async (req: Request<{}, {level}, ProfileBody>, res: Response) => {
 
 
+// TODO store jwt in .env file
+
 authRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
         if (!req.user) {

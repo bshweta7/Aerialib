@@ -1,22 +1,10 @@
 // TODO
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/core/constants/utils.dart';
 import 'package:frontend/features/auth/cubit/auth_cubit.dart';
 import 'package:frontend/features/auth/pages/login_page.dart';
-import 'package:frontend/features/home/pages/test_page.dart';
-import 'package:frontend/features/poses/cubit/poses_cubit.dart';
-// import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
-import 'package:frontend/features/poses/pages/pose_library_page.dart';
-import 'package:frontend/features/poses/widgets/pose_media_grid.dart';
-import 'package:frontend/features/poses/widgets/pose_card.dart';
-import 'package:intl/intl.dart';
 
-import '../../flows/pages/flow_library_page.dart';
-import '../../media/pages/media_library_page.dart';
 
 
 class UserProfilePage extends StatefulWidget {
@@ -57,49 +45,29 @@ class _UserProfilePage extends State<UserProfilePage> {
 
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
-
-            // if (state is PoseLoading) {
-            //   return const Center(child: CircularProgressIndicator(),);
-            // }
-            //
-            // if (state is PoseError) {
-            //   print("Error: State is Pose Error");
-            //   return Center(
-            //     child: Column(
-            //       children: [
-            //         const Text("State pose error"),
-            //         Text(state.error),
-            //       ],
-            //     ),
-            //   );
-            // }
-
             if (state is AuthLoggedIn) {
-              // final poses = state.poses.toList();
-
               return Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
 
-                    // Pose Library Navigation
                     ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            AuthInitial;
-                          });
-                          Navigator.push(context, LoginPage.route());
-                        },
-                        child: Text(
-                            "Log Out",
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 20,
-                            )
+                      onPressed: () {
+                        context.read<AuthCubit>().logout();
+                        // Optionally navigate to the login screen or perform other actions
+                        Navigator.push(context, LoginPage.route());
+                      },
+                      child: const Text(
+                        'Logout',
+                        style: TextStyle(
+                          // fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20,
                         )
-                    ),
-                    SizedBox(height: 10,),
+                      )
+                    )
+
+
 
                     // TODO add these to github tickets
                     //  Expanded(

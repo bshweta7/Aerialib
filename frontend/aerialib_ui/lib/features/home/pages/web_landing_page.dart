@@ -21,19 +21,26 @@ class _WebLandingPageState extends State<WebLandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(// Allows scrolling
-        child: Column(
-          children: <Widget>[
-            HeroSection(),
-            AboutSection(),
-            ProblemSolutionSection(),
-            KeyFeaturesSection(),
-            TestimonialsSection(),
-            PricingSection(),
-            CallToActionSection(),
-            FooterSection(),
-          ],
-        ),
+      body: Column(
+        children: [
+          // NavBar(),
+          Expanded(
+            child: SingleChildScrollView(// Allows scrolling
+              child: Column(
+                children: <Widget>[
+                  HeroSection(),
+                  AboutSection(),
+                  ProblemSolutionSection(),
+                  KeyFeaturesSection(),
+                  TestimonialsSection(),
+                  PricingSection(),
+                  CallToActionSection(),
+                  FooterSection(),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -41,6 +48,35 @@ class _WebLandingPageState extends State<WebLandingPage> {
 
 
 // --- Sections ---
+
+class NavBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.08,
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(32.0), // Increased padding for better spacing
+      decoration: BoxDecoration(
+        color: Constants.darkPurple
+      ),
+      child: Row(
+        // TODO space evenly
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Aerialib",
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.05, // Increased font size for "Aerialib"
+              fontWeight: FontWeight.w900, // Make it extra bold
+              color: Colors.white, // Make it pop with a light color against gradient
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 class HeroSection extends StatelessWidget {
   @override
@@ -51,17 +87,18 @@ class HeroSection extends StatelessWidget {
       padding: EdgeInsets.all(32.0), // Increased padding for better spacing
       decoration: BoxDecoration(
         // borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          colors: [Constants.midTeal, Constants.midPurple],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0.1, 0.25],
-          tileMode: TileMode.repeated,
-        ),
+        color: Constants.midPurple,
+        // gradient: LinearGradient(
+          // colors: [Constants.darkPurple, Constants.midPurple],
+          // begin: Alignment.topCenter,
+          // end: Alignment.bottomCenter,
+          // stops: [0.1, 0.25],
+          // tileMode: TileMode.repeated,
+        // ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+        children: [
           Text(
             "Aerialib",
             style: TextStyle(
@@ -94,7 +131,7 @@ class HeroSection extends StatelessWidget {
             // "Effortlessly create flows, track student progress, and elevate your studio's experience with the all-in-one aerial arts management app.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 20,
               color: Colors.white70, // Slightly faded for less emphasis
             ),
           ),
@@ -105,9 +142,18 @@ class HeroSection extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16), // Larger button
-              textStyle: const TextStyle(fontSize: 18, color: Colors.white),
+              textStyle: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.white
+              ),
             ),
-            child: const Text("Get Started!"),
+            child: const Text(
+              "Get Started!",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24
+              )
+            ),
           ),
           // Add your image or video here
         ],
@@ -120,9 +166,9 @@ class AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(32.0), // Increased padding for better spacing
+      // height: MediaQuery.of(context).size.height * 0.7,
+      // width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(20.0), // Increased padding for better spacing
       decoration: BoxDecoration(
         // borderRadius: BorderRadius.circular(20),
         color:Constants.backgroundBlue
@@ -131,24 +177,17 @@ class AboutSection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            "Aerialib",
+            "About Aerialib",
             style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height * 0.08, // Increased font size for "Aerialib"
-              fontWeight: FontWeight.w900, // Make it extra bold
-              color: Colors.white, // Make it pop with a light color against gradient
-              shadows: [
-                Shadow(
-                  blurRadius: 5.0,
-                  color: Colors.black.withOpacity(0.5),
-                  offset: Offset(2, 2),
-                ),
-              ],
+              fontSize: 30, // Increased font size for "Aerialib"
+              fontWeight: FontWeight.bold, // Make it extra bold
+              color: Colors.black, // Make it pop with a light color against gradient
             ),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
           SizedBox(height: 10),
           Text(
-            "The All-In-One Aerial Arts Library to Streamline Your Teaching.",
+            "Say Goodbye to Tedious Lesson Planning and Student Management.",
             style: TextStyle(
               fontSize: 28, // Increase tagline font size
               fontWeight: FontWeight.w700, // Make it bold

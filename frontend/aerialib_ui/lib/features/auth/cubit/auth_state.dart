@@ -19,3 +19,5 @@ final class AuthError extends AuthState {
 }
 
 final class AuthErrorShow extends AuthState {}
+
+class AuthLoggedOut extends AuthState {}

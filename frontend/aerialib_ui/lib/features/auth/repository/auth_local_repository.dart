@@ -88,5 +88,11 @@ class AuthLocalRepository {
     }
   }
 
+  // Function to clear user data
+  // TODO instead of clearing it altogether, it could be like facebook (login as Shweta - not you? click here)
+  Future<void> clearUser() async {
+    final db = await database;
+    await db.delete(tableName); // Delete all rows from the users table.
+  }
 
 }
