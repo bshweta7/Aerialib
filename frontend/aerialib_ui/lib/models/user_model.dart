@@ -52,8 +52,8 @@ class UserModel {
       email: map['email'] ?? '',
       name: map['name'] ?? '',
       token: map['token'] ?? '',
-      createdAt: DateTime.parse(map['createdAt']),
-      updatedAt: DateTime.parse(map['updatedAt']),
+      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : DateTime.now(), // Or handle null differently
+      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : DateTime.now(), // Or handle null differently
     );
   }
 
