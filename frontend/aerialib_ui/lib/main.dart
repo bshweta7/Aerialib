@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/cubit/auth_cubit.dart';
-import 'package:frontend/features/auth/pages/login_page.dart';
-import 'package:frontend/features/auth/pages/signup_page.dart';
-import 'package:frontend/features/home/pages/home_page.dart';
-import 'package:frontend/features/home/pages/web_landing_page.dart';
+import 'package:frontend/pages/auth/login_page.dart';
+import 'package:frontend/pages/auth/signup_page.dart';
+import 'package:frontend/pages/home/home_page.dart';
+import 'package:frontend/pages/home/web_landing_page.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/cubit/poses_cubit.dart';
