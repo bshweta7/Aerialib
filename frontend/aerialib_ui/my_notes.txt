@@ -1,0 +1,3 @@
+Release Build
+Android: flutter build apk --release
+IOS: flutter build ios --release
