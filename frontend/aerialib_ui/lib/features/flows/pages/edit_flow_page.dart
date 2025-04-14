@@ -1,8 +1,8 @@
 // TODO Allows reordering
 
 import 'package:flutter/material.dart';
-import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/poses/cubit/poses_cubit.dart';
+import 'package:frontend/cubit/auth_cubit.dart';
+import 'package:frontend/cubit/poses_cubit.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

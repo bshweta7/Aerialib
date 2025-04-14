@@ -10,8 +10,8 @@ import 'package:frontend/core/widgets/media_display/pose_grid.dart';
 import 'package:frontend/core/widgets/multi_selector.dart';
 import 'package:frontend/core/widgets/search_bar.dart';
 
-import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/poses/cubit/poses_cubit.dart';
+import 'package:frontend/cubit/auth_cubit.dart';
+import 'package:frontend/cubit/poses_cubit.dart';
 import 'package:frontend/features/poses/pages/add_new_pose_page.dart';
 
 import 'package:frontend/models/pose_model.dart';

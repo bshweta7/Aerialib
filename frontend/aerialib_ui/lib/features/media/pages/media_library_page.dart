@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/utils.dart';
 
-import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/media/cubit/media_cubit.dart';
+import 'package:frontend/cubit/auth_cubit.dart';
+import 'package:frontend/cubit/media_cubit.dart';
 import 'package:frontend/features/media/pages/upload_new_media_page.dart';
 
 import 'package:frontend/core/widgets/media_display/media_grid.dart';

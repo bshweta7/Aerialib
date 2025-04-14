@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/media/cubit/media_cubit.dart';
+import 'package:frontend/cubit/auth_cubit.dart';
+import 'package:frontend/cubit/media_cubit.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
 import 'package:frontend/features/media/pages/media_library_page.dart';
 import 'package:image_picker/image_picker.dart';

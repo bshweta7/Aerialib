@@ -13,8 +13,8 @@ import 'package:frontend/core/widgets/multi_selector.dart';
 import 'package:frontend/core/widgets/search_bar.dart';
 import 'package:frontend/core/widgets/media_display/media_utils.dart';
 
-import 'package:frontend/features/auth/cubit/auth_cubit.dart';
-import 'package:frontend/features/flows/cubit/flow_cubit.dart';
+import 'package:frontend/cubit/auth_cubit.dart';
+import 'package:frontend/cubit/flow_cubit.dart';
 import 'package:frontend/features/flows/widgets/flow_card.dart';
 
 import 'package:frontend/models/flow_model.dart';

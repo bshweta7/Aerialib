@@ -12,8 +12,8 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/cubit/poses_cubit.dart';
 
-import 'features/media/cubit/media_cubit.dart';
-import 'features/flows/cubit/flow_cubit.dart';
+import 'cubit/media_cubit.dart';
+import 'cubit/flow_cubit.dart';
 
 Future<void> main() async {
   if (Platform.isLinux ) {
