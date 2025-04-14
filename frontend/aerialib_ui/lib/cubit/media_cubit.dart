@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/core/constants/utils.dart';
+import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/repositories/media_remote_repository.dart';
 import 'package:frontend/repositories/media_local_repository.dart';
 import 'package:frontend/models/media_model.dart';

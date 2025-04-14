@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/constants.dart';
-import '../../../core/constants/utils.dart';
+import '../../../core/utils/formatters.dart';
 
 class UploadNewMediaPage extends StatefulWidget {
   static MaterialPageRoute route() => MaterialPageRoute(

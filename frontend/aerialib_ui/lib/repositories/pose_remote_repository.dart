@@ -7,7 +7,7 @@ import 'package:frontend/models/pose_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
-import 'package:frontend/core/constants/utils.dart';
+import 'package:frontend/core/utils/formatters.dart';
 
 class PoseRemoteRepository {
   final poseLocalRepository = PoseLocalRepository();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/core/constants/utils.dart';
+import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/repositories/pose_remote_repository.dart';
 import 'package:frontend/models/pose_model.dart';
 import 'package:frontend/repositories/pose_local_repository.dart';

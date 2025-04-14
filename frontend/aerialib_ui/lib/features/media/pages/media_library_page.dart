@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/core/constants/utils.dart';
+import 'package:frontend/core/utils/formatters.dart';
 
 import 'package:frontend/cubit/auth_cubit.dart';
 import 'package:frontend/cubit/media_cubit.dart';

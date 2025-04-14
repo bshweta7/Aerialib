@@ -7,7 +7,7 @@ import 'package:frontend/features/poses/pages/pose_library_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/constants.dart';
+import 'package:frontend/core/constants/constants.dart';
 
 class AddNewPosePage extends StatefulWidget {
   static MaterialPageRoute route() => MaterialPageRoute(

@@ -6,7 +6,8 @@ import 'package:frontend/cubit/poses_cubit.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/constants.dart';
+import 'package:frontend/core/constants/constants.dart';
+
 import '../../../models/pose_model.dart';
 
 class UpdatePosePage extends StatefulWidget {
