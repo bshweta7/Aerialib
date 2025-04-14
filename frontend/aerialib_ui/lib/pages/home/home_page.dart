@@ -10,8 +10,8 @@ import 'package:frontend/pages/home/test_page.dart';
 import 'package:frontend/cubit/poses_cubit.dart';
 // import 'package:frontend/pages/poses/pages/add_new_pose_page.dart';
 import 'package:frontend/pages/poses/pose_library_page.dart';
-import 'package:frontend/pages/poses/widgets/pose_media_grid.dart';
-import 'package:frontend/pages/poses/widgets/pose_card.dart';
+// import 'package:frontend/pages/poses/widgets/pose_media_grid.dart';
+// import 'package:frontend/pages/poses/widgets/pose_card.dart';
 import 'package:intl/intl.dart';
 
 import 'package:frontend/pages/auth/user_profile_page.dart';

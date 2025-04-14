@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'dart:io' show Platform;
 
+// TODO separate into separate constants.dart file
+
+
 class Constants {
   // Urls
   /*static String backendUri = "http://10.20.29.99:8000";*/
@@ -31,7 +34,5 @@ class Constants {
   static Color backgroundBlue = const Color (0xFFf0efff);
   static Color lightTeal = const Color (0xFFc0e4ec);
   static Color midTeal = const Color (0xFF79d2d5);
-
-
 
 }
