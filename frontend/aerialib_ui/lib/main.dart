@@ -6,13 +6,30 @@ import 'package:frontend/features/auth/pages/login_page.dart';
 import 'package:frontend/features/auth/pages/signup_page.dart';
 import 'package:frontend/features/home/pages/home_page.dart';
 import 'package:frontend/features/home/pages/web_landing_page.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/features/poses/cubit/poses_cubit.dart';
 
 import 'features/media/cubit/media_cubit.dart';
 import 'features/flows/cubit/flow_cubit.dart';
 
-void main() {
+Future<void> main() async {
+  // Set default window size for linux
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(300, 600), // Set your desired default width and height
+    center: true, // Optional: Center the window on the screen
+    title: 'Aerialib Linux', // Optional: Set the window title
+  );
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
+
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit()),
