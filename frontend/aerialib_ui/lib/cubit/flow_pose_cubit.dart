@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:frontend/features/flows/repository/flow_pose_remote_repository.dart';
-import 'package:frontend/features/flows/repository/flow_pose_local_repository.dart';
+import 'package:frontend/repositories/flow_pose_remote_repository.dart';
+import 'package:frontend/repositories/flow_pose_local_repository.dart';
 
 import 'package:frontend/models/flow_pose_model.dart';
 

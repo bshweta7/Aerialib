@@ -2,18 +2,22 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/features/flows/repository/flow_local_repository.dart';
-import 'package:frontend/models/flow_model.dart';
+import 'package:frontend/repositories/pose_local_repository.dart';
+import 'package:frontend/models/pose_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
-class FlowRemoteRepository {
-  final flowLocalRepository = FlowLocalRepository();
+import 'package:frontend/core/constants/utils.dart';
 
-  Future<FlowModel> createFlow({
+class PoseRemoteRepository {
+  final poseLocalRepository = PoseLocalRepository();
+
+  Future<PoseModel> createPose({
     required String name,
     required String description,
+    required String cues,
     required String apparatus,
+    required int level,
     required String primaryImageId,
     required String token,
     required String createdBy,
@@ -22,58 +26,62 @@ class FlowRemoteRepository {
     try {
       // First try POST into backend
       final res = await http.post(
-          Uri.parse("${Constants.backendUri}/flows"),
+          Uri.parse("${Constants.backendUri}/poses"),
           headers: {
             'Content-Type': 'application/json',
             'x-auth-token': token,
           },
           body: jsonEncode({
             'name': name,
-            'description': description,
+            // 'description': description,
+            // 'cues': cues,
             'apparatus': apparatus,
+            'level': level,
             'createdBy': createdBy,
             'primaryImageId': primaryImageId,
+            // TODO why doesnt this include everything? POST thunderclient didnt work when i added a nullable one like description - gave error.
           })
       );
 
       if(res.statusCode != 201) {
-        print("ERROR: Could not create flow --> POST /flows");
+        print("ERROR: Could not create pose --> POST /poses");
         throw jsonDecode(res.body)['error'];
       } else {
-        return FlowModel.fromJson(res.body);
+        return PoseModel.fromJson(res.body);
       }
 
     } catch (e) {
       try {
-        // otherwise make a FlowModel without POSTing it.
-        final flowModel = FlowModel(
+        // otherwise make a PoseModel without POSTing it.
+        final poseModel = PoseModel(
           id: const Uuid().v6(),
           name: name,
           description: description,
+          cues: cues,
           apparatus: apparatus,
+          level: level,
           createdBy: createdBy,
           updatedBy: createdBy,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           isSynced: 0,
           primaryImageId: primaryImageId,
-          primaryImageUrl: Constants.missingImageUrl, // Note: This will update in backend but is required here because it is a required field in FlowModel
+          primaryImageUrl: Constants.missingImageUrl, // Note: This will update in backend but is required here because it is a required field in PoseModel
         );
-        // await flowLocalRepository.insertFlow(flowModel); // TODO shouldnt this insert???
-        return flowModel;
+        // await poseLocalRepository.insertPose(poseModel); // TODO shouldnt this insert???
+        return poseModel;
       } catch (e) {
         rethrow;
       }
     }
   }
 
-  Future<List<FlowModel>> getFlows({
+  Future<List<PoseModel>> getPoses({
     required String token,
   }) async {
     try {
-
       final res = await http.get(
-          Uri.parse("${Constants.backendUri}/flows"),
+          Uri.parse("${Constants.backendUri}/poses"),
           headers: {
             'Content-Type': 'application/json',
             'x-auth-token': token,
@@ -81,48 +89,48 @@ class FlowRemoteRepository {
       );
 
       if(res.statusCode != 200) {
-        print("ERROR: Remote repository fetch error - GET /flows");
+        print("ERROR: Remote repository fetch error - GET /poses");
         print(res.body);
         throw jsonDecode(res.body)['error'];
       }
 
-      final remoteFlowsList = jsonDecode(res.body);
+      final remotePosesList = jsonDecode(res.body);
 
-      List<FlowModel> remoteFlowsListMapped = [];
+      List<PoseModel> remotePosesListMapped = [];
 
-      for (var element in remoteFlowsList) {
-        remoteFlowsListMapped.add(FlowModel.fromMap(element));
+      for (var element in remotePosesList) {
+        remotePosesListMapped.add(PoseModel.fromMap(element));
       }
 
-      await flowLocalRepository.insertFlows(remoteFlowsListMapped);
+      await poseLocalRepository.insertPoses(remotePosesListMapped);
 
-      return remoteFlowsListMapped;
+      return remotePosesListMapped;
     } catch (e) {
-      final flows = await flowLocalRepository.getFlows();
-      if (flows.isNotEmpty) {
-        return flows;
+      final poses = await poseLocalRepository.getPoses();
+      if (poses.isNotEmpty) {
+        return poses;
       }
       rethrow; // same as throw (e)
     }
   }
 
-  Future<bool> syncFlows({
+  Future<bool> syncPoses({
     required String token,
-    required List<FlowModel> flows,
+    required List<PoseModel> poses,
 
   }) async {
     try {
-      final flowListInMap = [];
-      for (final flow in flows) {
-        flowListInMap.add(flow.toMap());
+      final poseListInMap = [];
+      for (final pose in poses) {
+        poseListInMap.add(pose.toMap());
       }
       final res = await http.post(
-        Uri.parse("${Constants.backendUri}/flows/sync"),
+        Uri.parse("${Constants.backendUri}/poses/sync"),
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': token,
         },
-        body: jsonEncode(flowListInMap),
+        body: jsonEncode(poseListInMap),
       );
 
       if(res.statusCode != 201) {
@@ -137,31 +145,31 @@ class FlowRemoteRepository {
   }
 
 
-  Future<FlowModel> updateFlow({
-    required FlowModel updatedFlow,
+  Future<PoseModel> updatePose({
+    required PoseModel updatedPose,
     required String token,
   }) async {
     try {
       final res = await http.put(
-        Uri.parse("${Constants.backendUri}/flows/update/${updatedFlow.id}"),
+        Uri.parse("${Constants.backendUri}/poses/update/${updatedPose.id}"),
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': token,
         },
-        body: jsonEncode(updatedFlow.toJson()), // Convert FlowModel to JSON
+        body: jsonEncode(updatedPose.toJson()), // Convert PoseModel to JSON
       );
 
       if (res.statusCode != 200) {
-        print("ERROR: Could not update flow --> PUT /flows/update/${updatedFlow.id}");
+        print("ERROR: Could not update pose --> PUT /poses/update/${updatedPose.id}");
         throw jsonDecode(res.body)['error'];
       } else {
-        return FlowModel.fromJson(res.body);
+        return PoseModel.fromJson(res.body);
       }
     } catch (e) {
       try {
         // Handle local update
-        await flowLocalRepository.updateFlow(updatedFlow);
-        return updatedFlow;
+        await poseLocalRepository.updatePose(updatedPose);
+        return updatedPose;
       } catch (localUpdateError){
         rethrow;
       }

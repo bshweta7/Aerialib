@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:frontend/features/flows/repository/flow_remote_repository.dart';
-import 'package:frontend/features/flows/repository/flow_local_repository.dart';
+import 'package:frontend/repositories/flow_remote_repository.dart';
+import 'package:frontend/repositories/flow_local_repository.dart';
 
 import 'package:frontend/models/flow_model.dart';
 

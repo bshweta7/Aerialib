@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/features/media/repository/media_local_repository.dart';
+import 'package:frontend/repositories/media_local_repository.dart';
 import 'package:frontend/models/media_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
