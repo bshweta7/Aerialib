@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:frontend/data/models/pose_model.dart';
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/pose.dart';
-import '../../domain/repositories/pose_repository.dart';
+import '../../domain/repositories/pose_repository_impl.dart';
 
 // TODO note - maybe I shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
 // TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional PoseError state to handle those errors.
