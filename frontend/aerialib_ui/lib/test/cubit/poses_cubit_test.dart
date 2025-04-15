@@ -8,6 +8,24 @@ import 'package:frontend/repositories/pose/pose_repository.dart';
 class MockPoseRepository extends Mock implements PoseRepository {}
 
 void main() {
+  // Register fallback value for PoseModel
+  setUpAll(() {
+    registerFallbackValue(PoseModel(
+      id: "fallback-id",
+      name: "Fallback Pose",
+      description: "Fallback description",
+      cues: "Fallback cues",
+      apparatus: "Fallback apparatus",
+      level: 1,
+      primaryImageId: "fallback-img-id",
+      createdBy: "Fallback user",
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      isSynced: 1,
+      primaryImageUrl: '',
+    ));
+  });
+
   late PosesCubit posesCubit;
   late MockPoseRepository mockPoseRepo;
 
