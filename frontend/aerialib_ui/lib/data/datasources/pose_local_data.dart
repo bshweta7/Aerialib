@@ -5,11 +5,10 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
-
-// TODO : modularize the DB schema part into a separate pose_schema.dart if it grows
+import 'package:frontend/data/local_db_schema/pose_schema.dart';
 
 class PoseLocalDataSource {
-  String tableName = "poses";
+  String tableName = poseTable;
 
   Database? _database;
 
@@ -38,46 +37,12 @@ class PoseLocalDataSource {
       version: 6,
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < newVersion) {
-          await db.execute(
-            'DROP TABLE $tableName',
-          );
-          db.execute('''
-            CREATE TABLE $tableName(
-              id TEXT PRIMARY KEY,
-              name TEXT NOT NULL,
-              description TEXT,
-              cues TEXT,
-              apparatus TEXT NOT NULL,
-              level INTEGER NOT NULL,
-              createdBy TEXT NOT NULL,
-              updatedBy TEXT, 
-              createdAt TEXT NOT NULL,
-              updatedAt TEXT NOT NULL,
-              primaryImageId TEXT NOT NULL,
-              primaryImageUrl TEXT NOT NULL,
-              isSynced INTEGER NOT NULL
-            )'''
-          );
+          await db.execute(dropPoseTable); // Use drop command from schema
+          await db.execute(createPoseTable); // Use create command from schema
         }
       },
-      onCreate: (db, version) {
-        return db.execute('''
-          CREATE TABLE $tableName(
-            id TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
-            description TEXT,
-            cues TEXT,
-            apparatus TEXT NOT NULL,
-            level INTEGER NOT NULL,
-            createdBy TEXT NOT NULL,
-            updatedBy TEXT, 
-            createdAt TEXT NOT NULL,
-            updatedAt TEXT NOT NULL,
-            primaryImageId TEXT NOT NULL,
-            primaryImageUrl TEXT NOT NULL,
-            isSynced INTEGER NOT NULL
-          )'''
-        );
+      onCreate: (db, version) async {
+        return db.execute(createPoseTable); // Use create command from schema
       },
     );
   }
