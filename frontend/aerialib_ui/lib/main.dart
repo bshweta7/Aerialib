@@ -8,6 +8,9 @@ import 'package:frontend/pages/auth/login_page.dart';
 import 'package:frontend/pages/auth/signup_page.dart';
 import 'package:frontend/pages/home/home_page.dart';
 import 'package:frontend/pages/home/web_landing_page.dart';
+import 'package:frontend/repositories/pose/pose_local_repository.dart';
+import 'package:frontend/repositories/pose/pose_remote_repository.dart';
+import 'package:frontend/repositories/pose/pose_repository.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/cubit/poses_cubit.dart';
@@ -33,11 +36,17 @@ Future<void> main() async {
     });
   }
 
+  // Set up Repos
+  final poseRepo = PoseRepository(
+    localRepo: PoseLocalRepository(),
+    remoteRepo: PoseRemoteRepository(),
+  );
+
   // Run app
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit()),
-      BlocProvider(create: (_) => PosesCubit()),
+      BlocProvider(create: (_) => PosesCubit(poseRepo: poseRepo)),
       BlocProvider(create: (_) => MediaCubit()),
       BlocProvider(create: (_) => FlowsCubit()),
     ],

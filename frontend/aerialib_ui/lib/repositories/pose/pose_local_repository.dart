@@ -5,6 +5,9 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
+
+// TODO : modularize the DB schema part into a separate pose_schema.dart if it grows
+
 class PoseLocalRepository {
   String tableName = "poses";
 
@@ -134,7 +137,7 @@ class PoseLocalRepository {
   }
 
   // TODO rename below to updateSyncedStatus or something more descriptive
-  Future<void> updateRowValue(String id, int newValue) async {
+  Future<void> updateSyncedStatus(String id, int newValue) async {
     final db = await database;
     await db.update(
       tableName,

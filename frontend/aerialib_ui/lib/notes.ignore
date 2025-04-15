@@ -1,2 +1,5 @@
 build new apk with flutter build apk
 
+Release Build
+Android: flutter build apk --release
+IOS: flutter build ios --release

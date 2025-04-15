@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/utils/formatters.dart';
-import 'package:frontend/repositories/pose_remote_repository.dart';
+import 'package:frontend/repositories/pose/pose_remote_repository.dart';
 import 'package:frontend/models/pose_model.dart';
-import 'package:frontend/repositories/pose_local_repository.dart';
+import 'package:frontend/repositories/pose/pose_local_repository.dart';
+import 'package:equatable/equatable.dart';
+import 'package:frontend/models/pose_model.dart';
+import '../repositories/pose/pose_repository.dart';
 
 
 // TODO note - maybe i shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
@@ -11,9 +14,11 @@ import 'package:frontend/repositories/pose_local_repository.dart';
 part 'poses_state.dart';
 
 class PosesCubit extends Cubit<PosesState>{
-  PosesCubit() : super(PoseInitial());
-  final poseRemoteRepository = PoseRemoteRepository();
-  final poseLocalRepository = PoseLocalRepository();
+  final PoseRepository _poseRepo;
+
+  PosesCubit({required PoseRepository poseRepo})
+      : _poseRepo = poseRepo,
+        super(PoseInitial());
 
   Future<void> createNewPose({
     required String name,
@@ -27,7 +32,7 @@ class PosesCubit extends Cubit<PosesState>{
   }) async {
     try {
       emit(PoseLoading());
-      final poseModel = await poseRemoteRepository.createPose(
+      final poseModel = await _poseRepo.createPose(
         name: name,
         description: description,
         cues: cues,
@@ -37,8 +42,6 @@ class PosesCubit extends Cubit<PosesState>{
         token: token,
         createdBy: createdBy,
       );
-      await poseLocalRepository.insertPose(poseModel);
-
       emit(AddNewPoseSuccess(poseModel));
     } catch (e) {
       print(e.toString());
@@ -50,7 +53,7 @@ class PosesCubit extends Cubit<PosesState>{
   }) async {
     try {
       emit(PoseLoading());
-      final poses = await poseRemoteRepository.getPoses(token: token);
+      final poses = await _poseRepo.getAllPoses(token);
       emit(GetPosesSuccess(poses));
     } catch (e) {
       print(e.toString());
@@ -59,27 +62,11 @@ class PosesCubit extends Cubit<PosesState>{
   }
 
   Future<void> syncPoses(String token) async {
-    // get all unsynced poses from our sqlite db
-    final unsyncedPoses = await poseLocalRepository.getUnsyncedPoses();
-
-    if (unsyncedPoses.isEmpty) {
-      return;
-    }
-
-    print("Unsynced poses:");
-    print(unsyncedPoses);
-
-    // talk to our postgresql db to add the new pose
-    final isSynced = await poseRemoteRepository.syncPoses(
-        token: token,
-        poses: unsyncedPoses
-    );
-    // change the poses that were added to the db from 0 to 1
-    if (isSynced) {
-      print("Poses have been synced");
-      for (final pose in unsyncedPoses) {
-        poseLocalRepository.updateRowValue(pose.id, 1);
-      }
+    try {
+      await _poseRepo.syncIfNeeded(token);
+    } catch (e) {
+      print("Sync error: $e");
+      // Optional: emit a sync error state if needed
     }
   }
 
@@ -89,12 +76,10 @@ class PosesCubit extends Cubit<PosesState>{
   }) async {
     try {
       emit(PoseLoading());
-      final poseModel = await poseRemoteRepository.updatePose(
+      final poseModel = await _poseRepo.updatePose(
         updatedPose: updatedPose,
         token: token,
       );
-      await poseLocalRepository.updatePose(poseModel); // Update local repository
-
       emit(UpdatePoseSuccess(poseModel)); // Emit success state
     } catch (e) {
       print(e.toString());
