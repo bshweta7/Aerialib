@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/models/pose_model.dart';
+import 'package:frontend/data/models/pose_model.dart';
 import 'package:uuid/uuid.dart';
-import 'package:frontend/services/http_service.dart';
+import 'package:frontend/data/services/http_service.dart';
 
 class PoseRemoteDataSource {
   final HttpService httpService;

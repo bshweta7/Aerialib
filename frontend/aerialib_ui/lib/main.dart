@@ -8,13 +8,13 @@ import 'package:frontend/pages/auth/login_page.dart';
 import 'package:frontend/pages/auth/signup_page.dart';
 import 'package:frontend/pages/home/home_page.dart';
 import 'package:frontend/pages/home/web_landing_page.dart';
-import 'package:frontend/repositories/pose/pose_local_repository.dart';
-import 'package:frontend/repositories/pose/pose_remote_repository.dart';
+import 'package:frontend/data/datasources/pose_local_data.dart';
+import 'package:frontend/data/datasources/pose_remote_data.dart';
 import 'package:frontend/repositories/pose/pose_repository.dart';
-import 'package:frontend/services/http_service.dart';
+import 'package:frontend/data/services/http_service.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:frontend/cubit/poses_cubit.dart';
+import 'package:frontend/cubit/poses/poses_cubit.dart';
 
 import 'cubit/media_cubit.dart';
 import 'cubit/flow_cubit.dart';

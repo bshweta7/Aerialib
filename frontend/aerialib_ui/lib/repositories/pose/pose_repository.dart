@@ -1,6 +1,6 @@
-import 'package:frontend/repositories/pose/pose_local_repository.dart';
-import 'package:frontend/repositories/pose/pose_remote_repository.dart';
-import 'package:frontend/models/pose_model.dart';
+import 'package:frontend/data/datasources/pose_local_data.dart';
+import 'package:frontend/data/datasources/pose_remote_data.dart';
+import 'package:frontend/data/models/pose_model.dart';
 
 
 class PoseRepository {

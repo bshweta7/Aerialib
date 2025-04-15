@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/services/sp_service.dart';
+import 'package:frontend/data/services/sp_service.dart';
 import 'package:frontend/repositories/auth_remote_repository.dart';
 import 'package:frontend/repositories/auth_local_repository.dart';
 import 'package:frontend/models/user_model.dart';

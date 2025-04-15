@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/utils/formatters.dart';
-import 'package:frontend/repositories/pose/pose_remote_repository.dart';
-import 'package:frontend/models/pose_model.dart';
-import 'package:frontend/repositories/pose/pose_local_repository.dart';
+import 'package:frontend/data/datasources/pose_remote_data.dart';
+import 'package:frontend/data/models/pose_model.dart';
+import 'package:frontend/data/datasources/pose_local_data.dart';
 import 'package:equatable/equatable.dart';
-import 'package:frontend/models/pose_model.dart';
-import '../repositories/pose/pose_repository.dart';
+import 'package:frontend/data/models/pose_model.dart';
+import '../../repositories/pose/pose_repository.dart';
 
 
 // TODO note - maybe i shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...

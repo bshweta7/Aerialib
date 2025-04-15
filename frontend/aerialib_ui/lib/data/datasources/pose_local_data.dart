@@ -1,4 +1,4 @@
-import 'package:frontend/models/pose_model.dart';
+import 'package:frontend/data/models/pose_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 

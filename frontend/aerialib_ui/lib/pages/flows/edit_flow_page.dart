@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend/cubit/auth_cubit.dart';
-import 'package:frontend/cubit/poses_cubit.dart';
+import 'package:frontend/cubit/poses/poses_cubit.dart';
 import 'package:frontend/pages/home/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 
-import '../../models/pose_model.dart';
+import '../../data/models/pose_model.dart';
 
 class UpdatePosePage extends StatefulWidget {
   final PoseModel pose;

@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:frontend/cubit/poses_cubit.dart';
-import 'package:frontend/models/pose_model.dart';
+import 'package:frontend/cubit/poses/poses_cubit.dart';
+import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/repositories/pose/pose_repository.dart';
 
 class MockPoseRepository extends Mock implements PoseRepository {}

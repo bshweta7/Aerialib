@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/cubit/auth_cubit.dart';
 import 'package:frontend/pages/home/test_page.dart';
-import 'package:frontend/cubit/poses_cubit.dart';
+import 'package:frontend/cubit/poses/poses_cubit.dart';
 // import 'package:frontend/pages/poses/pages/add_new_pose_page.dart';
 import 'package:frontend/pages/poses/pose_library_page.dart';
 // import 'package:frontend/pages/poses/widgets/pose_media_grid.dart';

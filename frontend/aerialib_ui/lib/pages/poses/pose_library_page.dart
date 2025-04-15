@@ -11,10 +11,10 @@ import 'package:frontend/pages/widgets/multi_selector.dart';
 import 'package:frontend/pages/widgets/search_bar.dart';
 
 import 'package:frontend/cubit/auth_cubit.dart';
-import 'package:frontend/cubit/poses_cubit.dart';
+import 'package:frontend/cubit/poses/poses_cubit.dart';
 import 'package:frontend/pages/poses/add_new_pose_page.dart';
 
-import 'package:frontend/models/pose_model.dart';
+import 'package:frontend/data/models/pose_model.dart';
 
 import '../widgets/media_display/media_utils.dart';
 

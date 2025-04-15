@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:frontend/models/pose_model.dart';
+import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/pages/poses/pose_view_page.dart';
 
 import 'package:frontend/pages/widgets/media_display/media_icon.dart';

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frontend/models/pose_model.dart';
+import 'package:frontend/data/models/pose_model.dart';
 
 class FlowModel {
   final String id;
