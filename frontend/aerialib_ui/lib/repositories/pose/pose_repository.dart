@@ -4,24 +4,15 @@ import 'package:frontend/models/pose_model.dart';
 
 
 class PoseRepository {
-  final PoseLocalRepository _localRepo;
-  final PoseRemoteRepository _remoteRepo;
+  final PoseLocalDataSource localRepo;
+  final PoseRemoteDataSource remoteRepo;
 
   PoseRepository({
-    required PoseLocalRepository localRepo,
-    required PoseRemoteRepository remoteRepo,
-  })  : _localRepo = localRepo,
-        _remoteRepo = remoteRepo;
+    required this.localRepo,
+    required this.remoteRepo,
+  });
 
-  Future<List<PoseModel>> getAllPoses(String token) async {
-    try {
-      final remotePoses = await _remoteRepo.getPoses(token: token);
-      return remotePoses;
-    } catch (_) {
-      return _localRepo.getPoses();
-    }
-  }
-
+  /// Create a new pose (tries remote first, fallback to local if offline)
   Future<PoseModel> createPose({
     required String name,
     required String description,
@@ -32,7 +23,7 @@ class PoseRepository {
     required String token,
     required String createdBy,
   }) async {
-    final newPose = await _remoteRepo.createPose(
+    final pose = await remoteRepo.createPose(
       name: name,
       description: description,
       cues: cues,
@@ -43,28 +34,57 @@ class PoseRepository {
       createdBy: createdBy,
     );
 
-    await _localRepo.insertPose(newPose); // always keep local in sync
-    return newPose;
-  }
-
-  Future<PoseModel> updatePose({
-    required PoseModel updatedPose,
-    required String token,
-  }) async {
-    final pose = await _remoteRepo.updatePose(updatedPose: updatedPose, token: token);
-    await _localRepo.updatePose(pose);
+    await localRepo.insertPose(pose);
     return pose;
   }
 
-  Future<void> syncIfNeeded(String token) async {
-    final unsyncedPoses = await _localRepo.getUnsyncedPoses();
-    if (unsyncedPoses.isNotEmpty) {
-      final success = await _remoteRepo.syncPoses(token: token, poses: unsyncedPoses);
-      if (success) {
-        for (final pose in unsyncedPoses) {
-          await _localRepo.updateSyncedStatus(pose.id, 1); // mark as synced
-        }
+  /// Fetch all poses from local DB
+  Future<List<PoseModel>> getLocalPoses() {
+    return localRepo.getPoses();
+  }
+
+  /// Fetch all poses from remote API and save locally
+  Future<void> syncRemoteToLocal(String token) async {
+    final poses = await remoteRepo.fetchRemotePoses(token: token);
+    await localRepo.insertPoses(poses);
+  }
+
+
+  /// Send unsynced local poses to remote, and mark them as synced
+  Future<void> syncLocalToRemote(String token) async {
+    final unsynced = await localRepo.getUnsyncedPoses();
+    final success = await remoteRepo.syncPoses(token: token, poses: unsynced);
+
+    if (success) {
+      for (final pose in unsynced) {
+        await localRepo.setSyncedStatus(pose.id, 1);
       }
     }
+  }
+
+
+  /// Full sync (both directions)
+  Future<void> fullSync(String token) async {
+    await syncLocalToRemote(token);
+    await syncRemoteToLocal(token);
+  }
+
+
+  /// Update a pose remotely and locally
+  Future<void> updatePose({
+    required PoseModel pose,
+    required String token,
+  }) async {
+    final updated = await remoteRepo.updatePose(
+      updatedPose: pose,
+      token: token,
+    );
+    await localRepo.updatePose(updated);
+  }
+
+
+  /// Delete locally (optional addition)
+  Future<void> deletePose(String id) async {
+    await localRepo.deletePose(id);
   }
 }

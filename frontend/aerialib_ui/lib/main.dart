@@ -11,6 +11,7 @@ import 'package:frontend/pages/home/web_landing_page.dart';
 import 'package:frontend/repositories/pose/pose_local_repository.dart';
 import 'package:frontend/repositories/pose/pose_remote_repository.dart';
 import 'package:frontend/repositories/pose/pose_repository.dart';
+import 'package:frontend/services/http_service.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/cubit/poses_cubit.dart';
@@ -38,8 +39,8 @@ Future<void> main() async {
 
   // Set up Repos
   final poseRepo = PoseRepository(
-    localRepo: PoseLocalRepository(),
-    remoteRepo: PoseRemoteRepository(),
+    localRepo: PoseLocalDataSource(),
+    remoteRepo: PoseRemoteDataSource(httpService: HttpService()),
   );
 
   // Run app
