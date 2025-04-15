@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     const Text("State pose error"),
-                    Text(state.error),
+                    // Text(state.error),
                   ],
                 ),
               );

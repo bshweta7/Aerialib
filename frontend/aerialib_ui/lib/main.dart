@@ -10,7 +10,7 @@ import 'package:frontend/pages/home/home_page.dart';
 import 'package:frontend/pages/home/web_landing_page.dart';
 import 'package:frontend/data/datasources/pose_local_data.dart';
 import 'package:frontend/data/datasources/pose_remote_data.dart';
-import 'package:frontend/repositories/pose/pose_repository.dart';
+import 'package:frontend/domain/repositories/pose_repository.dart';
 import 'package:frontend/data/services/http_service.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -47,7 +47,7 @@ Future<void> main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit()),
-      BlocProvider(create: (_) => PosesCubit(poseRepo: poseRepo)),
+      BlocProvider(create: (_) => PosesCubit(poseRepo)),
       BlocProvider(create: (_) => MediaCubit()),
       BlocProvider(create: (_) => FlowsCubit()),
     ],

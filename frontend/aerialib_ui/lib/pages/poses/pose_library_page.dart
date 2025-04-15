@@ -16,6 +16,7 @@ import 'package:frontend/pages/poses/add_new_pose_page.dart';
 
 import 'package:frontend/data/models/pose_model.dart';
 
+import '../../domain/entities/pose.dart';
 import '../widgets/media_display/media_utils.dart';
 
 class PoseLibraryPage extends StatefulWidget {
@@ -108,14 +109,14 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                 child: Column(
                   children: [
                     const Text("State pose error"),
-                    Text(state.error),
+                    // Text(state.error),
                   ],
                 ),
               );
             }
 
             if (state is GetPosesSuccess) {
-              List<PoseModel> filteredPoses = state.poses.where(
+              List<Pose> filteredPoses = state.poses.where(
                     (elem) =>
                 selectedApparatus.contains(elem.apparatus) &&
                     selectedLevels.contains(elem.level),
@@ -326,12 +327,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       children: [
                         SingleChildScrollView(
                           controller: _myScrollController,
-                          child: PoseGrid(
-                            filteredPoses,
-                            _gridSize,
-                            "",
-                            "",
-                          ),
+                          // child: PoseGrid(
+                          //   filteredPoses,
+                          //   _gridSize,
+                          //   "",
+                          //   "",
+                          // ),
 
                         ),
 

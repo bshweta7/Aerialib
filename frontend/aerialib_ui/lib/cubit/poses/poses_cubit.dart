@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/data/models/pose_model.dart';
+// import 'package:frontend/data/models/pose_model.dart';
 import 'package:equatable/equatable.dart';
-import '../../repositories/pose/pose_repository.dart';
+import '../../domain/entities/pose.dart';
+import '../../domain/repositories/pose_repository.dart';
 
 // TODO note - maybe I shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
 // TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional PoseError state to handle those errors.
@@ -12,9 +13,7 @@ part 'poses_state.dart';
 class PosesCubit extends Cubit<PosesState> {
   final PoseRepository _poseRepo;
 
-  PosesCubit({required PoseRepository poseRepo})
-      : _poseRepo = poseRepo,
-        super(const PoseInitial());
+  PosesCubit(this._poseRepo) : super(const PoseInitial());
 
   /// Create a new pose
   Future<void> createNewPose({
@@ -29,7 +28,7 @@ class PosesCubit extends Cubit<PosesState> {
   }) async {
     try {
       emit(const PoseLoading());
-      final poseModel = await _poseRepo.createPose(
+      final pose = await _poseRepo.createPose(
         name: name,
         description: description,
         cues: cues,
@@ -39,7 +38,7 @@ class PosesCubit extends Cubit<PosesState> {
         token: token,
         createdBy: createdBy,
       );
-      emit(AddNewPoseSuccess(poseModel));
+      emit(AddNewPoseSuccess(pose));
     } catch (e) {
       print(e.toString());
       emit(PoseError(e.toString()));
@@ -80,22 +79,23 @@ class PosesCubit extends Cubit<PosesState> {
 
   /// Update pose info (both local and remote)
   Future<void> updatePoseInfo({
-    required PoseModel updatedPose,
+    required Pose updatedPose,
     required String token,
   }) async {
     try {
-      emit(PoseLoading());
+      emit(const PoseLoading());
       await _poseRepo.updatePose(
         updatedPose: updatedPose,
         token: token,
       );
-      emit(UpdatePoseSuccess(updatedPose)); // Emit success state
+      emit(UpdatePoseSuccess(updatedPose));
     } catch (e) {
       print(e.toString());
       emit(PoseError(e.toString()));
     }
   }
 }
+
 
 
 // TODO see his next video on background plugin that syncs every 7 days.

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:frontend/cubit/poses/poses_cubit.dart';
 import 'package:frontend/data/models/pose_model.dart';
-import 'package:frontend/repositories/pose/pose_repository.dart';
+import 'package:frontend/domain/repositories/pose_repository.dart';
 
 class MockPoseRepository extends Mock implements PoseRepository {}
 
@@ -31,7 +31,7 @@ void main() {
 
   setUp(() {
     mockPoseRepo = MockPoseRepository();
-    posesCubit = PosesCubit(poseRepo: mockPoseRepo);
+    posesCubit = PosesCubit(mockPoseRepo);
   });
 
   tearDown(() {

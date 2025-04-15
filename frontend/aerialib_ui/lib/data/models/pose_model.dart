@@ -1,88 +1,28 @@
+// lib/data/models/pose_model.dart
+
 import 'dart:convert';
 
 import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/domain/entities/pose.dart';
 
-class PoseModel {
-  final String id;
-  final String name;
-  final String? description;
-  final String? cues;
-  final String apparatus;
-  final int level;
-  final String createdBy; // TODO why is this not UUID Type?
-  final String? updatedBy;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final int isSynced;
-  final String primaryImageId;
-  final String primaryImageUrl;
-
-  PoseModel({
-    required this.id,
-    required this.name,
-    this.description,
-    this.cues,
-    required this.apparatus,
-    required this.level,
-    required this.createdBy,
-    this.updatedBy,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.isSynced,
-    required this.primaryImageId,
-    required this.primaryImageUrl,
+class PoseModel extends Pose {
+  const PoseModel({
+    required super.id,
+    required super.name,
+    super.description,
+    super.cues,
+    required super.apparatus,
+    required super.level,
+    required super.createdBy,
+    super.updatedBy,
+    required super.createdAt,
+    required super.updatedAt,
+    required super.isSynced,
+    required super.primaryImageId,
+    required super.primaryImageUrl,
   });
 
-  PoseModel copyWith({
-    String? id,
-    String? name,
-    String? description,
-    String? cues,
-    String? apparatus,
-    int? level,
-    String? createdBy,
-    String? updatedBy,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    int? isSynced,
-    String? primaryImageId,
-    String? primaryImageUrl,
-  }) {
-    return PoseModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      cues: cues ?? this.cues,
-      apparatus: apparatus ?? this.apparatus,
-      level: level ?? this.level,
-      createdBy: createdBy ?? this.createdBy,
-      updatedBy: updatedBy ?? this.updatedBy,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isSynced: isSynced ?? this.isSynced,
-      primaryImageId: primaryImageId ?? this.primaryImageId,
-      primaryImageUrl: primaryImageUrl ?? this.primaryImageUrl,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'description': description,
-      'cues': cues,
-      'apparatus': apparatus,
-      'level': level,
-      'createdBy': createdBy,
-      'updatedBy': updatedBy,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      'isSynced': isSynced,
-      'primaryImageId': primaryImageId,
-      'primaryImageUrl': primaryImageUrl,
-    };
-  }
-
+  /// Construct PoseModel from a Map (e.g., from SQLite or API JSON)
   factory PoseModel.fromMap(Map<String, dynamic> map) {
     return PoseModel(
       id: map['id'] ?? '',
@@ -92,79 +32,60 @@ class PoseModel {
       apparatus: map['apparatus'] ?? '',
       level: map['level'] ?? -1,
       createdBy: map['created_by'] ?? '',
-      updatedBy: map['updated_by'] ?? '',
+      updatedBy: map['updated_by'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
-      isSynced: map['is_synced'] ?? 1,
+      isSynced: map['is_synced'] ?? 0,
       primaryImageId: map['primary_image_id'] ?? Constants.missingImageId,
       primaryImageUrl: map['primary_image_url'] ?? Constants.missingImageUrl,
-      // createdBy: map['createdBy'] ?? '',
-      // updatedBy: map['updatedBy'] ?? '',
-      // createdAt: DateTime.parse(map['createdAt']),
-      // updatedAt: DateTime.parse(map['updatedAt']),
-      // isSynced: map['isSynced'] ?? 1,
-      // primaryImageId: map['primaryImageId'] ?? Constants.missingImageId,
-      // primaryImageUrl: map['primaryImageUrl'] ?? Constants.missingImageUrl,
-      // TODO update the mapping or local db so local and remote match
     );
   }
 
+  /// Serialize PoseModel to a Map (for local DB or API)
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'cues': cues,
+      'apparatus': apparatus,
+      'level': level,
+      'created_by': createdBy,
+      'updated_by': updatedBy,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'is_synced': isSynced,
+      'primary_image_id': primaryImageId,
+      'primary_image_url': primaryImageUrl,
+    };
+  }
+
+  /// Deserialize PoseModel from a JSON string
+  factory PoseModel.fromJson(String source) =>
+      PoseModel.fromMap(json.decode(source));
+
+  /// Serialize PoseModel to a JSON string
   String toJson() => json.encode(toMap());
 
-  factory PoseModel.fromJson(String source) =>
-      PoseModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  /// Convert this PoseModel into a domain-layer Pose entity
+  Pose toEntity() => this;
 
-  @override
-  String toString() {
-    return 'PoseModel('
-        'id: $id, '
-        'name: $name, '
-        'description: $description, '
-        'cues: $cues, '
-        'apparatus: $apparatus, '
-        'level: $level, '
-        'createdBy: $createdBy, '
-        'updatedBy: $updatedBy, '
-        'createdAt: $createdAt, '
-        'updatedAt: $updatedAt, '
-        'isSynced: $isSynced, '
-        'primaryImageId: $primaryImageId, '
-        'primaryImageUrl: $primaryImageUrl)';
-  }
-
-  @override
-  bool operator ==(covariant PoseModel other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.name == name &&
-        other.description == description &&
-        other.cues == cues &&
-        other.apparatus == apparatus &&
-        other.level == level &&
-        other.createdBy == createdBy &&
-        other.updatedBy == updatedBy &&
-        other.createdAt == createdAt &&
-        other.updatedAt == updatedAt &&
-        other.isSynced == isSynced &&
-        other.primaryImageId == primaryImageId &&
-        other.primaryImageUrl == primaryImageUrl;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-    name.hashCode ^
-    description.hashCode ^
-    cues.hashCode ^
-    apparatus.hashCode ^
-    level.hashCode ^
-    createdBy.hashCode ^
-    updatedBy.hashCode ^
-    createdAt.hashCode ^
-    updatedAt.hashCode ^
-    isSynced.hashCode ^
-    primaryImageId.hashCode ^
-    primaryImageUrl.hashCode;
+  /// Construct PoseModel from a domain-layer Pose entity
+  factory PoseModel.fromEntity(Pose pose) {
+    return PoseModel(
+      id: pose.id,
+      name: pose.name,
+      description: pose.description,
+      cues: pose.cues,
+      apparatus: pose.apparatus,
+      level: pose.level,
+      createdBy: pose.createdBy,
+      updatedBy: pose.updatedBy,
+      createdAt: pose.createdAt,
+      updatedAt: pose.updatedAt,
+      isSynced: pose.isSynced,
+      primaryImageId: pose.primaryImageId,
+      primaryImageUrl: pose.primaryImageUrl,
+    );
   }
 }
