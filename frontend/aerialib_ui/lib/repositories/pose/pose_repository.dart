@@ -72,11 +72,11 @@ class PoseRepository {
 
   /// Update a pose remotely and locally
   Future<void> updatePose({
-    required PoseModel pose,
+    required PoseModel updatedPose,
     required String token,
   }) async {
     final updated = await remoteRepo.updatePose(
-      updatedPose: pose,
+      updatedPose: updatedPose,
       token: token,
     );
     await localRepo.updatePose(updated);

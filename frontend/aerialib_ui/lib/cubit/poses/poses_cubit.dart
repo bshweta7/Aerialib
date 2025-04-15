@@ -1,25 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/core/utils/formatters.dart';
-import 'package:frontend/data/datasources/pose_remote_data.dart';
 import 'package:frontend/data/models/pose_model.dart';
-import 'package:frontend/data/datasources/pose_local_data.dart';
 import 'package:equatable/equatable.dart';
-import 'package:frontend/data/models/pose_model.dart';
 import '../../repositories/pose/pose_repository.dart';
 
-
-// TODO note - maybe i shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
+// TODO note - maybe I shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
+// TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional PoseError state to handle those errors.
+// TODO - The syncPoses method has been modified to first sync local unsynced poses and then sync remote poses back to local. You might want to consider handling the case where network is unavailable or when some poses are not synced successfully.
 
 part 'poses_state.dart';
 
-class PosesCubit extends Cubit<PosesState>{
+class PosesCubit extends Cubit<PosesState> {
   final PoseRepository _poseRepo;
 
   PosesCubit({required PoseRepository poseRepo})
       : _poseRepo = poseRepo,
-        super(PoseInitial());
+        super(const PoseInitial());
 
+  /// Create a new pose
   Future<void> createNewPose({
     required String name,
     required String description,
@@ -31,7 +28,7 @@ class PosesCubit extends Cubit<PosesState>{
     required String createdBy,
   }) async {
     try {
-      emit(PoseLoading());
+      emit(const PoseLoading());
       final poseModel = await _poseRepo.createPose(
         name: name,
         description: description,
@@ -49,43 +46,56 @@ class PosesCubit extends Cubit<PosesState>{
     }
   }
 
-  Future<void> getAllPoses({required String token,
-  }) async {
+  /// Fetch all poses (from local storage or remote if needed)
+  Future<void> getAllPoses({required String token}) async {
     try {
-      emit(PoseLoading());
-      final poses = await _poseRepo.getAllPoses(token);
-      emit(GetPosesSuccess(poses));
+      emit(const PoseLoading());
+      final poses = await _poseRepo.getLocalPoses();  // Fetch local poses
+      if (poses.isEmpty) {
+        // If no local poses, sync from remote and retry
+        await _poseRepo.syncRemoteToLocal(token);
+        final updatedPoses = await _poseRepo.getLocalPoses();
+        emit(GetPosesSuccess(updatedPoses));
+      } else {
+        emit(GetPosesSuccess(poses));
+      }
     } catch (e) {
       print(e.toString());
       emit(PoseError(e.toString()));
     }
   }
 
+  /// Sync poses (sync unsynced local poses with remote)
   Future<void> syncPoses(String token) async {
     try {
-      await _poseRepo.syncIfNeeded(token);
+      await _poseRepo.syncLocalToRemote(token);
+      // Optionally, sync remote to local after syncing
+      await _poseRepo.syncRemoteToLocal(token);
     } catch (e) {
       print("Sync error: $e");
       // Optional: emit a sync error state if needed
+      emit(PoseError("Sync error: $e"));
     }
   }
 
+  /// Update pose info (both local and remote)
   Future<void> updatePoseInfo({
     required PoseModel updatedPose,
     required String token,
   }) async {
     try {
       emit(PoseLoading());
-      final poseModel = await _poseRepo.updatePose(
+      await _poseRepo.updatePose(
         updatedPose: updatedPose,
         token: token,
       );
-      emit(UpdatePoseSuccess(poseModel)); // Emit success state
+      emit(UpdatePoseSuccess(updatedPose)); // Emit success state
     } catch (e) {
       print(e.toString());
       emit(PoseError(e.toString()));
     }
   }
 }
+
 
 // TODO see his next video on background plugin that syncs every 7 days.

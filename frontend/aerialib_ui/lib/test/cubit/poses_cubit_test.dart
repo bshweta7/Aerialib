@@ -69,10 +69,22 @@ void main() {
 
   group("getAllPoses", () {
     blocTest<PosesCubit, PosesState>(
-      'emits [PoseLoading, GetPosesSuccess] on success',
+      'emits [PoseLoading, GetPosesSuccess] on success with local poses',
       build: () {
-        when(() => mockPoseRepo.getAllPoses(testToken))
+        when(() => mockPoseRepo.getLocalPoses())
             .thenAnswer((_) async => [testPose]);
+        return posesCubit;
+      },
+      act: (cubit) => cubit.getAllPoses(token: testToken),
+      expect: () => [PoseLoading(), GetPosesSuccess([testPose])],
+    );
+
+    blocTest<PosesCubit, PosesState>(
+      'emits [PoseLoading, GetPosesSuccess] after syncing from remote',
+      build: () {
+        when(() => mockPoseRepo.getLocalPoses()).thenAnswer((_) async => []);
+        when(() => mockPoseRepo.syncRemoteToLocal(testToken)).thenAnswer((_) async {});
+        when(() => mockPoseRepo.getLocalPoses()).thenAnswer((_) async => [testPose]);
         return posesCubit;
       },
       act: (cubit) => cubit.getAllPoses(token: testToken),
@@ -85,8 +97,8 @@ void main() {
       'emits [PoseLoading, UpdatePoseSuccess] on success',
       build: () {
         when(() => mockPoseRepo.updatePose(
-          updatedPose: testPose,
-          token: testToken,
+          updatedPose: any(named: "updatedPose"),
+          token: any(named: "token"),
         )).thenAnswer((_) async => testPose);
         return posesCubit;
       },
@@ -100,15 +112,20 @@ void main() {
 
   group("syncPoses", () {
     blocTest<PosesCubit, PosesState>(
-      'calls repo.syncIfNeeded but does not emit state',
+      'calls repo.syncLocalToRemote and syncRemoteToLocal but does not emit state',
       build: () {
-        when(() => mockPoseRepo.syncIfNeeded(testToken))
-            .thenAnswer((_) async => {});
+        when(() => mockPoseRepo.syncLocalToRemote(testToken))
+            .thenAnswer((_) async {});
+        when(() => mockPoseRepo.syncRemoteToLocal(testToken))
+            .thenAnswer((_) async {});
         return posesCubit;
       },
       act: (cubit) => cubit.syncPoses(testToken),
       expect: () => [],
-      verify: (_) => verify(() => mockPoseRepo.syncIfNeeded(testToken)).called(1),
+      verify: (_) {
+        verify(() => mockPoseRepo.syncLocalToRemote(testToken)).called(1);
+        verify(() => mockPoseRepo.syncRemoteToLocal(testToken)).called(1);
+      },
     );
   });
 }
