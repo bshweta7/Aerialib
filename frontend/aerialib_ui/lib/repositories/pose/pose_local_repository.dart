@@ -8,7 +8,7 @@ import 'dart:io';
 
 // TODO : modularize the DB schema part into a separate pose_schema.dart if it grows
 
-class PoseLocalRepository {
+class PoseLocalDataSource {
   String tableName = "poses";
 
   Database? _database;
@@ -135,9 +135,8 @@ class PoseLocalRepository {
 
     return [];
   }
-
-  // TODO rename below to updateSyncedStatus or something more descriptive
-  Future<void> updateSyncedStatus(String id, int newValue) async {
+  
+  Future<void> setSyncedStatus(String id, int newValue) async {
     final db = await database;
     await db.update(
       tableName,
@@ -154,6 +153,15 @@ class PoseLocalRepository {
       pose.toMap(),
       where: 'id = ?',
       whereArgs: [pose.id],
+    );
+  }
+
+  Future<void> deletePose(String id) async {
+    final db = await database;
+    await db.delete(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id]
     );
   }
 
