@@ -1,7 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO understand this portion more
 /// Shared Preferences Service
+/// Description: Handles persistent key-value storage, like user tokens,
+///   theme settings, etc.
+/// What goes here: Login tokens, "Has seen onboarding" flags, Offline
+/// mode flags, Any user/local setting stored via SharedPreferences
+
 class SpService {
   /// Set the token
   Future<void> setToken(String token) async {
@@ -21,3 +25,6 @@ class SpService {
   }
 
 }
+
+// TODO optional extras: Future<void> setBool(String key, bool value);
+// TODO optional extras: Future<bool?> getBool(String key);
