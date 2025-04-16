@@ -6,18 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/to_sort/pages/widgets/media_display/pose_grid.dart';
-import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
-import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/presentation/widgets/media_display/media_utils.dart';
+import 'package:frontend/domain/entities/pose.dart';
 
 import 'package:frontend/to_sort/cubit/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
+import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
+import 'package:frontend/domain/repositories/pose_repository_impl.dart';
+import '../../widgets/media_display/pose_grid.dart';
 
-import 'package:frontend/data/models/pose_model.dart';
-
-import '../../../domain/entities/pose.dart';
-import '../../../to_sort/pages/widgets/media_display/media_utils.dart';
 
 class PoseLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -46,19 +45,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   void initState() {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
-
     context.read<PosesCubit>().getAllPoses(token: user.user.token);
-
-    Connectivity().onConnectivityChanged.listen((data) async {
-      if (data.contains(ConnectivityResult.wifi)) {
-        print("Wifi Available");
-        await context.read<PosesCubit>().syncPoses(user.user.token);
-        // TODO Sync poses when coming back to the page, even if there is no change in wifi connectivity -- accounts for adding a new pose and returning to the pose library (maybe ??)
-
-      } else {
-        print("No wifi available");
-      }
-    });
   }
 
   void changeGridSize(int amount) {
@@ -104,12 +91,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             }
 
             if (state is PoseError) {
-              print("Error: State is Pose Error");
-              return Center(
+              print("ERROR: State is Pose Error");
+              print(state.message);
+              return const Center(
                 child: Column(
                   children: [
-                    const Text("State pose error"),
-                    // Text(state.error),
+                    Text("State pose error"),
                   ],
                 ),
               );
@@ -121,34 +108,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                 selectedApparatus.contains(elem.apparatus) &&
                     selectedLevels.contains(elem.level),
               ).toList();
-
-              // print("AAACK");
-              // print(poses);
-              // print(filteredPoses);
-
-              // List<String> posesNamesList = [];
-              // List<String> mediaPathsList = [];
-              //
-              // for (int i = 0; i < filteredPoses.length; i++) {
-              //   posesNamesList.add(filteredPoses[i].name);
-              //   mediaPathsList.add("http://localhost:8000/media/data"+filteredPoses[i].primaryImageUrl);
-              // }
-
-              // TODO REMOVE THE NAMES LIST ABOVE
-
-                //       media.add(Media(
-                //         responseJson[i]["media_id"].toString(), MediaType.photo,
-                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/thumbnail',
-                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/media',
-                //       ));
-                //       media[i].filename = responseJson[i]["filename"];
-                //       media[i].takenTimestamp = (responseJson[i]["date_taken"] != null) ? DateTime.parse(responseJson[i]["date_taken"]) : DateTime.now();
-                //     }
-
-              // print("POSES FROM HOME PAGE");
-              // print(poses);
-              // print("NAMES");
-              // print(posesNamesList);
 
               return Column(
                 children: [
@@ -297,6 +256,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       ],
                     ),
                   ),
+                  // TODO move filters section to separate widget
 
                   // TODO implement search
                   Padding(
@@ -327,6 +287,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       children: [
                         SingleChildScrollView(
                           controller: _myScrollController,
+                          // TODO modify 
                           // child: PoseGrid(
                           //   filteredPoses,
                           //   _gridSize,
