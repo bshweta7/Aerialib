@@ -10,13 +10,13 @@ const String createPoseTable = '''
     cues TEXT,
     apparatus TEXT NOT NULL,
     level INTEGER NOT NULL,
-    createdBy TEXT NOT NULL,
-    updatedBy TEXT,
-    createdAt TEXT NOT NULL,
-    updatedAt TEXT NOT NULL,
-    primaryImageId TEXT NOT NULL,
-    primaryImageUrl TEXT NOT NULL,
-    isSynced INTEGER NOT NULL
+    created_by TEXT NOT NULL,
+    updated_by TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    primary_image_id TEXT NOT NULL,
+    primary_image_url TEXT NOT NULL,
+    is_synced INTEGER NOT NULL
   )
 ''';
 

@@ -5,7 +5,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
-import 'package:frontend/data/local_db_schema/pose_schema.dart';
+import 'package:frontend/data/schemas/pose_schema.dart';
 
 class PoseLocalDataSource {
   String tableName = poseTable;
@@ -87,7 +87,7 @@ class PoseLocalDataSource {
     final db = await database;
     final result = await db.query(
       tableName,
-      where: 'isSynced = ?',
+      where: 'is_synced = ?',
       whereArgs: [0],
     );
     if (result.isNotEmpty) {
@@ -105,7 +105,7 @@ class PoseLocalDataSource {
     final db = await database;
     await db.update(
       tableName,
-      {'isSynced': newValue},
+      {'is_synced': newValue},
       where: 'id = ?',
       whereArgs: [id],
     );

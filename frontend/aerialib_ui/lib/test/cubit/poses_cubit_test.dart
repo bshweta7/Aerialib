@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:frontend/cubit/poses/poses_cubit.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/domain/repositories/pose_repository_impl.dart';
 

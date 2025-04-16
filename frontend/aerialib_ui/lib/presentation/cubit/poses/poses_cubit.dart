@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:frontend/data/models/pose_model.dart';
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/pose.dart';
-import '../../domain/repositories/pose_repository_impl.dart';
+import '../../../domain/entities/pose.dart';
+import '../../../domain/repositories/pose_repository_impl.dart';
 
 // TODO note - maybe I shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
 // TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional PoseError state to handle those errors.
@@ -48,14 +48,22 @@ class PosesCubit extends Cubit<PosesState> {
   /// Fetch all poses (from local storage or remote if needed)
   Future<void> getAllPoses({required String token}) async {
     try {
+      print("Fetching poses...");
       emit(const PoseLoading());
+
       final poses = await _poseRepo.getLocalPoses();  // Fetch local poses
       if (poses.isEmpty) {
         // If no local poses, sync from remote and retry
+        print("No poses in local datasource, syncing from remote");
         await _poseRepo.syncRemoteToLocal(token);
-        final updatedPoses = await _poseRepo.getLocalPoses();
-        emit(GetPosesSuccess(updatedPoses));
+
+
+        final poses = await _poseRepo.getLocalPoses();
+        print("Got poses (after sync from remote): ${poses.length}");
+        emit(GetPosesSuccess(poses));
+        // TODO can remove else below
       } else {
+        print("Got poses from local: ${poses.length}");
         emit(GetPosesSuccess(poses));
       }
     } catch (e) {
@@ -67,9 +75,12 @@ class PosesCubit extends Cubit<PosesState> {
   /// Sync poses (sync unsynced local poses with remote)
   Future<void> syncPoses(String token) async {
     try {
+      print("Syncing local to remote");
       await _poseRepo.syncLocalToRemote(token);
-      // Optionally, sync remote to local after syncing
+
+      print("Syncing remote to local");
       await _poseRepo.syncRemoteToLocal(token);
+
     } catch (e) {
       print("Sync error: $e");
       // Optional: emit a sync error state if needed

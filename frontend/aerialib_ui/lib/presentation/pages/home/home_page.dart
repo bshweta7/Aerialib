@@ -1,19 +1,13 @@
 // TODO Implement this library.import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/cubit/auth_cubit.dart';
+import 'package:frontend/data/services/connectivity_service.dart';
 import 'package:frontend/pages/home/test_page.dart';
-import 'package:frontend/cubit/poses/poses_cubit.dart';
-// import 'package:frontend/pages/poses/pages/add_new_pose_page.dart';
-import 'package:frontend/pages/poses/pose_library_page.dart';
-// import 'package:frontend/pages/poses/widgets/pose_media_grid.dart';
-// import 'package:frontend/pages/poses/widgets/pose_card.dart';
-import 'package:intl/intl.dart';
-
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 import 'package:frontend/pages/auth/user_profile_page.dart';
 import 'package:frontend/pages/flows/flow_library_page.dart';
 import 'package:frontend/pages/media/media_library_page.dart';
@@ -35,11 +29,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
+    // Fetch local poses and sync remote ones if needed
     context.read<PosesCubit>().getAllPoses(token: user.user.token);
+    // TODO add other imports here
+
     Connectivity().onConnectivityChanged.listen((data) async {
-      if (data.contains(ConnectivityResult.wifi)) {
+      if (data.contains(ConnectivityResult.wifi) || data.contains(ConnectivityResult.ethernet)) { // TODO add other options, possibly move to connectivity_service.dart
         print("Wifi Available");
         await context.read<PosesCubit>().syncPoses(user.user.token);
 
@@ -47,6 +45,10 @@ class _HomePageState extends State<HomePage> {
         print("No wifi available");
       }
     });
+
+    // TODO - Consider caching the last sync time in shared prefs (via sp_service.dart maybe?)
+    // TODO - move this "import data" logic to a StartupManager or AppInitializer class for even cleaner structure
+
   }
 
 
@@ -80,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     const Text("State pose error"),
-                    // Text(state.error),
+                    Text(state.message.toString()),
                   ],
                 ),
               );

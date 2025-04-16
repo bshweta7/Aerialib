@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/cubit/auth_cubit.dart';
 import 'package:frontend/cubit/media_cubit.dart';
-import 'package:frontend/pages/home/home_page.dart';
+import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/pages/media/media_library_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
