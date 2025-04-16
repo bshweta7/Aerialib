@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/cubit/auth_cubit.dart';
-import 'package:frontend/pages/auth/login_page.dart';
+import 'package:frontend/to_sort/cubit/auth_cubit.dart';
+import 'package:frontend/to_sort/pages/auth/login_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
-import 'package:frontend/pages/home/web_landing_page.dart';
+import 'package:frontend/to_sort/pages/home/web_landing_page.dart';
 import 'package:frontend/data/datasources/pose_local_data.dart';
 import 'package:frontend/data/datasources/pose_remote_data.dart';
 import 'package:frontend/domain/repositories/pose_repository_impl.dart';
@@ -15,8 +15,8 @@ import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 
-import 'cubit/media_cubit.dart';
-import 'cubit/flow_cubit.dart';
+import 'to_sort/cubit/media_cubit.dart';
+import 'to_sort/cubit/flow_cubit.dart';
 
 Future<void> main() async {
   if (Platform.isLinux ) {

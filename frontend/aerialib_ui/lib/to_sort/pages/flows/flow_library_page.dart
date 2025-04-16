@@ -1,3 +1,6 @@
+// TODO this page will show all of the flows accessible to user, with filters for apparatus
+
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -6,34 +9,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/to_sort/pages/widgets/media_display/pose_grid.dart';
+
 import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
+import 'package:frontend/to_sort/pages/widgets/media_display/media_utils.dart';
 
 import 'package:frontend/to_sort/cubit/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
-import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
+import 'package:frontend/to_sort/cubit/flow_cubit.dart';
+import 'package:frontend/to_sort/pages/flows/widgets/flow_card.dart';
 
-import 'package:frontend/data/models/pose_model.dart';
+import 'package:frontend/to_sort/models/flow_model.dart';
+import 'package:frontend/to_sort/pages/widgets/media_display/media_card.dart';
 
-import '../../../domain/entities/pose.dart';
-import '../../../to_sort/pages/widgets/media_display/media_utils.dart';
 
-class PoseLibraryPage extends StatefulWidget {
+
+class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
       MaterialPageRoute(
-        builder: (context) => const PoseLibraryPage(),
+        builder: (context) => const FlowLibraryPage(),
       );
-  const PoseLibraryPage({super.key});
+  const FlowLibraryPage({super.key});
 
   @override
-  State<PoseLibraryPage> createState() => _PoseLibraryPageState();
+  State<FlowLibraryPage> createState() => _FlowLibraryPageState();
 }
 
-class _PoseLibraryPageState extends State<PoseLibraryPage> {
+class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
   int _gridSize = 3; // Start at 0 and set during the first build
-  int _gridSizeMax = 10; // TODO set this dynamically when building
   String _searchQuery = ''; // To store the current search query
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
   List<String> selectedApparatus = Constants.apparatusOptions;
@@ -47,13 +50,13 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    context.read<PosesCubit>().getAllPoses(token: user.user.token);
+    context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
     Connectivity().onConnectivityChanged.listen((data) async {
       if (data.contains(ConnectivityResult.wifi)) {
         print("Wifi Available");
-        await context.read<PosesCubit>().syncPoses(user.user.token);
-        // TODO Sync poses when coming back to the page, even if there is no change in wifi connectivity -- accounts for adding a new pose and returning to the pose library (maybe ??)
+        await context.read<FlowsCubit>().syncFlows(user.user.token);
+        // TODO Sync flows when coming back to the page, even if there is no change in wifi connectivity -- accounts for adding a new flow and returning to the flow library (maybe ??)
 
       } else {
         print("No wifi available");
@@ -76,7 +79,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: const Text("Pose Library"),
+          title: const Text("Flow Library"),
           centerTitle: true,
           actions: [
             IconButton(
@@ -96,59 +99,40 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
           ],
         ),
 
-        body: BlocBuilder<PosesCubit, PosesState>(
+        body: BlocBuilder<FlowsCubit, FlowsState>(
           builder: (context, state) {
 
-            if (state is PoseLoading) {
+            if (state is FlowLoading) {
               return const Center(child: CircularProgressIndicator(),);
             }
 
-            if (state is PoseError) {
-              print("Error: State is Pose Error");
+            if (state is FlowError) {
+              print("Error: State is Flow Error");
               return Center(
                 child: Column(
                   children: [
-                    const Text("State pose error"),
-                    // Text(state.error),
+                    const Text("State flow error"),
+                    Text(state.error),
                   ],
                 ),
               );
             }
 
-            if (state is GetPosesSuccess) {
-              List<Pose> filteredPoses = state.poses.where(
-                    (elem) =>
-                selectedApparatus.contains(elem.apparatus) &&
-                    selectedLevels.contains(elem.level),
-              ).toList();
+            if (state is GetFlowsSuccess) {
+              List<FlowModel> filteredFlows = state.flows.toList();
+              print(filteredFlows);
+              List<List<String>> posesInFilteredFlows = [[
+                "/default/clock.jpg",
+                "/default/man_in_the_moon.jpg"
+              ]];
 
-              // print("AAACK");
-              // print(poses);
-              // print(filteredPoses);
-
-              // List<String> posesNamesList = [];
+              // List<String> flowsNamesList = [];
               // List<String> mediaPathsList = [];
               //
-              // for (int i = 0; i < filteredPoses.length; i++) {
-              //   posesNamesList.add(filteredPoses[i].name);
-              //   mediaPathsList.add("http://localhost:8000/media/data"+filteredPoses[i].primaryImageUrl);
+              // for (int i = 0; i < filteredFlows.length; i++) {
+              //   flowsNamesList.add(filteredFlows[i].name);
+              //   mediaPathsList.add("http://localhost:8000/media/data"+filteredFlows[i].primaryImageUrl);
               // }
-
-              // TODO REMOVE THE NAMES LIST ABOVE
-
-                //       media.add(Media(
-                //         responseJson[i]["media_id"].toString(), MediaType.photo,
-                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/thumbnail',
-                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/media',
-                //       ));
-                //       media[i].filename = responseJson[i]["filename"];
-                //       media[i].takenTimestamp = (responseJson[i]["date_taken"] != null) ? DateTime.parse(responseJson[i]["date_taken"]) : DateTime.now();
-                //     }
-
-              // print("POSES FROM HOME PAGE");
-              // print(poses);
-              // print("NAMES");
-              // print(posesNamesList);
 
               return Column(
                 children: [
@@ -233,7 +217,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                       },
                                       // getLabel: (String apparatus) => apparatus, // Simple string case
                                       onSelectionChanged: (List<String> selected) {
-                                        // TODO update the poses visible
+                                        // TODO update the flows visible
                                         print('Selected Apparatus: $selected');
                                         setState(() {
                                           selectedApparatus = selected;
@@ -253,6 +237,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                 SizedBox(height:10),
 
                                 // Level Filter
+                                // TODO - add level column to flows table
                                 Wrap( // Changed to Wrap
                                   alignment: WrapAlignment.start,
                                   spacing: 8.0, // Space between children horizontally
@@ -325,16 +310,26 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                   Expanded(
                     child: Stack(
                       children: [
-                        SingleChildScrollView(
-                          controller: _myScrollController,
-                          // child: PoseGrid(
-                          //   filteredPoses,
-                          //   _gridSize,
-                          //   "",
-                          //   "",
-                          // ),
-
+                        FlowCardList(
+                          flowsList: filteredFlows,
+                          posesInFlowsList: posesInFilteredFlows,
                         ),
+
+                      // MediaCard(
+                      //   flow
+                      // )
+                        // PosesInFlowCard(posesInFlowsList: posesInFilteredFlows),
+                        // SingleChildScrollView(
+                        //   controller: _myScrollController,
+                        //   child:
+                        //   PoseMediaGrid( // TODO MAKE FLOW MEDIA GRID
+                        //     filteredFlows,
+                        //     _gridSize,
+                        //     "",
+                        //     "",
+                        //   ),
+                        //
+                        // ),
 
                         Positioned(
                           bottom: 20,
@@ -370,20 +365,20 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             ),
                           ),
 
-                        // Show add new pose button
-                        if (_areOptionsVisible) // Conditional rendering of other buttons
-                          Positioned(
-                            bottom: 180,
-                            right: 20,
-                            child: FloatingActionButton(
-                              heroTag: 'newPoseFAB',
-                              tooltip: 'Add new pose',
-                              onPressed: () {
-                                Navigator.push(context, AddNewPosePage.route());
-                              },
-                              child: const Icon(CupertinoIcons.add),
-                            ),
-                          ),
+                        // // Show add new flow button
+                        // if (_areOptionsVisible) // Conditional rendering of other buttons
+                        //   Positioned(
+                        //     bottom: 180,
+                        //     right: 20,
+                        //     child: FloatingActionButton(
+                        //       heroTag: 'newFlowFAB',
+                        //       tooltip: 'Add new flow',
+                        //       onPressed: () {
+                        //         Navigator.push(context, AddNewFlowPage.route());
+                        //       },
+                        //       child: const Icon(CupertinoIcons.add),
+                        //     ),
+                        //   ),
 
                         // Show scroll to top of page button
                         if (_areOptionsVisible)

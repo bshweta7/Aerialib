@@ -4,40 +4,40 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/core/utils/formatters.dart';
 
+import 'package:frontend/to_sort/cubit/auth_cubit.dart';
+import 'package:frontend/to_sort/cubit/media_cubit.dart';
+import 'package:frontend/to_sort/pages/media/upload_new_media_page.dart';
+
+import 'package:frontend/to_sort/pages/widgets/media_display/media_grid.dart';
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/to_sort/pages/widgets/media_display/pose_grid.dart';
 import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 
-import 'package:frontend/to_sort/cubit/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
-import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
+import 'package:frontend/to_sort/models/media_model.dart';
 
-import 'package:frontend/data/models/pose_model.dart';
+import '../widgets/media_display/media_utils.dart';
 
-import '../../../domain/entities/pose.dart';
-import '../../../to_sort/pages/widgets/media_display/media_utils.dart';
 
-class PoseLibraryPage extends StatefulWidget {
+class MediaLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
       MaterialPageRoute(
-        builder: (context) => const PoseLibraryPage(),
+        builder: (context) => const MediaLibraryPage(),
       );
-  const PoseLibraryPage({super.key});
+  const MediaLibraryPage({super.key});
 
   @override
-  State<PoseLibraryPage> createState() => _PoseLibraryPageState();
+  State<MediaLibraryPage> createState() => _MediaLibraryPageState();
 }
 
-class _PoseLibraryPageState extends State<PoseLibraryPage> {
+class _MediaLibraryPageState extends State<MediaLibraryPage> {
 
-  int _gridSize = 3; // Start at 0 and set during the first build
-  int _gridSizeMax = 10; // TODO set this dynamically when building
+  int _gridSize = 0; // Start at 0 and set automatically during the first build
   String _searchQuery = ''; // To store the current search query
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
   List<String> selectedApparatus = Constants.apparatusOptions;
-  List<int> selectedLevels = Constants.levelOptions;
+  List<String> selectedShareStatus = Constants.shareOptions; // TODO
   bool _isContainerVisible = false; // Initially hidden
   final ScrollController _myScrollController = ScrollController();
   bool _areOptionsVisible = false; // Track visibility
@@ -47,19 +47,19 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    context.read<PosesCubit>().getAllPoses(token: user.user.token);
+    context.read<MediaCubit>().getAllMedia(token: user.user.token);
 
     Connectivity().onConnectivityChanged.listen((data) async {
       if (data.contains(ConnectivityResult.wifi)) {
         print("Wifi Available");
-        await context.read<PosesCubit>().syncPoses(user.user.token);
-        // TODO Sync poses when coming back to the page, even if there is no change in wifi connectivity -- accounts for adding a new pose and returning to the pose library (maybe ??)
+        await context.read<MediaCubit>().syncMedia(user.user.token);
 
       } else {
         print("No wifi available");
       }
     });
   }
+
 
   void changeGridSize(int amount) {
     // Detect current width and calculate a maximum grid size (column count)
@@ -70,13 +70,18 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
+    // Refresh the grid minimum size
+    changeGridSize(0);
+
+    // Normal widget building
     return Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: const Text("Pose Library"),
+          title: const Text("Media Library"),
           centerTitle: true,
           actions: [
             IconButton(
@@ -96,72 +101,57 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
           ],
         ),
 
-        body: BlocBuilder<PosesCubit, PosesState>(
+        body: BlocBuilder<MediaCubit, MediaState>(
           builder: (context, state) {
 
-            if (state is PoseLoading) {
+            if (state is MediaLoading) {
               return const Center(child: CircularProgressIndicator(),);
             }
 
-            if (state is PoseError) {
-              print("Error: State is Pose Error");
+            if (state is MediaError) {
+              print("Error: State is Media Error");
               return Center(
                 child: Column(
                   children: [
-                    const Text("State pose error"),
-                    // Text(state.error),
+                    const Text("State media error"),
+                    Text(state.error),
                   ],
                 ),
               );
             }
 
-            if (state is GetPosesSuccess) {
-              List<Pose> filteredPoses = state.poses.where(
-                    (elem) =>
-                selectedApparatus.contains(elem.apparatus) &&
-                    selectedLevels.contains(elem.level),
-              ).toList();
+            if (state is GetMediaListSuccess) {
+              final mediaList = state.mediaList.toList();
+              // TODO FILTERING: final medias = state.medias.where(
+              //                       (elem) =>
+              //                   DateFormat('d').format(elem.dueAt) == DateFormat('d').format(selectedDate) &&
+              //                       selectedDate.month == elem.dueAt.month &&
+              //                       selectedDate.year == elem.dueAt.year
+              //               ).toList();
 
-              // print("AAACK");
-              // print(poses);
-              // print(filteredPoses);
+              List<MediaModel> filteredMedia = mediaList;
+              // TODO
+              // List<MediaModel> filteredMedia = state.mediaList.where(
+              //       (elem) =>
+              //   selectedApparatus.contains(elem.apparatus)
+              //       // && selectedShareStatus.contains(elem.apparatus), // TODO USER - needs more work
+              // ).toList();
 
-              // List<String> posesNamesList = [];
-              // List<String> mediaPathsList = [];
-              //
-              // for (int i = 0; i < filteredPoses.length; i++) {
-              //   posesNamesList.add(filteredPoses[i].name);
-              //   mediaPathsList.add("http://localhost:8000/media/data"+filteredPoses[i].primaryImageUrl);
-              // }
-
-              // TODO REMOVE THE NAMES LIST ABOVE
-
-                //       media.add(Media(
-                //         responseJson[i]["media_id"].toString(), MediaType.photo,
-                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/thumbnail',
-                //         serverAddress + "/api/v1/media/" + responseJson[i]["media_id"].toString() + '/media',
-                //       ));
-                //       media[i].filename = responseJson[i]["filename"];
-                //       media[i].takenTimestamp = (responseJson[i]["date_taken"] != null) ? DateTime.parse(responseJson[i]["date_taken"]) : DateTime.now();
-                //     }
-
-              // print("POSES FROM HOME PAGE");
-              // print(poses);
-              // print("NAMES");
-              // print(posesNamesList);
 
               return Column(
                 children: [
 
                   // Filters Section
+                  // TODO Remove levels filtering
+                  // TODO Add filter by UploadedBy (maybe Uploaded by me vs shared with me vs default)
                   Container(
                     width: double.infinity, // Expand horizontally
                     margin: const EdgeInsets.symmetric(
                       vertical: 10,
                     ),
                     padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 10.0
+                        vertical: 10.0,
+                        horizontal: 10.0
                     ),
                     decoration: BoxDecoration(
                       color: Colors.purple.shade100,
@@ -233,15 +223,15 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                       },
                                       // getLabel: (String apparatus) => apparatus, // Simple string case
                                       onSelectionChanged: (List<String> selected) {
-                                        // TODO update the poses visible
                                         print('Selected Apparatus: $selected');
                                         setState(() {
                                           selectedApparatus = selected;
                                         });
                                       },
                                       validator: (value) {
+                                        // TODO Verify why this doesn't work or remove altogether (also see pose librarly)
                                         if (value == null || value.isEmpty) {
-                                          const SnackBar(content: Text('Please select at least one apparatus'));
+                                          // const SnackBar(content: Text('Please select at least one apparatus'));
                                           return 'Please select at least one apparatus';
                                         }
                                         return null;
@@ -252,42 +242,49 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                                 SizedBox(height:10),
 
-                                // Level Filter
-                                Wrap( // Changed to Wrap
+                                // Shared Filter
+                                Wrap(
                                   alignment: WrapAlignment.start,
                                   spacing: 8.0, // Space between children horizontally
                                   runSpacing: 4.0, // Space between lines vertically
                                   children: [
                                     const Text(
-                                      "Level:   ",
+                                      "Share Option:   ",
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
 
-                                    MultiSelect<int>(
-                                      options: Constants.levelOptions,
-                                      initialValues: selectedLevels,
-                                      getLabel: (int level) => 'Level $level',
-                                      // TODO Format level 0 to intro
-                                      // TODO should level even be an int? consider "level 1+" terminology
-                                      onSelectionChanged: (List<int> selected) {
-                                        print('Selected Levels: $selected');
+                                    MultiSelect(
+                                      options: Constants.shareOptions,
+                                      initialValues: selectedShareStatus,
+                                      getLabel: (String shareStatus) {
+                                        if (shareStatus.isEmpty) {
+                                          return shareStatus; // Or return some default string if needed
+                                        }
+                                        return shareStatus[0].toUpperCase() + shareStatus.substring(1);
+                                        // TODO what is this doing
+                                      },
+                                      // getLabel: (String apparatus) => apparatus, // Simple string case
+                                      onSelectionChanged: (List<String> selected) {
+                                        print('Selected Share Status: $selected');
                                         setState(() {
-                                          selectedLevels = selected;
+                                          selectedShareStatus = selected;
                                         });
                                       },
                                       validator: (value) {
+                                        // TODO Verify why this doesn't work or remove altogether (also see pose librarly)
                                         if (value == null || value.isEmpty) {
-                                          const SnackBar(content: Text('Please select at least one level'));
-                                          return 'Please select at least one level';
+                                          // const SnackBar(content: Text('Please select at least one apparatus'));
+                                          return 'Please select at least one share status';
                                         }
                                         return null;
                                       },
-                                    )
+                                    ),
                                   ],
                                 ),
+
                                 SizedBox(height:10),
 
                               ],
@@ -304,7 +301,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                         horizontal: 20.0
                     ),
                     child: SearchBarWidget(
-                      // suggestionList: ['Test 1', 'Test 2', 'Test 3'],
                       onSearchChanged: (query) {
                         setState(() {
                           _searchQuery = query;
@@ -325,15 +321,15 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                   Expanded(
                     child: Stack(
                       children: [
+                        // TODO : need to update media Grid to take media not poseModel
                         SingleChildScrollView(
                           controller: _myScrollController,
-                          // child: PoseGrid(
-                          //   filteredPoses,
-                          //   _gridSize,
-                          //   "",
-                          //   "",
-                          // ),
-
+                          child: MediaGrid(
+                            filteredMedia,
+                            _gridSize,
+                            "",
+                            "",
+                          ),
                         ),
 
                         Positioned(
@@ -341,6 +337,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                           right: 20,
 
                           // Options Button
+                          // TODO Make a Floating Action Button widget so its easy to remember the hero tag
                           child: FloatingActionButton(
                             heroTag: 'pageOptionsFAB',
                             tooltip: 'Open page options',
@@ -364,22 +361,22 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                               onPressed: () {
                                 // TODO implement reset filters
                                 selectedApparatus = Constants.apparatusOptions;
-                                selectedLevels = Constants.levelOptions;
+                                selectedShareStatus = Constants.shareOptions;
                               },
                               child: const Icon(CupertinoIcons.refresh),
                             ),
                           ),
 
-                        // Show add new pose button
+                        // Show add new media button
                         if (_areOptionsVisible) // Conditional rendering of other buttons
                           Positioned(
                             bottom: 180,
                             right: 20,
                             child: FloatingActionButton(
-                              heroTag: 'newPoseFAB',
-                              tooltip: 'Add new pose',
+                              heroTag: 'newMediaFAB',
+                              tooltip: 'Upload new media',
                               onPressed: () {
-                                Navigator.push(context, AddNewPosePage.route());
+                                Navigator.push(context, UploadNewMediaPage.route());
                               },
                               child: const Icon(CupertinoIcons.add),
                             ),
@@ -392,6 +389,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             right: 20,
                             child: FloatingActionButton(
                               heroTag: 'scrollTopFAB',
+                              tooltip: 'Scroll to the top of the page',
                               onPressed: () {
                                 _myScrollController.animateTo(
                                   0,
@@ -399,7 +397,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                   curve: Curves.easeInOut,
                                 );
                               },
-                              tooltip: 'Scroll to the top of the page',
                               child: const Icon(CupertinoIcons.arrow_up),
                             ),
 

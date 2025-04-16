@@ -3,14 +3,14 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/cubit/auth_cubit.dart';
+import 'package:frontend/to_sort/cubit/auth_cubit.dart';
 import 'package:frontend/data/services/connectivity_service.dart';
-import 'package:frontend/pages/home/test_page.dart';
+import 'package:frontend/to_sort/pages/home/test_page.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
-import 'package:frontend/pages/auth/user_profile_page.dart';
-import 'package:frontend/pages/flows/flow_library_page.dart';
-import 'package:frontend/pages/media/media_library_page.dart';
+import 'package:frontend/to_sort/pages/auth/user_profile_page.dart';
+import 'package:frontend/to_sort/pages/flows/flow_library_page.dart';
+import 'package:frontend/to_sort/pages/media/media_library_page.dart';
 
 
 class HomePage extends StatefulWidget {
