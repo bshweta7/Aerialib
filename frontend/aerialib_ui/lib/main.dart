@@ -38,8 +38,8 @@ Future<void> main() async {
 
   // Set up Repos
   final poseRepo = PoseRepository(
-    localRepo: PoseLocalDataSource(),
-    remoteRepo: PoseRemoteDataSource(httpService: HttpService()),
+    localDataSrc: PoseLocalDataSource(),
+    remoteDataSrc: PoseRemoteDataSource(httpService: HttpService()),
   );
 
   // Run app

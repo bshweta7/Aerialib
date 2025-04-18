@@ -17,7 +17,7 @@ class PoseLoading extends PosesState {
 }
 
 class GetPosesSuccess extends PosesState {
-  final List<Pose> poses;
+  final List<PoseEntity> poses;
   const GetPosesSuccess(this.poses);
 
   @override
@@ -25,7 +25,7 @@ class GetPosesSuccess extends PosesState {
 }
 
 class AddNewPoseSuccess extends PosesState {
-  final Pose pose;
+  final PoseEntity pose;
   const AddNewPoseSuccess(this.pose);
 
   @override
@@ -33,7 +33,7 @@ class AddNewPoseSuccess extends PosesState {
 }
 
 class UpdatePoseSuccess extends PosesState {
-  final Pose updatedPose;
+  final PoseEntity updatedPose;
   const UpdatePoseSuccess(this.updatedPose);
 
   @override

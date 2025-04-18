@@ -12,7 +12,7 @@ import 'package:frontend/core/constants/constants.dart';
 
 import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
-import 'package:frontend/presentation/widgets/media_display/media_utils.dart';
+import 'package:frontend/presentation/widgets/media_display/media_grid_utils.dart';
 
 import 'package:frontend/to_sort/cubit/auth_cubit.dart';
 import 'package:frontend/to_sort/cubit/flow_cubit.dart';

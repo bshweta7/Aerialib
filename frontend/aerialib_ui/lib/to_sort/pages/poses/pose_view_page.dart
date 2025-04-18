@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/presentation/widgets/media_display/pose_grid.dart';
+import 'package:frontend/presentation/widgets/media_display/media_grid.dart';
 import 'package:frontend/to_sort/pages/poses/edit_pose_page.dart';
 import 'package:frontend/data/models/pose_model.dart';
 
-import '../widgets/media_display/media_icon.dart';
+import '../../../presentation/widgets/media_display/media_icon_grid_card.dart';
 
 class PoseViewPage extends StatefulWidget {
   final PoseModel pose;
@@ -59,15 +59,15 @@ class _PoseViewPageState extends State<PoseViewPage> {
           child:
             Column(
               children: [
-                Expanded(
-                  child: MediaIcon(
-                    widget.pose.name,
-                    widget.pose.primaryImageUrl,
-                    () {},
-                    "",
-                    "",
-                  )
-                ),
+                // Expanded(
+                //   child: MediaIconCard(
+                //     widget.pose.name,
+                //     widget.pose.primaryImageUrl,
+                //     () {},
+                //     "",
+                //     "",
+                //   )
+                // ),
 
                 // // TODO Alternative Names
                 // Row(

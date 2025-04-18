@@ -1,6 +1,6 @@
-// lib/domain/entities/pose.dart
+// lib/domain/entities/pose_entity.dart
 
-class Pose {
+class PoseEntity {
   final String id;
   final String name;
   final String? description;
@@ -15,7 +15,7 @@ class Pose {
   final String primaryImageId;
   final String primaryImageUrl;
 
-  const Pose({
+  const PoseEntity({
     required this.id,
     required this.name,
     this.description,
@@ -34,7 +34,7 @@ class Pose {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is Pose &&
+          other is PoseEntity &&
               runtimeType == other.runtimeType &&
               id == other.id &&
               name == other.name &&

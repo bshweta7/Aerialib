@@ -10,6 +10,7 @@ class PoseRemoteDataSource {
 
   PoseRemoteDataSource({required this.httpService});
 
+  /// Create and return PoseModel
   Future<PoseModel> createPose({
     required String name,
     required String description,
@@ -17,15 +18,16 @@ class PoseRemoteDataSource {
     required String apparatus,
     required int level,
     required String primaryImageId,
-    required String token,
     required String createdBy,
+    required String token,
   }) async {
+
     final body = {
       'name': name,
       'apparatus': apparatus,
       'level': level,
-      'createdBy': createdBy,
       'primaryImageId': primaryImageId,
+      'createdBy': createdBy,
     };
 
     try {
@@ -37,6 +39,7 @@ class PoseRemoteDataSource {
       );
 
       return PoseModel.fromJson(response.body);
+
     } catch (e) {
       // Fallback: construct a local unsynced PoseModel (but leave inserting to PoseRepository)
       return PoseModel(
@@ -74,12 +77,13 @@ class PoseRemoteDataSource {
     required List<PoseModel> poses,
   }) async {
     final List<Map<String, dynamic>> poseListInMap = poses.map((pose) => pose.toMap()).toList();
-
+    print(poseListInMap);
     final response = await httpService.post(
       path: "/poses/sync",
       token: token,
       body: poseListInMap,
     );
+    print(response);
 
     return response.statusCode == 201;
   }

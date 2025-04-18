@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/to_sort/models/media_model.dart';
 import 'package:frontend/to_sort/pages/media/media_view_page.dart';
-import 'package:frontend/to_sort/pages/widgets/media_display/media_icon.dart';
+import 'package:frontend/presentation/widgets/media_display/media_icon_grid_card.dart';
 
 // TODO if the screen is too small, only show name if tapped on ?
 
@@ -30,18 +30,18 @@ class MediaGrid extends StatelessWidget {
       gridDelegate:
       SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: gridSize),
       itemBuilder: (BuildContext context, int index) {
-        return MediaIcon(
-          mediaList[index].name,
-          mediaList[index].mediaURL,
-          () {
-            Navigator.push(
-              context,
-              MediaViewPage.route(mediaList[index])
-            );
-          },
-          "",
-          "",
-        );
+        // return MediaIconCard(
+        //   mediaList[index].name,
+        //   mediaList[index].mediaURL,
+        //   () {
+        //     Navigator.push(
+        //       context,
+        //       MediaViewPage.route(mediaList[index])
+        //     );
+        //   },
+        //   "",
+        //   "",
+        // );
       },
       itemCount: mediaList.length,
     );

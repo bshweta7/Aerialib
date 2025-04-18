@@ -17,7 +17,7 @@ import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 
 import 'package:frontend/to_sort/models/media_model.dart';
 
-import '../../../presentation/widgets/media_display/media_utils.dart';
+import '../../../presentation/widgets/media_display/media_grid_utils.dart';
 
 
 class MediaLibraryPage extends StatefulWidget {

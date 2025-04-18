@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/to_sort/pages/widgets/media_display/media_icon.dart'; // TODO shouldn't use media icon here... use sliding image display
+import 'package:frontend/presentation/widgets/media_display/media_icon_grid_card.dart'; // TODO shouldn't use media icon here... use sliding image display
 import 'package:frontend/to_sort/models/media_model.dart';
 
 
@@ -58,13 +58,13 @@ class _MediaViewPageState extends State<MediaViewPage> {
               child:
               Column(
                 children: [
-                  Expanded(child: MediaIcon(
-                      widget.media.name,
-                      widget.media.mediaURL,
-                      () {},
-                      "",
-                      ""
-                  )),
+                  // Expanded(child: MediaIconCard(
+                  //     widget.media.name,
+                  //     widget.media.mediaURL,
+                  //     () {},
+                  //     "",
+                  //     ""
+                  // )),
 
                   // // TODO Alternative Names
                   // Row(

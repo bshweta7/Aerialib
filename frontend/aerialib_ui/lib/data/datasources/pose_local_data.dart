@@ -22,13 +22,11 @@ class PoseLocalDataSource {
   }
 
   Future<Database> _initDb() async {
-
     // Initialize sqflite_common_ffi on desktop and web
     if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
     }
-
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, "poses.db");
 
@@ -46,10 +44,38 @@ class PoseLocalDataSource {
       },
     );
   }
+  // Future<Database> _initDb() async {
+  //   DatabaseFactory? factory;
+  //
+  //   final dbPath = await getDatabasesPath();
+  //   String path = join(dbPath, "poses.db");
+  //
+  //   if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+  //     // Initialize sqflite_common_ffi on desktop and web
+  //     sqfliteFfiInit();
+  //     factory = databaseFactoryFfi;
+  //   } else {
+  //     factory = databaseFactory; // Use the default factory for mobile
+  //   }
+  //
+  //   return openDatabase(
+  //     path,
+  //     version: 6,
+  //     onUpgrade: (db, oldVersion, newVersion) async {
+  //       if (oldVersion < newVersion) {
+  //         await db.execute(dropPoseTable); // Use drop command from schema
+  //         await db.execute(createPoseTable); // Use create command from schema
+  //       }
+  //     },
+  //     onCreate: (db, version) async {
+  //       return db.execute(createPoseTable); // Use create command from schema
+  //     },
+  //   );
+  // }
 
   Future<void> insertPose(PoseModel pose) async {
     final db = await database;
-    await db.delete(tableName, where: 'id = ?', whereArgs: [pose.id]);
+    // TODO decide if upsert or not: await db.delete(tableName, where: 'id = ?', whereArgs: [pose.id]);
     await db.insert(tableName, pose.toMap());
   }
 
@@ -60,7 +86,7 @@ class PoseLocalDataSource {
       batch.insert(
         tableName,
         pose.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace, //TODO replace might be wrong here
+        conflictAlgorithm: ConflictAlgorithm.ignore, //TODO replace might be wrong here - use replace if upserting
       );
     }
 

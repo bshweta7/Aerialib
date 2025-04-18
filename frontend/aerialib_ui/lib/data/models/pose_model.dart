@@ -3,9 +3,11 @@
 import 'dart:convert';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/domain/entities/pose.dart';
+import 'package:frontend/domain/entities/pose_entity.dart';
 
-class PoseModel extends Pose {
+import '../../domain/entities/media_icon.dart';
+
+class PoseModel extends PoseEntity {
   const PoseModel({
     required super.id,
     required super.name,
@@ -16,7 +18,7 @@ class PoseModel extends Pose {
     required super.createdBy,
     super.updatedBy,
     required super.createdAt,
-    required super.updatedAt,
+    required super.updatedAt, // TODO - this should be nullable if never updated
     required super.isSynced,
     required super.primaryImageId,
     required super.primaryImageUrl,
@@ -35,7 +37,7 @@ class PoseModel extends Pose {
       updatedBy: map['updated_by'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
-      isSynced: map['is_synced'] ?? 0,
+      isSynced: map['is_synced'] ?? 1,
       primaryImageId: map['primary_image_id'] ?? Constants.missingImageId,
       primaryImageUrl: map['primary_image_url'] ?? Constants.missingImageUrl,
     );
@@ -68,10 +70,10 @@ class PoseModel extends Pose {
   String toJson() => json.encode(toMap());
 
   /// Convert this PoseModel into a domain-layer Pose entity
-  Pose toEntity() => this;
+  PoseEntity toEntity() => this;
 
   /// Construct PoseModel from a domain-layer Pose entity
-  factory PoseModel.fromEntity(Pose pose) {
+  factory PoseModel.fromEntity(PoseEntity pose) {
     return PoseModel(
       id: pose.id,
       name: pose.name,
