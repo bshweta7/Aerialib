@@ -15,7 +15,7 @@
 // import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 // import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
 // import 'package:frontend/domain/repositories/pose_repository_impl.dart';
-// import '../../../domain/entities/media_icon.dart';
+// import '../../../domain/entities/media_icon_entity.dart';
 // import '../../widgets/media_display/media_grid.dart';
 //
 // import 'package:frontend/'
@@ -106,13 +106,13 @@
 //             }
 //
 //             if (state is GetPosesSuccess) {
-//               List<Pose> filteredPoses = state.poses.where(
+//               List<PoseEntity> filteredPoses = state.poses.where(
 //                     (elem) =>
 //                 selectedApparatus.contains(elem.apparatus) &&
 //                     selectedLevels.contains(elem.level),
 //               ).toList();
 //
-//               List<MediaIcon> mediaList = filteredPoses.map((p) => p.toMediaIcon()).toList();
+//               List<MediaIconEntity> mediaList = filteredPoses.map((p) => p.toMediaIcon()).toList();
 //
 //
 //               return Column(

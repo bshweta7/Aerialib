@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
-import '../../domain/entities/media_icon.dart';
+import '../../domain/entities/media_icon_entity.dart';
 
 class PoseModel extends PoseEntity {
   const PoseModel({

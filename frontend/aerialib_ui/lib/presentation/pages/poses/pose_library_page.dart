@@ -9,13 +9,14 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid_utils.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
+import 'package:frontend/presentation/widgets/media_list/list_card.dart';
 
 import 'package:frontend/to_sort/cubit/auth_cubit.dart';
 import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
 import 'package:frontend/domain/repositories/pose_repository_impl.dart';
-import '../../../domain/entities/media_icon.dart';
+import '../../../domain/entities/media_icon_entity.dart';
 import '../../widgets/media_display/media_grid.dart';
 
 // import 'package:frontend/'
@@ -106,17 +107,15 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             }
 
             if (state is GetPosesSuccess) {
+
+              // TODO move filtereing to cubit?
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
                 selectedApparatus.contains(elem.apparatus) &&
                     selectedLevels.contains(elem.level),
               ).toList();
 
-              print("MOOOOOOOOOOOOOO0");
               print(filteredPoses);
-
-              // List<MediaIcon> mediaList = filteredPoses.map((p) => p.toMediaIcon()).toList();
-
 
               return Column(
                 children: [
@@ -127,7 +126,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       children: [
                         SingleChildScrollView(
                           controller: _myScrollController,
-                          child: Text("MOOO")
+                          child: ListCard(
+                            title: 'Title',
+                            subtitle: 'Subtitle',
+                            mediaUrl: '${Constants.backendUri}/missing_image.jpg',
+                          )
+                          // child: Text("MOOO")
                           // child: MediaGrid(
                           //   filteredPoses,
                           //   _gridSize,
