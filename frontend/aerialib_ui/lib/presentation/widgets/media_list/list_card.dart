@@ -7,14 +7,14 @@ class ListCard extends StatelessWidget {
   const ListCard({
     required this.title,
     required this.subtitle,
-    required this.mediaUrl,
+    required this.imageUrl,
     this.onTapFunction,
     super.key,
   });
 
   final String title;
   final String subtitle;
-  final String mediaUrl;
+  final String imageUrl;
   final GestureTapCallback? onTapFunction;
 
   @override
@@ -38,8 +38,8 @@ class ListCard extends StatelessWidget {
                 height: 80.0,
                 child: ClipRRect( // To round the image corners if you like
                   borderRadius: BorderRadius.circular(8.0),
-                  child: CachedNetworkImage( // TODO compare to customized version in ToSort folder. 
-                    imageUrl: mediaUrl,
+                  child: CachedNetworkImage( // TODO compare to customized version in ToSort folder.
+                    imageUrl: imageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Icon(Icons.error),

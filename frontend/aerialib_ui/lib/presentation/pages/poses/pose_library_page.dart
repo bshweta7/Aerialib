@@ -16,8 +16,10 @@ import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
 import 'package:frontend/domain/repositories/pose_repository_impl.dart';
+import '../../../core/utils/conversions.dart';
 import '../../../domain/entities/media_icon_entity.dart';
 import '../../widgets/media_display/media_grid.dart';
+import '../../widgets/media_list/media_list.dart';
 
 // import 'package:frontend/'
 
@@ -32,6 +34,8 @@ class PoseLibraryPage extends StatefulWidget {
   @override
   State<PoseLibraryPage> createState() => _PoseLibraryPageState();
 }
+
+
 
 class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
@@ -69,22 +73,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
           // the App.build method, and use it to set our appbar title.
           title: const Text("Pose Library"),
           centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.remove_circle_outline),
-              onPressed: () {
-                changeGridSize(1);
-              },
-              tooltip: 'Decrease Image Size',
-            ),
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              onPressed: () {
-                changeGridSize(-1);
-              },
-              tooltip: 'Increase Image Size',
-            ),
-          ],
         ),
 
         body: BlocBuilder<PosesCubit, PosesState>(
@@ -117,6 +105,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
               print(filteredPoses);
 
+              List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
+
+              print(filteredMediaIcons);
+
               return Column(
                 children: [
 
@@ -126,18 +118,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       children: [
                         SingleChildScrollView(
                           controller: _myScrollController,
-                          child: ListCard(
-                            title: 'Title',
-                            subtitle: 'Subtitle',
-                            mediaUrl: '${Constants.backendUri}/missing_image.jpg',
-                          )
-                          // child: Text("MOOO")
-                          // child: MediaGrid(
-                          //   filteredPoses,
-                          //   _gridSize,
-                          //   "",
-                          //   "",
-                          // ),
+                          child: MediaList(mediaItems: filteredMediaIcons)
                         ),
                       ],
                     ),
