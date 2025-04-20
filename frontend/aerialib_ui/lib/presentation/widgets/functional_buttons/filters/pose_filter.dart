@@ -3,6 +3,8 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/filters/filter_multi_select.dart';
 
+import 'active_filters.dart';
+
 class PoseFilters extends StatefulWidget {
   final List<String> initialApparatus;
   final List<int> initialLevels;
@@ -77,9 +79,7 @@ class _PoseFiltersState extends State<PoseFilters> {
 
     activeFilterString = filters.join('\n');
 
-    return activeFilterString.isEmpty ? " (All)" : "$activeFilterString";
-
-    return _selectedApparatus[0];
+    return activeFilterString.isEmpty ? " (All)" : activeFilterString;
   }
 
 
@@ -101,9 +101,11 @@ class _PoseFiltersState extends State<PoseFilters> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween, // TODO adjust this
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
 
@@ -138,7 +140,10 @@ class _PoseFiltersState extends State<PoseFilters> {
 
                       // Active Filters
                       if (!_isContainerVisible) // Show summary when collapsed
-                        Text(_getActiveFilters()), // TODO
+                        ActiveFiltersSummary(
+                          activeApparatusFilters: widget.initialApparatus,
+                          activeLevelFilters: widget.initialLevels,
+                        ),
                     ],
                   ),
 
