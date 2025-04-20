@@ -1,30 +1,37 @@
-// lib/data/models/pose_model.dart
-
 import 'dart:convert';
-
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/domain/entities/pose_entity.dart';
 
-import '../../domain/entities/media_icon_entity.dart';
+class PoseModel {
+  final String id;
+  final String name;
+  final String? description;
+  final String? cues;
+  final String apparatus;
+  final int level;
+  final String createdBy;
+  final String? updatedBy;
+  final DateTime createdAt;
+  final DateTime updatedAt; // TODO - this should be nullable if never updated
+  final int isSynced;
+  final String primaryImageId;
+  final String primaryImageUrl;
 
-class PoseModel extends PoseEntity {
   const PoseModel({
-    required super.id,
-    required super.name,
-    super.description,
-    super.cues,
-    required super.apparatus,
-    required super.level,
-    required super.createdBy,
-    super.updatedBy,
-    required super.createdAt,
-    required super.updatedAt, // TODO - this should be nullable if never updated
-    required super.isSynced,
-    required super.primaryImageId,
-    required super.primaryImageUrl,
+    required this.id,
+    required this.name,
+    this.description,
+    this.cues,
+    required this.apparatus,
+    required this.level,
+    required this.createdBy,
+    this.updatedBy,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.isSynced,
+    required this.primaryImageId,
+    required this.primaryImageUrl,
   });
 
-  /// Construct PoseModel from a Map (e.g., from SQLite or API JSON)
   factory PoseModel.fromMap(Map<String, dynamic> map) {
     return PoseModel(
       id: map['id'] ?? '',
@@ -43,7 +50,6 @@ class PoseModel extends PoseEntity {
     );
   }
 
-  /// Serialize PoseModel to a Map (for local DB or API)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -62,32 +68,9 @@ class PoseModel extends PoseEntity {
     };
   }
 
-  /// Deserialize PoseModel from a JSON string
   factory PoseModel.fromJson(String source) =>
       PoseModel.fromMap(json.decode(source));
 
-  /// Serialize PoseModel to a JSON string
   String toJson() => json.encode(toMap());
 
-  /// Convert this PoseModel into a domain-layer Pose entity
-  PoseEntity toEntity() => this;
-
-  /// Construct PoseModel from a domain-layer Pose entity
-  factory PoseModel.fromEntity(PoseEntity pose) {
-    return PoseModel(
-      id: pose.id,
-      name: pose.name,
-      description: pose.description,
-      cues: pose.cues,
-      apparatus: pose.apparatus,
-      level: pose.level,
-      createdBy: pose.createdBy,
-      updatedBy: pose.updatedBy,
-      createdAt: pose.createdAt,
-      updatedAt: pose.updatedAt,
-      isSynced: pose.isSynced,
-      primaryImageId: pose.primaryImageId,
-      primaryImageUrl: pose.primaryImageUrl,
-    );
-  }
 }

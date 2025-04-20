@@ -118,7 +118,7 @@ class PoseRepository {
     required PoseEntity updatedPose,
     required String token,
   }) async {
-    final poseModel = PoseModel.fromEntity(updatedPose);
+    final poseModel = poseEntityToModel(updatedPose);
 
     final updatedModel = await remoteDataSrc.updatePose(
       updatedPose: poseModel,
@@ -132,5 +132,42 @@ class PoseRepository {
   Future<void> deletePose(String id) async {
     await localDataSrc.deletePose(id);
   }
+}
+
+// Mapping function (can be in the repository or as a static method)
+PoseEntity poseModelToEntity(PoseModel model) {
+  return PoseEntity(
+    id: model.id,
+    name: model.name,
+    description: model.description,
+    cues: model.cues,
+    apparatus: model.apparatus,
+    level: model.level,
+    createdBy: model.createdBy,
+    updatedBy: model.updatedBy,
+    createdAt: model.createdAt,
+    updatedAt: model.updatedAt,
+    isSynced: model.isSynced,
+    primaryImageId: model.primaryImageId,
+    primaryImageUrl: model.primaryImageUrl,
+  );
+}
+
+PoseModel poseEntityToModel(PoseEntity entity) {
+  return PoseModel(
+    id: entity.id,
+    name: entity.name,
+    description: entity.description,
+    cues: entity.cues,
+    apparatus: entity.apparatus,
+    level: entity.level,
+    createdBy: entity.createdBy,
+    updatedBy: entity.updatedBy,
+    createdAt: entity.createdAt,
+    updatedAt: entity.updatedAt,
+    isSynced: entity.isSynced,
+    primaryImageId: entity.primaryImageId,
+    primaryImageUrl: entity.primaryImageUrl,
+  );
 }
 
