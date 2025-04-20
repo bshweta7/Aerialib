@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/media_icon_entity.dart';
-import 'package:frontend/presentation/widgets/media_display/media_icon_grid_card.dart';
+import 'package:frontend/presentation/widgets/media_list/list_card.dart';
 
-import 'list_card.dart';
-
-// TODO if the screen is too small, only show name if tapped on ?
+typedef NavigateToMediaPage = void Function(MediaIconEntity mediaItem); // Define the typedef here
 
 class MediaList extends StatelessWidget {
   final List<MediaIconEntity> mediaItems;
+  final NavigateToMediaPage onMediaTap;
 
-  const MediaList({super.key, required this.mediaItems});
+  const MediaList({super.key, required this.mediaItems, required this.onMediaTap});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +17,16 @@ class MediaList extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       itemCount: mediaItems.length,
       itemBuilder: (context, index) {
-        print(index);
         final mediaItem = mediaItems[index];
-        print(mediaItem.imageUrl);
-        return ListCard( // Your existing card widget
-          imageUrl: mediaItem.imageUrl,
-          title: mediaItem.title,
-          subtitle: mediaItem.subtitle,
-          // You might handle tap actions or other type-specific logic here
+        return GestureDetector(
+          onTap: () {
+            onMediaTap(mediaItem);
+          },
+          child: ListCard(
+            imageUrl: mediaItem.imageUrl,
+            title: mediaItem.title,
+            subtitle: mediaItem.subtitle,
+          ),
         );
       },
     );

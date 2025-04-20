@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid_utils.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
@@ -84,6 +85,13 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
+  void _navigateToMediaPage(MediaIconEntity mediaItem) {
+    Navigator.push(
+      context,
+      PoseViewPage.route(mediaItem.data),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +163,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
 
                               // List poses
-                              MediaList(mediaItems: filteredMediaIcons),
+                              MediaList(
+                                mediaItems: filteredMediaIcons,
+                                onMediaTap: _navigateToMediaPage,
+                              ),
                             ],
                           )
                         ),

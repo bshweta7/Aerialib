@@ -18,7 +18,7 @@ import 'package:frontend/domain/repositories/pose_repository_impl.dart';
 import '../../../domain/entities/media_icon_entity.dart';
 import '../../widgets/media_display/media_grid.dart';
 
-import 'package:frontend/'
+// import 'package:frontend/'
 
 
 class PoseLibraryPage extends StatefulWidget {
@@ -112,7 +112,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     selectedLevels.contains(elem.level),
               ).toList();
 
-              List<MediaIconEntity> mediaList = filteredPoses.map((p) => p.toMediaIcon()).toList();
+              // List<MediaIconEntity> mediaList = filteredPoses.map((p) => p.toMediaIcon()).toList();
 
 
               return Column(
