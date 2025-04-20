@@ -90,16 +90,20 @@ class _PoseFiltersState extends State<PoseFilters> {
                 children: [
 
                   // Drop down full view button
+
                   IconButton(
                     icon: Icon(_isContainerVisible
-                        ? Icons.arrow_drop_up
-                        : Icons.arrow_drop_down), // Change icon based on visibility
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down
+                    ), // Change icon based on visibility
                     onPressed: () {
                       setState(() {
                         _isContainerVisible = !_isContainerVisible; // Toggle visibility
                       });
                     },
-                    tooltip: 'Show or hide filter options',
+                    tooltip: _isContainerVisible
+                      ? 'Hide filter options'
+                      : 'Expand filter options',
                   ),
 
                   // Title
@@ -117,13 +121,18 @@ class _PoseFiltersState extends State<PoseFilters> {
               if (_isContainerVisible)
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: TextButton(
-                    onPressed: _resetFilters,
-                    child: const Text(
-                      "Reset",
-                      style: TextStyle(color: Colors.blue),
-                    ),
+                  child: IconButton(
+                    icon: const Icon(Icons.refresh), // Change icon based on visibility
+                    onPressed:  _resetFilters,
+                    tooltip: 'Reset filters',
                   ),
+                  // TextButton(
+                  //   onPressed:
+                  //   child: const Text(
+                  //     "Reset",
+                  //     style: TextStyle(color: Colors.blue),
+                  //   ),
+                  // ),
                 ),
             ],
           ),
