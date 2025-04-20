@@ -18,10 +18,10 @@ import 'package:frontend/presentation/widgets/functional_buttons/filters/pose_fi
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid/media_grid.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
+import 'package:frontend/presentation/widgets/functional_buttons/search_bar.dart';
 
 
 import 'package:frontend/to_sort/cubit/auth_cubit.dart';
-import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
 
 class PoseLibraryPage extends StatefulWidget {
@@ -41,12 +41,14 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   int _gridSize = 3; // Start at 0 and set during the first build
   int _gridSizeMax = 10; // TODO set this dynamically when building
-  String _searchQuery = ''; // To store the current search query
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
+
+  // Filtering
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
-  bool _isContainerVisible = false; // Initially hidden
-  bool _areOptionsVisible = false; // Track visibility
+
+  // Search Bar
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -70,6 +72,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
+  // Filtering
   void _updateApparatusFilter(List<String> newApparatus) {
     setState(() {
       selectedApparatus = newApparatus;
@@ -82,6 +85,29 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
+  // Search Bar
+  void _updateSearchQuery(String newQuery) {
+    print(newQuery);
+    setState(() {
+      _searchQuery = newQuery;
+    });
+  }
+
+  List<MediaIconEntity> _filterPosesBySearch(List<PoseEntity> allPoses, String query) {
+    if (query.isEmpty) {
+      return posesToMediaIcons(allPoses);
+    }
+    final lowerCaseQuery = query.toLowerCase();
+    final filtered = allPoses.where((pose) {
+      return pose.name.toLowerCase().contains(lowerCaseQuery) ||
+          (pose.description?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
+          pose.apparatus.toLowerCase().contains(lowerCaseQuery);
+    }).toList();
+    return posesToMediaIcons(filtered);
+  }
+
+
+  // Navigation
   void _navigateToMediaPage(MediaIconEntity mediaItem) {
     Navigator.push(
       context,
@@ -145,10 +171,20 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                   // TODO consider "Sticky Behavior" for filter box scrolling (currently stationary)
                   // A sticky behavior means the filter section scrolls normally at the top but then "sticks" to a certain position as the user scrolls down the list of poses. Flutter's SliverAppBar with pinned: true can achieve a similar effect for app bar sections, but for a regular widget in the body, it's a bit more involved and might require using ScrollController and Transform.translate or custom Sliver widgets.
 
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: SearchBarWidget(
+                      onSearchChanged: _updateSearchQuery,
+                      suggestionList: state.poses,
+                    ),
+                  ),
+
+                  const SizedBox(height: 15,),
+
                   Expanded(
                     child: Stack(
                       children: [
-
                         SingleChildScrollView(
                           controller: _scrollController,
                           child: Column(
@@ -158,7 +194,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                               // List poses
                               MediaList(
-                                mediaItems: filteredMediaIcons,
+                                mediaItems: filteredMediaIcons, // TODO should i define a new list to hold search results?
                                 onMediaTap: _navigateToMediaPage,
                               ),
                             ],

@@ -16,6 +16,7 @@ class MediaList extends StatelessWidget {
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
       itemCount: mediaItems.length,
+      // TODO if itemCount = 0, say "Oops, no poses found. Try changing your filters!"
       itemBuilder: (context, index) {
         final mediaItem = mediaItems[index];
         return GestureDetector(
