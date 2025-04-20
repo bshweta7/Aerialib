@@ -9,7 +9,6 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid_utils.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:frontend/presentation/widgets/media_list/list_card.dart';
 
 import 'package:frontend/to_sort/cubit/auth_cubit.dart';
 import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
@@ -18,6 +17,7 @@ import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
 import 'package:frontend/domain/repositories/pose_repository_impl.dart';
 import '../../../core/utils/conversions.dart';
 import '../../../domain/entities/media_icon_entity.dart';
+import '../../widgets/functional_buttons/filters/pose_filter.dart';
 import '../../widgets/functional_buttons/scroll_to_top.dart';
 import '../../widgets/functional_buttons/add_new.dart';
 import '../../widgets/media_display/media_grid.dart';
@@ -72,6 +72,19 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
+  void _updateApparatusFilter(List<String> newApparatus) {
+    setState(() {
+      selectedApparatus = newApparatus;
+    });
+  }
+
+  void _updateLevelsFilter(List<int> newLevels) {
+    setState(() {
+      selectedLevels = newLevels;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,22 +126,33 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     selectedLevels.contains(elem.level),
               ).toList();
 
-              print(filteredPoses);
-
               List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
 
               print(filteredMediaIcons);
 
-              return Stack(
+              return Column(
                 children: [
-                  // List poses
-                  SingleChildScrollView(
-                    controller: _scrollController,
-                    child: MediaList(mediaItems: filteredMediaIcons)
+                  // Pose Filters
+                  PoseFilters(
+                    initialApparatus: selectedApparatus,
+                    initialLevels: selectedLevels,
+                    onApparatusChanged: _updateApparatusFilter,
+                    onLevelsChanged: _updateLevelsFilter,
                   ),
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        // List poses
+                        SingleChildScrollView(
+                          controller: _scrollController,
+                          child: MediaList(mediaItems: filteredMediaIcons)
+                        ),
 
-                  // Scroll to top floating button
-                  ScrollToTopButton(scrollController: _scrollController), // Add the button
+                        // Scroll to top floating button
+                        ScrollToTopButton(scrollController: _scrollController), // Add the button
+                      ],
+                    ),
+                  ),
                 ],
               );
             }
