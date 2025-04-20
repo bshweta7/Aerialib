@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/to_sort/pages/flows/edit_flow_page.dart';
 import 'package:frontend/to_sort/models/flow_model.dart';
 
-import '../../../presentation/widgets/media_display/media_icon_grid_card.dart';
+import '../../../presentation/widgets/media_display/media_grid/media_icon_grid_card.dart';
 
 class FlowViewPage extends StatefulWidget {
   final FlowModel flow;

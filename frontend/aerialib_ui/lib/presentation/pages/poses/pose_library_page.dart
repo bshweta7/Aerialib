@@ -6,26 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/core/utils/conversions.dart';
+
+import 'package:frontend/domain/entities/pose_entity.dart';
+import 'package:frontend/domain/entities/media_icon_entity.dart';
+
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
-import 'package:frontend/presentation/widgets/media_display/media_grid_utils.dart';
-import 'package:frontend/domain/entities/pose_entity.dart';
+import 'package:frontend/presentation/widgets/media_display/media_grid/media_grid_utils.dart';
+import 'package:frontend/presentation/widgets/functional_buttons/filters/pose_filter.dart';
+import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
+import 'package:frontend/presentation/widgets/media_display/media_grid/media_grid.dart';
+import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
+
 
 import 'package:frontend/to_sort/cubit/auth_cubit.dart';
-import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
-import 'package:frontend/domain/repositories/pose_repository_impl.dart';
-import '../../../core/utils/conversions.dart';
-import '../../../domain/entities/media_icon_entity.dart';
-import '../../widgets/functional_buttons/filters/pose_filter.dart';
-import '../../widgets/functional_buttons/scroll_to_top.dart';
-import '../../widgets/functional_buttons/add_new.dart';
-import '../../widgets/media_display/media_grid.dart';
-import '../../widgets/media_list/media_list.dart';
-
-// import 'package:frontend/'
-
 
 class PoseLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -127,7 +124,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             }
 
             if (state is GetPosesSuccess) {
-
               // TODO move filtering to cubit?
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
@@ -136,8 +132,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               ).toList();
 
               List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
-
-              print(filteredMediaIcons);
 
               return Column(
                 children: [

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/constants/constants.dart';
 
-import 'cached_network_image.dart';
+import '../../../../presentation/widgets/media_display/formatted_cached_network_image.dart';
 
 class MediaCard extends StatelessWidget {
   // Creates tappable media card with detailed info

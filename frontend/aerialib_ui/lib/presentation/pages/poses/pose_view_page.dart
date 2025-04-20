@@ -1,10 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:frontend/presentation/widgets/media_display/media_grid.dart';
 import 'package:frontend/to_sort/pages/poses/edit_pose_page.dart';
-import 'package:frontend/data/models/pose_model.dart';
-
-import '../../widgets/media_display/media_icon_grid_card.dart';
+import '../../../core/constants/constants.dart';
+import '../../widgets/media_display/formatted_cached_network_image.dart';
+import '../../widgets/media_display/media_grid/media_icon_grid_card.dart';
 
 class PoseViewPage extends StatefulWidget {
   final PoseEntity pose;
@@ -54,98 +54,95 @@ class _PoseViewPageState extends State<PoseViewPage> {
           ),
           ] // TODO ADD EDITING
       ),
-      body: Expanded(
-        child: Padding( // TODO Ask about ordering of items on page, ensure consistency across add, edit, and view pages
-          padding: const EdgeInsets.all(20),
-          child:
-            Column(
+        // TODO Ask about ordering of items on page, ensure consistency across add, edit, and view pages
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: FormattedCachedNetworkImage( // TODO compare to customized version in ToSort folder.
+                widget.pose.primaryImageUrl,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // // TODO Alternative Names
+            // Row(
+            //   children: [
+            //     Text("Alternative Names: "),
+            //     Text(widget.pose.alternativeNames)
+            //   ],
+
+            // Level
+            Row(
               children: [
-                // Expanded(
-                //   child: MediaIconCard(
-                //     widget.pose.name,
-                //     widget.pose.primaryImageUrl,
-                //     () {},
-                //     "",
-                //     "",
-                //   )
-                // ),
-
-                // // TODO Alternative Names
-                // Row(
-                //   children: [
-                //     Text("Alternative Names: "),
-                //     Text(widget.pose.alternativeNames)
-                //   ],
-
-                // Level
-                Row(
-                  children: [
-                    const Text(
-                      "Level: ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )
-                    ),
-                    Text('Level ${widget.pose.level}')
-                  ],
+                const Text(
+                  "Level: ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )
                 ),
-
-                // Apparatus
-                Row(
-                  children: [
-                    const Text(
-                      "Apparatus: ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )
-                    ),
-                    Text(widget.pose.apparatus)
-                  ],
-                ),
-
-                // Description
-                Row(
-                  children: [
-                    const Text(
-                      "Description: ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )
-                    ),
-                    if (widget.pose.description != null)
-                      Text('${widget.pose.description}')
-                    else
-                      const Text(
-                        'None',
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                      ),
-                  ],
-                ),
-
-                // Cues
-                Row(
-                  children: [
-                    const Text(
-                        "Cues: ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        )
-                    ),
-                    if (widget.pose.cues != null)
-                      Text('${widget.pose.cues}')
-                    else
-                      const Text(
-                        'None',
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                      ),
-                  ],
-                ),
+                Text('Level ${widget.pose.level}')
               ],
-            )
-            // TODO Make a media slider for this page
-            // TODO media icon name should be more discrete - in dark translucent bar on bottom maybe?
-            // TODO Rename pose name to "original name by manual" if default, or "original name by _username_" if user uploaded
-        ),
+            ),
+
+            // Apparatus
+            Row(
+              children: [
+                const Text(
+                  "Apparatus: ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )
+                ),
+                Text(widget.pose.apparatus)
+              ],
+            ),
+
+            // Description
+            Row(
+              children: [
+                const Text(
+                  "Description: ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )
+                ),
+                if (widget.pose.description != null)
+                  Text('${widget.pose.description}')
+                else
+                  const Text(
+                    'None',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+              ],
+            ),
+
+            // Cues
+            Row(
+              children: [
+                const Text(
+                    "Cues: ",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    )
+                ),
+                if (widget.pose.cues != null)
+                  Text('${widget.pose.cues}')
+                else
+                  const Text(
+                    'None',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+              ],
+            ),
+          ],
+        )
+          // TODO Make a media slider for this page
+          // TODO media icon name should be more discrete - in dark translucent bar on bottom maybe?
+          // TODO Rename pose name to "original name by manual" if default, or "original name by _username_" if user uploaded
       )
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../to_sort/pages/widgets/media_display/cached_network_image.dart';
+import '../formatted_cached_network_image.dart';
 
 class MediaIconGridCard extends StatelessWidget {
   // Creates tappable media icon
@@ -31,7 +31,7 @@ class MediaIconGridCard extends StatelessWidget {
           children: [
             // TODO remove this and add aspect ratio back to make it take the whole space
             Expanded(
-              child: CustomizedCachedNetworkImage(mediaUrl),
+              child: FormattedCachedNetworkImage(mediaUrl),
             ),
             Text(
               caption,

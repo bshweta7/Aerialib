@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../to_sort/pages/widgets/media_display/cached_network_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
+import '../formatted_cached_network_image.dart';
 
 class ListCard extends StatelessWidget {
   // Creates tappable list with image, name, subtitle
@@ -40,12 +41,7 @@ class ListCard extends StatelessWidget {
                 height: 80.0,
                 child: ClipRRect( // To round the image corners if you like
                   borderRadius: BorderRadius.circular(8.0),
-                  child: CachedNetworkImage( // TODO compare to customized version in ToSort folder.
-                    imageUrl: imageUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                  ),
+                  child: FormattedCachedNetworkImage(imageUrl),
                 ),
               ),
               const SizedBox(width: 16.0),

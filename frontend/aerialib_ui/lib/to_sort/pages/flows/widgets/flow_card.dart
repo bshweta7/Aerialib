@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/to_sort/pages/widgets/media_display/cached_network_image.dart';
+import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 import 'package:frontend/to_sort/pages/flows/widgets/poses_in_flow_card.dart';
 
 import '../../../../core/constants/constants.dart';

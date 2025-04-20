@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:frontend/core/constants/constants.dart';
 
-class CustomizedCachedNetworkImage extends StatelessWidget {
+class FormattedCachedNetworkImage extends StatelessWidget {
   // Creates tappable media icon
-  const CustomizedCachedNetworkImage(
+  const FormattedCachedNetworkImage(
       this.mediaUrl,
       {super.key}
       );
