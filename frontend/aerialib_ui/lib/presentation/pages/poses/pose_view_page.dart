@@ -41,18 +41,18 @@ class _PoseViewPageState extends State<PoseViewPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.pose.name),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Navigator.push(
-              //     context,
-              //     UpdatePosePage.route(widget.pose)
-              // );
-            },
-            tooltip: 'Edit this pose',
-          ),
-          ] // TODO ADD EDITING
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.edit),
+        //     onPressed: () {
+        //       // Navigator.push(
+        //       //     context,
+        //       //     UpdatePosePage.route(widget.pose)
+        //       // );
+        //     },
+        //     tooltip: 'Edit this pose',
+        //   ),
+        //   ] // TODO ADD EDITING
       ),
         // TODO Ask about ordering of items on page, ensure consistency across add, edit, and view pages
       body: Padding(

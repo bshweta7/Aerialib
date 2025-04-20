@@ -22,7 +22,6 @@ import 'package:frontend/presentation/widgets/functional_buttons/search_bar.dart
 
 
 import 'package:frontend/to_sort/cubit/auth_cubit.dart';
-import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
 
 class PoseLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
