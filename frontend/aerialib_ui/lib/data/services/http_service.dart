@@ -31,6 +31,22 @@ class HttpService {
     return res;
   }
 
+  /// Allows for POST requests that don't require a token (e.g. Login and Signup)
+  Future<http.Response> postInit({
+    required String path,
+    required dynamic body,
+  }) async {
+    final res = await http.post(
+      Uri.parse("${Constants.backendUri}$path"),
+      headers:{'Content-Type': 'application/json'}, // base header only (no token)
+      body: jsonEncode(body),
+    );
+
+    _checkForError(res);
+    return res;
+  }
+
+
   Future<http.Response> put({
     required String path,
     required String token,

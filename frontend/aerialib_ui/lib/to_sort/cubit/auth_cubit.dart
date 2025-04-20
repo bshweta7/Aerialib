@@ -1,24 +1,26 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/data/services/sp_service.dart';
-import 'package:frontend/to_sort/repositories/auth_remote_repository.dart';
+import 'package:frontend/data/datasources/user/user_remote_data.dart';
 import 'package:frontend/data/datasources/user/user_local_data.dart';
 import 'package:frontend/data/models/user_model.dart';
+
+import '../../data/services/http_service.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
-  final authRemoteRepository = AuthRemoteRepository();
-  final authLocalRepository = UserLocalDataSource();
+  final userRemoteDataSource = UserRemoteDataSource(httpService: HttpService());
+  final userLocalRepository = UserLocalDataSource();
   final spService = SpService();
 
   void getUserData() async {
     try {
       emit(AuthLoading());
-      final userModel = await authRemoteRepository.getUserData();
+      final userModel = await userRemoteDataSource.getUserData();
 
       if (userModel != null) {
-        await authLocalRepository.insertUser(userModel);
+        await userLocalRepository.insertUser(userModel);
         emit(AuthLoggedIn(userModel));
       } else {
         emit(AuthInitial());
@@ -36,7 +38,7 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     try {
       emit(AuthLoading());
-      await authRemoteRepository.signUp(
+      await userRemoteDataSource.signUp(
           name: name,
           email: email,
           password: password
@@ -54,7 +56,7 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     try {
       emit(AuthLoading());
-      final userModel = await authRemoteRepository.login(
+      final userModel = await userRemoteDataSource.login(
           email: email,
           password: password
       );
@@ -63,7 +65,7 @@ class AuthCubit extends Cubit<AuthState> {
         await spService.setToken(userModel.token);
       }
 
-      await authLocalRepository.insertUser(userModel);
+      await userLocalRepository.insertUser(userModel);
 
       emit(AuthLoggedIn(userModel));
     } catch (e) {
@@ -77,7 +79,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthLoading());
       // Clear local data (token, user data)
       await spService.removeToken();
-      await authLocalRepository.clearUser();
+      await userLocalRepository.clearUser();
 
       // emit(AuthLoggedOut());
       emit(AuthInitial());
