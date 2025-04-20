@@ -92,10 +92,11 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
           title: const Text("Poses"),
-          actions: const [
-            AddNewPoseButton(),
-            SizedBox(width:8.0),
-          ]
+          // TODO - add page view options to actions.
+          // actions: const [
+          //   AddNewPoseButton(),
+          //   SizedBox(width:8.0),
+          // ]
         ),
 
         body: BlocBuilder<PosesCubit, PosesState>(

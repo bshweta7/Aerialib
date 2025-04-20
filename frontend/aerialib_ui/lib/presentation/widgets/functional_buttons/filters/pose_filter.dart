@@ -32,6 +32,16 @@ class _PoseFiltersState extends State<PoseFilters> {
     _selectedLevels = List.from(widget.initialLevels);
   }
 
+  void _resetFilters() {
+    print(_selectedApparatus);
+    setState(() {
+      _selectedApparatus = Constants.apparatusOptions;
+    });
+    widget.onApparatusChanged(Constants.apparatusOptions);
+
+    print(_selectedApparatus);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,26 +60,48 @@ class _PoseFiltersState extends State<PoseFilters> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // TODO adjust this
             children: [
-              const Text(
-                "Filters",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+
+                  // Drop down full view button
+                  IconButton(
+                    icon: Icon(_isContainerVisible
+                        ? Icons.arrow_drop_up
+                        : Icons.arrow_drop_down), // Change icon based on visibility
+                    onPressed: () {
+                      setState(() {
+                        _isContainerVisible = !_isContainerVisible; // Toggle visibility
+                      });
+                    },
+                    tooltip: 'Show or hide filter options',
+                  ),
+
+                  // Title
+                  const Text(
+                    "Filters",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+
+              // Reset filters button
+              if (_isContainerVisible)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: TextButton(
+                    onPressed: _resetFilters,
+                    child: const Text(
+                      "Reset",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
                 ),
-              ),
-              IconButton(
-                icon: Icon(_isContainerVisible
-                    ? Icons.arrow_drop_up
-                    : Icons.arrow_drop_down), // Change icon based on visibility
-                onPressed: () {
-                  setState(() {
-                    _isContainerVisible = !_isContainerVisible; // Toggle visibility
-                  });
-                },
-                tooltip: 'Show or hide filter options',
-              ),
             ],
           ),
           if (_isContainerVisible) // Conditional rendering
