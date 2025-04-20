@@ -18,7 +18,8 @@ import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
 import 'package:frontend/domain/repositories/pose_repository_impl.dart';
 import '../../../core/utils/conversions.dart';
 import '../../../domain/entities/media_icon_entity.dart';
-import '../../widgets/floating_buttons/scroll_to_top.dart';
+import '../../widgets/functional_buttons/scroll_to_top.dart';
+import '../../widgets/functional_buttons/add_new.dart';
 import '../../widgets/media_display/media_grid.dart';
 import '../../widgets/media_list/media_list.dart';
 
@@ -40,13 +41,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   final ScrollController _scrollController = ScrollController();
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-
   int _gridSize = 3; // Start at 0 and set during the first build
   int _gridSizeMax = 10; // TODO set this dynamically when building
   String _searchQuery = ''; // To store the current search query
@@ -61,6 +55,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
     context.read<PosesCubit>().getAllPoses(token: user.user.token);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void changeGridSize(int amount) {
@@ -78,8 +78,11 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: const Text("Pose Library"),
-          centerTitle: true,
+          title: const Text("Poses"),
+          actions: const [
+            AddNewPoseButton(),
+            SizedBox(width:8.0),
+          ]
         ),
 
         body: BlocBuilder<PosesCubit, PosesState>(
