@@ -120,7 +120,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
             if (state is GetPosesSuccess) {
 
-              // TODO move filtereing to cubit?
+              // TODO move filtering to cubit?
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
                 selectedApparatus.contains(elem.apparatus) &&
@@ -140,13 +140,24 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     onApparatusChanged: _updateApparatusFilter,
                     onLevelsChanged: _updateLevelsFilter,
                   ),
+                  // TODO consider "Sticky Behavior" for filter box scrolling (currently stationary)
+                  // A sticky behavior means the filter section scrolls normally at the top but then "sticks" to a certain position as the user scrolls down the list of poses. Flutter's SliverAppBar with pinned: true can achieve a similar effect for app bar sections, but for a regular widget in the body, it's a bit more involved and might require using ScrollController and Transform.translate or custom Sliver widgets.
+
                   Expanded(
                     child: Stack(
                       children: [
-                        // List poses
+
                         SingleChildScrollView(
                           controller: _scrollController,
-                          child: MediaList(mediaItems: filteredMediaIcons)
+                          child: Column(
+                            children: [
+                              // TODO Search bar goes here
+
+
+                              // List poses
+                              MediaList(mediaItems: filteredMediaIcons),
+                            ],
+                          )
                         ),
 
                         // Scroll to top floating button

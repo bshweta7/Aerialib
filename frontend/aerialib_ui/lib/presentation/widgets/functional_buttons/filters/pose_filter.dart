@@ -63,6 +63,24 @@ class _PoseFiltersState extends State<PoseFilters> {
     widget.onLevelsChanged(selected);
   }
 
+  String _getActiveFilters() {
+    String activeFilterString = "";
+    List<String> filters = [];
+
+    if (_selectedApparatus.isNotEmpty) {
+      filters.add("Apparatus: ${_selectedApparatus.join(', ')}");
+    }
+
+    if (_selectedLevels.isNotEmpty) {
+      filters.add("Levels: ${_selectedLevels.map((level) => 'Level $level').join(', ')}");
+    }
+
+    activeFilterString = filters.join('\n');
+
+    return activeFilterString.isEmpty ? " (All)" : "$activeFilterString";
+
+    return _selectedApparatus[0];
+  }
 
 
   @override
@@ -107,13 +125,24 @@ class _PoseFiltersState extends State<PoseFilters> {
                   ),
 
                   // Title
-                  const Text(
-                    "Filters",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Filters",
+                        style: TextStyle(
+                          fontSize: 16, // TODO needs to be restyled
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      // Active Filters
+                      if (!_isContainerVisible) // Show summary when collapsed
+                        Text(_getActiveFilters()), // TODO
+                    ],
                   ),
+
+
                 ],
               ),
 

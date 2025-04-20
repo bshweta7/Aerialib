@@ -293,12 +293,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       children: [
                         SingleChildScrollView(
                           controller: _myScrollController,
-                          child: MediaGrid(
-                            filteredPoses,
-                            _gridSize,
-                            "",
-                            "",
-                          ),
+                          // child: MediaGrid(
+                          //   filteredPoses,
+                          //   _gridSize,
+                          //   "",
+                          //   "",
+                          // ),
 
                         ),
 
