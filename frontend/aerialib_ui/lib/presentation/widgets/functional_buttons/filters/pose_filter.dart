@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
-
-import 'filter_multi_select.dart';
+import 'package:frontend/core/utils/formatters.dart';
+import 'package:frontend/presentation/widgets/functional_buttons/filters/filter_multi_select.dart';
 
 class PoseFilters extends StatefulWidget {
   final List<String> initialApparatus;
@@ -26,6 +25,8 @@ class _PoseFiltersState extends State<PoseFilters> {
   bool _isContainerVisible = false;
   late List<String> _selectedApparatus;
   late List<int> _selectedLevels;
+  bool _apparatusError = false;
+  bool _levelsError = false;
 
   @override
   void initState() {
@@ -37,22 +38,31 @@ class _PoseFiltersState extends State<PoseFilters> {
   void _resetFilters() {
     setState(() {
       _selectedApparatus = Constants.apparatusOptions;
+      _selectedLevels = Constants.levelOptions;
+      _apparatusError = false;
+      _levelsError = false;
     });
     widget.onApparatusChanged(Constants.apparatusOptions);
+    widget.onLevelsChanged(Constants.levelOptions);
 
   }
 
   void _onApparatusSelectionChanged(List<String> selected) {
     setState(() {
       _selectedApparatus = selected;
+      _apparatusError = selected.isEmpty && _isContainerVisible;
     });
     widget.onApparatusChanged(selected);
-    if (selected.isEmpty && _isContainerVisible) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select at least one apparatus')),
-      );
-    }
   }
+
+  void _onLevelsSelectionChanged(List<int> selected) {
+    setState(() {
+      _selectedLevels = selected;
+      _levelsError = selected.isEmpty && _isContainerVisible;
+    });
+    widget.onLevelsChanged(selected);
+  }
+
 
 
   @override
@@ -131,67 +141,45 @@ class _PoseFiltersState extends State<PoseFilters> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Apparatus Filter
-                  FilterMultiSelect<String>(
-                    options: Constants.apparatusOptions,
-                    initialValues: widget.initialApparatus,
-                    getLabel: (String apparatus) {
-                      if (apparatus.isEmpty) {
-                        return apparatus;
-                      }
-                      return apparatus[0].toUpperCase() +
-                          apparatus.substring(1);
-                    },
-                    onSelectionChanged: _onApparatusSelectionChanged, //widget.onApparatusChanged,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select at least one apparatus';
-                      }
-                      return null;
-                    },
-                  ),
 
-                  // Wrap(
-                  //   alignment: WrapAlignment.start,
-                  //   spacing: 8.0,
-                  //   runSpacing: 4.0,
-                  //   children: [
-                  //     const Text(
-                  //       "Apparatus:   ",
-                  //       style: TextStyle(
-                  //         fontSize: 14,
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                      // MultiSelect(
-                      //   options: Constants.apparatusOptions,
-                      //   initialValues: _selectedApparatus,
-                      //   getLabel: (String apparatus) {
-                      //     if (apparatus.isEmpty) {
-                      //       return apparatus;
-                      //     }
-                      //     return apparatus[0].toUpperCase() +
-                      //         apparatus.substring(1);
-                      //   },
-                      //   onSelectionChanged: (List<String> selected) {
-                      //     setState(() {
-                      //       _selectedApparatus = selected;
-                      //     });
-                      //     widget.onApparatusChanged(selected); // Notify parent
-                      //   },
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       const SnackBar(
-                      //           content: Text(
-                      //               'Please select at least one apparatus'));
-                      //       return 'Please select at least one apparatus';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
-                  //   ],
-                  // ),
+                  // Apparatus Filter
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    spacing: 8.0,
+                    runSpacing: 4.0,
+                    children: [
+                      const Text(
+                        "Apparatus:  ",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      FilterMultiSelect<String>(
+                        options: Constants.apparatusOptions,
+                        initialValues: widget.initialApparatus,
+                        getLabel: (String apparatus) => capitalizeFirstLetter(apparatus),
+                        onSelectionChanged: _onApparatusSelectionChanged,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select at least one apparatus';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                  if (_apparatusError)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        'Please select at least one apparatus',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+
                   const SizedBox(height: 10),
+
                   // Level Filter
                   Wrap(
                     alignment: WrapAlignment.start,
@@ -199,32 +187,32 @@ class _PoseFiltersState extends State<PoseFilters> {
                     runSpacing: 4.0,
                     children: [
                       const Text(
-                        "Level:   ",
+                        "Level:  ",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      MultiSelect<int>(
+                      FilterMultiSelect<int>(
                         options: Constants.levelOptions,
-                        initialValues: _selectedLevels,
+                        initialValues: widget.initialLevels,
                         getLabel: (int level) => 'Level $level',
-                        onSelectionChanged: (List<int> selected) {
-                          setState(() {
-                            _selectedLevels = selected;
-                          });
-                          widget.onLevelsChanged(selected); // Notify parent
-                        },
+                        onSelectionChanged: _onLevelsSelectionChanged,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            const SnackBar(
-                                content:
-                                Text('Please select at least one level'));
                             return 'Please select at least one level';
                           }
                           return null;
                         },
-                      )
+                      ),
+                      if (_levelsError)
+                        const Padding(
+                          padding: EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            'Please select at least one level',
+                            style: TextStyle(color: Colors.red, fontSize: 12),
+                          ),
+                        ),
                     ],
                   ),
                   const SizedBox(height: 10),
