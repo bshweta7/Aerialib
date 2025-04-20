@@ -1,4 +1,4 @@
-import 'package:frontend/to_sort/models/user_model.dart';
+import 'package:frontend/data/models/user_model.dart';
 import 'package:path/path.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';

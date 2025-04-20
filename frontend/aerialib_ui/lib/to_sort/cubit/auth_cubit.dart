@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/data/services/sp_service.dart';
 import 'package:frontend/to_sort/repositories/auth_remote_repository.dart';
 import 'package:frontend/to_sort/repositories/auth_local_repository.dart';
-import 'package:frontend/to_sort/models/user_model.dart';
+import 'package:frontend/data/models/user_model.dart';
 
 part 'auth_state.dart';
 

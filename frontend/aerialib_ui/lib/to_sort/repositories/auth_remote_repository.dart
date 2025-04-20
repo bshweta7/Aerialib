@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:frontend/data/services/sp_service.dart';
 import 'package:frontend/to_sort/repositories/auth_local_repository.dart';
-import 'package:frontend/to_sort/models/user_model.dart';
+import 'package:frontend/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:frontend/core/constants/constants.dart';

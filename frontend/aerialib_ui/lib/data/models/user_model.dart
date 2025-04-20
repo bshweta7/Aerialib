@@ -8,13 +8,13 @@ class UserModel {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  UserModel({
+  const UserModel({
     required this.id,
     required this.email,
     required this.name,
     required this.token,
     required this.createdAt,
-    required this.updatedAt
+    required this.updatedAt,
   });
 
   UserModel copyWith({
@@ -52,8 +52,8 @@ class UserModel {
       email: map['email'] ?? '',
       name: map['name'] ?? '',
       token: map['token'] ?? '',
-      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : DateTime.now(), // Or handle null differently
-      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : DateTime.now(), // Or handle null differently
+      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : DateTime.now(),
+      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : DateTime.now(),
     );
   }
 
