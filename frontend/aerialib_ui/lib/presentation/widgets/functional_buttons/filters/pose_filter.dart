@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 
+import 'filter_multi_select.dart';
+
 class PoseFilters extends StatefulWidget {
   final List<String> initialApparatus;
   final List<int> initialLevels;
@@ -33,14 +35,25 @@ class _PoseFiltersState extends State<PoseFilters> {
   }
 
   void _resetFilters() {
-    print(_selectedApparatus);
     setState(() {
       _selectedApparatus = Constants.apparatusOptions;
     });
     widget.onApparatusChanged(Constants.apparatusOptions);
 
-    print(_selectedApparatus);
   }
+
+  void _onApparatusSelectionChanged(List<String> selected) {
+    setState(() {
+      _selectedApparatus = selected;
+    });
+    widget.onApparatusChanged(selected);
+    if (selected.isEmpty && _isContainerVisible) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select at least one apparatus')),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,46 +132,65 @@ class _PoseFiltersState extends State<PoseFilters> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Apparatus Filter
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    spacing: 8.0,
-                    runSpacing: 4.0,
-                    children: [
-                      const Text(
-                        "Apparatus:   ",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      MultiSelect(
-                        options: Constants.apparatusOptions,
-                        initialValues: _selectedApparatus,
-                        getLabel: (String apparatus) {
-                          if (apparatus.isEmpty) {
-                            return apparatus;
-                          }
-                          return apparatus[0].toUpperCase() +
-                              apparatus.substring(1);
-                        },
-                        onSelectionChanged: (List<String> selected) {
-                          setState(() {
-                            _selectedApparatus = selected;
-                          });
-                          widget.onApparatusChanged(selected); // Notify parent
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            const SnackBar(
-                                content: Text(
-                                    'Please select at least one apparatus'));
-                            return 'Please select at least one apparatus';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
+                  FilterMultiSelect<String>(
+                    options: Constants.apparatusOptions,
+                    initialValues: widget.initialApparatus,
+                    getLabel: (String apparatus) {
+                      if (apparatus.isEmpty) {
+                        return apparatus;
+                      }
+                      return apparatus[0].toUpperCase() +
+                          apparatus.substring(1);
+                    },
+                    onSelectionChanged: _onApparatusSelectionChanged, //widget.onApparatusChanged,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select at least one apparatus';
+                      }
+                      return null;
+                    },
                   ),
+
+                  // Wrap(
+                  //   alignment: WrapAlignment.start,
+                  //   spacing: 8.0,
+                  //   runSpacing: 4.0,
+                  //   children: [
+                  //     const Text(
+                  //       "Apparatus:   ",
+                  //       style: TextStyle(
+                  //         fontSize: 14,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                      // MultiSelect(
+                      //   options: Constants.apparatusOptions,
+                      //   initialValues: _selectedApparatus,
+                      //   getLabel: (String apparatus) {
+                      //     if (apparatus.isEmpty) {
+                      //       return apparatus;
+                      //     }
+                      //     return apparatus[0].toUpperCase() +
+                      //         apparatus.substring(1);
+                      //   },
+                      //   onSelectionChanged: (List<String> selected) {
+                      //     setState(() {
+                      //       _selectedApparatus = selected;
+                      //     });
+                      //     widget.onApparatusChanged(selected); // Notify parent
+                      //   },
+                      //   validator: (value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       const SnackBar(
+                      //           content: Text(
+                      //               'Please select at least one apparatus'));
+                      //       return 'Please select at least one apparatus';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
+                  //   ],
+                  // ),
                   const SizedBox(height: 10),
                   // Level Filter
                   Wrap(
