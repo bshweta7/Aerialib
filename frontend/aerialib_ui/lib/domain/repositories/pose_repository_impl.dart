@@ -1,11 +1,7 @@
-import 'package:frontend/data/datasources/pose_local_data.dart';
-import 'package:frontend/data/datasources/pose_remote_data.dart';
+import 'package:frontend/data/datasources/poses/pose_local_data.dart';
+import 'package:frontend/data/datasources/poses/pose_remote_data.dart';
 import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:uuid/uuid.dart';
-
-import '../../core/constants/constants.dart';
-
 
 class PoseRepository {
   final PoseLocalDataSource localDataSrc;
@@ -16,6 +12,7 @@ class PoseRepository {
     required this.remoteDataSrc,
   });
 
+  /// Convert a PoseModel to a PoseEntity
   PoseEntity _poseModelToEntity(PoseModel poseModel) {
     return PoseEntity(
       id: poseModel.id,
@@ -34,6 +31,26 @@ class PoseRepository {
     );
   }
 
+  /// Convert a PoseEntity to a PoseModel
+  PoseModel _poseEntityToModel(PoseEntity entity) {
+    return PoseModel(
+      id: entity.id,
+      name: entity.name,
+      description: entity.description,
+      cues: entity.cues,
+      apparatus: entity.apparatus,
+      level: entity.level,
+      createdBy: entity.createdBy,
+      updatedBy: entity.updatedBy,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+      isSynced: entity.isSynced,
+      primaryImageId: entity.primaryImageId,
+      primaryImageUrl: entity.primaryImageUrl,
+    );
+  }
+
+  /// Convert a list of PoseModels to a list of PoseEntities
   List<PoseEntity> _poseModelsToEntities(List<PoseModel> models) {
     return models.map((model) => _poseModelToEntity(model)).toList();
   }
@@ -49,7 +66,6 @@ class PoseRepository {
     required String token,
     required String createdBy,
   }) async {
-
     try {
       final poseModel = await remoteDataSrc.createPose(
         name: name,
@@ -88,7 +104,7 @@ class PoseRepository {
 
   /// Send unsynced local poses to remote, and mark them as synced
   Future<void> syncLocalToRemote(String token) async {
-    final unsynced = await localDataSrc.getUnsyncedPoses();
+    final List<PoseModel> unsynced = await localDataSrc.getUnsyncedPoses();
     if (unsynced.isEmpty) {
       return;
     }
@@ -118,7 +134,7 @@ class PoseRepository {
     required PoseEntity updatedPose,
     required String token,
   }) async {
-    final poseModel = poseEntityToModel(updatedPose);
+    final poseModel = _poseEntityToModel(updatedPose);
 
     final updatedModel = await remoteDataSrc.updatePose(
       updatedPose: poseModel,
@@ -133,41 +149,3 @@ class PoseRepository {
     await localDataSrc.deletePose(id);
   }
 }
-
-// Mapping function (can be in the repository or as a static method)
-PoseEntity poseModelToEntity(PoseModel model) {
-  return PoseEntity(
-    id: model.id,
-    name: model.name,
-    description: model.description,
-    cues: model.cues,
-    apparatus: model.apparatus,
-    level: model.level,
-    createdBy: model.createdBy,
-    updatedBy: model.updatedBy,
-    createdAt: model.createdAt,
-    updatedAt: model.updatedAt,
-    isSynced: model.isSynced,
-    primaryImageId: model.primaryImageId,
-    primaryImageUrl: model.primaryImageUrl,
-  );
-}
-
-PoseModel poseEntityToModel(PoseEntity entity) {
-  return PoseModel(
-    id: entity.id,
-    name: entity.name,
-    description: entity.description,
-    cues: entity.cues,
-    apparatus: entity.apparatus,
-    level: entity.level,
-    createdBy: entity.createdBy,
-    updatedBy: entity.updatedBy,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
-    isSynced: entity.isSynced,
-    primaryImageId: entity.primaryImageId,
-    primaryImageUrl: entity.primaryImageUrl,
-  );
-}
-
