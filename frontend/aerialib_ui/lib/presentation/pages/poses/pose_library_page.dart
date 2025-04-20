@@ -18,6 +18,7 @@ import 'package:frontend/to_sort/pages/poses/add_new_pose_page.dart';
 import 'package:frontend/domain/repositories/pose_repository_impl.dart';
 import '../../../core/utils/conversions.dart';
 import '../../../domain/entities/media_icon_entity.dart';
+import '../../widgets/floating_buttons/scroll_to_top.dart';
 import '../../widgets/media_display/media_grid.dart';
 import '../../widgets/media_list/media_list.dart';
 
@@ -35,9 +36,16 @@ class PoseLibraryPage extends StatefulWidget {
   State<PoseLibraryPage> createState() => _PoseLibraryPageState();
 }
 
-
-
 class _PoseLibraryPageState extends State<PoseLibraryPage> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
 
   int _gridSize = 3; // Start at 0 and set during the first build
   int _gridSizeMax = 10; // TODO set this dynamically when building
@@ -46,7 +54,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
   bool _isContainerVisible = false; // Initially hidden
-  final ScrollController _myScrollController = ScrollController();
   bool _areOptionsVisible = false; // Track visibility
 
   @override
@@ -109,21 +116,16 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
               print(filteredMediaIcons);
 
-              return Column(
+              return Stack(
                 children: [
+                  // List poses
+                  SingleChildScrollView(
+                    controller: _scrollController,
+                    child: MediaList(mediaItems: filteredMediaIcons)
+                  ),
 
-                  // TODO Move floating buttons to be attached to entire thing, not just media box
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        SingleChildScrollView(
-                          controller: _myScrollController,
-                          child: MediaList(mediaItems: filteredMediaIcons)
-                        ),
-                      ],
-                    ),
-                  )
-
+                  // Scroll to top floating button
+                  ScrollToTopButton(scrollController: _scrollController), // Add the button
                 ],
               );
             }
