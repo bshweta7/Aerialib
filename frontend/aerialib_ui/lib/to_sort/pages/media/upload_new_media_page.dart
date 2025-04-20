@@ -245,7 +245,7 @@ class _UploadNewMediaPageState extends State<UploadNewMediaPage> {
 
 
 // import 'package:flutter/material.dart';
-// import 'package:frontend/pages/auth/cubit/auth_cubit.dart';
+// import 'package:frontend/pages/user/cubit/auth_cubit.dart';
 // import 'package:frontend/pages/media/cubit/transition_cubit.dart';
 // import 'package:frontend/pages/home/pages/home_page.dart';
 // import 'package:frontend/pages/media/pages/transition_library_page.dart';

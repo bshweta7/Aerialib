@@ -80,4 +80,4 @@ class MediaCard extends StatelessWidget {
 
 // TODO reference media.dart in apeturama
 // TODO: Enable swipe down to reload
-// TODO will eventually need to call media with jwt auth to ensure permissions
+// TODO will eventually need to call media with jwt user to ensure permissions

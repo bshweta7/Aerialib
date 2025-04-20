@@ -9,7 +9,6 @@ import 'package:frontend/data/schemas/pose_schema.dart';
 
 class PoseLocalDataSource {
   String tableName = poseTable;
-
   Database? _database;
 
   Future<Database> get database async {
