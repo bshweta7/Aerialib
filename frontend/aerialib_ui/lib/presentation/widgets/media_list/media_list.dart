@@ -13,7 +13,6 @@ class MediaList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("A");
     return ListView.builder(
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
@@ -21,6 +20,7 @@ class MediaList extends StatelessWidget {
       itemBuilder: (context, index) {
         print(index);
         final mediaItem = mediaItems[index];
+        print(mediaItem.imageUrl);
         return ListCard( // Your existing card widget
           imageUrl: mediaItem.imageUrl,
           title: mediaItem.title,

@@ -22,9 +22,11 @@ class ListCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTapFunction,
       child: Card(
-        margin: EdgeInsets.zero, // To ensure it takes full width
-        clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.all(5.0), // To ensure it takes full width
+        elevation: 2.0,
+        clipBehavior: Clip.none,
         shape: RoundedRectangleBorder(
+          // side: const BorderSide(color: Colors.grey, width: 1.0), // Customize color and width
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: SizedBox(
