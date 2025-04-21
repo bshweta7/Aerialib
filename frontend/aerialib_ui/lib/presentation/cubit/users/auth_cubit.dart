@@ -4,7 +4,7 @@ import 'package:frontend/data/datasources/user/user_remote_data.dart';
 import 'package:frontend/data/datasources/user/user_local_data.dart';
 import 'package:frontend/data/models/user_model.dart';
 
-import '../../data/services/http_service.dart';
+import '../../../data/services/http_service.dart';
 
 part 'auth_state.dart';
 

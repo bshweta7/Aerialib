@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:frontend/to_sort/cubit/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/to_sort/cubit/transition_cubit.dart';
 
 import 'package:frontend/core/constants/constants.dart';

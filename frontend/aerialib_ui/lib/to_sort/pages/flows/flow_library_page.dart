@@ -14,7 +14,7 @@ import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid/media_grid_utils.dart';
 
-import 'package:frontend/to_sort/cubit/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/to_sort/cubit/flow_cubit.dart';
 import 'package:frontend/to_sort/pages/flows/widgets/flow_card.dart';
 

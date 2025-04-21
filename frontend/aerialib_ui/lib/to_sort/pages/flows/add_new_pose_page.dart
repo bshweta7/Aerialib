@@ -1,6 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/to_sort/cubit/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';

@@ -3,7 +3,7 @@
 // import 'package:mocktail/mocktail.dart';
 // import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 // import 'package:frontend/data/models/pose_model.dart';
-// import 'package:frontend/domain/repositories/pose_repository_impl.dart';
+// import 'package:frontend/domain/repositories/pose_repository.dart';
 //
 // class MockPoseRepository extends Mock implements PoseRepository {}
 //

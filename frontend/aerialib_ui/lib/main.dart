@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/to_sort/cubit/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/to_sort/pages/auth/login_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/to_sort/pages/home/web_landing_page.dart';
 import 'package:frontend/data/datasources/poses/pose_local_data.dart';
 import 'package:frontend/data/datasources/poses/pose_remote_data.dart';
-import 'package:frontend/domain/repositories/pose_repository_impl.dart';
+import 'package:frontend/domain/repositories/pose_repository.dart';
 import 'package:frontend/data/services/http_service.dart';
 import 'package:window_manager/window_manager.dart';
 
