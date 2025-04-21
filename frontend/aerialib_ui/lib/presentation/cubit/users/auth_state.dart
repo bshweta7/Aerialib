@@ -1,23 +1,44 @@
 part of "auth_cubit.dart";
 
-sealed class AuthState {}
+sealed class AuthState extends Equatable {
+  const AuthState();
 
-final class AuthInitial extends AuthState {}
+  @override
+  List<Object?> get props => [];
+}
 
-final class AuthLoading extends AuthState {}
+final class AuthInitial extends AuthState {
+  const AuthInitial();
+}
 
-final class AuthSignUp extends AuthState {}
+final class AuthLoading extends AuthState {
+  const AuthLoading();
+}
+
+final class AuthSignUp extends AuthState {
+  const AuthSignUp();
+}
 
 final class AuthLoggedIn extends AuthState {
-  final UserModel user;
-  AuthLoggedIn(this.user);
+  final UserEntity user;
+  const AuthLoggedIn(this.user);
+
+  @override
+  List<Object?> get props => [user]; // Include user in props for equality
 }
 
 final class AuthError extends AuthState {
   final String error;
-  AuthError(this.error);
+  const AuthError(this.error);
+
+  @override
+  List<Object?> get props => [error]; // Include error in props for equality
 }
 
-final class AuthErrorShow extends AuthState {}
+final class AuthErrorShow extends AuthState {
+  const AuthErrorShow();
+}
 
-class AuthLoggedOut extends AuthState {}
+final class AuthLoggedOut extends AuthState {
+  const AuthLoggedOut();
+}

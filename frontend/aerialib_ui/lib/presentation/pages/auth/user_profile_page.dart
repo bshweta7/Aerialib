@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/to_sort/pages/auth/login_page.dart';
+import 'package:frontend/presentation/pages/auth/login_page.dart';
 
 
 

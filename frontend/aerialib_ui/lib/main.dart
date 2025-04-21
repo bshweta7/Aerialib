@@ -3,20 +3,28 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/to_sort/pages/auth/login_page.dart';
-import 'package:frontend/presentation/pages/home/home_page.dart';
-import 'package:frontend/to_sort/pages/home/web_landing_page.dart';
-import 'package:frontend/data/datasources/poses/pose_local_data.dart';
-import 'package:frontend/data/datasources/poses/pose_remote_data.dart';
-import 'package:frontend/domain/repositories/pose_repository.dart';
-import 'package:frontend/data/services/http_service.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/data/datasources/poses/pose_local_data.dart';
+import 'package:frontend/data/datasources/poses/pose_remote_data.dart';
+import 'package:frontend/data/datasources/user/user_local_data.dart';
+import 'package:frontend/data/datasources/user/user_remote_data.dart';
+import 'package:frontend/data/services/http_service.dart';
 
+import 'package:frontend/domain/repositories/pose_repository.dart';
+import 'package:frontend/domain/repositories/user_repository.dart';
+
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/presentation/pages/home/home_page.dart';
+
+
+
+import 'package:frontend/presentation/pages/auth/login_page.dart';
+import 'package:frontend/to_sort/pages/home/web_landing_page.dart';
 import 'to_sort/cubit/media_cubit.dart';
 import 'to_sort/cubit/flow_cubit.dart';
+
 
 Future<void> main() async {
   if (Platform.isLinux ) {
@@ -38,14 +46,19 @@ Future<void> main() async {
 
   // Set up Repos
   final poseRepo = PoseRepository(
-    localDataSrc: PoseLocalDataSource(),
-    remoteDataSrc: PoseRemoteDataSource(httpService: HttpService()),
+    localDataSource: PoseLocalDataSource(),
+    remoteDataSource: PoseRemoteDataSource(httpService: HttpService()),
+  );
+
+  final userRepo = UserRepository(
+    localDataSource: UserLocalDataSource(),
+    remoteDataSource: UserRemoteDataSource(httpService: HttpService()),
   );
 
   // Run app
   runApp(MultiBlocProvider(
     providers: [
-      BlocProvider(create: (_) => AuthCubit()),
+      BlocProvider(create: (_) => AuthCubit(userRepo)),
       BlocProvider(create: (_) => PosesCubit(poseRepo)),
       BlocProvider(create: (_) => MediaCubit()),
       BlocProvider(create: (_) => FlowsCubit()),

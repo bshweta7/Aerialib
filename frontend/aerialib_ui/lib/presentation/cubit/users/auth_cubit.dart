@@ -1,33 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/data/services/sp_service.dart';
-import 'package:frontend/data/datasources/user/user_remote_data.dart';
-import 'package:frontend/data/datasources/user/user_local_data.dart';
-import 'package:frontend/data/models/user_model.dart';
-
-import '../../../data/services/http_service.dart';
+import 'package:frontend/domain/repositories/user_repository.dart';
+import 'package:frontend/domain/entities/user_entity.dart';
+import 'package:equatable/equatable.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(AuthInitial());
-  final userRemoteDataSource = UserRemoteDataSource(httpService: HttpService());
-  final userLocalRepository = UserLocalDataSource();
-  final spService = SpService();
+  final UserRepository _userRepository;
+
+  AuthCubit(this._userRepository) : super(const AuthInitial());
 
   void getUserData() async {
     try {
-      emit(AuthLoading());
-      final userModel = await userRemoteDataSource.getUserData();
+      emit(const AuthLoading());
+      final userEntity = await _userRepository.getUser();
 
-      if (userModel != null) {
-        await userLocalRepository.insertUser(userModel);
-        emit(AuthLoggedIn(userModel));
+      if (userEntity != null) {
+        emit(AuthLoggedIn(userEntity));
       } else {
-        emit(AuthInitial());
+        emit(const AuthInitial());
       }
-
     } catch (e) {
-      emit(AuthInitial());
+      emit(AuthError(e.toString()));
     }
   }
 
@@ -37,14 +31,13 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
   }) async {
     try {
-      emit(AuthLoading());
-      await userRemoteDataSource.signUp(
-          name: name,
-          email: email,
-          password: password
+      emit(const AuthLoading());
+      final userEntity = await _userRepository.signUp(
+        name: name,
+        email: email,
+        password: password,
       );
-
-      emit(AuthSignUp());
+      emit(AuthLoggedIn(userEntity));
     } catch (e) {
       emit(AuthError(e.toString()));
     }
@@ -55,40 +48,29 @@ class AuthCubit extends Cubit<AuthState> {
     required String password,
   }) async {
     try {
-      emit(AuthLoading());
-      final userModel = await userRemoteDataSource.login(
-          email: email,
-          password: password
+      emit(const AuthLoading());
+      final userEntity = await _userRepository.login(
+        email: email,
+        password: password,
       );
-
-      if(userModel.token.isNotEmpty) {
-        await spService.setToken(userModel.token);
-      }
-
-      await userLocalRepository.insertUser(userModel);
-
-      emit(AuthLoggedIn(userModel));
+      emit(AuthLoggedIn(userEntity));
     } catch (e) {
       emit(AuthError(e.toString()));
     }
   }
 
-  // Logout Function
+  /// Logout Function
   void logout() async {
     try {
-      emit(AuthLoading());
-      // Clear local data (token, user data)
-      await spService.removeToken();
-      await userLocalRepository.clearUser();
-
-      // emit(AuthLoggedOut());
-      emit(AuthInitial());
+      emit(const AuthLoading());
+      await _userRepository.clearUser();
+      emit(const AuthLoggedOut());
     } catch (e) {
       emit(AuthError(e.toString()));
     }
   }
 
   void reInitialize() {
-    emit(AuthInitial());
+    emit(const AuthInitial());
   }
 }

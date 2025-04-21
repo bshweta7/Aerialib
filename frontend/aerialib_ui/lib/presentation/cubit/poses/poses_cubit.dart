@@ -1,9 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:frontend/data/models/pose_model.dart';
 import 'package:equatable/equatable.dart';
-import '../../../domain/entities/pose_entity.dart';
-import '../../../domain/repositories/pose_repository.dart';
+import 'package:frontend/domain/entities/pose_entity.dart';
+import 'package:frontend/domain/repositories/pose_repository.dart';
 
 // TODO note - maybe I shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
 // TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional PoseError state to handle those errors.
@@ -12,9 +11,9 @@ import '../../../domain/repositories/pose_repository.dart';
 part 'poses_state.dart';
 
 class PosesCubit extends Cubit<PosesState> {
-  final PoseRepository _poseRepo;
+  final PoseRepository _poseRepository;
 
-  PosesCubit(this._poseRepo) : super(const PoseInitial());
+  PosesCubit(this._poseRepository) : super(const PoseInitial());
 
   /// Create a new pose
   Future<void> createNewPose({
@@ -29,7 +28,7 @@ class PosesCubit extends Cubit<PosesState> {
   }) async {
     try {
       emit(const PoseLoading());
-      PoseEntity pose = await _poseRepo.createPose(
+      PoseEntity pose = await _poseRepository.createPose(
         name: name,
         description: description,
         cues: cues,
@@ -52,13 +51,13 @@ class PosesCubit extends Cubit<PosesState> {
       print("Fetching poses...");
       emit(const PoseLoading());
 
-      List<PoseEntity> poses = await _poseRepo.getLocalPoses();  // Fetch local poses
+      List<PoseEntity> poses = await _poseRepository.getLocalPoses();  // Fetch local poses
       if (poses.isEmpty) {
         // If no local poses, sync from remote and retry
         print("No poses in local datasource, syncing from remote");
-        await _poseRepo.syncRemoteToLocal(token);
+        await _poseRepository.syncRemoteToLocal(token);
 
-        final poses = await _poseRepo.getLocalPoses();
+        final poses = await _poseRepository.getLocalPoses();
       }
 
       print("Number of Poses Retrieved: ${poses.length}");
@@ -78,10 +77,10 @@ class PosesCubit extends Cubit<PosesState> {
         print("Wifi available.");
         try {
           print("Syncing local to remote");
-          await _poseRepo.syncLocalToRemote(token);
+          await _poseRepository.syncLocalToRemote(token);
 
           print("Syncing remote to local");
-          await _poseRepo.syncRemoteToLocal(token);
+          await _poseRepository.syncRemoteToLocal(token);
 
         } catch (e) {
           print("Sync error: $e");
@@ -104,7 +103,7 @@ class PosesCubit extends Cubit<PosesState> {
   }) async {
     try {
       emit(const PoseLoading());
-      await _poseRepo.updatePose(
+      await _poseRepository.updatePose(
         updatedPose: updatedPose,
         token: token,
       );

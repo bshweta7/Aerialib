@@ -1,6 +1,5 @@
 part of 'poses_cubit.dart';
 
-
 abstract class PosesState extends Equatable {
   const PosesState();
 

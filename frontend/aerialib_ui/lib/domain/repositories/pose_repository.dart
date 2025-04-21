@@ -4,12 +4,12 @@ import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
 class PoseRepository {
-  final PoseLocalDataSource localDataSrc;
-  final PoseRemoteDataSource remoteDataSrc;
+  final PoseLocalDataSource localDataSource;
+  final PoseRemoteDataSource remoteDataSource;
 
   PoseRepository({
-    required this.localDataSrc,
-    required this.remoteDataSrc,
+    required this.localDataSource,
+    required this.remoteDataSource,
   });
 
   /// Convert a PoseModel to a PoseEntity
@@ -67,7 +67,7 @@ class PoseRepository {
     required String createdBy,
   }) async {
     try {
-      final poseModel = await remoteDataSrc.createPose(
+      final poseModel = await remoteDataSource.createPose(
         name: name,
         description: description,
         cues: cues,
@@ -77,7 +77,7 @@ class PoseRepository {
         token: token,
         createdBy: createdBy,
       );
-      await localDataSrc.insertPose(poseModel);
+      await localDataSource.insertPose(poseModel);
       return _poseModelToEntity(poseModel);
     } catch (e) {
       // TODO Handle other potential errors (e.g., local database issues)
@@ -88,7 +88,7 @@ class PoseRepository {
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getLocalPoses() async {
     print("Fetching PoseModels from Local Database");
-    final poseModels = await localDataSrc.getPoses();
+    final poseModels = await localDataSource.getPoses();
     print("Converting to Pose Models to Entities");
     return _poseModelsToEntities(poseModels);
   }
@@ -97,20 +97,20 @@ class PoseRepository {
 
   /// Fetch all poses from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
-    final poseModels = await remoteDataSrc.fetchRemotePoses(token: token);
-    await localDataSrc.insertPoses(poseModels);
+    final poseModels = await remoteDataSource.fetchRemotePoses(token: token);
+    await localDataSource.insertPoses(poseModels);
   }
 
 
   /// Send unsynced local poses to remote, and mark them as synced
   Future<void> syncLocalToRemote(String token) async {
-    final List<PoseModel> unsynced = await localDataSrc.getUnsyncedPoses();
+    final List<PoseModel> unsynced = await localDataSource.getUnsyncedPoses();
     if (unsynced.isEmpty) {
       return;
     }
 
     print("Retrieved unsynced poses from local");
-    final success = await remoteDataSrc.syncPoses(
+    final success = await remoteDataSource.syncPoses(
       token: token,
       poses: unsynced,
     );
@@ -118,7 +118,7 @@ class PoseRepository {
 
     if (success) {
       for (final pose in unsynced) {
-        await localDataSrc.setSyncedStatus(pose.id, 1);
+        await localDataSource.setSyncedStatus(pose.id, 1);
       }
     }
   }
@@ -136,16 +136,16 @@ class PoseRepository {
   }) async {
     final poseModel = _poseEntityToModel(updatedPose);
 
-    final updatedModel = await remoteDataSrc.updatePose(
+    final updatedModel = await remoteDataSource.updatePose(
       updatedPose: poseModel,
       token: token,
     );
 
-    await localDataSrc.updatePose(updatedModel);
+    await localDataSource.updatePose(updatedModel);
   }
 
   /// Delete locally
   Future<void> deletePose(String id) async {
-    await localDataSrc.deletePose(id);
+    await localDataSource.deletePose(id);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/to_sort/pages/auth/signup_page.dart';
+import 'package:frontend/presentation/pages/auth/signup_page.dart';
 
 import '../../../core/constants/constants.dart';
 
