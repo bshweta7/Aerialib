@@ -156,4 +156,17 @@ class PoseLocalDataSource {
     );
   }
 
-}
+  /// Returns PoseModel given an ID
+  Future<PoseModel?> getPoseById(String poseId) async {
+    final db = await database;
+    final result = await db.query(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [poseId],
+    );
+    if (result.isNotEmpty) {
+      return PoseModel.fromMap(result.first);
+    } else {
+      return null; // Return null if not found
+    }
+  }
