@@ -1,9 +1,9 @@
-import '../../data/models/pose_model.dart';
-import '../entities/pose_entity.dart';
+import 'package:frontend/data/models/pose_model.dart';
+import 'package:frontend/domain/entities/pose_entity.dart';
 
 class PoseMapper {
   /// Convert a PoseModel to a PoseEntity
-  static PoseEntity poseModelToEntity(PoseModel model) {
+  static PoseEntity modelToEntity(PoseModel model) {
     return PoseEntity(
       id: model.id,
       name: model.name,
@@ -22,7 +22,7 @@ class PoseMapper {
   }
 
   /// Convert a PoseEntity to a PoseModel
-  static PoseModel poseEntityToModel(PoseEntity entity) {
+  static PoseModel entityToModel(PoseEntity entity) {
     return PoseModel(
       id: entity.id,
       name: entity.name,
@@ -40,12 +40,12 @@ class PoseMapper {
     );
   }
   /// Convert a list of PoseModels to a list of PoseEntities
-  static List<PoseEntity> poseModelsToEntities(List<PoseModel> models) {
-    return models.map(poseModelToEntity).toList();
+  static List<PoseEntity> modelsToEntities(List<PoseModel> models) {
+    return models.map(modelToEntity).toList();
   }
 
   /// Convert a list of PoseEntities to a list of PoseModels
-  static List<PoseModel> poseEntitiesToModels(List<PoseEntity> entities) {
-    return entities.map(poseEntityToModel).toList();
+  static List<PoseModel> entitiesToModels(List<PoseEntity> entities) {
+    return entities.map(entityToModel).toList();
   }
 }

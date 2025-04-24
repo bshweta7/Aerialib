@@ -32,7 +32,7 @@ class FlowMapper {
   }
 
   /// Converts a FlowEntity to a FlowModel (metadata only)
-  static FlowModel entityToModel(FlowEntity entity) {
+  static FlowModel entityToModelMetaData(FlowEntity entity) {
     return FlowModel(
       id: entity.id,
       name: entity.name,

@@ -37,7 +37,7 @@ class PoseRepository {
         createdBy: createdBy,
       );
       await localDataSource.insertPose(poseModel);
-      return PoseMapper.poseModelToEntity(poseModel);
+      return PoseMapper.modelToEntity(poseModel);
     } catch (e) {
       // TODO Handle other potential errors (e.g., local database issues)
       rethrow;
@@ -49,7 +49,7 @@ class PoseRepository {
     print("Fetching PoseModels from Local Database");
     final poseModels = await localDataSource.getPoses();
     print("Converting to Pose Models to Entities");
-    return PoseMapper.poseModelsToEntities(poseModels);
+    return PoseMapper.modelsToEntities(poseModels);
   }
 
   // TODO get all poses - try to sync and if not possible, return local poses with note that its local only (or last synced time)
@@ -93,7 +93,7 @@ class PoseRepository {
     required PoseEntity updatedPose,
     required String token,
   }) async {
-    final poseModel = PoseMapper.poseEntityToModel(updatedPose);
+    final poseModel = PoseMapper.entityToModel(updatedPose);
 
     final updatedModel = await remoteDataSource.updatePose(
       updatedPose: poseModel,

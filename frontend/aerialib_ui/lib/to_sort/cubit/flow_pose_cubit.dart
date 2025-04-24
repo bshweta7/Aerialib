@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:frontend/data/datasources/flow_poses/flow_pose_remote_data.dart';
-import 'package:frontend/data/datasources/flow_poses/flow_pose_local_data.dart';
+import 'package:frontend/data/datasources/flows/flow_pose_remote_data.dart';
+import 'package:frontend/data/datasources/flows/flow_pose_local_data.dart';
 
 import 'package:frontend/to_sort/models/flow_pose_model.dart';
 
