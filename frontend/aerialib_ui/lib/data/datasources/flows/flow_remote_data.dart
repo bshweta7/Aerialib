@@ -1,171 +1,96 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/data/datasources/flows/flow_local_data.dart';
-import 'package:frontend/to_sort/models/flow_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/data/models/flow_model.dart';
+import 'package:frontend/data/services/http_service.dart';
 import 'package:uuid/uuid.dart';
 
-class FlowRemoteRepository {
-  final flowLocalRepository = FlowLocalDataSource();
+class FlowRemoteDataSource {
+  final HttpService httpService;
 
+  FlowRemoteDataSource({required this.httpService});
+
+  /// Create and return FlowModel
   Future<FlowModel> createFlow({
     required String name,
     required String description,
     required String apparatus,
-    required String primaryImageId,
-    required String token,
     required String createdBy,
-  }) async {
-
-    try {
-      // First try POST into backend
-      final res = await http.post(
-          Uri.parse("${Constants.backendUri}/flows"),
-          headers: {
-            'Content-Type': 'application/json',
-            'x-auth-token': token,
-          },
-          body: jsonEncode({
-            'name': name,
-            'description': description,
-            'apparatus': apparatus,
-            'createdBy': createdBy,
-            'primaryImageId': primaryImageId,
-          })
-      );
-
-      if(res.statusCode != 201) {
-        print("ERROR: Could not create flow --> POST /flows");
-        throw jsonDecode(res.body)['error'];
-      } else {
-        return FlowModel.fromJson(res.body);
-      }
-
-    } catch (e) {
-      try {
-        // otherwise make a FlowModel without POSTing it.
-        final flowModel = FlowModel(
-          id: const Uuid().v6(),
-          name: name,
-          description: description,
-          apparatus: apparatus,
-          createdBy: createdBy,
-          updatedBy: createdBy,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          isSynced: 0,
-          primaryImageId: primaryImageId,
-          primaryImageUrl: Constants.missingImageUrl, // Note: This will update in backend but is required here because it is a required field in FlowModel
-        );
-        // await flowLocalRepository.insertFlow(flowModel); // TODO shouldnt this insert???
-        return flowModel;
-      } catch (e) {
-        rethrow;
-      }
-    }
-  }
-
-  Future<List<FlowModel>> getFlows({
     required String token,
   }) async {
-    try {
 
-      final res = await http.get(
-          Uri.parse("${Constants.backendUri}/flows"),
-          headers: {
-            'Content-Type': 'application/json',
-            'x-auth-token': token,
-          }
+    final body = {
+      'name': name,
+      'description': description,
+      'apparatus': apparatus,
+      'createdBy': createdBy,
+    };
+
+    try {
+      // first try POST into backend.
+      final response = await httpService.post(
+        path: "/flows",
+        token: token,
+        body: body,
       );
 
-      if(res.statusCode != 200) {
-        print("ERROR: Remote repository fetch error - GET /flows");
-        print(res.body);
-        throw jsonDecode(res.body)['error'];
-      }
+      return FlowModel.fromJson(response.body);
 
-      final remoteFlowsList = jsonDecode(res.body);
-
-      List<FlowModel> remoteFlowsListMapped = [];
-
-      for (var element in remoteFlowsList) {
-        remoteFlowsListMapped.add(FlowModel.fromMap(element));
-      }
-
-      await flowLocalRepository.insertFlows(remoteFlowsListMapped);
-
-      return remoteFlowsListMapped;
     } catch (e) {
-      final flows = await flowLocalRepository.getFlows();
-      if (flows.isNotEmpty) {
-        return flows;
-      }
-      rethrow; // same as throw (e)
+      // Fallback: construct a local unsynced FlowModel
+      return FlowModel(
+        id: const Uuid().v6(),
+        name: name,
+        description: description,
+        apparatus: apparatus,
+        createdBy: createdBy,
+        updatedBy: createdBy,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        isSynced: 0,
+      );
     }
   }
 
+  /// Retrieve flows from remote data source and return list of FlowModels
+  Future<List<FlowModel>> fetchRemoteFlows({
+    required String token,
+  }) async {
+    final response = await httpService.get(
+      path: "/flows",
+      token: token,
+    );
+
+    final List<dynamic> jsonList = jsonDecode(response.body);
+    return jsonList.map((e) => FlowModel.fromMap(e)).toList();
+  }
+
+  /// Sync local flows to remote data source
   Future<bool> syncFlows({
     required String token,
     required List<FlowModel> flows,
-
   }) async {
-    try {
-      final flowListInMap = [];
-      for (final flow in flows) {
-        flowListInMap.add(flow.toMap());
-      }
-      final res = await http.post(
-        Uri.parse("${Constants.backendUri}/flows/sync"),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': token,
-        },
-        body: jsonEncode(flowListInMap),
-      );
+    final List<Map<String, dynamic>> flowListInMap = flows.map((flow) => flow.toMap()).toList();
+    print(flowListInMap);
+    final response = await httpService.post(
+      path: "/flows/sync",
+      token: token,
+      body: flowListInMap,
+    );
+    print(response);
 
-      if(res.statusCode != 201) {
-        throw jsonDecode(res.body)['error'];
-      }
-
-      return true;
-    } catch (e) {
-      print(e);
-      return false;
-    }
+    return response.statusCode == 201;
   }
-
 
   Future<FlowModel> updateFlow({
     required FlowModel updatedFlow,
     required String token,
   }) async {
-    try {
-      final res = await http.put(
-        Uri.parse("${Constants.backendUri}/flows/update/${updatedFlow.id}"),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': token,
-        },
-        body: jsonEncode(updatedFlow.toJson()), // Convert FlowModel to JSON
-      );
+    final response = await httpService.put(
+      path: "/flows/update/${updatedFlow.id}",
+      token: token,
+      body: updatedFlow.toJson(),
+    );
 
-      if (res.statusCode != 200) {
-        print("ERROR: Could not update flow --> PUT /flows/update/${updatedFlow.id}");
-        throw jsonDecode(res.body)['error'];
-      } else {
-        return FlowModel.fromJson(res.body);
-      }
-    } catch (e) {
-      try {
-        // Handle local update
-        await flowLocalRepository.updateFlow(updatedFlow);
-        return updatedFlow;
-      } catch (localUpdateError){
-        rethrow;
-      }
-    }
+    return FlowModel.fromJson(response.body);
   }
-
 }
