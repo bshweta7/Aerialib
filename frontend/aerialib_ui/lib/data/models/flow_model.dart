@@ -9,7 +9,7 @@ class FlowModel {
   final String? updatedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int isSynced; // Assuming you might want to track sync status
+  final int isSynced;
 
   const FlowModel({
     required this.id,
@@ -33,7 +33,7 @@ class FlowModel {
       updatedBy: map['updated_by'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
-      isSynced: map['is_synced'] ?? 1, // Default to synced if not present
+      isSynced: map['is_synced'] ?? 0, // Default to synced if not present
     );
   }
 

@@ -10,7 +10,7 @@ part 'flow_pose_state.dart';
 class FlowPoseCubit extends Cubit<FlowPoseState> {
   FlowPoseCubit() : super(FlowPoseInitial());
   final flowPoseLocalRepository = FlowPoseLocalDataSource();
-  final flowPoseRemoteRepository = FlowPoseRemoteRepository();
+  final flowPoseRemoteRepository = FlowPoseRemoteDataSource();
 
   Future<void> createNewFlowPose({
     required String flowId,

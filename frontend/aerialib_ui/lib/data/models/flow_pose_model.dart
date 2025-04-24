@@ -7,12 +7,16 @@ class FlowPoseModel {
   final String flowId; // Foreign Key to flow table (UUID)
   final String poseId; // Foreign Key to poses table (UUID)
   final int order; // Position in the flow
+  final String transitionId;
+  final int isSynced;
 
   const FlowPoseModel({
     required this.id,
     required this.flowId,
     required this.poseId,
     required this.order,
+    required this.transitionId,
+    required this.isSynced,
   });
 
   factory FlowPoseModel.fromMap(Map<String, dynamic> map) {
@@ -21,6 +25,8 @@ class FlowPoseModel {
       flowId: map['flow_id'] ?? '',
       poseId: map['pose_id'] ?? '',
       order: map['order'] ?? -1,
+      transitionId: map['transition_id'] ?? '',
+      isSynced: map['is_synced'] ?? 0, // Default to synced if not present
     );
   }
 
@@ -30,6 +36,8 @@ class FlowPoseModel {
       'flow_id': flowId,
       'pose_id': poseId,
       'order': order,
+      'transition_id': transitionId,
+      'is_synced': isSynced,
     };
   }
 
