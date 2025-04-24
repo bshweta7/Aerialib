@@ -129,22 +129,15 @@ class FlowPoseLocalDataSource {
     );
   }
 
-  // TODO might be handled by repo...
-  //  Future<List<FlowPoseModel>> getFlowPosesInFlow(FlowModel flow) async {
-  //   /// Returns list of FlowPoseModels containing flowPoses with the given flowId ///
-  //   final db = await database;
-  //   final result = await db.query(
-  //     tableName,
-  //     where: 'flow_id = ?',
-  //     whereArgs: [flow.id],
-  //   );
-  //   if (result.isNotEmpty) {
-  //     List<FlowPoseModel> flowPoses = [];
-  //     for (final elem in result) {
-  //       flowPoses.add(FlowPoseModel.fromMap(elem));
-  //     }
-  //     return flowPoses;
-  //   }
-  //   return [];
-  // }
+  /// Returns list of FlowPoseModels containing flowPoses with the given flowId
+  Future<List<FlowPoseModel>> getFlowPosesInFlow(String flowId) async {
+    final db = await database;
+    final result = await db.query(
+      tableName,
+      where: 'flow_id = ?',
+      whereArgs: [flowId],
+      orderBy: 'order ASC',
+    );
+    return result.map((e) => FlowPoseModel.fromMap(e)).toList();
+  }
 }
