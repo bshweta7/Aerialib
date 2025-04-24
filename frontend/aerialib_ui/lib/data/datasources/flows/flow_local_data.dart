@@ -9,7 +9,7 @@ import '../../schemas/flow_schema.dart';
 
 
 class FlowLocalDataSource {
-  String tableName = "flows";
+  String tableName = flowTable;
   Database? _database;
 
   Future<Database> get database async {
@@ -41,31 +41,14 @@ class FlowLocalDataSource {
         }
       },
       onCreate: (db, version) {
-        return db.execute('''
-          CREATE TABLE $tableName(
-            id TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
-            description TEXT,
-            apparatus TEXT,
-
-            primaryImageId TEXT NOT NULL,
-            primaryImageUrl TEXT NOT NULL, 
-            
-            createdBy TEXT NOT NULL,
-            updatedBy TEXT, 
-            createdAt TEXT NOT NULL,
-            updatedAt TEXT NOT NULL,
-
-            isSynced INTEGER NOT NULL
-          )'''
-        );
+        return db.execute(createFlowTable);
       },
     );
   }
 
   Future<void> insertFlow(FlowModel flow) async {
     final db = await database;
-    await db.delete(tableName, where: 'id = ?', whereArgs: [flow.id]);
+    // TODO decide if upsert or not: await db.delete(tableName, where: 'id = ?', whereArgs: [flow.id]);
     await db.insert(tableName, flow.toMap());
   }
 
@@ -103,7 +86,7 @@ class FlowLocalDataSource {
     final db = await database;
     final result = await db.query(
       tableName,
-      where: 'isSynced = ?',
+      where: 'is_synced = ?',
       whereArgs: [0],
     );
     if (result.isNotEmpty) {
@@ -118,11 +101,11 @@ class FlowLocalDataSource {
   }
 
   // TODO rename below to updateSyncedStatus or something more descriptive
-  Future<void> updateRowValue(String id, int newValue) async {
+  Future<void> setSyncedStatus(String id, int newValue) async {
     final db = await database;
     await db.update(
       tableName,
-      {'isSynced': newValue},
+      {'is_synced': newValue},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -135,6 +118,15 @@ class FlowLocalDataSource {
       flow.toMap(),
       where: 'id = ?',
       whereArgs: [flow.id],
+    );
+  }
+
+  Future<void> deleteFlow(String id) async {
+    final db = await database;
+    await db.delete(
+        tableName,
+        where: 'id = ?',
+        whereArgs: [id]
     );
   }
 
