@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:frontend/to_sort/repositories/flow_pose_remote_repository.dart';
-import 'package:frontend/to_sort/repositories/flow_pose_local_repository.dart';
+import 'package:frontend/data/datasources/flow_poses/flow_pose_remote_data.dart';
+import 'package:frontend/data/datasources/flow_poses/flow_pose_local_data.dart';
 
 import 'package:frontend/to_sort/models/flow_pose_model.dart';
 
@@ -9,7 +9,7 @@ part 'flow_pose_state.dart';
 
 class FlowPoseCubit extends Cubit<FlowPoseState> {
   FlowPoseCubit() : super(FlowPoseInitial());
-  final flowPoseLocalRepository = FlowPoseLocalRepository();
+  final flowPoseLocalRepository = FlowPoseLocalDataSource();
   final flowPoseRemoteRepository = FlowPoseRemoteRepository();
 
   Future<void> createNewFlowPose({
@@ -72,7 +72,7 @@ class FlowPoseCubit extends Cubit<FlowPoseState> {
     if (isSynced) {
       print("FlowPoses have been synced");
       for (final flowPose in unsyncedFlowPoses) {
-        flowPoseLocalRepository.updateSyncedStatus(flowPose.id, 1);
+        flowPoseLocalRepository.setSyncedStatus(flowPose.id, 1);
       }
     }
   }

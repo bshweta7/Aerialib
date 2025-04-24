@@ -72,7 +72,7 @@ class FlowsCubit extends Cubit<FlowsState> {
     if (isSynced) {
       print("Flows have been synced");
       for (final flow in unsyncedFlows) {
-        flowLocalRepository.updateRowValue(flow.id, 1);
+        flowLocalRepository.setSyncedStatus(flow.id, 1);
       }
     }
   }
