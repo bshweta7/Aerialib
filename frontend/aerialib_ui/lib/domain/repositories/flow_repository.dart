@@ -31,92 +31,95 @@ class FlowRepository {
   });
 
 
-  /// Convert FlowPoseModels list to PoseModels list
-  Future<List<PoseModel>> flowPoseModelsToPoseModels(
-      List<FlowPoseModel> flowPoses
-      ) async {
-    List<PoseModel> poses = [];
-    for (final flowPose in flowPoses) {
-      final pose = await poseLocalDataSource.getPoseById(flowPose.poseId);
-      if (pose != null) {
-        poses.add(pose);
-      } else {
-        print("Pose with ID ${flowPose.poseId} not found in local db.");
-      }
+  /// Create a new flow with metadata only (no poses)
+  Future<FlowModel> createFlow({
+    required String name,
+    required String description,
+    required String apparatus,
+    required String createdBy,
+    required String token,
+  }) async {
+    try {
+      final flowModel = await flowRemoteDataSource.createFlow(
+        name: name,
+        description: description,
+        apparatus: apparatus,
+        createdBy: createdBy,
+        token: token,
+      );
+      await flowLocalDataSource.insertFlow(flowModel);
+      return flowModel;
+    } catch (e) {
+      // TODO Handle other potential errors (e.g., local database issues)
+      rethrow;
     }
-    // TODO might need to move to flow_mapper.dart ?
-    return poses;
   }
 
-  /* Flow Model Functions */
-  /// Converts a FlowModel to a FlowEntity with its ordered list of PoseEntity.
-  Future<FlowEntity> _flowModelToEntity(FlowModel flowModel) async {
-    List<FlowPoseModel> flowPoseModels = await flowPoseLocalDataSource.getFlowPosesInFlow(flowModel.id);
-    List<PoseModel> poseModels = await flowPoseModelsToPoseModels(flowPoseModels);
-
-    return FlowMapper.modelToEntity(flowModel: flowModel, poseModels: poseModels);
+  Future<FlowPoseModel> createFlowPose({
+    required String flowId,
+    required String poseId,
+    required int order,
+    required String token,
+  }) async {
+    try {
+      final flowPoseModel = await flowPoseRemoteDataSource.createFlowPose(
+        flowId: flowId,
+        poseId: poseId,
+        order: order,
+        transitionId: "", // TODO remove
+        token: token,
+      );
+      await flowPoseLocalDataSource.insertFlowPose(flowPoseModel);
+      return flowPoseModel;
+    } catch (e) {
+      // TODO Handle other potential errors (e.g., local database issues)
+      rethrow;
+    }
   }
 
 
+  /// Fetch all poses from local DB
+  Future<List<FlowEntity>> getLocalFlows() async {
+    print("Fetching Flow and FlowPoses from Local Database");
 
-  /// Convert PoseModels list to FlowPoseModels list
-  // TODO
-  //  List<FlowPoseModel> generateFlowPosesFromPoseModels(
-  //   String flowId,
-  //   List<PoseModel> poseModels
-  // ) {
-  //   return List.generate(poseModels.length, (index) {
-  //     final pose = poseModels[index];
-  //     return FlowPoseModel(
-  //       id: '$flowId_${pose.id}', // Or null if using autoincrement
-  //       flowId: flowId,
-  //       poseId: pose.id,
-  //       order: index,
-  //     );
-  //   });
-  // }
+    final flowModels = await flowLocalDataSource.getFlows();
+    final flowPoseModels = await flowPoseLocalDataSource.getFlowPoses();
 
+    print("Converting Flow/FlowPoses Models to Flow Entities");
 
-  // TODO : FlowModel _flowEntityToModel(FlowEntity entity)
+    // Group FlowPoseModels by flowId
+    final Map<String, List<FlowPoseModel>> flowPoseMap = {};
+    for (final pose in flowPoseModels) {
+      flowPoseMap.putIfAbsent(pose.flowId, () => []).add(pose);
+    }
 
-  // TODO : List<FlowPoseModel> flowEntityToFlowPoseModels(FlowEntity entity)
+    final List<FlowEntity> flowEntities = [];
 
-  /* CRUD (Create Read Update Delete) */
+    for (final flowModel in flowModels) {
+      final flowId = flowModel.id;
+      final posesInFlow = flowPoseMap[flowId] ?? [];
 
-  // TODO : Future<void> createFlow(FlowEntity flowEntity)
+      // Sort by order to preserve sequence
+      posesInFlow.sort((a, b) => a.order.compareTo(b.order));
 
-  // TODO: Future<List<FlowEntity>> getLocalFlows()
+      // Get PoseModels for the flow
+      final poseModels = await FlowMapper.flowPoseModelsToPoseModels(
+        posesInFlow,
+        poseLocalDataSource.getPoseById,
+      );
 
-  // TODO : Future<void> updateFlow(FlowEntity flowEntity)
-  // Future<void> updateFlow(FlowEntity flowEntity) async {
-  //   final db = await database;
-  //
-  //   // Step 1: Convert FlowEntity to FlowModel and update it
-  //   final flowModel = FlowMapper.entityToModel(flowEntity);
-  //   await db.update(
-  //     'flows', // Replace with your actual table name
-  //     flowModel.toMap(),
-  //     where: 'id = ?',
-  //     whereArgs: [flowModel.id],
-  //   );
-  //
-  //   // Step 2: Delete all existing FlowPoseModels for this flow
-  //   await db.delete(
-  //     'flow_poses', // Replace with your actual table name
-  //     where: 'flow_id = ?',
-  //     whereArgs: [flowModel.id],
-  //   );
-  //
-  //   // Step 3: Generate new FlowPoseModels with fresh UUIDs
-  //   final newFlowPoseModels = FlowMapper.entityToFlowPoseModels(flowEntity);
-  //
-  //   // Step 4: Insert the new FlowPoseModels
-  //   for (final flowPose in newFlowPoseModels) {
-  //     await db.insert('flow_poses', flowPose.toMap());
-  //   }
-  //
-  //   print('Flow ${flowEntity.id} updated successfully');
-  // }
+      // Convert to FlowEntity
+      final flowEntity = FlowMapper.modelToEntity(
+        flowModel: flowModel,
+        poseModels: poseModels,
+      );
+
+      flowEntities.add(flowEntity);
+    }
+
+    return flowEntities;
+  }
+
 
   /// Update a flow remotely and locally
   Future<void> updateFlow({
@@ -136,14 +139,20 @@ class FlowRepository {
 
     // Update locally
     await flowLocalDataSource.updateFlow(flowModel);
-    flowPoseLocalDataSource.deleteFlowPoseInFlow(updatedFlow.id);
-    flowPoseLocalDataSource.insertFlowPoses(flowPoseModels);
+    await flowPoseLocalDataSource.deleteFlowPoseInFlow(updatedFlow.id);
+    await flowPoseLocalDataSource.insertFlowPoses(flowPoseModels);
   }
 
+  /// Delete a flow remotely and locally
+  Future<void> deleteFlow({
+    required String flowId,
+    required String token,
+  }) async {
+    // TODO delete flow AND flow Poses remotely too!
 
-
-  // TODO : Future<void> deleteFlow(String flowId)
-
+    await flowLocalDataSource.deleteFlow(flowId);
+    await flowPoseLocalDataSource.deleteFlowPoseInFlow(flowId);
+  }
 
   /* Sync Functions */
 
