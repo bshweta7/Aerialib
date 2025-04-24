@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/to_sort/repositories/flow_local_repository.dart';
+import 'package:frontend/data/datasources/flows/flow_local_data.dart';
 import 'package:frontend/to_sort/models/flow_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 class FlowRemoteRepository {
-  final flowLocalRepository = FlowLocalRepository();
+  final flowLocalRepository = FlowLocalDataSource();
 
   Future<FlowModel> createFlow({
     required String name,

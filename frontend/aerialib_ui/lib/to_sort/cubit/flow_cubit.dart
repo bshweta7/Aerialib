@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:frontend/to_sort/repositories/flow_remote_repository.dart';
-import 'package:frontend/to_sort/repositories/flow_local_repository.dart';
+import 'package:frontend/data/datasources/flows/flow_remote_data.dart';
+import 'package:frontend/data/datasources/flows/flow_local_data.dart';
 
 import 'package:frontend/to_sort/models/flow_model.dart';
 
@@ -10,7 +10,7 @@ part 'flow_state.dart';
 class FlowsCubit extends Cubit<FlowsState> {
   FlowsCubit() : super(FlowInitial());
   final flowRemoteRepository = FlowRemoteRepository();
-  final flowLocalRepository = FlowLocalRepository();
+  final flowLocalRepository = FlowLocalDataSource();
 
   // FLOWS ONLY
   Future<void> createNewFlow({

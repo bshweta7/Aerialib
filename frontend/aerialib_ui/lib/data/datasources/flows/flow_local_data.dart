@@ -5,10 +5,11 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
+import '../../schemas/flow_schema.dart';
 
-class FlowLocalRepository {
+
+class FlowLocalDataSource {
   String tableName = "flows";
-
   Database? _database;
 
   Future<Database> get database async {
@@ -21,7 +22,6 @@ class FlowLocalRepository {
   }
 
   Future<Database> _initDb() async {
-
     // Initialize sqflite_common_ffi on desktop and web
     if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
       sqfliteFfiInit();
@@ -36,28 +36,8 @@ class FlowLocalRepository {
       version: 1,
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < newVersion) {
-          await db.execute(
-            'DROP TABLE $tableName',
-          );
-          db.execute('''
-            CREATE TABLE $tableName(
-              id TEXT PRIMARY KEY,
-              name TEXT NOT NULL,
-              description TEXT,
-              apparatus TEXT,
-
-              primaryImageId TEXT NOT NULL,
-              primaryImageUrl TEXT NOT NULL, 
-              
-              createdBy TEXT NOT NULL,
-              updatedBy TEXT, 
-              createdAt TEXT NOT NULL,
-              updatedAt TEXT NOT NULL,
-
-              isSynced INTEGER NOT NULL
-  
-            )'''
-          );
+          await db.execute(dropFlowTable);
+          await db.execute(createFlowTable);
         }
       },
       onCreate: (db, version) {
