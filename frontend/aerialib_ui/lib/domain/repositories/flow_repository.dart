@@ -132,10 +132,12 @@ class FlowRepository {
       updatedFlow: flowModel,
       token: token,
     );
+    // TODO update flow Poses remotely too!
 
     // Update locally
     await flowLocalDataSource.updateFlow(flowModel);
-    // TODO flow POses
+    flowPoseLocalDataSource.deleteFlowPoseInFlow(updatedFlow.id);
+    flowPoseLocalDataSource.insertFlowPoses(flowPoseModels);
   }
 
 

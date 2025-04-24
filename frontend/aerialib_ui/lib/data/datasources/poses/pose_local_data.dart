@@ -12,7 +12,7 @@ class PoseLocalDataSource {
   Database? _database;
 
   Future<Database> get database async {
-    if(_database!=null) {
+    if (_database != null) {
       return _database!;
     }
 
@@ -86,24 +86,24 @@ class PoseLocalDataSource {
       batch.insert(
         tableName,
         pose.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.ignore, //TODO replace might be wrong here - use replace if upserting
+        conflictAlgorithm: ConflictAlgorithm
+            .ignore, //TODO replace might be wrong here - use replace if upserting
       );
     }
 
     await batch.commit(noResult: true);
   }
 
-  Future<List<PoseModel>> getPoses () async {
+  Future<List<PoseModel>> getPoses() async {
     final db = await database;
     final result = await db.query(tableName);
 
-    if(result.isNotEmpty) {
+    if (result.isNotEmpty) {
       List<PoseModel> poses = [];
       for (final elem in result) {
         poses.add(PoseModel.fromMap(elem));
       }
       return poses;
-
     } else {
       return [];
     }
@@ -126,7 +126,7 @@ class PoseLocalDataSource {
 
     return [];
   }
-  
+
   Future<void> setSyncedStatus(String id, int newValue) async {
     final db = await database;
     await db.update(
@@ -150,9 +150,9 @@ class PoseLocalDataSource {
   Future<void> deletePose(String id) async {
     final db = await database;
     await db.delete(
-      tableName,
-      where: 'id = ?',
-      whereArgs: [id]
+        tableName,
+        where: 'id = ?',
+        whereArgs: [id]
     );
   }
 
@@ -170,3 +170,4 @@ class PoseLocalDataSource {
       return null; // Return null if not found
     }
   }
+}

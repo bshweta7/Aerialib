@@ -110,22 +110,33 @@ class FlowPoseLocalDataSource {
     );
   }
 
-  Future<void> updateFlowPose(FlowPoseModel flowPose) async {
-    final db = await database;
-    await db.update(
-      tableName,
-      flowPose.toMap(),
-      where: 'id = ?',
-      whereArgs: [flowPose.id],
-    );
-  }
+  // Future<void> updateFlowPose(FlowPoseModel flowPose) async {
+  //   final db = await database;
+  //   await db.update(
+  //     tableName,
+  //     flowPose.toMap(),
+  //     where: 'id = ?',
+  //     whereArgs: [flowPose.id],
+  //   );
+  // }
 
-  Future<void> deletePose(String id) async {
+
+  Future<void> deleteFlowPose(String id) async {
     final db = await database;
     await db.delete(
         tableName,
         where: 'id = ?',
         whereArgs: [id]
+    );
+  }
+
+  /// Delete all the flow poses for a given flow
+  Future<void> deleteFlowPoseInFlow(String flowId) async {
+    final db = await database;
+    await db.delete(
+      tableName,
+      where: 'flow_id = ?',
+      whereArgs: [flowId],
     );
   }
 
