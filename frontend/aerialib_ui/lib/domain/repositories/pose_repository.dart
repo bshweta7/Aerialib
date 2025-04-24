@@ -3,6 +3,8 @@ import 'package:frontend/data/datasources/poses/pose_remote_data.dart';
 import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
+import '../mappers/pose_mapper.dart';
+
 class PoseRepository {
   final PoseLocalDataSource localDataSource;
   final PoseRemoteDataSource remoteDataSource;
@@ -11,49 +13,6 @@ class PoseRepository {
     required this.localDataSource,
     required this.remoteDataSource,
   });
-
-  /// Convert a PoseModel to a PoseEntity
-  PoseEntity _poseModelToEntity(PoseModel poseModel) {
-    return PoseEntity(
-      id: poseModel.id,
-      name: poseModel.name,
-      description: poseModel.description,
-      cues: poseModel.cues,
-      apparatus: poseModel.apparatus,
-      level: poseModel.level,
-      createdBy: poseModel.createdBy,
-      updatedBy: poseModel.updatedBy,
-      createdAt: poseModel.createdAt,
-      updatedAt: poseModel.updatedAt,
-      isSynced: poseModel.isSynced,
-      primaryImageId: poseModel.primaryImageId,
-      primaryImageUrl: poseModel.primaryImageUrl,
-    );
-  }
-
-  /// Convert a PoseEntity to a PoseModel
-  PoseModel _poseEntityToModel(PoseEntity entity) {
-    return PoseModel(
-      id: entity.id,
-      name: entity.name,
-      description: entity.description,
-      cues: entity.cues,
-      apparatus: entity.apparatus,
-      level: entity.level,
-      createdBy: entity.createdBy,
-      updatedBy: entity.updatedBy,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-      isSynced: entity.isSynced,
-      primaryImageId: entity.primaryImageId,
-      primaryImageUrl: entity.primaryImageUrl,
-    );
-  }
-
-  /// Convert a list of PoseModels to a list of PoseEntities
-  List<PoseEntity> _poseModelsToEntities(List<PoseModel> models) {
-    return models.map((model) => _poseModelToEntity(model)).toList();
-  }
 
   /// Create a new pose (tries remote first, fallback to local if offline)
   Future<PoseEntity> createPose({
@@ -78,7 +37,7 @@ class PoseRepository {
         createdBy: createdBy,
       );
       await localDataSource.insertPose(poseModel);
-      return _poseModelToEntity(poseModel);
+      return PoseMapper.poseModelToEntity(poseModel);
     } catch (e) {
       // TODO Handle other potential errors (e.g., local database issues)
       rethrow;
@@ -90,7 +49,7 @@ class PoseRepository {
     print("Fetching PoseModels from Local Database");
     final poseModels = await localDataSource.getPoses();
     print("Converting to Pose Models to Entities");
-    return _poseModelsToEntities(poseModels);
+    return PoseMapper.poseModelsToEntities(poseModels);
   }
 
   // TODO get all poses - try to sync and if not possible, return local poses with note that its local only (or last synced time)
@@ -134,7 +93,7 @@ class PoseRepository {
     required PoseEntity updatedPose,
     required String token,
   }) async {
-    final poseModel = _poseEntityToModel(updatedPose);
+    final poseModel = PoseMapper.poseEntityToModel(updatedPose);
 
     final updatedModel = await remoteDataSource.updatePose(
       updatedPose: poseModel,
