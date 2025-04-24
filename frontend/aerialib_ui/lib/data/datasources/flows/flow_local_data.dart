@@ -1,11 +1,11 @@
-import 'package:frontend/to_sort/models/flow_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
-import '../../schemas/flow_schema.dart';
+import 'package:frontend/data/models/flow_model.dart';
+import 'package:frontend/data/schemas/flow_schema.dart';
 
 
 class FlowLocalDataSource {

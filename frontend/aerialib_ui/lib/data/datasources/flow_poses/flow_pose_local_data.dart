@@ -1,12 +1,11 @@
-import 'package:frontend/to_sort/models/flow_pose_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
-import '../../../to_sort/models/flow_model.dart';
-import '../../schemas/flow_poses_schema.dart';
+import 'package:frontend/data/models/flow_pose_model.dart';
+import 'package:frontend/data/schemas/flow_poses_schema.dart';
 
 class FlowPoseLocalDataSource {
   String tableName = flowPoseTable;
@@ -130,21 +129,22 @@ class FlowPoseLocalDataSource {
     );
   }
 
-  Future<List<FlowPoseModel>> getFlowPosesInFlow(FlowModel flow) async {
-    /// Returns list of FlowPoseModels containing flowPoses with the given flowId ///
-    final db = await database;
-    final result = await db.query(
-      tableName,
-      where: 'flow_id = ?',
-      whereArgs: [flow.id],
-    );
-    if (result.isNotEmpty) {
-      List<FlowPoseModel> flowPoses = [];
-      for (final elem in result) {
-        flowPoses.add(FlowPoseModel.fromMap(elem));
-      }
-      return flowPoses;
-    }
-    return [];
-  }
+  // TODO might be handled by repo...
+  //  Future<List<FlowPoseModel>> getFlowPosesInFlow(FlowModel flow) async {
+  //   /// Returns list of FlowPoseModels containing flowPoses with the given flowId ///
+  //   final db = await database;
+  //   final result = await db.query(
+  //     tableName,
+  //     where: 'flow_id = ?',
+  //     whereArgs: [flow.id],
+  //   );
+  //   if (result.isNotEmpty) {
+  //     List<FlowPoseModel> flowPoses = [];
+  //     for (final elem in result) {
+  //       flowPoses.add(FlowPoseModel.fromMap(elem));
+  //     }
+  //     return flowPoses;
+  //   }
+  //   return [];
+  // }
 }

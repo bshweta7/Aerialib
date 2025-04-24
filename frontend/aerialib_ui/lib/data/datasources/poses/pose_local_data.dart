@@ -1,10 +1,10 @@
-import 'package:frontend/data/models/pose_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
+import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/data/schemas/pose_schema.dart';
 
 class PoseLocalDataSource {
