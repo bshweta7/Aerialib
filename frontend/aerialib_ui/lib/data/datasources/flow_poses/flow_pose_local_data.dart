@@ -5,11 +5,11 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
-import '../models/flow_model.dart';
+import '../../../to_sort/models/flow_model.dart';
+import '../../schemas/flow_poses_schema.dart';
 
-class FlowPoseLocalRepository {
-  String tableName = "flow_poses";
-
+class FlowPoseLocalDataSource {
+  String tableName = flowPoseTable;
   Database? _database;
 
   Future<Database> get database async {
@@ -37,39 +37,19 @@ class FlowPoseLocalRepository {
       version: 6,
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < newVersion) {
-          await db.execute(
-            'DROP TABLE $tableName',
-          );
-          db.execute('''
-            CREATE TABLE $tableName(
-              id TEXT PRIMARY KEY,
-              flowId TEXT NOT NULL,
-              poseId TEXT NOT NULL,
-              order INTEGER NOT NULL,
-              transitionId TEXT,
-              isSynced INTEGER NOT NULL
-            )'''
-          );
+          await db.execute(dropFlowPoseTable); // Use drop command from schema
+          await db.execute(createFlowPoseTable); // Use create command from schema
         }
       },
       onCreate: (db, version) {
-        return db.execute('''
-          CREATE TABLE $tableName(
-            id TEXT PRIMARY KEY,
-              flowId TEXT NOT NULL,
-              poseId TEXT NOT NULL,
-              order INTEGER NOT NULL,
-              transitionId TEXT,
-              isSynced INTEGER NOT NULL
-          )'''
-        );
+        return db.execute(createFlowPoseTable); // Use create command from schema
       },
     );
   }
 
   Future<void> insertFlowPose(FlowPoseModel flowPose) async {
     final db = await database;
-    await db.delete(tableName, where: 'id = ?', whereArgs: [flowPose.id]);
+    // TODO decide if upsert or not: await db.delete(tableName, where: 'id = ?', whereArgs: [flowPose.id]);
     await db.insert(tableName, flowPose.toMap());
   }
 
@@ -107,7 +87,7 @@ class FlowPoseLocalRepository {
     final db = await database;
     final result = await db.query(
       tableName,
-      where: 'isSynced = ?',
+      where: 'is_synced = ?',
       whereArgs: [0],
     );
     if (result.isNotEmpty) {
@@ -121,11 +101,11 @@ class FlowPoseLocalRepository {
     return [];
   }
 
-  Future<void> updateSyncedStatus(String id, int newValue) async {
+  Future<void> setSyncedStatus(String id, int newValue) async {
     final db = await database;
     await db.update(
       tableName,
-      {'isSynced': newValue},
+      {'is_synced': newValue},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -141,12 +121,21 @@ class FlowPoseLocalRepository {
     );
   }
 
+  Future<void> deletePose(String id) async {
+    final db = await database;
+    await db.delete(
+        tableName,
+        where: 'id = ?',
+        whereArgs: [id]
+    );
+  }
+
   Future<List<FlowPoseModel>> getFlowPosesInFlow(FlowModel flow) async {
     /// Returns list of FlowPoseModels containing flowPoses with the given flowId ///
     final db = await database;
     final result = await db.query(
       tableName,
-      where: 'flowId = ?',
+      where: 'flow_id = ?',
       whereArgs: [flow.id],
     );
     if (result.isNotEmpty) {
