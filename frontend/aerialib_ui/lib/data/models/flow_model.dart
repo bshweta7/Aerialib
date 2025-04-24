@@ -4,6 +4,7 @@ class FlowModel {
   final String id;
   final String name;
   final String? description;
+  final String? apparatus;
   final String createdBy;
   final String? updatedBy;
   final DateTime createdAt;
@@ -14,6 +15,7 @@ class FlowModel {
     required this.id,
     required this.name,
     this.description,
+    this.apparatus,
     required this.createdBy,
     this.updatedBy,
     required this.createdAt,
@@ -26,6 +28,7 @@ class FlowModel {
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       description: map['description'],
+      apparatus: map['apparatus'],
       createdBy: map['created_by'] ?? '',
       updatedBy: map['updated_by'],
       createdAt: DateTime.parse(map['created_at']),
@@ -39,6 +42,7 @@ class FlowModel {
       'id': id,
       'name': name,
       'description': description,
+      'apparatus': apparatus,
       'created_by': createdBy,
       'updated_by': updatedBy,
       'created_at': createdAt.toIso8601String(),
