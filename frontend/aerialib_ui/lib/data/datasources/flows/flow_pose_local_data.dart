@@ -46,12 +46,14 @@ class FlowPoseLocalDataSource {
     );
   }
 
+  /// Insert a flow pose into the database
   Future<void> insertFlowPose(FlowPoseModel flowPose) async {
     final db = await database;
     // TODO decide if upsert or not: await db.delete(tableName, where: 'id = ?', whereArgs: [flowPose.id]);
     await db.insert(tableName, flowPose.toMap());
   }
 
+  /// Insert a list of flow poses into the database (bulk insert)
   Future<void> insertFlowPoses(List<FlowPoseModel> flowPoses) async {
     final db = await database;
     final batch = db.batch();
@@ -62,7 +64,6 @@ class FlowPoseLocalDataSource {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
-
     await batch.commit(noResult: true);
   }
 

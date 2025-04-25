@@ -58,6 +58,13 @@ class FlowRepository {
     }
   }
 
+  /// Insert a list of flow pose entities
+  Future<void> insertFlowPoses(List<FlowPoseEntity> entities) async {
+    final models = entities.map(FlowPoseMapper.entityToModel).toList();
+    await localDataSource.insertFlowPoses(models);
+  }
+
+
 
   /// Fetch all flow poses from local DB
   Future<List<FlowPoseEntity>> getLocalFlowPoses() async {
@@ -138,4 +145,21 @@ class FlowRepository {
   Future<void> deleteFlowPose(String id) async {
     await localDataSource.deleteFlowPose(id);
   }
+
+  /// Delete all flow poses associated with a flow ID
+  Future<void> deleteAllFlowPosesInFlow(String flowId) async {
+    await localDataSource.deleteFlowPoseInFlow(flowId);
+  }
+
+
+  /// Update flow poses for a given flow
+  Future<void> replaceFlowPosesInFlow({
+    required String flowId,
+    required List<FlowPoseEntity> newPoses,
+  }) async {
+    await deleteAllFlowPosesInFlow(flowId);
+    await insertFlowPoses(newPoses);
+  }
+
+
 }
