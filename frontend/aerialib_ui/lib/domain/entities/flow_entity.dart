@@ -1,9 +1,9 @@
-import 'package:frontend/domain/entities/pose_entity.dart';
+import 'package:frontend/domain/entities/flow_pose_entity.dart';
 
 class FlowEntity {
   final String id;
   final String name;
-  final List<PoseEntity> poses; // Ordered list of PoseEntity
+  final List<FlowPoseEntity> poses; // Ordered list of PoseEntity
   final String? description;
   final String? apparatus;
   final String createdBy;

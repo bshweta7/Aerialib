@@ -6,23 +6,20 @@ import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/domain/mappers/pose_mapper.dart';
 import 'package:uuid/uuid.dart';
 
-const _uuid = Uuid();
+import '../entities/flow_pose_entity.dart';
+import 'flow_pose_mapper.dart';
 
 class FlowMapper {
-  /// Converts a FlowModel to a FlowEntity.
-  /// Requires the list of associated PoseModels, already ordered.
-  static FlowEntity modelToEntity({
-    required FlowModel flowModel,
-    required List<PoseModel> poseModels,
-  }) {
-    final poses = poseModels.map(PoseMapper.modelToEntity).toList();
 
+  /// Converts a FlowModel to a FlowEntity with empty poses.
+  static FlowEntity modelToEntityMetaDataOnly(FlowModel flowModel) {
     return FlowEntity(
       id: flowModel.id,
       name: flowModel.name,
-      poses: poses,
       description: flowModel.description,
       apparatus: flowModel.apparatus,
+      poses: [],
+      // Empty, to be filled later
       createdBy: flowModel.createdBy,
       updatedBy: flowModel.updatedBy,
       createdAt: flowModel.createdAt,
@@ -31,8 +28,40 @@ class FlowMapper {
     );
   }
 
+  /// Converts a FlowModel to a FlowEntity.
+  /// Requires the list of associated PoseModels, already ordered.
+  // static Future<FlowEntity> modelToEntity({
+  //   required FlowModel flowModel,
+  //   required List<FlowPoseModel> flowPoseModels,
+  // }) async {
+  //   final List<FlowPoseEntity> flowPoseEntities = [];
+  //
+  //   for (final model in flowPoseModels) {
+  //     final poseModel = await getPoseById(model.poseId);
+  //     if (poseModel != null) {
+  //       flowPoseEntities.add(
+  //         FlowPoseMapper.modelToEntity(model: model, poseModel: poseModel),
+  //       );
+  //     }
+  //   }
+  //
+  //   return FlowEntity(
+  //     id: flowModel.id,
+  //     name: flowModel.name,
+  //     description: flowModel.description,
+  //     apparatus: flowModel.apparatus,
+  //     poses: flowPoseEntities,
+  //     createdBy: flowModel.createdBy,
+  //     updatedBy: flowModel.updatedBy,
+  //     createdAt: flowModel.createdAt,
+  //     updatedAt: flowModel.updatedAt,
+  //     isSynced: flowModel.isSynced,
+  //   );
+  // }
+
+
   /// Converts a FlowEntity to a FlowModel (metadata only)
-  static FlowModel entityToModelMetaData(FlowEntity entity) {
+  static FlowModel entityToModel(FlowEntity entity) {
     return FlowModel(
       id: entity.id,
       name: entity.name,
@@ -44,37 +73,5 @@ class FlowMapper {
       updatedAt: entity.updatedAt,
       isSynced: entity.isSynced,
     );
-  }
-
-  /// Converts FlowEntity's pose list into ordered FlowPoseModels
-  static List<FlowPoseModel> entityToFlowPoseModels(FlowEntity entity) {
-    return List.generate(entity.poses.length, (index) {
-      final pose = entity.poses[index];
-      return FlowPoseModel(
-        id: _uuid.v6(),
-        flowId: entity.id,
-        poseId: pose.id,
-        order: index,
-        transitionId: '', //TODO remove? transition notes stored in flow?
-        isSynced: 0,
-      );
-    });
-  }
-
-  /// Helper to convert flowPoseModels → poseModels from local storage
-  static Future<List<PoseModel>> flowPoseModelsToPoseModels(
-      List<FlowPoseModel> flowPoses,
-      Future<PoseModel?> Function(String id) getPoseById,
-      ) async {
-    final poseModels = <PoseModel>[];
-    for (final flowPose in flowPoses) {
-      final pose = await getPoseById(flowPose.poseId);
-      if (pose != null) {
-        poseModels.add(pose);
-      } else {
-        print("Pose ${flowPose.poseId} not found.");
-      }
-    }
-    return poseModels;
   }
 }
