@@ -1,77 +1,11 @@
-import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
-import 'package:flutter/foundation.dart';
-import 'dart:io';
-
 import 'package:frontend/data/models/pose_model.dart';
-import 'package:frontend/data/schemas/pose_schema.dart';
+import '../../services/local_database_service.dart';
 
 class PoseLocalDataSource {
-  String tableName = poseTable;
-  Database? _database;
+  String tableName = 'poses';
 
-  Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
-
-    _database = await _initDb();
-    return _database!;
-  }
-
-  Future<Database> _initDb() async {
-    // Initialize sqflite_common_ffi on desktop and web
-    if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, "poses.db");
-
-    return openDatabase(
-      path,
-      version: 6,
-      onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < newVersion) {
-          await db.execute(dropPoseTable); // Use drop command from schema
-          await db.execute(createPoseTable); // Use create command from schema
-        }
-      },
-      onCreate: (db, version) async {
-        return db.execute(createPoseTable); // Use create command from schema
-      },
-    );
-  }
-
-  // Future<Database> _initDb() async {
-  //   DatabaseFactory? factory;
-  //
-  //   final dbPath = await getDatabasesPath();
-  //   String path = join(dbPath, "poses.db");
-  //
-  //   if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
-  //     // Initialize sqflite_common_ffi on desktop and web
-  //     sqfliteFfiInit();
-  //     factory = databaseFactoryFfi;
-  //   } else {
-  //     factory = databaseFactory; // Use the default factory for mobile
-  //   }
-  //
-  //   return openDatabase(
-  //     path,
-  //     version: 6,
-  //     onUpgrade: (db, oldVersion, newVersion) async {
-  //       if (oldVersion < newVersion) {
-  //         await db.execute(dropPoseTable); // Use drop command from schema
-  //         await db.execute(createPoseTable); // Use create command from schema
-  //       }
-  //     },
-  //     onCreate: (db, version) async {
-  //       return db.execute(createPoseTable); // Use create command from schema
-  //     },
-  //   );
-  // }
+  Future<Database> get database async => DatabaseService.database;
 
   Future<void> insertPose(PoseModel pose) async {
     final db = await database;

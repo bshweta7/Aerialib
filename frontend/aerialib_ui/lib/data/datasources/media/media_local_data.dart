@@ -1,73 +1,11 @@
 import 'package:frontend/to_sort/models/media_model.dart';
-import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
-import 'package:flutter/foundation.dart';
-import 'dart:io';
+import '../../services/local_database_service.dart';
 
 class MediaLocalDataSource {
   String tableName = "media";
 
-  Database? _database;
-
-  Future<Database> get database async {
-    if(_database!=null) {
-      return _database!;
-    }
-
-    _database = await _initDb();
-    return _database!;
-  }
-
-  Future<Database> _initDb() async {
-
-    // Initialize sqflite_common_ffi on desktop and web
-    if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
-
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, "media.db");
-
-    return openDatabase(
-      path,
-      version: 1,
-      onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < newVersion) {
-          await db.execute(
-            'DROP TABLE $tableName',
-          );
-          db.execute('''
-            CREATE TABLE $tableName(
-              id TEXT PRIMARY KEY,
-              mediaURL TEXT NOT NULL,
-              name TEXT,
-              description TEXT,
-              apparatus TEXT,
-              uploadedBy TEXT NOT NULL,
-              uploadedAt TEXT NOT NULL,
-              isSynced INTEGER NOT NULL
-            )'''
-          );
-        }
-      },
-      onCreate: (db, version) {
-        return db.execute('''
-          CREATE TABLE $tableName(
-            id TEXT PRIMARY KEY,
-            mediaURL TEXT NOT NULL,
-            name TEXT,
-            description TEXT,
-            apparatus TEXT,
-            uploadedBy TEXT NOT NULL,
-            uploadedAt TEXT NOT NULL,
-            isSynced INTEGER NOT NULL
-          )'''
-        );
-      },
-    );
-  }
+  Future<Database> get database async => DatabaseService.database;
 
   Future<void> insertMedia(MediaModel media) async {
     final db = await database;

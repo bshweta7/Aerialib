@@ -1,50 +1,12 @@
 import 'package:frontend/data/models/user_model.dart';
-import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:io';
-import 'package:sqflite/sqflite.dart';
-import 'package:frontend/data/schemas/user_schema.dart';
+import '../../services/local_database_service.dart';
 
 
 class UserLocalDataSource {
-  String tableName = userTable;
-  Database? _database;
+  String tableName = 'users';
 
-  /// Returns the database instance, initializing it if it's null.
-  Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
-    _database = await _initDb();
-    return _database!;
-  }
-
-  /// Initializes the local database.
-  Future<Database> _initDb() async {
-    // Initialize sqflite_common_ffi on desktop and web
-    if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
-
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, "user.db");
-
-    return openDatabase(
-      path,
-      version: 1,
-      onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < newVersion) {
-          await db.execute(dropUserTable); // Use drop command from schema
-          await db.execute(createUserTable); // Use create command from schema
-        }
-      },
-      onCreate: (db, version) {
-        return db.execute(createUserTable); // Use create command from schema
-      },
-    );
-  }
+  Future<Database> get database async => DatabaseService.database;
 
   /// Inserts a new user into the local database, replacing if a user with the same ID already exists.
   Future<void> insertUser(UserModel userModel) async {
