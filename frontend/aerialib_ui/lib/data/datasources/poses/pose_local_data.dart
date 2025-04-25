@@ -170,4 +170,16 @@ class PoseLocalDataSource {
       return null; // Return null if not found
     }
   }
+
+  /// Return List of PoseModels given list of IDs.
+  Future<List<PoseModel>> getPosesByIds(List<String> ids) async {
+    final db = await database;
+    final result = await db.query(
+      'poses',
+      where: 'id IN (${List.filled(ids.length, '?').join(', ')})',
+      whereArgs: ids,
+    );
+    return result.map((e) => PoseModel.fromMap(e)).toList();
+  }
+
 }
