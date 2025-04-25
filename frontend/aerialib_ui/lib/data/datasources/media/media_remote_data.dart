@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/to_sort/repositories/media_local_repository.dart';
+import 'package:frontend/data/datasources/media/media_local_data.dart';
 import 'package:frontend/to_sort/models/media_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
-class MediaRemoteRepository {
-  final mediaLocalRepository = MediaLocalRepository();
+class MediaRemoteDataSource {
+  final mediaLocalRepository = MediaLocalDataSource();
 
   Future<MediaModel> createMedia({
     required String mediaURL,

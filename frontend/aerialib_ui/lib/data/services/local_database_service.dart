@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'dart:io';
 
 import '../schemas/database_schema.dart';
-import '../schemas/pose_schema.dart';
 
 class DatabaseService {
   static Database? _db;

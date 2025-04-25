@@ -5,7 +5,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:io';
 
-class MediaLocalRepository {
+class MediaLocalDataSource {
   String tableName = "media";
 
   Database? _database;
