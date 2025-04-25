@@ -25,6 +25,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 import '../../../domain/entities/flow_entity.dart';
 import '../../cubit/flows/flows_cubit.dart';
+import 'flow_details_page.dart';
 
 class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -62,8 +63,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
   // Navigation
   void _navigateToFlowDetail(FlowEntity flow) {
-    // TODO: Navigate to FlowDetailPage
-    print("Tapped flow: ${flow.name}");
+    Navigator.push(context, FlowDetailPage.route(flow));
   }
 
   @override
