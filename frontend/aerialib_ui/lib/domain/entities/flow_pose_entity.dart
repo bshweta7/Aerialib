@@ -4,26 +4,26 @@ class FlowPoseEntity {
   final String id;
   final String flowId;
   final PoseEntity pose;
-  final int order;
+  final int poseOrder;
 
   FlowPoseEntity({
     required this.id,
     required this.flowId,
     required this.pose,
-    required this.order,
+    required this.poseOrder,
   });
 
   FlowPoseEntity copyWith({
     String? id,
     String? flowId,
     PoseEntity? pose,
-    int? order,
+    int? poseOrder,
   }) {
     return FlowPoseEntity(
       id: id ?? this.id,
       flowId: flowId ?? this.flowId,
       pose: pose ?? this.pose,
-      order: order ?? this.order,
+      poseOrder: poseOrder ?? this.poseOrder,
     );
   }
 }

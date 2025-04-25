@@ -1,50 +1,11 @@
-import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
-import 'package:flutter/foundation.dart';
-import 'dart:io';
-
 import 'package:frontend/data/models/flow_pose_model.dart';
-import 'package:frontend/data/schemas/flow_poses_schema.dart';
+import '../../services/local_database_service.dart';
 
 class FlowPoseLocalDataSource {
-  String tableName = flowPoseTable;
-  Database? _database;
+  String tableName = 'flow_poses';
 
-  Future<Database> get database async {
-    if(_database!=null) {
-      return _database!;
-    }
-
-    _database = await _initDb();
-    return _database!;
-  }
-
-  Future<Database> _initDb() async {
-
-    // Initialize sqflite_common_ffi on desktop and web
-    if (kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
-
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, "flow_poses.db");
-
-    return openDatabase(
-      path,
-      version: 6,
-      onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < newVersion) {
-          await db.execute(dropFlowPoseTable); // Use drop command from schema
-          await db.execute(createFlowPoseTable); // Use create command from schema
-        }
-      },
-      onCreate: (db, version) {
-        return db.execute(createFlowPoseTable); // Use create command from schema
-      },
-    );
-  }
+  Future<Database> get database async => DatabaseService.database;
 
   /// Insert a flow pose into the database
   Future<void> insertFlowPose(FlowPoseModel flowPose) async {

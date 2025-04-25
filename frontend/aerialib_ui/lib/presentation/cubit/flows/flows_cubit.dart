@@ -79,7 +79,7 @@ class FlowsCubit extends Cubit<FlowsState> {
       id: const Uuid().v6(),
       flowId: currentState.flow.id,
       pose: pose,
-      order: currentState.flow.poses.length,
+      poseOrder: currentState.flow.poses.length,
     );
 
     final updatedFlow = currentState.flow.copyWith(
@@ -96,7 +96,7 @@ class FlowsCubit extends Cubit<FlowsState> {
 
     final updatedPoses = reorderedPoses.asMap().entries.map((entry) {
       final index = entry.key;
-      final pose = entry.value.copyWith(order: index);
+      final pose = entry.value.copyWith(poseOrder: index);
       return pose;
     }).toList();
 

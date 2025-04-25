@@ -41,7 +41,7 @@ class FlowPoseRemoteDataSource {
         id: const Uuid().v6(),
         flowId: flowId,
         poseId: poseId,
-        order: order,
+        poseOrder: order,
         transitionId: transitionId,
         isSynced: 0,
       );

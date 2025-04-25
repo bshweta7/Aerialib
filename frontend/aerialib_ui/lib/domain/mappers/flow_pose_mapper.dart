@@ -13,7 +13,7 @@ class FlowPoseMapper {
       id: model.id,
       flowId: model.flowId,
       pose: PoseMapper.modelToEntity(poseModel),
-      order: model.order,
+      poseOrder: model.poseOrder,
     );
   }
 
@@ -23,7 +23,7 @@ class FlowPoseMapper {
       id: entity.id,
       flowId: entity.flowId,
       poseId: entity.pose.id,
-      order: entity.order,
+      poseOrder: entity.poseOrder,
       transitionId: '', // TODO remove this
       isSynced: 0,
     );
