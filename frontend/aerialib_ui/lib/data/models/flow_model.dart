@@ -9,6 +9,8 @@ class FlowModel {
   final String? updatedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String primaryImageId;
+  final String primaryImageUrl;
   final int isSynced;
 
   const FlowModel({
@@ -20,6 +22,8 @@ class FlowModel {
     this.updatedBy,
     required this.createdAt,
     required this.updatedAt,
+    this.primaryImageId = '',
+    this.primaryImageUrl = '',
     required this.isSynced,
   });
 
@@ -47,6 +51,8 @@ class FlowModel {
       'updated_by': updatedBy,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'primary_image_id': primaryImageId,
+      'primary_image_url': primaryImageUrl,
       'is_synced': isSynced,
     };
   }

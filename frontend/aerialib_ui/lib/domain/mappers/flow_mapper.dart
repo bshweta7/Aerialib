@@ -6,6 +6,7 @@ import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/domain/mappers/pose_mapper.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../core/constants/constants.dart';
 import '../entities/flow_pose_entity.dart';
 import 'flow_pose_mapper.dart';
 
@@ -63,6 +64,10 @@ class FlowMapper {
 
   /// Converts a FlowEntity to a FlowModel (metadata only)
   static FlowModel entityToModel(FlowEntity entity) {
+    final primaryImageId = entity.poses.isNotEmpty ? entity.poses.first.pose.primaryImageId : '';
+    final primaryImageUrl = entity.poses.isNotEmpty ? entity.poses.first.pose.primaryImageUrl : Constants.missingImageUrl;
+
+
     return FlowModel(
       id: entity.id,
       name: entity.name,
@@ -72,6 +77,8 @@ class FlowMapper {
       updatedBy: entity.updatedBy,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
+      primaryImageId: primaryImageId,
+      primaryImageUrl: primaryImageUrl,
       isSynced: entity.isSynced,
     );
   }
