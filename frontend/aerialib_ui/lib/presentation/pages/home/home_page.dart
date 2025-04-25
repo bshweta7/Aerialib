@@ -9,7 +9,7 @@ import 'package:frontend/to_sort/pages/home/test_page.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
-import 'package:frontend/to_sort/pages/flows/flow_library_page.dart';
+import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/to_sort/pages/media/media_library_page.dart';
 
 

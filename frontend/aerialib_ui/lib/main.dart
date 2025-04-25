@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/data/datasources/poses/pose_local_data.dart';
@@ -22,8 +23,14 @@ import 'package:frontend/presentation/pages/home/home_page.dart';
 
 import 'package:frontend/presentation/pages/auth/login_page.dart';
 import 'package:frontend/to_sort/pages/home/web_landing_page.dart';
+import 'data/datasources/flows/flow_local_data.dart';
+import 'data/datasources/flows/flow_pose_local_data.dart';
+import 'data/datasources/flows/flow_pose_remote_data.dart';
+import 'data/datasources/flows/flow_remote_data.dart';
+import 'domain/repositories/flow_pose_repository.dart';
+import 'domain/repositories/flow_repository.dart';
 import 'to_sort/cubit/media_cubit.dart';
-import 'to_sort/cubit/flow_cubit.dart';
+
 
 
 Future<void> main() async {
@@ -55,13 +62,24 @@ Future<void> main() async {
     remoteDataSource: UserRemoteDataSource(httpService: HttpService()),
   );
 
+  final flowRepo = FlowRepository(
+    localDataSource: FlowLocalDataSource(),
+    remoteDataSource: FlowRemoteDataSource(httpService: HttpService()),
+  );
+
+  final flowPoseRepo = FlowPoseRepository(
+    localDataSource: FlowPoseLocalDataSource(),
+    remoteDataSource: FlowPoseRemoteDataSource(httpService: HttpService()),
+    poseLocalDataSource: PoseLocalDataSource(),
+  );
+
   // Run app
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit(userRepo)),
       BlocProvider(create: (_) => PosesCubit(poseRepo)),
       BlocProvider(create: (_) => MediaCubit()),
-      BlocProvider(create: (_) => FlowsCubit()),
+      BlocProvider(create: (_) => FlowsCubit(flowRepo, flowPoseRepo)),
     ],
     child: const MyApp(),
   ));

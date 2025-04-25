@@ -38,9 +38,9 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   final ScrollController _scrollController = ScrollController();
 
-  int _gridSize = 3; // Start at 0 and set during the first build
-  int _gridSizeMax = 10; // TODO set this dynamically when building
-  final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
+  // int _gridSize = 3; // Start at 0 and set during the first build
+  // int _gridSizeMax = 10; // TODO set this dynamically when building
+  // final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
 
   // Filtering
   List<String> selectedApparatus = Constants.apparatusOptions;
@@ -62,16 +62,17 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     super.dispose();
   }
 
-  void changeGridSize(int amount) {
-    // Detect current width and calculate a maximum grid size (column count)
-    Size windowSize = MediaQuery.of(context).size;
-    _gridSize = calculateNewGridSize(amount, _gridSize, windowSize, kDebugMode);
-    setState(() {
-      _gridSize;
-    });
-  }
+  // void changeGridSize(int amount) {
+  //   // Detect current width and calculate a maximum grid size (column count)
+  //   Size windowSize = MediaQuery.of(context).size;
+  //   _gridSize = calculateNewGridSize(amount, _gridSize, windowSize, kDebugMode);
+  //   setState(() {
+  //     _gridSize;
+  //   });
+  // }
 
   // Filtering
+
   void _updateApparatusFilter(List<String> newApparatus) {
     setState(() {
       selectedApparatus = newApparatus;
@@ -137,15 +138,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             }
 
             if (state is PoseError) {
-              print("ERROR: State is Pose Error");
-              print(state.message);
-              return const Center(
-                child: Column(
-                  children: [
-                    Text("State pose error"),
-                  ],
-                ),
-              );
+              return Center(child: Text("Error: ${state.message}"));
             }
 
             if (state is GetPosesSuccess) {
