@@ -11,12 +11,12 @@ import 'package:frontend/data/datasources/flows/flow_pose_remote_data.dart';
 import 'package:frontend/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/domain/mappers/flow_pose_mapper.dart';
 
-class FlowRepository {
+class FlowPoseRepository {
   final FlowPoseLocalDataSource localDataSource;
   final FlowPoseRemoteDataSource remoteDataSource;
   final PoseLocalDataSource poseLocalDataSource;
 
-  FlowRepository({
+  FlowPoseRepository({
     required this.localDataSource,
     required this.remoteDataSource,
     required this.poseLocalDataSource

@@ -57,7 +57,7 @@ class PosesCubit extends Cubit<PosesState> {
         print("No poses in local datasource, syncing from remote");
         await _poseRepository.syncRemoteToLocal(token);
 
-        final poses = await _poseRepository.getLocalPoses();
+        poses = await _poseRepository.getLocalPoses();
       }
 
       print("Number of Poses Retrieved: ${poses.length}");

@@ -27,6 +27,32 @@ class FlowEntity {
     required this.isSynced,
   });
 
+  FlowEntity copyWith({
+    String? id,
+    String? name,
+    List<FlowPoseEntity>? poses,
+    String? description,
+    String? apparatus,
+    String? createdBy,
+    String? updatedBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? isSynced,
+  }) {
+    return FlowEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      poses: poses ?? this.poses,
+      description: description ?? this.description,
+      apparatus: apparatus ?? this.apparatus,
+      createdBy: createdBy ?? this.createdBy,
+      updatedBy: updatedBy ?? this.updatedBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isSynced: isSynced ?? this.isSynced,
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -56,3 +82,4 @@ class FlowEntity {
       updatedAt.hashCode ^
       isSynced.hashCode;
 }
+
