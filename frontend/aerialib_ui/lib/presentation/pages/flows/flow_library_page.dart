@@ -84,7 +84,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   }
 
   // Navigation
-  void _navigateToFlowDetail(FlowEntity flow) {
+  void _navigateToFlowPage(FlowEntity flow) {
     Navigator.push(context, FlowDetailsPage.route(flow));
   }
 
@@ -168,16 +168,16 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                             MediaList(
                               mediaItems: mediaItems,
                               onMediaTap: (mediaItem) {
-                                _navigateToFlowDetail(mediaItem.data as FlowEntity);
-                              },
+                                _navigateToFlowPage(mediaItem.data as FlowEntity);
+                              }, // TODO verify - this doesnt align exactly with the pose library page
                             ),
                           ],
                         ),
                       ),
+                      ScrollToTopButton(scrollController: _scrollController),
                     ],
                   ),
                 ),
-                ScrollToTopButton(scrollController: _scrollController),
               ],
             );
           }
