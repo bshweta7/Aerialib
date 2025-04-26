@@ -12,7 +12,7 @@ import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/domain/entities/media_icon_entity.dart';
 
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
-import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
+import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid/media_grid_utils.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/filters/pose_filter.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';

@@ -6,20 +6,20 @@ import '../../../core/constants/constants.dart';
 import '../../widgets/media_display/formatted_cached_network_image.dart';
 import '../../widgets/media_display/media_grid/media_icon_grid_card.dart';
 
-class PoseViewPage extends StatefulWidget {
+class PoseDetailsPage extends StatefulWidget {
   final PoseEntity pose;
 
-  const PoseViewPage({super.key, required this.pose});
+  const PoseDetailsPage({super.key, required this.pose});
 
   static MaterialPageRoute route(PoseEntity pose) => MaterialPageRoute(
-    builder: (context) => PoseViewPage(pose: pose,),
+    builder: (context) => PoseDetailsPage(pose: pose,),
   );
 
   @override
-  State<PoseViewPage> createState() => _PoseViewPageState();
+  State<PoseDetailsPage> createState() => _PoseDetailsPageState();
 }
 
-class _PoseViewPageState extends State<PoseViewPage> {
+class _PoseDetailsPageState extends State<PoseDetailsPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController cuesController = TextEditingController();
@@ -54,7 +54,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
         //   ),
         //   ] // TODO ADD EDITING
       ),
-        // TODO Ask about ordering of items on page, ensure consistency across add, edit, and view pages
+        // TODO Ask about ordering of items on page, ensure consistency across add, edit, and details pages
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

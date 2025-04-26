@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
-import 'package:frontend/domain/entities/flow_pose_entity.dart';
+
+import 'flow_edit_page.dart';
 
 class FlowDetailPage extends StatelessWidget {
   final FlowEntity flow;
@@ -18,6 +19,15 @@ class FlowDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(flow.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(context, FlowEditPage.route(flow));
+            },
+            tooltip: 'Edit this flow',
+          ),
+          ]
       ),
       body: flow.poses.isEmpty
           ? const Center(child: Text('No poses in this flow yet.'))

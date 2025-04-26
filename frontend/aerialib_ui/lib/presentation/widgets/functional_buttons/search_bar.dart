@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
+import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 
 class SearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
@@ -60,7 +60,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               });
               Navigator.push(
                 context,
-                PoseViewPage.route(pose), // Navigate directly to PoseViewPage
+                PoseDetailsPage.route(pose), // Navigate directly to PoseViewPage
               );
             },
           );
