@@ -1,6 +1,6 @@
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:frontend/data/models/flow_model.dart';
-import '../../services/local_database_service.dart';
+import 'package:frontend/data/services/local_database_service.dart';
 
 
 class FlowLocalDataSource {

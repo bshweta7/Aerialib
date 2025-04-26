@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/constants.dart';
+import 'package:frontend/core/constants/constants.dart';
 import 'custom_filter_chip.dart'; // Import the custom chip
 
 class ActiveFiltersSummary extends StatelessWidget {

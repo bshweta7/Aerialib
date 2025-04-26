@@ -1,10 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:frontend/to_sort/pages/poses/edit_pose_page.dart';
-import '../../../core/constants/constants.dart';
-import '../../widgets/media_display/formatted_cached_network_image.dart';
-import '../../widgets/media_display/media_grid/media_icon_grid_card.dart';
+import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 
 class PoseDetailsPage extends StatefulWidget {
   final PoseEntity pose;

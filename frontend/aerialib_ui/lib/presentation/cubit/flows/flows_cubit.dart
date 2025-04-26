@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
@@ -7,7 +6,7 @@ import 'package:frontend/domain/repositories/flow_repository.dart';
 import 'package:frontend/domain/repositories/flow_pose_repository.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../domain/entities/flow_pose_entity.dart';
+import 'package:frontend/domain/entities/flow_pose_entity.dart';
 
 part 'flows_state.dart';
 

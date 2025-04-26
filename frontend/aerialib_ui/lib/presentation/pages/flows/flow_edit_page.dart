@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/domain/entities/flow_entity.dart';
-import 'package:frontend/domain/entities/flow_pose_entity.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../domain/entities/pose_entity.dart';
+import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:frontend/domain/entities/flow_pose_entity.dart';
+import 'package:frontend/domain/entities/pose_entity.dart';
 
 class FlowEditPage extends StatefulWidget {
   final FlowEntity flow;
