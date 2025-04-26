@@ -23,6 +23,8 @@ import 'package:frontend/presentation/widgets/functional_buttons/search_bar.dart
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
+import '../../../to_sort/pages/flows/add_new_pose_page.dart';
+
 class PoseLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
       MaterialPageRoute(
@@ -38,6 +40,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   final ScrollController _scrollController = ScrollController();
 
+  // TODO GRID VIEW
   // int _gridSize = 3; // Start at 0 and set during the first build
   // int _gridSizeMax = 10; // TODO set this dynamically when building
   // final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
@@ -62,6 +65,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     super.dispose();
   }
 
+  // TODO GRID VIEW
   // void changeGridSize(int amount) {
   //   // Detect current width and calculate a maximum grid size (column count)
   //   Size windowSize = MediaQuery.of(context).size;
@@ -72,7 +76,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   // }
 
   // Filtering
-
   void _updateApparatusFilter(List<String> newApparatus) {
     setState(() {
       selectedApparatus = newApparatus;
@@ -93,18 +96,19 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
-  List<MediaIconEntity> _filterPosesBySearch(List<PoseEntity> allPoses, String query) {
-    if (query.isEmpty) {
-      return posesToMediaIcons(allPoses);
-    }
-    final lowerCaseQuery = query.toLowerCase();
-    final filtered = allPoses.where((pose) {
-      return pose.name.toLowerCase().contains(lowerCaseQuery) ||
-          (pose.description?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
-          pose.apparatus.toLowerCase().contains(lowerCaseQuery);
-    }).toList();
-    return posesToMediaIcons(filtered);
-  }
+  // TODO Search should result in multiple options that show up as filtered poses (low priority)
+  // List<MediaIconEntity> _filterPosesBySearch(List<PoseEntity> allPoses, String query) {
+  //   if (query.isEmpty) {
+  //     return posesToMediaIcons(allPoses);
+  //   }
+  //   final lowerCaseQuery = query.toLowerCase();
+  //   final filtered = allPoses.where((pose) {
+  //     return pose.name.toLowerCase().contains(lowerCaseQuery) ||
+  //         (pose.description?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
+  //         pose.apparatus.toLowerCase().contains(lowerCaseQuery);
+  //   }).toList();
+  //   return posesToMediaIcons(filtered);
+  // }
 
 
   // Navigation
@@ -115,19 +119,37 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
           title: const Text("Poses"),
-          // TODO - add page view options to actions.
-          // actions: const [
-          //   AddNewPoseButton(),
-          //   SizedBox(width:8.0),
-          // ]
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(context, AddNewPosePage.route());
+              },
+              tooltip: 'Add a new pose',
+            ),
+          ]
+          // TODO three dots to show page view options and add new pose button
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(Icons.remove_circle_outline),
+          //     onPressed: () {
+          //       changeGridSize(1);
+          //     },
+          //     tooltip: 'Decrease Image Size',
+          //   ),
+          //   IconButton(
+          //     icon: const Icon(Icons.add_circle_outline),
+          //     onPressed: () {
+          //       changeGridSize(-1);
+          //     },
+          //     tooltip: 'Increase Image Size',
+          //   ),
+          // ],
         ),
 
         body: BlocBuilder<PosesCubit, PosesState>(
@@ -154,6 +176,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               return Column(
                 children: [
                   // Pose Filters
+                  // TODO check expandable cards builtin function in flutter
                   PoseFilters(
                     initialApparatus: selectedApparatus,
                     initialLevels: selectedLevels,
