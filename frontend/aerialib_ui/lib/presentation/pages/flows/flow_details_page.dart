@@ -3,14 +3,14 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 
 import 'flow_edit_page.dart';
 
-class FlowDetailPage extends StatelessWidget {
+class FlowDetailsPage extends StatelessWidget {
   final FlowEntity flow;
 
-  const FlowDetailPage({Key? key, required this.flow}) : super(key: key);
+  const FlowDetailsPage({Key? key, required this.flow}) : super(key: key);
 
   static MaterialPageRoute route(FlowEntity flow) {
     return MaterialPageRoute(
-      builder: (context) => FlowDetailPage(flow: flow),
+      builder: (context) => FlowDetailsPage(flow: flow),
     );
   }
 

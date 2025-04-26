@@ -5,13 +5,13 @@ import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 class SearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
   final VoidCallback? onSearchSubmitted;
-  final List<PoseEntity> suggestionList; // Now a list of PoseEntity
+  final List<PoseEntity> suggestionList;
 
   const SearchBarWidget({
     Key? key,
     required this.onSearchChanged,
     this.onSearchSubmitted,
-    required this.suggestionList, // Make it required
+    required this.suggestionList,
   }) : super(key: key);
 
   @override

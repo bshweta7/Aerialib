@@ -18,7 +18,7 @@ import 'package:frontend/presentation/widgets/functional_buttons/filters/pose_fi
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid/media_grid.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
-import 'package:frontend/presentation/widgets/functional_buttons/search_bar.dart';
+import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
 
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
@@ -38,15 +38,16 @@ class FlowLibraryPage extends StatefulWidget {
 }
 
 class _FlowLibraryPageState extends State<FlowLibraryPage> {
+
   final ScrollController _scrollController = ScrollController();
 
-  // TODO ADD THESE
-  // Filtering
-  // List<String> selectedApparatus = Constants.apparatusOptions;
-  // List<int> selectedLevels = Constants.levelOptions;
-  //
-  // // Search Bar
-  // String _searchQuery = '';
+  // TODO - is grid view needed here?
+
+  // TODO Filtering
+  List<String> selectedApparatus = Constants.apparatusOptions;
+
+  // Search Bar
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -61,19 +62,57 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
     super.dispose();
   }
 
+  // TODO - Filtering
+  // void _updateApparatusFilter(List<String> newApparatus) {
+  //   setState(() {
+  //     selectedApparatus = newApparatus;
+  //   });
+  // }
+  //
+  // void _updateLevelsFilter(List<int> newLevels) {
+  //   setState(() {
+  //     selectedLevels = newLevels;
+  //   });
+  // }
+
+  // Search Bar
+  void _updateSearchQuery(String newQuery) {
+    print(newQuery);
+    setState(() {
+      _searchQuery = newQuery;
+    });
+  }
+
   // Navigation
   void _navigateToFlowDetail(FlowEntity flow) {
-    Navigator.push(context, FlowDetailPage.route(flow));
+    Navigator.push(context, FlowDetailsPage.route(flow));
   }
+
+  // TODO - should I use this function instead? void _navigateToMediaPage(MediaIconEntity mediaItem) {
+  //   Navigator.push(
+  //     context,
+  //     PoseDetailsPage.route(mediaItem.data),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Flows"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                // TODO - make addNewFlowPage Navigator.push(context, AddNewPosePage.route());
+              },
+              tooltip: 'Add a new flow',
+            ),
+          ]
       ),
       body: BlocBuilder<FlowsCubit, FlowsState>(
         builder: (context, state) {
+
           if (state is FlowLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -88,19 +127,52 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
               return const Center(child: Text("No flows available."));
             }
 
+            // TODO add filtering
+            // List<PoseEntity> filteredPoses = state.poses.where(
+            //       (elem) =>
+            //   selectedApparatus.contains(elem.apparatus) &&
+            //       selectedLevels.contains(elem.level),
+            // ).toList();
+            //
+            // List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
+
             final mediaItems = flowsToMediaIcons(state.flows);
 
-            return Stack(
+            // Search suggestion list
+            final List<FlowEntity> sortedFlows = List<FlowEntity>.from(state.flows)
+              ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
+            return Column(
               children: [
-                SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Column(
+
+                // TODO filters section
+
+                // Search Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SearchBarWidget(
+                    onSearchChanged: _updateSearchQuery,
+                    suggestionList: sortedFlows,
+                  ),
+                ),
+
+                const SizedBox(height: 15,),
+
+                Expanded(
+                  child: Stack(
                     children: [
-                      MediaList(
-                        mediaItems: mediaItems,
-                        onMediaTap: (mediaItem) {
-                          _navigateToFlowDetail(mediaItem.data as FlowEntity);
-                        },
+                      SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          children: [
+                            MediaList(
+                              mediaItems: mediaItems,
+                              onMediaTap: (mediaItem) {
+                                _navigateToFlowDetail(mediaItem.data as FlowEntity);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

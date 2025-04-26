@@ -17,7 +17,7 @@ import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/filters/pose_filter.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
-import 'package:frontend/presentation/widgets/functional_buttons/search_bar.dart';
+import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 
 
 class PoseLibraryPage extends StatefulWidget {
@@ -91,7 +91,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
-  // TODO Search should result in multiple options that show up as filtered poses (low priority)
+  // TODO Search should result in multiple options that show up as filtered poses (low priority) Also fix flows library page
   // List<MediaIconEntity> _filterPosesBySearch(List<PoseEntity> allPoses, String query) {
   //   if (query.isEmpty) {
   //     return posesToMediaIcons(allPoses);
@@ -107,7 +107,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
 
   // Navigation
-  void _navigateToMediaPage(MediaIconEntity mediaItem) {
+  void _navigateToPosePage(MediaIconEntity mediaItem) {
     Navigator.push(
       context,
       PoseDetailsPage.route(mediaItem.data),
@@ -210,7 +210,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                               // List poses
                               MediaList(
                                 mediaItems: filteredMediaIcons, // TODO should i define a new list to hold search results?
-                                onMediaTap: _navigateToMediaPage,
+                                onMediaTap: _navigateToPosePage,
                               ),
                             ],
                           )
