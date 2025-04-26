@@ -165,6 +165,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
             if (state is GetPosesSuccess) {
               // TODO move filtering to cubit?
+              // Filtering
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
                 selectedApparatus.contains(elem.apparatus) &&
@@ -172,6 +173,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               ).toList();
 
               List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
+
+              // Search suggestion list
+              final List<PoseEntity> sortedPoses = List<PoseEntity>.from(state.poses)
+                ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
               return Column(
                 children: [
@@ -191,7 +196,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: SearchBarWidget(
                       onSearchChanged: _updateSearchQuery,
-                      suggestionList: state.poses,
+                      suggestionList: sortedPoses,
                     ),
                   ),
 
