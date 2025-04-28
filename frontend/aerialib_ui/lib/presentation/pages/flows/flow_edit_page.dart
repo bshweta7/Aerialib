@@ -125,6 +125,7 @@ class _EditFlowPageState extends State<EditFlowPage> {
                         key: ValueKey(flowPose.id), // key goes here ✨
                         index: poses.indexOf(flowPose),
                         child: ListCard(
+                          key: ValueKey(flowPose.id),
                           title: flowPose.pose.name,
                           subtitle: 'Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}',
                           imageUrl: flowPose.pose.primaryImageUrl ?? '', // fallback if needed
@@ -134,6 +135,10 @@ class _EditFlowPageState extends State<EditFlowPage> {
                               PoseDetailsPage.route(flowPose.pose),
                             );
                           },
+                          trailing: ReorderableDragStartListener(
+                            index: poses.indexOf(flowPose),
+                            child: const Icon(Icons.drag_handle),
+                          ),
                         )
 
                       );

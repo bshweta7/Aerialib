@@ -9,12 +9,14 @@ class ListCard extends StatelessWidget {
     required this.subtitle,
     required this.imageUrl,
     this.onTapFunction,
+    this.trailing,
     super.key,
   });
 
   final String title;
   final String subtitle;
   final String imageUrl;
+  final Widget? trailing;
   final GestureTapCallback? onTapFunction;
 
   @override
@@ -65,6 +67,7 @@ class ListCard extends StatelessWidget {
                   ],
                 ),
               ),
+              if (trailing != null) trailing!,
             ],
           ),
         ),
