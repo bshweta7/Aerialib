@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
@@ -9,6 +10,7 @@ import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 
+import '../../cubit/users/auth_cubit.dart';
 import '../../widgets/media_display/media_list/list_card.dart';
 import '../poses/pose_details_page.dart';
 
@@ -30,6 +32,16 @@ class EditFlowPage extends StatefulWidget {
 class _EditFlowPageState extends State<EditFlowPage> {
   late List<FlowPoseEntity> poses;
   String _searchQuery = '';
+  final TextEditingController _textController = TextEditingController();
+  List<String> items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+
+  void _addItem(String newItem) {
+    setState(() {
+      items.add(newItem);
+    });
+    _textController.clear();
+  }
+
 
   @override
   void initState() {
@@ -61,23 +73,52 @@ class _EditFlowPageState extends State<EditFlowPage> {
   }
 
   void _saveFlow() {
-    // TODO: Save pose order and sync to backend
-    print('Saving flow with ${poses.length} poses');
-    for (var pose in poses) {
-      print('Pose: ${pose.pose.name}');
-    }
-    // Navigator.pop(context);
+    final user = context.read<AuthCubit>().state as AuthLoggedIn;
+
+    context.read<FlowsCubit>().reorderFlowPoses(poses); // Update Cubit flow poses to match UI
+    context.read<FlowsCubit>().saveFlow(user.user.token); // Then save everything
+
+    // Optionally: show a loading spinner or a snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Saving flow...')),
+    );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<FlowsCubit, FlowsState>(
+      listener: (context, state) {
+        if (state is EditFlowState && state.saveSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Flow saved successfully!')),
+          );
+          Navigator.pop(context); // Optionally go back to previous screen
+        }
+        if (state is EditFlowState && state.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error saving flow: ${state.errorMessage}')),
+          );
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         title: const Text('Add & Edit Poses'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _saveFlow,
+          BlocBuilder<FlowsCubit, FlowsState>(
+            builder: (context, state) {
+              if (state is EditFlowState && state.isSaving) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                );
+              }
+              return IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: _saveFlow,
+              );
+            },
           ),
         ],
       ),
@@ -105,6 +146,26 @@ class _EditFlowPageState extends State<EditFlowPage> {
 
                 // TODO allow multiselect from pose library
 
+                // TODO reformat the search bar to look like this "new Item" thing
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: TextField(
+                //         controller: _textController,
+                //         decoration: InputDecoration(labelText: 'New Item'),
+                //       ),
+                //     ),
+                //     IconButton(
+                //       icon: Icon(Icons.add),
+                //       onPressed: () {
+                //         if (_textController.text.isNotEmpty) {
+                //           _addItem(_textController.text);
+                //         }
+                //       },
+                //     ),
+                //   ],
+                // ),
+
                 /// Search Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -122,7 +183,7 @@ class _EditFlowPageState extends State<EditFlowPage> {
                   child: ReorderableListView(
                     children: poses.map((flowPose) {
                       return ReorderableDragStartListener(
-                        key: ValueKey(flowPose.id), // key goes here ✨
+                        key: ValueKey(flowPose.id),
                         index: poses.indexOf(flowPose),
                         child: ListCard(
                           key: ValueKey(flowPose.id),
@@ -157,6 +218,44 @@ class _EditFlowPageState extends State<EditFlowPage> {
                     },
                   ),
                 ),
+                const SizedBox(height: 10,),
+
+                // BlocBuilder<FlowsCubit, FlowsState>(
+                //   builder: (context, state) {
+                //     if (state is EditFlowState && state.isSaving) {
+                //       return const Padding(
+                //         padding: EdgeInsets.symmetric(horizontal: 16.0),
+                //         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                //       );
+                //     }
+                //     ElevatedButton(
+                //         onPressed: _saveFlow,// () {
+                //           // _saveFlow;
+                //           // Navigator.push(
+                //           //   context,
+                //           //   MaterialPageRoute(
+                //           //     // builder: (context) => FlowEditPage(flow: state.flow),
+                //           //     builder: (context) => const FlowLibraryPage(),
+                //           //   ),
+                //           //   // FlowEditPage(flow: state.flow).route(),
+                //           //   //     (_) => false
+                //           //   // TODO should this go to flow specific FlowViewPage instead?
+                //           // );
+                //         // },
+                //         // TODO change formatting to make clear that this is page one and add poses on next page
+                //         child: const Text(
+                //             "Save Changes",
+                //             style: TextStyle(
+                //                 color: Colors.white,
+                //                 fontSize: 18,
+                //                 fontWeight: FontWeight.normal
+                //             )
+                //         )
+                //     );
+                //   },
+                // ),
+
+
               ],
             );
           }
@@ -164,6 +263,7 @@ class _EditFlowPageState extends State<EditFlowPage> {
           return const SizedBox(); // fallback
         },
       ),
+    )
     );
   }
 }

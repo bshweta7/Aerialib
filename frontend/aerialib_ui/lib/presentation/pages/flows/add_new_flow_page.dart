@@ -80,7 +80,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Saved flow information"))
               );
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                     // builder: (context) => FlowEditPage(flow: state.flow),
