@@ -37,6 +37,8 @@ class FlowDetailsPage extends StatelessWidget {
           final flowPose = flow.poses[index];
           final pose = flowPose.pose;
 
+
+          // TODO REPLACE THIS WITH REAL LIST CARD WIDGET!!!
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(

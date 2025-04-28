@@ -9,6 +9,9 @@ import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 
+import '../../widgets/media_display/media_list/list_card.dart';
+import '../poses/pose_details_page.dart';
+
 class EditFlowPage extends StatefulWidget {
   final FlowEntity flow;
 
@@ -70,7 +73,7 @@ class _EditFlowPageState extends State<EditFlowPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Flow'),
+        title: const Text('Add & Edit Poses'),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -114,15 +117,27 @@ class _EditFlowPageState extends State<EditFlowPage> {
 
                 const SizedBox(height: 10),
 
+                // TODO light bulb on right side of each one that opens the list of poses you can transition to from the current pose (icon only shows up if there are known transitions). if clicked it drops down and creates a horizontal sliding list of images and names.
                 Expanded(
                   child: ReorderableListView(
                     children: poses.map((flowPose) {
-                      return ListTile(
-                        key: ValueKey(flowPose.id),
-                        title: Text(flowPose.pose.name),
-                        subtitle: Text('Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}'),
-                        leading: const Icon(Icons.drag_handle),
+                      return ReorderableDragStartListener(
+                        key: ValueKey(flowPose.id), // key goes here ✨
+                        index: poses.indexOf(flowPose),
+                        child: ListCard(
+                          title: flowPose.pose.name,
+                          subtitle: 'Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}',
+                          imageUrl: flowPose.pose.primaryImageUrl ?? '', // fallback if needed
+                          onTapFunction: () {
+                            Navigator.push(
+                              context,
+                              PoseDetailsPage.route(flowPose.pose),
+                            );
+                          },
+                        )
+
                       );
+
                     }).toList(),
                     onReorder: (oldIndex, newIndex) {
                       setState(() {
