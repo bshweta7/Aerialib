@@ -21,7 +21,7 @@ class MediaRemoteDataSource {
   }) async {
 
     final body = {
-      'mediaURL': mediaPath,
+      'mediaPath': mediaPath,
       'name': name,
       'description': description,
       'apparatus': apparatus,

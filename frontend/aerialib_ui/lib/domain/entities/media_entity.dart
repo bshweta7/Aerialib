@@ -21,7 +21,7 @@ class MediaEntity {
   });
 
   MediaEntity copyWith({
-    String? mediaURL,
+    String? mediaPath,
     String? name,
     String? description,
     String? apparatus,
@@ -31,7 +31,7 @@ class MediaEntity {
     String? id,
   }) {
     return MediaEntity(
-      mediaPath: mediaURL ?? this.mediaPath,
+      mediaPath: mediaPath ?? this.mediaPath,
       name: name ?? this.name,
       description: description ?? this.description,
       apparatus: apparatus ?? this.apparatus,
