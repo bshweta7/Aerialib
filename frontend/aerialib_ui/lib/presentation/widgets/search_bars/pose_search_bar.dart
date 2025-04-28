@@ -4,14 +4,14 @@ import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 
 class SearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
-  final VoidCallback? onSearchSubmitted;
   final List<PoseEntity> suggestionList;
+  final Function(PoseEntity)? onSuggestionTapped;
 
   const SearchBarWidget({
     Key? key,
     required this.onSearchChanged,
-    this.onSearchSubmitted,
     required this.suggestionList,
+    this.onSuggestionTapped,
   }) : super(key: key);
 
   @override
@@ -37,11 +37,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             widget.onSearchChanged(value); // Notify parent widget
             controller.openView();
           },
-          onSubmitted: (value) {
-            if (widget.onSearchSubmitted != null) {
-              widget.onSearchSubmitted!();
-            }
-          },
           leading: const Icon(Icons.search),
         );
       },
@@ -58,10 +53,15 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               setState(() {
                 controller.closeView(pose.name);
               });
-              Navigator.push(
-                context,
-                PoseDetailsPage.route(pose), // Navigate directly to PoseViewPage
-              );
+
+              if (widget.onSuggestionTapped != null) {
+                widget.onSuggestionTapped!(pose); // ✨ call your function when tapped
+              } else {
+                Navigator.push(
+                  context,
+                  PoseDetailsPage.route(pose), // fallback if no custom tap
+                );
+              }
             },
           );
         });

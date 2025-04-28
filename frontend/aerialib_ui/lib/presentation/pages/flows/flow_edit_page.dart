@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
+import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 
 class EditFlowPage extends StatefulWidget {
@@ -24,28 +26,39 @@ class EditFlowPage extends StatefulWidget {
 
 class _EditFlowPageState extends State<EditFlowPage> {
   late List<FlowPoseEntity> poses;
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    poses = List.from(widget.flow.poses); // Copy current poses
+    poses = List.from(widget.flow.poses);
+
+    // Load all poses for searching
+    context.read<FlowsCubit>().fetchAllAvailablePoses();
   }
 
-  void _addDummyPose() {
-    final newPose = FlowPoseEntity(
+  void _updateSearchQuery(String query) {
+    setState(() {
+      _searchQuery = query;
+    });
+  }
+
+  void _addPoseToFlow(PoseEntity pose) {
+    final newFlowPose = FlowPoseEntity(
       id: const Uuid().v6(),
       flowId: widget.flow.id,
-      pose: dummyPose(), // We'll make a dummy pose for now
+      pose: pose,
       poseOrder: poses.length,
     );
 
     setState(() {
-      poses.add(newPose);
+      poses.add(newFlowPose);
+      _searchQuery = '';
     });
   }
 
   void _saveFlow() {
-    // TODO: Update flow pose order and save back to database
+    // TODO: Save pose order and sync to backend
     print('Saving flow with ${poses.length} poses');
     for (var pose in poses) {
       print('Pose: ${pose.pose.name}');
@@ -65,69 +78,68 @@ class _EditFlowPageState extends State<EditFlowPage> {
           ),
         ],
       ),
-      body: Column(
-          children: [
+      body: BlocBuilder<FlowsCubit, FlowsState>(
+        builder: (context, state) {
+          if (state is FlowLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            // // Search Bar
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            //   child: SearchBarWidget(
-            //     onSearchChanged: _updateSearchQuery,
-            //     suggestionList: sortedPoses,
-            //   ),
-            // ),
+          if (state is FlowError) {
+            return Center(child: Text('Failed to load poses'));
+          }
 
-            ElevatedButton(
-              onPressed: _addDummyPose,
-              child: const Text('Add Pose (for now)'),
-            ),
-            Expanded(
-              child: ReorderableListView(
-                children: poses.map((flowPose) {
-                  return ListTile(
-                    key: ValueKey(flowPose.id),
-                    title: Text(flowPose.pose.name),
-                    subtitle: Text('Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}'),
-                    leading: const Icon(Icons.drag_handle),
-                  );
-                }).toList(),
-                onReorder: (oldIndex, newIndex) {
-                  setState(() {
-                    if (newIndex > oldIndex) {
-                      newIndex -= 1;
-                    }
-                    final item = poses.removeAt(oldIndex);
-                    poses.insert(newIndex, item);
+          if (state is AvailablePosesLoaded) {
+            final availablePoses = state.poses;
 
-                    // Update poseOrder after reordering
-                    for (int i = 0; i < poses.length; i++) {
-                      poses[i] = poses[i].copyWith(poseOrder: i);
-                    }
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-  }
+            // final filteredPoses = availablePoses.where((pose) {
+            //   return pose.name.toLowerCase().contains(_searchQuery.toLowerCase()) &&
+            //       !poses.any((flowPose) => flowPose.pose.id == pose.id); // don't show already added
+            // }).toList();
+            // TODO Add filtering by apparatus. maybe level
 
-  // Dummy pose generator (temporary until real pose picker)
-  PoseEntity dummyPose() {
-    return PoseEntity(
-      id: const Uuid().v4(),
-      name: 'Dummy Pose ${poses.length + 1}',
-      description: 'Just a placeholder',
-      cues: 'Cues go here',
-      apparatus: 'Hoop',
-      level: 1,
-      createdBy: 'system',
-      updatedBy: null,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      isSynced: 0,
-      primaryImageId: '',
-      primaryImageUrl: '',
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SearchBarWidget(
+                    onSearchChanged: _updateSearchQuery,
+                    suggestionList: availablePoses,
+                    onSuggestionTapped: _addPoseToFlow,
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                Expanded(
+                  child: ReorderableListView(
+                    children: poses.map((flowPose) {
+                      return ListTile(
+                        key: ValueKey(flowPose.id),
+                        title: Text(flowPose.pose.name),
+                        subtitle: Text('Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}'),
+                        leading: const Icon(Icons.drag_handle),
+                      );
+                    }).toList(),
+                    onReorder: (oldIndex, newIndex) {
+                      setState(() {
+                        if (newIndex > oldIndex) newIndex--;
+                        final item = poses.removeAt(oldIndex);
+                        poses.insert(newIndex, item);
+
+                        for (int i = 0; i < poses.length; i++) {
+                          poses[i] = poses[i].copyWith(poseOrder: i);
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+
+          return const SizedBox(); // fallback
+        },
+      ),
     );
   }
 }
