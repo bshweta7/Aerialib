@@ -137,7 +137,7 @@ class _EditFlowPageState extends State<EditFlowPage> {
                           },
                           trailing: ReorderableDragStartListener(
                             index: poses.indexOf(flowPose),
-                            child: const Icon(Icons.drag_handle),
+                            child: const Icon(Icons.drag_indicator), // TODO is Icons.drag_handle better?
                           ),
                         )
 
