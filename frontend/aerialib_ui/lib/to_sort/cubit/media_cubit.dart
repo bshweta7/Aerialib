@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/data/datasources/media/media_remote_data.dart';
 import 'package:frontend/data/datasources/media/media_local_data.dart';
-import 'package:frontend/to_sort/models/media_model.dart';
+import 'package:frontend/data/models/media_model.dart';
 
 part 'media_state.dart';
 

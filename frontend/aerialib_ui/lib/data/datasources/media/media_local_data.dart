@@ -1,4 +1,4 @@
-import 'package:frontend/to_sort/models/media_model.dart';
+import 'package:frontend/data/models/media_model.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../../services/local_database_service.dart';
 

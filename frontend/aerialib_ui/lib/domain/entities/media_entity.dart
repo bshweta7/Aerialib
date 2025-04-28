@@ -1,7 +1,5 @@
-import 'dart:convert';
-
-class MediaModel {
-  final String mediaURL;
+class MediaEntity {
+  final String mediaPath;
   final String name;
   final String description;
   final String apparatus;
@@ -9,9 +7,10 @@ class MediaModel {
   final int isSynced;
   final DateTime? uploadedAt;
   final String id;
+  // todo add other things like location and stuff
 
-  MediaModel({
-    required this.mediaURL,
+  const MediaEntity({
+    required this.mediaPath,
     required this.name,
     required this.description,
     required this.apparatus,
@@ -21,7 +20,7 @@ class MediaModel {
     required this.id,
   });
 
-  MediaModel copyWith({
+  MediaEntity copyWith({
     String? mediaURL,
     String? name,
     String? description,
@@ -31,8 +30,8 @@ class MediaModel {
     DateTime? uploadedAt,
     String? id,
   }) {
-    return MediaModel(
-      mediaURL: mediaURL ?? this.mediaURL,
+    return MediaEntity(
+      mediaPath: mediaURL ?? this.mediaPath,
       name: name ?? this.name,
       description: description ?? this.description,
       apparatus: apparatus ?? this.apparatus,
@@ -43,41 +42,10 @@ class MediaModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'mediaURL': mediaURL,
-      'name': name,
-      'description': description,
-      'apparatus': apparatus,
-      'uploadedBy': uploadedBy,
-      'isSynced': isSynced,
-      'uploadedAt': uploadedAt?.toIso8601String(),
-      'id': id,
-    };
-  }
-
-  factory MediaModel.fromMap(Map<String, dynamic> map) {
-    return MediaModel(
-      mediaURL: map['mediaURL'] ?? '',
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      apparatus: map['apparatus'] ?? '',
-      uploadedBy: map['uploadedBy'] ?? '',
-      isSynced: map['isSynced'] ?? 1,
-      uploadedAt: map['uploadedAt'] != null ? DateTime.parse(map['uploadedAt']) : null,
-      id: map['id'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory MediaModel.fromJson(String source) =>
-      MediaModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
   @override
   String toString() {
     return 'MediaModel('
-        'mediaURL: $mediaURL, '
+        'mediaURL: $mediaPath, '
         'name: $name, '
         'description: $description, '
         'apparatus: $apparatus, '
@@ -88,10 +56,10 @@ class MediaModel {
   }
 
   @override
-  bool operator ==(covariant MediaModel other) {
+  bool operator ==(covariant MediaEntity other) {
     if (identical(this, other)) return true;
 
-    return other.mediaURL == mediaURL &&
+    return other.mediaPath == mediaPath &&
         other.name == name &&
         other.description == description &&
         other.apparatus == apparatus &&
@@ -102,8 +70,8 @@ class MediaModel {
   }
 
   @override
-  int get hashCode {
-    return mediaURL.hashCode ^
+  int get hashCode =>
+    mediaPath.hashCode ^
     name.hashCode ^
     description.hashCode ^
     apparatus.hashCode ^
@@ -111,5 +79,4 @@ class MediaModel {
     isSynced.hashCode ^
     uploadedAt.hashCode ^
     id.hashCode;
-  }
 }

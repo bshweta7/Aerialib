@@ -1,17 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/data/datasources/media/media_local_data.dart';
-import 'package:frontend/to_sort/models/media_model.dart';
-import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
-
-import 'dart:convert';
-
-import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/data/models/media_model.dart';
-import 'package:uuid/uuid.dart';
 import 'package:frontend/data/services/http_service.dart';
 
 
@@ -52,7 +42,7 @@ class MediaRemoteDataSource {
       // Fallback: construct a local unsynced MediaModel (but leave inserting to MediaRepository)
       return MediaModel(
         id: const Uuid().v6(),
-        mediaURL: mediaPath,
+        mediaPath: mediaPath,
         name: name,
         description: description,
         apparatus: apparatus,

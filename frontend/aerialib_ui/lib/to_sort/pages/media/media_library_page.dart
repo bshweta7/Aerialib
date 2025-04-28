@@ -15,7 +15,7 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/to_sort/pages/widgets/multi_selector.dart';
 import 'package:frontend/to_sort/pages/widgets/search_bar.dart';
 
-import 'package:frontend/to_sort/models/media_model.dart';
+import 'package:frontend/data/models/media_model.dart';
 
 import '../../../presentation/widgets/media_display/media_grid/media_grid_utils.dart';
 

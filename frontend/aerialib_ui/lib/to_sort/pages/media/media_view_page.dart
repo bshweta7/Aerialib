@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid/media_icon_grid_card.dart'; // TODO shouldn't use media icon here... use sliding image display
-import 'package:frontend/to_sort/models/media_model.dart';
+import 'package:frontend/data/models/media_model.dart';
 
 
 // TODO MAKE THIS PAGE
