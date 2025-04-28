@@ -99,6 +99,10 @@ class _EditFlowPageState extends State<EditFlowPage> {
 
             return Column(
               children: [
+
+                // TODO allow multiselect from pose library
+
+                /// Search Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: SearchBarWidget(

@@ -51,18 +51,19 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             title: Text(pose.name),
             onTap: () {
               setState(() {
-                controller.closeView(pose.name);
+                controller.clear(); // ✨ clear the search text
+                controller.closeView(""); // ✨ close suggestion view without filling text
               });
 
               if (widget.onSuggestionTapped != null) {
-                widget.onSuggestionTapped!(pose); // ✨ call your function when tapped
+                widget.onSuggestionTapped!(pose);
               } else {
                 Navigator.push(
                   context,
-                  PoseDetailsPage.route(pose), // fallback if no custom tap
+                  PoseDetailsPage.route(pose),
                 );
               }
-            },
+            }
           );
         });
       },
