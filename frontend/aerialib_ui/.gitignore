@@ -11,6 +11,8 @@
 migrate_working_dir/
 my_notes.txt
 
+*.configure_fingerprint.bin
+
 # IntelliJ related
 *.iml
 *.ipr
