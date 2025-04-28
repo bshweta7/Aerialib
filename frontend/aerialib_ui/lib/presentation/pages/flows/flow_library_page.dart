@@ -15,6 +15,8 @@ import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.d
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
 
+import 'add_new_flow_page.dart';
+
 class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
       MaterialPageRoute(builder: (context) => const FlowLibraryPage());
@@ -92,7 +94,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                // TODO - make addNewFlowPage Navigator.push(context, AddNewPosePage.route());
+                Navigator.push(context, AddNewFlowPage.route());
               },
               tooltip: 'Add a new flow',
             ),
