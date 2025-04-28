@@ -18,7 +18,7 @@ class FlowPoseLocalDataSource {
   Future<void> insertFlowPoses(List<FlowPoseModel> flowPoses) async {
     final db = await database;
     final batch = db.batch();
-    for (final flowPose in flowPoses) {
+    for (var flowPose in flowPoses) {
       batch.insert(
         tableName,
         flowPose.toMap(),

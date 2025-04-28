@@ -22,10 +22,10 @@ class FlowPoseMapper {
     return FlowPoseModel(
       id: entity.id,
       flowId: entity.flowId,
-      poseId: entity.pose.id,
+      poseId: entity.pose.id,  // ✨ be careful — it's pose.id, NOT entity.id again
       poseOrder: entity.poseOrder,
-      transitionId: '', // TODO remove this
-      isSynced: 0,
+      transitionId: '', // TODO remove this from schema
+      isSynced: 0, // optional
     );
   }
 }

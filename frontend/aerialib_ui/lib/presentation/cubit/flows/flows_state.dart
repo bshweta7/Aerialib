@@ -59,12 +59,14 @@ class EditFlowState extends FlowsState {
   final bool isSaving;
   final bool saveSuccess;
   final String? errorMessage;
+  final List<PoseEntity> availablePoses;
 
   const EditFlowState({
     required this.flow,
     this.isSaving = false,
     this.saveSuccess = false,
     this.errorMessage,
+    this.availablePoses = const [],
   });
 
   EditFlowState copyWith({
@@ -72,22 +74,17 @@ class EditFlowState extends FlowsState {
     bool? isSaving,
     bool? saveSuccess,
     String? errorMessage,
+    List<PoseEntity>? availablePoses,
   }) {
     return EditFlowState(
       flow: flow ?? this.flow,
       isSaving: isSaving ?? this.isSaving,
       saveSuccess: saveSuccess ?? this.saveSuccess,
-      errorMessage: errorMessage,
+      errorMessage: errorMessage ?? this.errorMessage,
+      availablePoses: availablePoses ?? this.availablePoses,
     );
   }
 
   @override
-  List<Object?> get props => [flow, isSaving, saveSuccess, errorMessage];
+  List<Object?> get props => [flow, isSaving, saveSuccess, errorMessage, availablePoses];
 }
-
-/// State for all pose options loaded
-class AvailablePosesLoaded extends FlowsState {
-  final List<PoseEntity> poses;
-  const AvailablePosesLoaded(this.poses);
-}
-

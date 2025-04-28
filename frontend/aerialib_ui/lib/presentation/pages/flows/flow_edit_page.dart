@@ -48,8 +48,12 @@ class _EditFlowPageState extends State<EditFlowPage> {
     super.initState();
     poses = List.from(widget.flow.poses);
 
-    // Load all poses for searching
-    context.read<FlowsCubit>().fetchAllAvailablePoses();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FlowsCubit>().startEditingFlow(widget.flow);
+    });
+
+    // // Fetch all poses for search suggestions
+    // context.read<FlowsCubit>().fetchAllAvailablePoses();
   }
 
   void _updateSearchQuery(String query) {
@@ -75,10 +79,18 @@ class _EditFlowPageState extends State<EditFlowPage> {
   void _saveFlow() {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    context.read<FlowsCubit>().reorderFlowPoses(poses); // Update Cubit flow poses to match UI
+    // Print poses
+    for (var pose in poses) {
+      print("Pose name: ${pose.pose.name}, Pose order: ${pose.poseOrder}");
+    }
+
+    context.read<FlowsCubit>().updateFlowPoses(poses);
+    // context.read<FlowsCubit>().reorderFlowPoses(poses); // Update Cubit flow poses to match UI
     context.read<FlowsCubit>().saveFlow(user.user.token); // Then save everything
 
+    print("Saved Poses");
     // Optionally: show a loading spinner or a snackbar
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Saving flow...')),
     );
@@ -114,6 +126,7 @@ class _EditFlowPageState extends State<EditFlowPage> {
                   child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                 );
               }
+              // print(state);
               return IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: _saveFlow,
@@ -132,8 +145,12 @@ class _EditFlowPageState extends State<EditFlowPage> {
             return Center(child: Text('Failed to load poses'));
           }
 
-          if (state is AvailablePosesLoaded) {
-            final availablePoses = state.poses;
+          if (state is EditFlowState) {
+            final availablePoses = state.availablePoses;
+
+            if (availablePoses.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
             // final filteredPoses = availablePoses.where((pose) {
             //   return pose.name.toLowerCase().contains(_searchQuery.toLowerCase()) &&

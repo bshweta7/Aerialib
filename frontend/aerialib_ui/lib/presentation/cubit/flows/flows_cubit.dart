@@ -63,6 +63,18 @@ class FlowsCubit extends Cubit<FlowsState> {
   Future<void> startEditingFlow(FlowEntity flow) async {
     try {
       emit(EditFlowState(flow: flow));
+
+      // Then fetch available poses
+      print("Fetching all available poses...");
+      final poses = await _flowPoseRepository.getAllLocalPoses();
+
+      final currentState = state;
+      print("Emitting new EditFlowState with ${poses.length} available poses");
+
+      if (currentState is EditFlowState) {
+        emit(currentState.copyWith(availablePoses: poses));
+      }
+
     } catch (e) {
       print("Error initializing editing flow: $e");
       emit(FlowError(e.toString()));
@@ -88,21 +100,32 @@ class FlowsCubit extends Cubit<FlowsState> {
     emit(currentState.copyWith(flow: updatedFlow));
   }
 
-  /// Reorder poses in the flow
-  void reorderFlowPoses(List<FlowPoseEntity> reorderedPoses) {
+  /// Sets flow.poses to the new set of poses
+  void updateFlowPoses(List<FlowPoseEntity> newPoses) {
     if (state is! EditFlowState) return;
     final currentState = state as EditFlowState;
-
-    final updatedPoses = reorderedPoses.asMap().entries.map((entry) {
-      final index = entry.key;
-      final pose = entry.value.copyWith(poseOrder: index);
-      return pose;
-    }).toList();
-
-    final updatedFlow = currentState.flow.copyWith(poses: updatedPoses);
+    final updatedFlow = currentState.flow.copyWith(poses: newPoses);
+    print("Updated flow with new poses");
 
     emit(currentState.copyWith(flow: updatedFlow));
   }
+
+
+  // /// Reorder poses in the flow
+  // void reorderFlowPoses(List<FlowPoseEntity> reorderedPoses) {
+  //   if (state is! EditFlowState) return;
+  //   final currentState = state as EditFlowState;
+  //
+  //   final updatedPoses = reorderedPoses.asMap().entries.map((entry) {
+  //     final index = entry.key;
+  //     final pose = entry.value.copyWith(poseOrder: index);
+  //     return pose;
+  //   }).toList();
+  //
+  //   final updatedFlow = currentState.flow.copyWith(poses: updatedPoses);
+  //
+  //   emit(currentState.copyWith(flow: updatedFlow));
+  // }
 
   /// Save the flow and its poses (local + remote)
   Future<void> saveFlow(String token) async {
@@ -111,6 +134,7 @@ class FlowsCubit extends Cubit<FlowsState> {
 
     emit(currentState.copyWith(isSaving: true));
 
+    print("Saving the flow");
     try {
       await _flowRepository.updateFlow(
         updatedFlow: currentState.flow,
@@ -127,15 +151,26 @@ class FlowsCubit extends Cubit<FlowsState> {
     }
   }
 
-  /// Fetch all pose options
-  void fetchAllAvailablePoses() async {
-    try {
-      emit(FlowLoading());
-      final poses = await _flowPoseRepository.getAllLocalPoses();
-      emit(AvailablePosesLoaded(poses));
-    } catch (e) {
-      emit(FlowError('Failed to load poses'));
-    }
-  }
+  // /// Fetch all pose options
+  // Future<void> fetchAllAvailablePoses() async {
+  //   try {
+  //     print("Fetching all available poses...");
+  //     final poses = await _flowPoseRepository.getAllLocalPoses();
+  //
+  //     if (state is! EditFlowState) {
+  //       print("Not in EditFlowState! Current state: $state");
+  //       return;
+  //     }
+  //
+  //     final currentState = state as EditFlowState;
+  //     print("Emitting new EditFlowState with ${poses.length} available poses");
+  //     emit(currentState.copyWith(availablePoses: poses));
+  //
+  //   } catch (e) {
+  //     print('Failed to fetch poses: $e');
+  //     emit(FlowError('Failed to load poses'));
+  //   }
+  // }
+
 
 }
