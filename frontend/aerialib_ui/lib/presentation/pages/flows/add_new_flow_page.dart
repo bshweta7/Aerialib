@@ -2,6 +2,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/pages/flows/flow_edit_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:intl/intl.dart';
@@ -77,12 +78,15 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
               );
             } else if (state is AddNewFlowSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Flow added successfully"))
+                const SnackBar(content: Text("Flow details saved. Now add the poses!"))
               );
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                   context,
-                  HomePage.route(),
-                      (_) => false
+                  MaterialPageRoute(
+                    builder: (context) => FlowEditPage(flow: state.flow),
+                  ),
+                  // FlowEditPage(flow: state.flow).route(),
+                  //     (_) => false
                   // TODO should this go to flow specific FlowViewPage instead?
               );
             }
@@ -193,8 +197,9 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                       const SizedBox(height: 10,),
                       ElevatedButton(
                           onPressed: createNewFlow,
+                          // TODO change formatting to make clear that this is page one and add poses on next page
                           child: const Text(
-                              "SUBMIT",
+                              "Add Poses",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
