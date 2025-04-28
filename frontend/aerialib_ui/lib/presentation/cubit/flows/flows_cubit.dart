@@ -126,4 +126,16 @@ class FlowsCubit extends Cubit<FlowsState> {
       emit(currentState.copyWith(isSaving: false, errorMessage: e.toString()));
     }
   }
+
+  /// Fetch all pose options
+  void fetchAllAvailablePoses() async {
+    try {
+      emit(FlowLoading());
+      final poses = await _flowPoseRepository.getAllLocalPoses();
+      emit(AvailablePosesLoaded(poses));
+    } catch (e) {
+      emit(FlowError('Failed to load poses'));
+    }
+  }
+
 }

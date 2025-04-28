@@ -23,7 +23,7 @@ class FlowDetailsPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              Navigator.push(context, FlowEditPage.route(flow));
+              Navigator.push(context, EditFlowPage.route(flow));
             },
             tooltip: 'Edit this flow',
           ),

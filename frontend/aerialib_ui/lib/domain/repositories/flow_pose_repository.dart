@@ -5,11 +5,14 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 import '../../data/datasources/poses/pose_local_data.dart';
 import '../../data/models/flow_model.dart';
 import '../../data/models/flow_pose_model.dart';
+import '../entities/pose_entity.dart';
 import '../mappers/flow_mapper.dart';
 import 'package:frontend/data/datasources/flows/flow_pose_local_data.dart';
 import 'package:frontend/data/datasources/flows/flow_pose_remote_data.dart';
 import 'package:frontend/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/domain/mappers/flow_pose_mapper.dart';
+
+import '../mappers/pose_mapper.dart';
 
 class FlowPoseRepository {
   final FlowPoseLocalDataSource localDataSource;
@@ -161,5 +164,12 @@ class FlowPoseRepository {
     await insertFlowPoses(newPoses);
   }
 
+
+  /// Fetch all poses from local DB
+  Future<List<PoseEntity>> getAllLocalPoses() async {
+    print("Fetching PoseModels for Flow Cubit");
+    final poseModels = await poseLocalDataSource.getPoses();
+    return PoseMapper.modelsToEntities(poseModels);
+  }
 
 }

@@ -78,12 +78,13 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
               );
             } else if (state is AddNewFlowSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Flow details saved. Now add the poses!"))
+                const SnackBar(content: Text("Saved flow information"))
               );
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FlowEditPage(flow: state.flow),
+                    // builder: (context) => FlowEditPage(flow: state.flow),
+                    builder: (context) => EditFlowPage(flow: state.flow),
                   ),
                   // FlowEditPage(flow: state.flow).route(),
                   //     (_) => false

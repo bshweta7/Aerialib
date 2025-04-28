@@ -85,3 +85,9 @@ class EditFlowState extends FlowsState {
   List<Object?> get props => [flow, isSaving, saveSuccess, errorMessage];
 }
 
+/// State for all pose options loaded
+class AvailablePosesLoaded extends FlowsState {
+  final List<PoseEntity> poses;
+  const AvailablePosesLoaded(this.poses);
+}
+

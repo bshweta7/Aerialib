@@ -5,22 +5,24 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
-class FlowEditPage extends StatefulWidget {
+import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
+
+class EditFlowPage extends StatefulWidget {
   final FlowEntity flow;
 
-  const FlowEditPage({super.key, required this.flow});
+  const EditFlowPage({super.key, required this.flow});
 
   static MaterialPageRoute route(FlowEntity flow) {
     return MaterialPageRoute(
-      builder: (context) => FlowEditPage(flow: flow),
+      builder: (context) => EditFlowPage(flow: flow),
     );
   }
 
   @override
-  State<FlowEditPage> createState() => _FlowEditPageState();
+  State<EditFlowPage> createState() => _EditFlowPageState();
 }
 
-class _FlowEditPageState extends State<FlowEditPage> {
+class _EditFlowPageState extends State<EditFlowPage> {
   late List<FlowPoseEntity> poses;
 
   @override
@@ -31,7 +33,7 @@ class _FlowEditPageState extends State<FlowEditPage> {
 
   void _addDummyPose() {
     final newPose = FlowPoseEntity(
-      id: const Uuid().v4(),
+      id: const Uuid().v6(),
       flowId: widget.flow.id,
       pose: dummyPose(), // We'll make a dummy pose for now
       poseOrder: poses.length,
@@ -64,40 +66,50 @@ class _FlowEditPageState extends State<FlowEditPage> {
         ],
       ),
       body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: _addDummyPose,
-            child: const Text('Add Pose (for now)'),
-          ),
-          Expanded(
-            child: ReorderableListView(
-              children: poses.map((flowPose) {
-                return ListTile(
-                  key: ValueKey(flowPose.id),
-                  title: Text(flowPose.pose.name),
-                  subtitle: Text('Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}'),
-                  leading: const Icon(Icons.drag_handle),
-                );
-              }).toList(),
-              onReorder: (oldIndex, newIndex) {
-                setState(() {
-                  if (newIndex > oldIndex) {
-                    newIndex -= 1;
-                  }
-                  final item = poses.removeAt(oldIndex);
-                  poses.insert(newIndex, item);
+          children: [
 
-                  // Update poseOrder after reordering
-                  for (int i = 0; i < poses.length; i++) {
-                    poses[i] = poses[i].copyWith(poseOrder: i);
-                  }
-                });
-              },
+            // // Search Bar
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            //   child: SearchBarWidget(
+            //     onSearchChanged: _updateSearchQuery,
+            //     suggestionList: sortedPoses,
+            //   ),
+            // ),
+
+            ElevatedButton(
+              onPressed: _addDummyPose,
+              child: const Text('Add Pose (for now)'),
             ),
-          ),
-        ],
-      ),
-    );
+            Expanded(
+              child: ReorderableListView(
+                children: poses.map((flowPose) {
+                  return ListTile(
+                    key: ValueKey(flowPose.id),
+                    title: Text(flowPose.pose.name),
+                    subtitle: Text('Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}'),
+                    leading: const Icon(Icons.drag_handle),
+                  );
+                }).toList(),
+                onReorder: (oldIndex, newIndex) {
+                  setState(() {
+                    if (newIndex > oldIndex) {
+                      newIndex -= 1;
+                    }
+                    final item = poses.removeAt(oldIndex);
+                    poses.insert(newIndex, item);
+
+                    // Update poseOrder after reordering
+                    for (int i = 0; i < poses.length; i++) {
+                      poses[i] = poses[i].copyWith(poseOrder: i);
+                    }
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      );
   }
 
   // Dummy pose generator (temporary until real pose picker)
