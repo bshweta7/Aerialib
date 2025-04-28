@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/presentation/pages/auth/signup_page.dart';
 
 import '../../../core/constants/constants.dart';
+import '../../../core/constants/theme_colors.dart';
 
 
 class WebLandingPage extends StatefulWidget {
@@ -57,7 +58,7 @@ class NavBar extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(32.0), // Increased padding for better spacing
       decoration: BoxDecoration(
-        color: Constants.darkPurple
+        color: ThemeColors.darkPurple
       ),
       child: Row(
         // TODO space evenly
@@ -87,7 +88,7 @@ class HeroSection extends StatelessWidget {
       padding: EdgeInsets.all(32.0), // Increased padding for better spacing
       decoration: BoxDecoration(
         // borderRadius: BorderRadius.circular(20),
-        color: Constants.midPurple,
+        color: ThemeColors.midPurple,
         // gradient: LinearGradient(
           // colors: [Constants.darkPurple, Constants.midPurple],
           // begin: Alignment.topCenter,
@@ -171,12 +172,12 @@ class AboutSection extends StatelessWidget {
       padding: EdgeInsets.all(20.0), // Increased padding for better spacing
       decoration: BoxDecoration(
         // borderRadius: BorderRadius.circular(20),
-        color:Constants.backgroundBlue
+        color:ThemeColors.backgroundBlue
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
+          const Text(
             "About Aerialib",
             style: TextStyle(
               fontSize: 30, // Increased font size for "Aerialib"

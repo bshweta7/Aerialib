@@ -85,11 +85,9 @@ class _EditFlowPageState extends State<EditFlowPage> {
     }
 
     context.read<FlowsCubit>().updateFlowPoses(poses);
-    // context.read<FlowsCubit>().reorderFlowPoses(poses); // Update Cubit flow poses to match UI
-    context.read<FlowsCubit>().saveFlow(user.user.token); // Then save everything
+    context.read<FlowsCubit>().saveFlow(user.user.token);
 
     print("Saved Poses");
-    // Optionally: show a loading spinner or a snackbar
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Saving flow...')),
@@ -163,33 +161,14 @@ class _EditFlowPageState extends State<EditFlowPage> {
 
                 // TODO allow multiselect from pose library
 
-                // TODO reformat the search bar to look like this "new Item" thing
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: TextField(
-                //         controller: _textController,
-                //         decoration: InputDecoration(labelText: 'New Item'),
-                //       ),
-                //     ),
-                //     IconButton(
-                //       icon: Icon(Icons.add),
-                //       onPressed: () {
-                //         if (_textController.text.isNotEmpty) {
-                //           _addItem(_textController.text);
-                //         }
-                //       },
-                //     ),
-                //   ],
-                // ),
-
                 /// Search Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SearchBarWidget(
+                  child: PoseSearchBarWidget(
                     onSearchChanged: _updateSearchQuery,
                     suggestionList: availablePoses,
                     onSuggestionTapped: _addPoseToFlow,
+                    hintText: 'Add new pose',
                   ),
                 ),
 

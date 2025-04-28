@@ -8,7 +8,7 @@ class HttpService {
     required String token,
   }) async {
     final res = await http.get(
-      Uri.parse("${Constants.backendUri}$path"),
+      Uri.parse("${Constants.backendUrl}$path"),
       headers: _headers(token),
     );
 
@@ -22,7 +22,7 @@ class HttpService {
     required dynamic body,
   }) async {
     final res = await http.post(
-      Uri.parse("${Constants.backendUri}$path"),
+      Uri.parse("${Constants.backendUrl}$path"),
       headers: _headers(token),
       body: jsonEncode(body),
     );
@@ -37,7 +37,7 @@ class HttpService {
     required dynamic body,
   }) async {
     final res = await http.post(
-      Uri.parse("${Constants.backendUri}$path"),
+      Uri.parse("${Constants.backendUrl}$path"),
       headers:{'Content-Type': 'application/json'}, // base header only (no token)
       body: jsonEncode(body),
     );
@@ -53,7 +53,7 @@ class HttpService {
     required dynamic body,
   }) async {
     final res = await http.put(
-      Uri.parse("${Constants.backendUri}$path"),
+      Uri.parse("${Constants.backendUrl}$path"),
       headers: _headers(token),
       body: jsonEncode(body),
     );

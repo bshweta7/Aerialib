@@ -23,7 +23,7 @@ class MediaRemoteDataSource {
     try {
       // First try POST into backend
       final res = await http.post(
-          Uri.parse("${Constants.backendUri}/media"),
+          Uri.parse("${Constants.backendUrl}/media"),
           headers: {
             'Content-Type': 'application/json',
             'x-auth-token': token,
@@ -72,7 +72,7 @@ class MediaRemoteDataSource {
   }) async {
     try {
       final res = await http.get(
-          Uri.parse("${Constants.backendUri}/media"),
+          Uri.parse("${Constants.backendUrl}/media"),
           headers: {
             'Content-Type': 'application/json',
             'x-auth-token': token,
@@ -116,7 +116,7 @@ class MediaRemoteDataSource {
       }
       print("TEST");
       final res = await http.post(
-        Uri.parse("${Constants.backendUri}/media/sync"),
+        Uri.parse("${Constants.backendUrl}/media/sync"),
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': token,

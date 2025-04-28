@@ -59,7 +59,7 @@ class _UploadNewMediaPageState extends State<UploadNewMediaPage> {
 
     try {
       Response response = await dio.post(
-        Constants.backendUri,
+        Constants.backendUrl,
         data: formData,
         onSendProgress: (int sent, int total) {
           print('$sent $total'); // Progress tracking

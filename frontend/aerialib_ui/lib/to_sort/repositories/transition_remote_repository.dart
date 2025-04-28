@@ -26,7 +26,7 @@ class TransitionRemoteRepository {
     try {
       // First try POST into backend
       final res = await http.post(
-          Uri.parse("${Constants.backendUri}/transition"),
+          Uri.parse("${Constants.backendUrl}/transition"),
           headers: {
             'Content-Type': 'application/json',
             'x-auth-token': token,
@@ -80,7 +80,7 @@ class TransitionRemoteRepository {
   }) async {
     try {
       final res = await http.get(
-          Uri.parse("${Constants.backendUri}/transition"),
+          Uri.parse("${Constants.backendUrl}/transition"),
           headers: {
             'Content-Type': 'application/json',
             'x-auth-token': token,
@@ -123,7 +123,7 @@ class TransitionRemoteRepository {
         transitionListInMap.add(transition.toMap());
       }
       final res = await http.post(
-        Uri.parse("${Constants.backendUri}/transition/sync"),
+        Uri.parse("${Constants.backendUrl}/transition/sync"),
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': token,

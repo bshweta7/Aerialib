@@ -35,7 +35,7 @@ class ActiveFiltersSummary extends StatelessWidget {
     } else {
       activeFilterWidgets.addAll(activeApparatusFilters.map((filter) => CustomFilterChip(
         label: filter,
-        backgroundColor: const Color(0xFFFFEFD9), // TODO move this to colors.dart constants file
+        backgroundColor: const Color(0xFFFFEFD9), // TODO move this to theme_colors.dart constants file
       )).toList());
     }
 
@@ -69,7 +69,7 @@ class ActiveFiltersSummary extends StatelessWidget {
     } else {
       activeFilterWidgets.addAll(activeLevelFilters.map((level) => CustomFilterChip(
         label: 'Level $level',
-        backgroundColor: const Color(0xFFD9FCFF), // TODO move this to colors.dart constants file
+        backgroundColor: const Color(0xFFD9FCFF), // TODO move this to theme_colors.dart constants file
       )).toList());
     }
 
@@ -87,7 +87,7 @@ class ActiveFiltersSummary extends StatelessWidget {
     //   }
     //   activeFilterWidgets.addAll(activeLevelFilters.map((level) => CustomFilterChip(
     //     label: 'Level $level',
-    //     backgroundColor: const Color(0xFFD9FCFF), // TODO move this to colors.dart constants file
+    //     backgroundColor: const Color(0xFFD9FCFF), // TODO move this to theme_colors.dart constants file
     //   )).toList());
     // }
 

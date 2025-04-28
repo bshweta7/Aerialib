@@ -189,7 +189,8 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                   // Search Bar
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: SearchBarWidget(
+                    child: PoseSearchBarWidget(
+                      hintText: 'Search Poses',
                       onSearchChanged: _updateSearchQuery,
                       suggestionList: sortedPoses,
                     ),

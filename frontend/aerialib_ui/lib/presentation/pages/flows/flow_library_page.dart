@@ -140,7 +140,8 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                 // Search Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SearchBarWidget(
+                  child: FlowSearchBarWidget(
+                    hintText: 'Search Flows',
                     onSearchChanged: _updateSearchQuery,
                     suggestionList: sortedFlows,
                   ),

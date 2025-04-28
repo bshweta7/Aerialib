@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/presentation/pages/flows/flow_details_page.dart';
 
-class SearchBarWidget extends StatefulWidget {
+class FlowSearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
   final VoidCallback? onSearchSubmitted;
   final List<FlowEntity> suggestionList;
+  final String? hintText;
 
-  const SearchBarWidget({
-    Key? key,
+  const FlowSearchBarWidget({
+    super.key,
     required this.onSearchChanged,
     this.onSearchSubmitted,
     required this.suggestionList,
-  }) : super(key: key);
+    this.hintText,
+  });
 
   @override
-  State<SearchBarWidget> createState() => _SearchBarWidgetState();
+  State<FlowSearchBarWidget> createState() => _FlowSearchBarWidgetState();
 }
 
-class _SearchBarWidgetState extends State<SearchBarWidget> {
+class _FlowSearchBarWidgetState extends State<FlowSearchBarWidget> {
   final _searchController = SearchController();
 
   @override
@@ -27,6 +29,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       builder: (BuildContext context, SearchController controller) {
         return SearchBar(
           controller: controller,
+          hintText: widget.hintText,
           padding: const WidgetStatePropertyAll<EdgeInsets>(
             EdgeInsets.symmetric(horizontal: 16.0),
           ),
