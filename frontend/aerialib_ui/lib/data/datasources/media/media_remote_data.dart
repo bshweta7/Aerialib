@@ -7,11 +7,21 @@ import 'package:frontend/to_sort/models/media_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
-class MediaRemoteDataSource {
-  final mediaLocalRepository = MediaLocalDataSource();
+import 'dart:convert';
 
+import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/data/models/media_model.dart';
+import 'package:uuid/uuid.dart';
+import 'package:frontend/data/services/http_service.dart';
+
+
+class MediaRemoteDataSource {
+  final HttpService httpService;
+
+  MediaRemoteDataSource({required this.httpService});
+  
   Future<MediaModel> createMedia({
-    required String mediaURL,
+    required String mediaPath,
     required String name,
     required String description,
     required String apparatus,
@@ -20,119 +30,79 @@ class MediaRemoteDataSource {
 
   }) async {
 
+    final body = {
+      'mediaURL': mediaPath,
+      'name': name,
+      'description': description,
+      'apparatus': apparatus,
+      'uploadedBy': uploadedBy,
+    };
+
     try {
       // First try POST into backend
-      final res = await http.post(
-          Uri.parse("${Constants.backendUrl}/media"),
-          headers: {
-            'Content-Type': 'application/json',
-            'x-auth-token': token,
-          },
-          body: jsonEncode({
-            'mediaURL': mediaURL,
-            'name': name,
-            'description': description,
-            'apparatus': apparatus,
-            'uploadedBy': uploadedBy,
-          })
+      final response = await httpService.post(
+        path: "/media",
+        token: token,
+        body: body,
       );
 
-      if(res.statusCode != 201) {
-        print("ERROR: Could not create media --> POST /media");
-        throw jsonDecode(res.body)['error'];
-      } else {
-        return MediaModel.fromJson(res.body);
-      }
+      return MediaModel.fromJson(response.body);
 
     } catch (e) {
-      try {
-        // otherwise make a MediaModel without POSTing it.
-        final mediaModel = MediaModel(
-          id: const Uuid().v6(),
-          mediaURL: mediaURL,
-          name: name,
-          description: description,
-          apparatus: apparatus,
-          uploadedBy: uploadedBy,
-          uploadedAt: DateTime.now(),
-          isSynced: 0,
-
-        );
-        // await mediaLocalRepository.insertMedia(mediaModel); // TODO shouldnt this insert???
-        return mediaModel;
-      } catch (e) {
-        rethrow;
-      }
+      // Fallback: construct a local unsynced MediaModel (but leave inserting to MediaRepository)
+      return MediaModel(
+        id: const Uuid().v6(),
+        mediaURL: mediaPath,
+        name: name,
+        description: description,
+        apparatus: apparatus,
+        uploadedBy: uploadedBy,
+        uploadedAt: DateTime.now(),
+        isSynced: 0,
+      );
     }
   }
 
 
-  Future<List<MediaModel>> getMediaList({
+  Future<List<MediaModel>> fetchRemoteMediaList({ // TODO refactored from getMediaList
     required String token,
   }) async {
-    try {
-      final res = await http.get(
-          Uri.parse("${Constants.backendUrl}/media"),
-          headers: {
-            'Content-Type': 'application/json',
-            'x-auth-token': token,
-          }
-      );
+    final response = await httpService.get(
+      path: "/media",
+      token: token,
+    );
 
-      if(res.statusCode != 200) {
-        print("ERROR: Remote repository fetch error - GET /media");
-        // print(res.body);
-        throw jsonDecode(res.body)['error'];
-      }
-
-      final remoteMediaList = jsonDecode(res.body);
-      List<MediaModel> remoteMediaListMapped = [];
-
-      for (var element in remoteMediaList) {
-        remoteMediaListMapped.add(MediaModel.fromMap(element));
-      }
-
-      await mediaLocalRepository.insertMediaList(remoteMediaListMapped);
-
-      return remoteMediaListMapped;
-    } catch (e) {
-      final mediaList = await mediaLocalRepository.getMediaList();
-      if (mediaList.isNotEmpty) {
-        return mediaList;
-      }
-      rethrow; // same as throw (e)
-    }
+    final List<dynamic> jsonList = jsonDecode(response.body);
+    return jsonList.map((e) => MediaModel.fromMap(e)).toList();
   }
 
   Future<bool> syncMedia({
     required String token,
     required List<MediaModel> mediaList,
-
   }) async {
-    try {
-      final mediaListInMap = [];
-      for (final media in mediaList) {
-        mediaListInMap.add(media.toMap());
-      }
-      print("TEST");
-      final res = await http.post(
-        Uri.parse("${Constants.backendUrl}/media/sync"),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': token,
-        },
-        body: jsonEncode(mediaListInMap),
-      );
+    final List<Map<String, dynamic>> mediaListInMap = mediaList.map((media) => media.toMap()).toList();
+    print(mediaListInMap);
+    final response = await httpService.post(
+      path: "/media/sync",
+      token: token,
+      body: mediaListInMap,
+    );
+    print(response);
 
-      if(res.statusCode != 201) {
-        throw jsonDecode(res.body)['error'];
-      }
+    return response.statusCode == 201;
+  }
 
-      return true;
-    } catch (e) {
-      print(e);
-      return false;
-    }
+  Future<MediaModel> updateMedia({
+    required MediaModel updatedMedia,
+    required String token,
+  }) async {
+    final response = await httpService.put(
+      path: "/media/update/${updatedMedia.id}",
+      token: token,
+      body: updatedMedia.toJson(),
+    );
+
+    return MediaModel.fromJson(response.body);
   }
 
 }

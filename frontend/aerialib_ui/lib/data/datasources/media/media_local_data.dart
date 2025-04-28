@@ -9,7 +9,7 @@ class MediaLocalDataSource {
 
   Future<void> insertMedia(MediaModel media) async {
     final db = await database;
-    await db.delete(tableName, where: 'id = ?', whereArgs: [media.id]);
+    // TODO decide if upsert or not: await db.delete(tableName, where: 'id = ?', whereArgs: [media.id]);
     await db.insert(tableName, media.toMap());
   }
 
@@ -20,7 +20,7 @@ class MediaLocalDataSource {
       batch.insert(
         tableName,
         media.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace, //TODO replace might be wrong here
+        conflictAlgorithm: ConflictAlgorithm.ignore, //TODO replace might be wrong here - use replace if upserting
       );
     }
 
@@ -47,7 +47,7 @@ class MediaLocalDataSource {
     final db = await database;
     final result = await db.query(
       tableName,
-      where: 'isSynced = ?',
+      where: 'is_synced = ?',
       whereArgs: [0],
     );
     if (result.isNotEmpty) {
@@ -56,18 +56,62 @@ class MediaLocalDataSource {
         mediaList.add(MediaModel.fromMap(elem));
       }
       return mediaList;
-    } else {
-      return [];
     }
+    return [];
   }
 
-  Future<void> updateSyncedStatus(String id, int newValue) async {
+  Future<void> setSyncedStatus(String id, int newValue) async {
     final db = await database;
     await db.update(
       tableName,
-      {'isSynced': newValue},
+      {'is_synced': newValue},
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<void> updateMedia(MediaModel media) async {
+    final db = await database;
+    await db.update(
+      tableName,
+      media.toMap(),
+      where: 'id = ?',
+      whereArgs: [media.id],
+    );
+  }
+
+  Future<void> deleteMedia(String id) async {
+    final db = await database;
+    await db.delete(
+        tableName,
+        where: 'id = ?',
+        whereArgs: [id]
+    );
+  }
+
+  /// Returns MediaModel given an ID
+  Future<MediaModel?> getMediaById(String mediaId) async {
+    final db = await database;
+    final result = await db.query(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [mediaId],
+    );
+    if (result.isNotEmpty) {
+      return MediaModel.fromMap(result.first);
+    } else {
+      return null; // Return null if not found
+    }
+  }
+
+  /// Return List of MediaModels given list of IDs.
+  Future<List<MediaModel>> getMediasByIds(List<String> ids) async {
+    final db = await database;
+    final result = await db.query(
+      'media',
+      where: 'id IN (${List.filled(ids.length, '?').join(', ')})',
+      whereArgs: ids,
+    );
+    return result.map((e) => MediaModel.fromMap(e)).toList();
   }
 }

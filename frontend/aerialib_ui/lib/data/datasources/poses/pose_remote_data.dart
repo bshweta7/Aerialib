@@ -101,4 +101,6 @@ class PoseRemoteDataSource {
 
     return PoseModel.fromJson(response.body);
   }
+
+  // TODO delete pose option
 }

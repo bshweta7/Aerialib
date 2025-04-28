@@ -23,7 +23,7 @@ class MediaCubit extends Cubit<MediaState>{
     try {
       emit(MediaLoading());
       final mediaModel = await mediaRemoteRepository.createMedia(
-        mediaURL: mediaURL,
+        mediaPath: mediaURL,
         name: name,
         description: description,
         apparatus: apparatus,
@@ -69,7 +69,7 @@ class MediaCubit extends Cubit<MediaState>{
     if (isSynced) {
       print("Unsynced media have been synced");
       for (final media in unsyncedMedia) {
-        mediaLocalRepository.updateSyncedStatus(media.id, 1);
+        mediaLocalRepository.setSyncedStatus(media.id, 1);
       }
     }
 
