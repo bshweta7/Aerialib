@@ -27,9 +27,12 @@ import 'data/datasources/flows/flow_local_data.dart';
 import 'data/datasources/flows/flow_pose_local_data.dart';
 import 'data/datasources/flows/flow_pose_remote_data.dart';
 import 'data/datasources/flows/flow_remote_data.dart';
+import 'data/datasources/media/media_local_data.dart';
+import 'data/datasources/media/media_remote_data.dart';
 import 'domain/repositories/flow_pose_repository.dart';
 import 'domain/repositories/flow_repository.dart';
-import 'to_sort/cubit/media_cubit.dart';
+import 'domain/repositories/media_repository.dart';
+import 'presentation/cubit/media/media_cubit.dart';
 
 
 
@@ -73,12 +76,17 @@ Future<void> main() async {
     poseLocalDataSource: PoseLocalDataSource(),
   );
 
+  final mediaRepo = MediaRepository(
+    localDataSource: MediaLocalDataSource(),
+    remoteDataSource: MediaRemoteDataSource(httpService: HttpService()),
+  );
+
   // Run app
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit(userRepo)),
       BlocProvider(create: (_) => PosesCubit(poseRepo)),
-      BlocProvider(create: (_) => MediaCubit()),
+      BlocProvider(create: (_) => MediaCubit(mediaRepo)),
       BlocProvider(create: (_) => FlowsCubit(flowRepo, flowPoseRepo)),
     ],
     child: const MyApp(),

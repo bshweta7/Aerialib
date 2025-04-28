@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/to_sort/cubit/media_cubit.dart';
+import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/to_sort/pages/media/media_library_page.dart';
 import 'package:image_picker/image_picker.dart';

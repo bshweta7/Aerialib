@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/utils/formatters.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/to_sort/cubit/media_cubit.dart';
+import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 import 'package:frontend/to_sort/pages/media/upload_new_media_page.dart';
 
 import 'package:frontend/to_sort/pages/widgets/media_display/media_grid.dart';

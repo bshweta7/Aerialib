@@ -92,8 +92,6 @@ class PosesCubit extends Cubit<PosesState> {
         print("No wifi available");
       }
     });
-
-
   }
 
   /// Update pose info (both local and remote)
