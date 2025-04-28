@@ -28,7 +28,7 @@ class FlowPoseRemoteDataSource {
     try {
       // first try POST into backend.
       final response = await httpService.post(
-        path: "/flow_poses",
+        path: "/flow_pose",
         token: token,
         body: body,
       );

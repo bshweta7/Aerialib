@@ -24,7 +24,7 @@ app.use("/poses", poseRouter);
 app.use("/auth", authRouter);
 app.use("/media", mediaRouter);
 app.use("/flows", flowRouter);
-app.use("/flow_pose", flowPoseRouter);
+app.use("/flow_pose", flowPoseRouter); // TODO consistent routes - pose, flow, flow_pose/ (not poses)
 
 // create rest api
 app.get("/", (req, res) => {
