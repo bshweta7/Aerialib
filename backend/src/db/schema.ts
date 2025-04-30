@@ -1,51 +1,50 @@
 // specify schema for all tables 
 
-import { doublePrecision, integer, pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {doublePrecision, integer, jsonb, pgTable, text, timestamp, uuid} from "drizzle-orm/pg-core";
 
+
+/* USERS */
 export const usersTable = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: text("name").notNull(),
+
+    username: text("username").notNull().unique(),
     email: text("email").notNull().unique(),
     password: text("password").notNull(),
+
+
+    firstName: text("first_name"),
+    lastName: text("last_name"),
+    bio: text("bio"),
+    preferences: jsonb("preferences"),
+
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
+    lastLogin: timestamp("last_login").defaultNow(),
+
+
 });
 
 export type User = typeof usersTable.$inferSelect;
 export type NewUser = typeof usersTable.$inferInsert;
 
 
-export const posesTable = pgTable("poses", {
-    id: uuid("id").primaryKey().defaultRandom(),
-    name: text("name").notNull(),
-    // TODO alternative names
-    description: text("description"),
-    cues: text("cues"),
-    apparatus: text("apparatus").notNull(),
-    level: integer("level").notNull(), // TODO update this to real or add difficulty field -> may need to modify filter in frontend
-    // TODO contraindications 
-    createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
-    updatedBy: uuid("updated_by").references(() => usersTable.id),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow(),
-    primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id),
 
-});
-
-
-export type Pose = typeof posesTable.$inferSelect;
-export type NewPose = typeof posesTable.$inferInsert;
-
-
+/* MEDIA */
 export const mediaTable = pgTable("media", {
     id: uuid("id").primaryKey().defaultRandom(),
-    mediaURL: text("media_url").notNull(), // TODO should this be mediaPath instead? 
+    mediaPath: text("media_path").notNull(),
+
+    mediaType: text("media_type").notNull(),
+    fileSize: integer("file_size"),
+
     name: text("name"),
     description: text("description"),
     apparatus: text("apparatus"),
+
     uploadedBy: uuid("uploaded_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     uploadedAt: timestamp("uploaded_at").defaultNow(),
 
+    // TODO alt text should combine all the relevant info in front end
     // TODO delete metadata EXIF (security)
 });
 
@@ -54,88 +53,188 @@ export type Media = typeof mediaTable.$inferSelect;
 export type NewMedia = typeof mediaTable.$inferInsert;
 
 
+
+/* POSES */
+export const posesTable = pgTable("poses", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id),
+    apparatus: text("apparatus").notNull(),
+    level: doublePrecision("level").notNull(),
+
+    description: text("description"),
+    teachingCues: text("teaching_cues"),
+    safetyCues: text("safety_cues"),
+    progressions: text("progressions"),
+
+    createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    updatedBy: uuid("updated_by").references(() => usersTable.id),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type Pose = typeof posesTable.$inferSelect;
+export type NewPose = typeof posesTable.$inferInsert;
+
+
+
+/* TRANSITIONS */
 export const transitionsTable = pgTable("transitions", {
     id: uuid("id").primaryKey().defaultRandom(),
 
     fromPoseId: uuid("from_pose_id").notNull().references(() => posesTable.id),
     toPoseId: uuid("to_pose_id").notNull().references(() => posesTable.id),
+    level: doublePrecision("level").notNull(),
 
     name: text("name"),
     description: text("description"),
-    cues: text("cues"),
-    difficulty: integer("difficulty"),
-    duration: doublePrecision("duration"),
+    teachingCues: text("teaching_cues"),
+    safetyCues: text("safety_cues"),
+    progressions: text("progressions"),
 
-    primaryVideoId: uuid("primary_video_id").references(() => mediaTable.id),
+    transitionType: text("transition_type"),
+    startingGrip: text("starting_grip"),
+    endingGrip: text("ending_grip"),
 
-    // TODO add types (separate regular transitions from rolls - rolls cant be in poses because they can have different start and end, and they take time)
-    // TODO contraindications 
-
-    // TODO is this needed
-    // createdBy: uuid("created_by").notNull().references(() => usersTable.id, {onDelete: "cascade"}),
-    // updatedBy: uuid("updated_by").references(() => usersTable.id),
-    // createdAt: timestamp("created_at").defaultNow(),
-    // updatedAt: timestamp("updated_at").defaultNow(),
-
+    createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    updatedBy: uuid("updated_by").references(() => usersTable.id),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
 });
-
 
 export type Transition = typeof transitionsTable.$inferSelect;
 export type NewTransition = typeof transitionsTable.$inferInsert;
 
 
-
+/* FLOWS */
 export const flowsTable = pgTable("flows", {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: text("name").notNull(),
+    name: text("name").notNull(), // NOTE: Give suggestions in frontend (like April Flow) or default to date created
+    apparatus: text("apparatus").notNull(), // NOTE: this can be interpreted from poses contained within it, don't need to ask the user to enter it
+    level: doublePrecision("level").notNull(),
 
     description: text("description"),
-    apparatus: text("apparatus"),// TODO should this be nullable? 
+    teachingCues: text("teaching_cues"),
+    safetyCues: text("safety_cues"),
+    progressions: text("progressions"),
 
     createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "set default" }), // TODO Figure out what is set default
     updatedBy: uuid("updated_by").references(() => usersTable.id),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
-
-    primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id), 
 });
 
 export type Flow = typeof flowsTable.$inferSelect;
 export type NewFlow = typeof flowsTable.$inferInsert;
 
-// TODO may need a "media Connector table" that converts pose uuid and flow uuid into a standard uuid that can be put into media? or add a column in media for flow id ? 
 
+/* FLOW POSES CONNECTOR */
 export const flowPosesTable = pgTable("flow_poses", {
     id: uuid("id").primaryKey().defaultRandom(),
-    flowId: uuid('flow_id')
-        .notNull()
-        .references(() => flowsTable.id, {
-            onDelete: 'cascade',
-            onUpdate: 'no action',
-        }),
-    poseId: uuid('pose_id')
-        .notNull()
-        .references(() => posesTable.id, {
-            onDelete: 'cascade', // TODO check this - need better way of handling this  
-            onUpdate: 'no action',
-        }),
+    flowId: uuid('flow_id').notNull().references(() => flowsTable.id, {
+        onDelete: 'cascade',
+        onUpdate: 'no action',
+    }),
+    poseId: uuid('pose_id').notNull().references(() => posesTable.id, {
+        onDelete: 'cascade', // TODO check this - need better way of handling this
+        onUpdate: 'no action',
+    }),
     order: integer('order').notNull(),
-    transitionId: uuid('transition_id')
-        .references(() => transitionsTable.id, {
-            onDelete: 'cascade',
-            onUpdate: 'no action',
-        }),
-},
-    // TODO Can add which pose was added by which user (if sharing collections)
-);
+    transitionId: uuid('transition_id').references(() => transitionsTable.id, {
+        onDelete: 'cascade',
+        onUpdate: 'no action',
+    }),
+});
 
 
 export type FlowPose = typeof flowPosesTable.$inferSelect;
 export type NewFlowPose = typeof flowPosesTable.$inferInsert;
 
 
+/* TODO other tables:
 
+RELATED TO USERS
+Roles: UserID, Role (instructor student studioOwner), OR Instructors: UserID, Studio, Apparatus, Level
+Classes: ClassName, Date, Time, Instructor, Apparatus, Level (used for attendance in future)
+ProfilePicture: UserID, MediaID
 
+RELATED TO POSES
+Contraindications: PoseID, contraindication
+MuscleGroupsEngaged:
+Variations/PoseFamilies: BasePoseId, VariantPoseId
+
+RELATED TO MEDIA
+MediaSharing: MediaID, UserId(sharedTo)
+ThumbnailId: videoMediaID and thumbnailMediaID
+AssociatedPoses / Flows : MediaID, PoseID
+
+*/
+
+/* GEMINI VERSION OF THE TABLES ABOVE
+
+export const rolesTable = pgTable("roles", {
+    userId: uuid("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade", onUpdate: "no action" }),
+    role: text("role").notNull(), // e.g., 'instructor', 'student', 'studioOwner'
+    // You might add a scope if roles can be specific to a studio or apparatus
+    // scope: uuid("scope").references(...),
+    primaryKey: primaryKey({ columns: [userId, role] }), // Ensures a user doesn't have the same role multiple times
+});
+
+export const instructorsTable = pgTable("instructors", {
+    userId: uuid("user_id").primaryKey().references(() => usersTable.id, { onDelete: "cascade", onUpdate: "no action" }),
+    studio: text("studio"),
+    apparatus: text("apparatus", { array: true }), // An instructor might teach on multiple apparatus
+    level: text("level"), // Or perhaps a more structured way to represent levels they teach
+});
+
+export const classesTable = pgTable("classes", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    className: text("class_name").notNull(),
+    date: date("date").notNull(),
+    time: time("time").notNull(),
+    instructorId: uuid("instructor_id").references(() => instructorsTable.userId, { onDelete: "set null", onUpdate: "no action" }),
+    apparatus: text("apparatus").notNull(),
+    level: text("level"),
+    // ... other class details
+});
+
+export const contraindicationsTable = pgTable("contraindications", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    poseId: uuid("pose_id").notNull().references(() => posesTable.id, { onDelete: "cascade", onUpdate: "no action" }),
+    contraindication: text("contraindication").notNull(),
+    // You might want to add a category for the contraindication (e.g., 'physical', 'medical')
+});
+
+export const muscleGroupsEngagedTable = pgTable("muscle_groups_engaged", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    poseId: uuid("pose_id").notNull().references(() => posesTable.id, { onDelete: "cascade", onUpdate: "no action" }),
+    muscleGroup: text("muscle_group").notNull(),
+});
+
+export const poseVariationsTable = pgTable("pose_variations", {
+    basePoseId: uuid("base_pose_id").notNull().references(() => posesTable.id, { onDelete: "cascade", onUpdate: "no action" }),
+    variantPoseId: uuid("variant_pose_id").notNull().references(() => posesTable.id, { onDelete: "cascade", onUpdate: "no action" }),
+    primaryKey: primaryKey({ columns: [basePoseId, variantPoseId] }),
+    relationType: text("relation_type"), // e.g., 'variation', 'progression', 'regression'
+    description: text("description"), // Optional description of the relationship
+});
+
+export const mediaSharingTable = pgTable("media_sharing", {
+    mediaId: uuid("media_id").notNull().references(() => mediaTable.id, { onDelete: "cascade", onUpdate: "no action" }),
+    userId: uuid("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade", onUpdate: "no action" }),
+    sharedAt: timestamp("shared_at").defaultNow(),
+    primaryKey: primaryKey({ columns: [mediaId, userId] }),
+});
+
+export const mediaTable = pgTable("media", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    // ... other media fields
+    thumbnailMediaId: uuid("thumbnail_media_id").references(() => mediaTable.id),
+    // For videos, you might also have a previewImageId
+    previewImageId: uuid("preview_image_id").references(() => mediaTable.id),
+});
+
+ */
 
 // TODO Collections - can store things like "favorites" or "Goals"
 // 
