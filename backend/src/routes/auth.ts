@@ -5,17 +5,20 @@ import { db } from "../db";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { auth, AuthRequest } from "../middleware/auth";
+import dotenv from "dotenv";
+import {jsonb, text, timestamp, uuid} from "drizzle-orm/pg-core";
+dotenv.config();
 
 const authRouter = Router();
 
 interface SignUpBody {
-    name: string,
+    username: string,
     email: string,
     password: string,
 }
 
 interface LoginBody {
-    email: string,
+    username: string,
     password: string,
 }
 
@@ -23,19 +26,30 @@ interface LoginBody {
 authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Response) => {
     try {
         // get request body
-        const { name, email, password } = req.body;
+        const { username, email, password } = req.body;
 
-        //check if user already exists
-        const existingUser = await db
+        // check if a user with the same email already exists
+        const existingEmailUser = await db
             .select()
             .from(usersTable)
             .where(eq(usersTable.email, email));
 
-        if (existingUser.length) {
+        // also ensure that a user with the same username doesn't exist
+        const existingUsernameUser = await db
+            .select()
+            .from(usersTable)
+            .where(eq(usersTable.username, username));
+
+        if (existingEmailUser.length) {
             res
                 .status(400)
-                .json({ error: "User with the same email already exists." }); // TODO this should lead to "forgot password" button to send an email 
-            return
+                .json({ error: "User with the same email already exists. Did you forget your password?" });
+        }
+
+        if (existingUsernameUser.length) {
+            res
+                .status(400)
+                .json({ error: "User with the same username already exists. Please choose a different username." });
         }
 
         // hash the password
@@ -43,7 +57,7 @@ authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Respons
 
         // create a new user and store in db
         const newUser: NewUser = {
-            name,
+            username,
             email,
             password: hashedPassword
         }
@@ -56,36 +70,47 @@ authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Respons
         res.status(500).json({ error: e })
     }
 });
+// TODO also include a "forgot password" button to send an email with updated token
+
 
 // login route
 authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response) => {
     try {
         // get request body
-        const { email, password } = req.body;
+        const { username, password } = req.body;
 
-        //check if user doesn't exists
+        //check if a user doesn't exist
         const [existingUser] = await db
             .select()
             .from(usersTable)
-            .where(eq(usersTable.email, email));
+            .where(eq(usersTable.username, username));
 
         if (!existingUser) {
             res
                 .status(400)
-                .json({ error: "User with this email does not exists!" });
+                .json({ error: "User with this email does not exist. Do you want to sign up?" });
             return
         }
 
         // hash the password
         const isMatch = await bcryptjs.compare(password, existingUser.password);
         if (!isMatch) {
-            res.status(400).json({ error: "Incorrect password!" })
+            res.status(400).json({ error: "Incorrect password. Please try again." })
             return
         }
 
-        const token = jwt.sign({ id: existingUser.id }, "passwordKey") //TODO: move secret key to .env file
+        const token = jwt.sign({ id: existingUser.id }, process.env.JWT_SECRET!);
 
-        res.json({ token, name: existingUser.name, email: existingUser.email });
+        res.json({
+            token,
+            id: existingUser.id,
+            username: existingUser.username,
+            email: existingUser.email,
+            firstName: existingUser.firstName,
+            lastName: existingUser.lastName,
+            bio: existingUser.bio,
+            preferences: existingUser.preferences,
+        });
 
     } catch (e) {
         console.log(e)
@@ -94,7 +119,7 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
 });
 
 
-// check if the token stored on user's device is valid
+// check if the token stored on the user's device is valid
 authRouter.post("/tokenIsValid", async (req, res) => {
     try {
         // get the header (to get token)
@@ -106,7 +131,7 @@ authRouter.post("/tokenIsValid", async (req, res) => {
         }
 
         // verify if token is valid
-        const verified = jwt.verify(token, "passwordKey"); // TODO update passwordKey
+        const verified = jwt.verify(token, process.env.JWT_SECRET!);
 
         if (!verified) {
             res.json(false);
@@ -134,12 +159,7 @@ authRouter.post("/tokenIsValid", async (req, res) => {
     }
 });
 
-
-// TODO profile can use the dynamic one: authRouter.post("/profile:id", async (req: Request<{id}, {}, ProfileBody>, res: Response) => {
 // TODO pose search can use the query string: authRouter.post("/profile?level=1", async (req: Request<{}, {level}, ProfileBody>, res: Response) => {
-
-
-// TODO store jwt in .env file
 
 authRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
@@ -155,5 +175,18 @@ authRouter.get("/", auth, async (req: AuthRequest, res) => {
         res.status(500).json(false);
     }
 });
+
+
+authRouter.get("/profile/:id", async (req: Request<{ id: string }>, res) => {
+    const { id } = req.params;
+    const [user] = await db
+        .select()
+        .from(usersTable)
+        .where(
+            eq(usersTable.id, id)
+        );
+    res.json(user);
+});
+
 
 export default authRouter;
