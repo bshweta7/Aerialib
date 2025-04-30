@@ -15,12 +15,12 @@ class MediaLoading extends MediaState {
   const MediaLoading();
 }
 
-class GetMediasSuccess extends MediaState {
-  final List<MediaEntity> medias;
-  const GetMediasSuccess(this.medias);
+class GetMediaListSuccess extends MediaState {
+  final List<MediaEntity> mediaList;
+  const GetMediaListSuccess(this.mediaList);
 
   @override
-  List<Object?> get props => [medias];
+  List<Object?> get props => [mediaList];
 }
 
 class AddNewMediaSuccess extends MediaState {
@@ -40,9 +40,9 @@ class UpdateMediaSuccess extends MediaState {
 }
 
 class MediaError extends MediaState {
-  final String message;
-  const MediaError(this.message);
+  final String error;
+  const MediaError(this.error);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [error];
 }

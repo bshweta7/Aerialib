@@ -47,12 +47,12 @@ class _MediaLibraryPageState extends State<MediaLibraryPage> {
     super.initState();
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    context.read<MediaCubit>().getAllMedia(token: user.user.token);
+    context.read<MediaCubit>().getAllMedias(token: user.user.token);
 
     Connectivity().onConnectivityChanged.listen((data) async {
       if (data.contains(ConnectivityResult.wifi)) {
         print("Wifi Available");
-        await context.read<MediaCubit>().syncMedia(user.user.token);
+        await context.read<MediaCubit>().syncMedias(user.user.token);
 
       } else {
         print("No wifi available");

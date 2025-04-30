@@ -69,7 +69,7 @@ class MediaCubit extends Cubit<MediaState>{
       }
 
       print("Number of Medias Retrieved: ${medias.length}");
-      emit(GetMediasSuccess(medias));
+      emit(GetMediaListSuccess(medias));
 
     } catch (e) {
       print("Cubit GetAllMedias failed");
