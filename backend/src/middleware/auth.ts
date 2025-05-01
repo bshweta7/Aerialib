@@ -6,7 +6,7 @@ import { usersTable } from "../db/schema";
 import { eq } from "drizzle-orm";
 
 export interface AuthRequest extends Request {
-    // Request is default type of req, AuthRequest extends it to add in user and token (i.e. auth info) as additional fields
+    // Request is the default type of req; AuthRequest extends it to add in user and token (i.e., auth info) as additional fields
     // Can be used even if not authenticated because user and token are nullable
     user?: UUID;
     token?: string;

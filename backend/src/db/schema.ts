@@ -31,6 +31,7 @@ export const mediaTable = pgTable("media", {
 
     mediaType: text("media_type").notNull(),
     fileSize: integer("file_size"),
+    primaryMedia: text("primary_media"),
 
     name: text("name"),
     description: text("description"),
