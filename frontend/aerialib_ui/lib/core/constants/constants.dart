@@ -20,7 +20,7 @@ class Constants {
 
   // Images
   static String missingImageId = "6a8e2421-5aa5-48a4-a0b2-73d6a28ef5d3";
-  static String missingImageUrl = "/missing_image.jpg";
+  static String missingImagePath = "/missing_image.jpg";
   // TODO move missing image to assets?
 
 }

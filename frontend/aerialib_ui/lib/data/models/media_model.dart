@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class MediaModel {
-  final String mediaPath;
+  final String path;
   final String name;
   final String description;
   final String apparatus;
@@ -12,7 +12,7 @@ class MediaModel {
   // todo add other things like location and stuff
 
   MediaModel({
-    required this.mediaPath,
+    required this.path,
     required this.name,
     required this.description,
     required this.apparatus,
@@ -24,7 +24,7 @@ class MediaModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'mediaURL': mediaPath,
+      'mediaURL': path,
       'name': name,
       'description': description,
       'apparatus': apparatus,
@@ -37,7 +37,7 @@ class MediaModel {
 
   factory MediaModel.fromMap(Map<String, dynamic> map) {
     return MediaModel(
-      mediaPath: map['mediaURL'] ?? '',
+      path: map['mediaURL'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       apparatus: map['apparatus'] ?? '',

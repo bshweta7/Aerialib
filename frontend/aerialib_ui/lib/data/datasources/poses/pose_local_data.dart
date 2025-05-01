@@ -28,7 +28,7 @@ class PoseLocalDataSource {
     await batch.commit(noResult: true);
   }
 
-  Future<List<PoseModel>> getPoses() async {
+  Future<List<PoseModel>> getAllPoses() async {
     final db = await database;
     final result = await db.query(tableName);
 

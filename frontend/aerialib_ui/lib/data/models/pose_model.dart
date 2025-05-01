@@ -4,49 +4,52 @@ import 'package:frontend/core/constants/constants.dart';
 class PoseModel {
   final String id;
   final String name;
-  final String? description;
-  final String? cues;
+  final String primaryImageId;
   final String apparatus;
-  final int level;
+  final double level;
+  final String? description;
+  final String? teachingCues;
+  final String? safetyCues;
+  final String? progressions;
   final String createdBy;
   final String? updatedBy;
   final DateTime createdAt;
-  final DateTime updatedAt; // TODO - this should be nullable if never updated
+  final DateTime updatedAt;
   final int isSynced;
-  final String primaryImageId;
-  final String primaryImageUrl;
 
   const PoseModel({
     required this.id,
     required this.name,
-    this.description,
-    this.cues,
+    required this.primaryImageId,
     required this.apparatus,
     required this.level,
+    this.description,
+    this.teachingCues,
+    this.safetyCues,
+    this.progressions,
     required this.createdBy,
     this.updatedBy,
     required this.createdAt,
     required this.updatedAt,
     required this.isSynced,
-    required this.primaryImageId,
-    required this.primaryImageUrl,
   });
 
   factory PoseModel.fromMap(Map<String, dynamic> map) {
     return PoseModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
-      description: map['description'],
-      cues: map['cues'],
+      primaryImageId: map['primary_image_id'] ?? Constants.missingImageId,
       apparatus: map['apparatus'] ?? '',
-      level: map['level'] ?? -1,
+      level: (map['level'] is int ? (map['level'] as int).toDouble() : map['level']) ?? -1.0, // Handle potential int or double
+      description: map['description'],
+      teachingCues: map['teaching_cues'],
+      safetyCues: map['safety_cues'],
+      progressions: map['progressions'],
       createdBy: map['created_by'] ?? '',
       updatedBy: map['updated_by'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
       isSynced: map['is_synced'] ?? 1,
-      primaryImageId: map['primary_image_id'] ?? Constants.missingImageId,
-      primaryImageUrl: map['primary_image_url'] ?? Constants.missingImageUrl,
     );
   }
 
@@ -54,17 +57,18 @@ class PoseModel {
     return {
       'id': id,
       'name': name,
-      'description': description,
-      'cues': cues,
+      'primary_image_id': primaryImageId,
       'apparatus': apparatus,
       'level': level,
+      'description': description,
+      'teaching_cues': teachingCues,
+      'safety_cues': safetyCues,
+      'progressions': progressions,
       'created_by': createdBy,
       'updated_by': updatedBy,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'is_synced': isSynced,
-      'primary_image_id': primaryImageId,
-      'primary_image_url': primaryImageUrl,
     };
   }
 
@@ -72,5 +76,4 @@ class PoseModel {
       PoseModel.fromMap(json.decode(source));
 
   String toJson() => json.encode(toMap());
-
 }

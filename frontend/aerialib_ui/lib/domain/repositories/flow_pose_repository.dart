@@ -168,7 +168,7 @@ class FlowPoseRepository {
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllLocalPoses() async {
     print("Fetching PoseModels for Flow Cubit");
-    final poseModels = await poseLocalDataSource.getPoses();
+    final poseModels = await poseLocalDataSource.getAllPoses();
     return PoseMapper.modelsToEntities(poseModels);
   }
 

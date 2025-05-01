@@ -3,32 +3,36 @@
 class PoseEntity {
   final String id;
   final String name;
-  final String? description;
-  final String? cues;
+  final String primaryImageId;
+  final String primaryMediaPath;
   final String apparatus;
-  final int level;
+  final double level;
+  final String? description;
+  final String? teachingCues;
+  final String? safetyCues;
+  final String? progressions;
   final String createdBy;
   final String? updatedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
   final int isSynced;
-  final String primaryImageId;
-  final String primaryImageUrl;
 
   const PoseEntity({
     required this.id,
     required this.name,
-    this.description,
-    this.cues,
+    required this.primaryImageId,
+    required this.primaryMediaPath,
     required this.apparatus,
     required this.level,
+    this.description,
+    this.teachingCues,
+    this.safetyCues,
+    this.progressions,
     required this.createdBy,
     this.updatedBy,
     required this.createdAt,
     required this.updatedAt,
     required this.isSynced,
-    required this.primaryImageId,
-    required this.primaryImageUrl,
   });
 
   @override
@@ -38,31 +42,35 @@ class PoseEntity {
               runtimeType == other.runtimeType &&
               id == other.id &&
               name == other.name &&
-              description == other.description &&
-              cues == other.cues &&
+              primaryImageId == other.primaryImageId &&
+              primaryMediaPath == other.primaryMediaPath &&
               apparatus == other.apparatus &&
               level == other.level &&
+              description == other.description &&
+              teachingCues == other.teachingCues &&
+              safetyCues == other.safetyCues &&
+              progressions == other.progressions &&
               createdBy == other.createdBy &&
               updatedBy == other.updatedBy &&
               createdAt == other.createdAt &&
               updatedAt == other.updatedAt &&
-              isSynced == other.isSynced &&
-              primaryImageId == other.primaryImageId &&
-              primaryImageUrl == other.primaryImageUrl;
+              isSynced == other.isSynced;
 
   @override
   int get hashCode =>
       id.hashCode ^
       name.hashCode ^
-      description.hashCode ^
-      cues.hashCode ^
+      primaryImageId.hashCode ^
+      primaryMediaPath.hashCode ^
       apparatus.hashCode ^
       level.hashCode ^
+      description.hashCode ^
+      teachingCues.hashCode ^
+      safetyCues.hashCode ^
+      progressions.hashCode ^
       createdBy.hashCode ^
       updatedBy.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode ^
-      isSynced.hashCode ^
-      primaryImageId.hashCode ^
-      primaryImageUrl.hashCode;
+      isSynced.hashCode;
 }

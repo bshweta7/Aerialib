@@ -42,7 +42,7 @@ class MediaRemoteDataSource {
       // Fallback: construct a local unsynced MediaModel (but leave inserting to MediaRepository)
       return MediaModel(
         id: const Uuid().v6(),
-        mediaPath: mediaPath,
+        path: mediaPath,
         name: name,
         description: description,
         apparatus: apparatus,

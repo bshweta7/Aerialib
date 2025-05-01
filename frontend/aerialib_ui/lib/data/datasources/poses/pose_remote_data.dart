@@ -13,10 +13,12 @@ class PoseRemoteDataSource {
   /// Create and return PoseModel
   Future<PoseModel> createPose({
     required String name,
-    required String description,
-    required String cues,
     required String apparatus,
-    required int level,
+    required double level,
+    String? description,
+    String? teachingCues,
+    String? safetyCues,
+    String? progressions,
     required String primaryImageId,
     required String createdBy,
     required String token,
@@ -28,10 +30,13 @@ class PoseRemoteDataSource {
       'level': level,
       'primaryImageId': primaryImageId,
       'createdBy': createdBy,
+      if (description != null) 'description': description,
+      if (teachingCues != null) 'teachingCues': teachingCues,
+      if (safetyCues != null) 'safetyCues': safetyCues,
+      if (progressions != null) 'progressions': progressions,
     };
 
     try {
-      // first try POST into backend.
       final response = await httpService.post(
         path: "/poses",
         token: token,
@@ -39,23 +44,24 @@ class PoseRemoteDataSource {
       );
 
       return PoseModel.fromJson(response.body);
-
     } catch (e) {
-      // Fallback: construct a local unsynced PoseModel (but leave inserting to PoseRepository)
+      // Fallback: construct a local unsynced PoseModel
+      final now = DateTime.now();
       return PoseModel(
         id: const Uuid().v6(),
         name: name,
-        description: description,
-        cues: cues,
+        primaryImageId: primaryImageId,
         apparatus: apparatus,
         level: level,
+        description: description,
+        teachingCues: teachingCues,
+        safetyCues: safetyCues,
+        progressions: progressions,
         createdBy: createdBy,
         updatedBy: createdBy,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        createdAt: now,
+        updatedAt: now,
         isSynced: 0,
-        primaryImageId: primaryImageId,
-        primaryImageUrl: Constants.missingImageUrl, // TODO remove this (Note: This will update in backend but is required here because it is a required field in PoseModel)
       );
     }
   }

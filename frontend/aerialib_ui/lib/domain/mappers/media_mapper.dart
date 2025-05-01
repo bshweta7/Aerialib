@@ -6,7 +6,7 @@ class MediaMapper {
   static MediaEntity modelToEntity(MediaModel model) {
     return MediaEntity(
       id: model.id,
-      mediaPath: model.mediaPath,
+      mediaPath: model.path,
       name: model.name,
       description: model.description,
       apparatus: model.apparatus,
@@ -20,7 +20,7 @@ class MediaMapper {
   static MediaModel entityToModel(MediaEntity entity) {
     return MediaModel(
       id: entity.id,
-      mediaPath: entity.mediaPath,
+      path: entity.mediaPath,
       name: entity.name,
       description: entity.description,
       apparatus: entity.apparatus,

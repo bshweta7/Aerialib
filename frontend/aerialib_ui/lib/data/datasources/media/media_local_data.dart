@@ -43,6 +43,23 @@ class MediaLocalDataSource {
     }
   }
 
+  /// Get list of media models that are primary images for poses
+  Future<List<MediaModel>> getPoseMedia() async {
+    final db = await database;
+    final result = await db.query(
+      tableName,
+      where: 'primary_media = ?',
+      whereArgs: ['pose'],
+    );
+
+    if (result.isNotEmpty) {
+      return result.map((elem) => MediaModel.fromMap(elem)).toList();
+    } else {
+      return [];
+    }
+  }
+
+
   Future<List<MediaModel>> getUnsyncedMedia() async {
     final db = await database;
     final result = await db.query(

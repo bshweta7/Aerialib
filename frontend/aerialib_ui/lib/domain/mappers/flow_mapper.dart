@@ -65,7 +65,7 @@ class FlowMapper {
   /// Converts a FlowEntity to a FlowModel (metadata only)
   static FlowModel entityToModel(FlowEntity entity) {
     final primaryImageId = entity.poses.isNotEmpty ? entity.poses.first.pose.primaryImageId : '';
-    final primaryImageUrl = entity.poses.isNotEmpty ? entity.poses.first.pose.primaryImageUrl : Constants.missingImageUrl;
+    final primaryImageUrl = entity.poses.isNotEmpty ? entity.poses.first.pose.primaryImageUrl : Constants.missingImagePath;
 
 
     return FlowModel(

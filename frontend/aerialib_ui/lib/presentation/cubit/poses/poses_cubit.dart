@@ -51,13 +51,13 @@ class PosesCubit extends Cubit<PosesState> {
       print("Fetching poses...");
       emit(const PoseLoading());
 
-      List<PoseEntity> poses = await _poseRepository.getLocalPoses();  // Fetch local poses
+      List<PoseEntity> poses = await _poseRepository.getAllPoses();  // Fetch local poses
       if (poses.isEmpty) {
         // If no local poses, sync from remote and retry
         print("No poses in local datasource, syncing from remote");
         await _poseRepository.syncRemoteToLocal(token);
 
-        poses = await _poseRepository.getLocalPoses();
+        poses = await _poseRepository.getAllPoses();
       }
 
       print("Number of Poses Retrieved: ${poses.length}");
