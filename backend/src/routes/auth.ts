@@ -88,7 +88,7 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
         if (!existingUser) {
             res
                 .status(400)
-                .json({ error: "User with this email does not exist. Do you want to sign up?" });
+                .json({ error: "User with this username does not exist. Do you want to sign up?" });
             return
         }
 
@@ -102,7 +102,7 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
         const token = jwt.sign({ id: existingUser.id }, process.env.JWT_SECRET!);
 
         res.json({
-            token,
+            token: token,
             id: existingUser.id,
             username: existingUser.username,
             email: existingUser.email,

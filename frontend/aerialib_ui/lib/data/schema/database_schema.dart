@@ -7,7 +7,6 @@ const String createUserTable = '''
 
     username TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
 
     first_name TEXT,
     last_name TEXT,
@@ -15,9 +14,9 @@ const String createUserTable = '''
     
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    last_login TEXT NOT NULL
+    last_login TEXT NOT NULL,
     
-    token TEXT NOT NULL,
+    token TEXT NOT NULL
   )
 ''';
 
@@ -70,7 +69,7 @@ const String createPoseTable = '''
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
   
-    is_synced INTEGER NOT NULL,
+    is_synced INTEGER NOT NULL
   )
 ''';
 
@@ -103,7 +102,7 @@ const String createTransitionTable = '''
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     
-    is_synced INTEGER NOT NULL,
+    is_synced INTEGER NOT NULL
   )
 ''';
 

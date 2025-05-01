@@ -42,7 +42,7 @@ class UserRemoteDataSource {
     required String password,
   }) async {
     final body = {
-      'email': username,
+      'username': username,
       'password': password,
     };
 
