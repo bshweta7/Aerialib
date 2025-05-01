@@ -10,12 +10,13 @@ class FlowPoseMapper {
   static FlowPoseEntity modelToEntity({
     required FlowPoseModel model,
     required PoseModel poseModel,
+    required String mediaPath,
     TransitionModel? transitionModel,
   }) {
     return FlowPoseEntity(
       id: model.id,
       flowId: model.flowId,
-      pose: PoseMapper.modelToEntity(poseModel),
+      pose: PoseMapper.modelToEntity(poseModel, mediaPath),
       poseOrder: model.poseOrder,
       transition: transitionModel != null
           ? TransitionMapper.modelToEntity(transitionModel)

@@ -2,9 +2,12 @@ import 'package:frontend/data/datasources/flows/flow_local_data.dart';
 import 'package:frontend/data/datasources/flows/flow_remote_data.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 
+import '../../core/constants/constants.dart';
+import '../../data/datasources/media/media_local_data.dart';
 import '../../data/datasources/poses/pose_local_data.dart';
 import '../../data/models/flow_model.dart';
 import '../../data/models/flow_pose_model.dart';
+import '../../data/models/media_model.dart';
 import '../entities/pose_entity.dart';
 import '../mappers/flow_mapper.dart';
 import 'package:frontend/data/datasources/flow_poses/flow_pose_local_data.dart';
@@ -21,12 +24,14 @@ class FlowPoseRepository {
   final FlowPoseRemoteDataSource remoteDataSource;
   final PoseLocalDataSource poseLocalDataSource;
   final TransitionLocalDataSource transitionLocalDataSource;
+  final MediaLocalDataSource mediaLocalDataSource;
 
   FlowPoseRepository({
     required this.localDataSource,
     required this.remoteDataSource,
     required this.poseLocalDataSource,
     required this.transitionLocalDataSource,
+    required this.mediaLocalDataSource,
   });
 
   /// Create a new flow pose (tries remote first, fallback to local if offline)
@@ -38,6 +43,7 @@ class FlowPoseRepository {
     required String token,
   }) async {
     try {
+      // 1. Create remotely
       final createdModel = await remoteDataSource.createFlowPose(
         flowId: flowId,
         poseId: poseId,
@@ -46,26 +52,48 @@ class FlowPoseRepository {
         token: token,
       );
 
+      // 2. Save locally
       await localDataSource.insertFlowPose(createdModel);
 
+      // 3. Get pose model
       final poseModel = await poseLocalDataSource.getPoseById(poseId);
       if (poseModel == null) {
         throw Exception('Pose not found locally for poseId $poseId');
       }
 
+      // 4. Get transition model (optional)
       final TransitionModel? transitionModel = createdModel.transitionId != null
           ? await transitionLocalDataSource.getTransitionById(createdModel.transitionId!)
           : null;
 
+      // 5. Get media path for the pose
+      final mediaList = await mediaLocalDataSource.getPoseMedia();
+      final mediaPath = mediaList
+          .firstWhere(
+            (m) => m.id == poseModel.primaryImageId,
+        orElse: () => MediaModel(
+          id: '',
+          path: Constants.missingImagePath,
+          type: '',
+          uploadedBy: '',
+          uploadedAt: DateTime.now(),
+          isSynced: 1,
+        ),
+      )
+          .path;
+
+      // 6. Map everything to entity
       return FlowPoseMapper.modelToEntity(
         model: createdModel,
         poseModel: poseModel,
         transitionModel: transitionModel,
+        mediaPath: mediaPath,
       );
     } catch (e) {
       rethrow;
     }
   }
+
 
   /// Insert a list of flow pose entities
   Future<void> insertFlowPoses(List<FlowPoseEntity> entities) async {
@@ -74,14 +102,13 @@ class FlowPoseRepository {
   }
 
 
-
   /// Fetch all flow poses from local DB
   Future<List<FlowPoseEntity>> getLocalFlowPoses() async {
     print("Fetching Flow Pose Models from Local Database");
     final flowPoseModels = await localDataSource.getFlowPoses();
 
     print("Preparing corresponding Pose Models from Local Database");
-    final poseIds = flowPoseModels.map((fp) => fp.poseId).toList();
+    final poseIds = flowPoseModels.map((fp) => fp.poseId).toSet().toList();
     final poseModels = await poseLocalDataSource.getPosesByIds(poseIds);
     final poseMap = {for (var pose in poseModels) pose.id: pose};
 
@@ -91,9 +118,12 @@ class FlowPoseRepository {
         .cast<String>()
         .toSet()
         .toList();
-
     final transitionModels = await transitionLocalDataSource.getTransitionsByIds(transitionIds);
     final transitionMap = {for (var t in transitionModels) t.id: t};
+
+    // Load media and map pose ID -> path
+    final mediaList = await mediaLocalDataSource.getPoseMedia();
+    final mediaMap = {for (var m in mediaList) m.id: m.path};
 
     print("Converting to Flow Pose Models to Entities");
     return flowPoseModels.map((flowPose) {
@@ -106,13 +136,17 @@ class FlowPoseRepository {
           ? transitionMap[flowPose.transitionId!]
           : null;
 
+      final mediaPath = mediaMap[poseModel.primaryImageId] ?? Constants.missingImagePath;
+
       return FlowPoseMapper.modelToEntity(
         model: flowPose,
         poseModel: poseModel,
         transitionModel: transitionModel,
+        mediaPath: mediaPath,
       );
     }).toList();
   }
+
   // TODO : see if needed (this will stop gracefully if a pose is not found:
 //   final List<FlowPoseEntity> flowPoseEntities = [];
 //
@@ -191,7 +225,10 @@ class FlowPoseRepository {
   Future<List<PoseEntity>> getAllLocalPoses() async {
     print("Fetching PoseModels for Flow Cubit");
     final poseModels = await poseLocalDataSource.getAllPoses();
-    return PoseMapper.modelsToEntities(poseModels);
+    final mediaList = await mediaLocalDataSource.getPoseMedia();
+
+    return PoseMapper.modelsToEntities(poseModels, mediaList);
   }
+
 
 }

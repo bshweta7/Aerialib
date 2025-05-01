@@ -49,7 +49,12 @@ class FlowMapper {
       final poseModel = await getPoseById(model.poseId);
       if (poseModel != null) {
         flowPoseEntities.add(
-          FlowPoseMapper.modelToEntity(model: model, poseModel: poseModel),
+          FlowPoseMapper.modelToEntity(
+              model: model,
+              poseModel: poseModel,
+              mediaPath: thumbnailImagePath,
+              // TODO transitionModel: transitionModel
+          ),
         );
       }
     }
