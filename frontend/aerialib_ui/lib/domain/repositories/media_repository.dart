@@ -29,8 +29,6 @@ class MediaRepository {
   /// Create a new media (tries remote first, fallback to local if offline)
   Future<MediaEntity> createMedia({
     required String path,
-    required String type,
-    int? fileSize,
     String? primaryMedia,
     String? name,
     String? description,

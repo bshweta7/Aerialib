@@ -29,29 +29,34 @@ class MediaCubit extends Cubit<MediaState>{
 
   /// Create a new media
   Future<void> createNewMedia({
-    required String mediaPath, // TODO Change to path OR MEDIAPATH
-    required String name,
-    required String description,
-    required String apparatus,
+    required String path,
+    String? name,
+    String? description,
+    String? apparatus,
+    String? primaryMedia, // e.g. 'pose', 'flow', etc.
     required String uploadedBy,
     required String token,
   }) async {
     try {
       emit(const MediaLoading());
-      MediaEntity media = await _mediaRepository.createMedia(
-        mediaPath: mediaPath,
-        name: name,
-        description: description,
-        apparatus: apparatus,
+
+      final media = await _mediaRepository.createMedia(
+        path: path,
+        name: name ?? '',
+        description: description ?? '',
+        apparatus: apparatus ?? '',
         uploadedBy: uploadedBy,
         token: token,
+        primaryMedia: primaryMedia,
       );
+
       emit(AddNewMediaSuccess(media));
     } catch (e) {
-      print(e.toString());
+      print("Error creating media: $e");
       emit(MediaError(e.toString()));
     }
   }
+
 
   /// Fetch all medias (from local storage or remote if needed)
   Future<void> getAllMedias({required String token}) async {

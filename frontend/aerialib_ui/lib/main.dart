@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/data/datasources/transitions/transition_local_data.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -58,6 +59,7 @@ Future<void> main() async {
   final poseRepo = PoseRepository(
     localDataSource: PoseLocalDataSource(),
     remoteDataSource: PoseRemoteDataSource(httpService: HttpService()),
+    mediaLocalDataSource: MediaLocalDataSource(),
   );
 
   final userRepo = UserRepository(
@@ -68,12 +70,15 @@ Future<void> main() async {
   final flowRepo = FlowRepository(
     localDataSource: FlowLocalDataSource(),
     remoteDataSource: FlowRemoteDataSource(httpService: HttpService()),
+    mediaLocalDataSource: MediaLocalDataSource(),
   );
 
   final flowPoseRepo = FlowPoseRepository(
     localDataSource: FlowPoseLocalDataSource(),
     remoteDataSource: FlowPoseRemoteDataSource(httpService: HttpService()),
     poseLocalDataSource: PoseLocalDataSource(),
+    transitionLocalDataSource: TransitionLocalDataSource(),
+    mediaLocalDataSource: MediaLocalDataSource(),
   );
 
   final mediaRepo = MediaRepository(

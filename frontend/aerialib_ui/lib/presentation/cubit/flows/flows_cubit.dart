@@ -1,12 +1,12 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
+import 'package:frontend/domain/entities/flow_pose_entity.dart';
+
 import 'package:frontend/domain/repositories/flow_repository.dart';
 import 'package:frontend/domain/repositories/flow_pose_repository.dart';
-import 'package:uuid/uuid.dart';
-
-import 'package:frontend/domain/entities/flow_pose_entity.dart';
 
 part 'flows_state.dart';
 
@@ -39,19 +39,31 @@ class FlowsCubit extends Cubit<FlowsState> {
   Future<void> createNewFlow({
     required String name,
     required String description,
+    String? teachingCues,
+    String? safetyCues,
+    String? progressions,
     required String apparatus,
+    required double level,
+    required String thumbnailImageId,
     required String createdBy,
     required String token,
   }) async {
     try {
       emit(const FlowLoading());
+
       final flow = await _flowRepository.createFlow(
         name: name,
         description: description,
+        teachingCues: teachingCues,
+        safetyCues: safetyCues,
+        progressions: progressions,
         apparatus: apparatus,
+        level: level,
+        thumbnailImageId: thumbnailImageId,
         createdBy: createdBy,
         token: token,
       );
+
       emit(AddNewFlowSuccess(flow));
     } catch (e) {
       print("Error creating flow: $e");

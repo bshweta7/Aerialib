@@ -46,3 +46,11 @@ class PoseError extends PosesState {
   @override
   List<Object?> get props => [message];
 }
+
+class DeletePoseSuccess extends PosesState {
+  final String deletedPoseId;
+  const DeletePoseSuccess(this.deletedPoseId);
+
+  @override
+  List<Object?> get props => [deletedPoseId];
+}

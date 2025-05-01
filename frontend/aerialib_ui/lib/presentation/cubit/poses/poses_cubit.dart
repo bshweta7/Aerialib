@@ -19,28 +19,34 @@ class PosesCubit extends Cubit<PosesState> {
   Future<void> createNewPose({
     required String name,
     required String description,
-    required String cues,
+    String? teachingCues,
+    String? safetyCues,
+    String? progressions,
     required String apparatus,
-    required int level,
+    required double level,
     required String primaryImageId,
     required String token,
     required String createdBy,
   }) async {
     try {
       emit(const PoseLoading());
-      PoseEntity pose = await _poseRepository.createPose(
+
+      final pose = await _poseRepository.createPose(
         name: name,
         description: description,
-        cues: cues,
+        teachingCues: teachingCues,
+        safetyCues: safetyCues,
+        progressions: progressions,
         apparatus: apparatus,
         level: level,
         primaryImageId: primaryImageId,
         token: token,
         createdBy: createdBy,
       );
+
       emit(AddNewPoseSuccess(pose));
     } catch (e) {
-      print(e.toString());
+      print("Error creating pose: $e");
       emit(PoseError(e.toString()));
     }
   }
@@ -111,6 +117,21 @@ class PosesCubit extends Cubit<PosesState> {
       emit(PoseError(e.toString()));
     }
   }
+
+  /// Delete a pose locally
+  Future<void> deletePose(String poseId) async {
+    try {
+      emit(const PoseLoading());
+      await _poseRepository.deletePose(poseId);
+      // Optionally: refetch or emit success directly
+      final poses = await _poseRepository.getAllPoses();
+      emit(DeletePoseSuccess(poseId));
+    } catch (e) {
+      print("Error deleting pose: $e");
+      emit(PoseError("Error deleting pose: $e"));
+    }
+  }
+
 }
 
 
