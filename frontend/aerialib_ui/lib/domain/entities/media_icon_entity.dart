@@ -5,6 +5,8 @@ class MediaIconEntity {
   final MediaType type; // Enum to differentiate between Flow and Pose
   final dynamic data; // TODO - Optional: Hold the original Flow or Pose object if needed for specific actions
 
+  // TODO add alt text
+
   MediaIconEntity({
     required this.imageUrl,
     required this.title,

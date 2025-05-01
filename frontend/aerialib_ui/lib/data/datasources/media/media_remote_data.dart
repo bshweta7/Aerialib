@@ -12,20 +12,24 @@ class MediaRemoteDataSource {
   
   Future<MediaModel> createMedia({
     required String mediaPath,
-    required String name,
-    required String description,
-    required String apparatus,
+    required String mediaType,
+    int? fileSize,
+    String? primaryMedia,
+    String? name,
+    String? description,
+    String? apparatus,
     required String uploadedBy,
     required String token,
-
   }) async {
-
     final body = {
-      'mediaPath': mediaPath,
-      'name': name,
-      'description': description,
-      'apparatus': apparatus,
-      'uploadedBy': uploadedBy,
+      'media_path': mediaPath,
+      'media_type': mediaType,
+      if (fileSize != null) 'file_size': fileSize,
+      if (primaryMedia != null) 'primary_media': primaryMedia,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (apparatus != null) 'apparatus': apparatus,
+      'uploaded_by': uploadedBy,
     };
 
     try {
@@ -43,9 +47,12 @@ class MediaRemoteDataSource {
       return MediaModel(
         id: const Uuid().v6(),
         path: mediaPath,
-        name: name,
-        description: description,
-        apparatus: apparatus,
+        type: mediaType,
+        fileSize: fileSize,
+        primaryMedia: primaryMedia,
+        name: name ?? '',
+        description: description ?? '',
+        apparatus: apparatus ?? '',
         uploadedBy: uploadedBy,
         uploadedAt: DateTime.now(),
         isSynced: 0,
