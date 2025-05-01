@@ -20,36 +20,36 @@ class AddNewPosePage extends StatefulWidget {
 }
 
 class _AddNewPosePageState extends State<AddNewPosePage> {
+  final formKey = GlobalKey<FormState>();
+
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController cuesController = TextEditingController();
+  TextEditingController teachingCuesController = TextEditingController();
+  TextEditingController safetyCuesController = TextEditingController();
+  TextEditingController progressionsController = TextEditingController();
   TextEditingController apparatusController = TextEditingController();
   TextEditingController levelController = TextEditingController();
-  // TextEditingController thumbnailURLController = TextEditingController();
-
-  final formKey = GlobalKey<FormState>();
 
   void createNewPose() async {
     if (formKey.currentState!.validate()) {
-      AuthLoggedIn user = context
-          .read<AuthCubit>()
-          .state as AuthLoggedIn;
-      int? level = int.tryParse(
-          levelController.text.trim()); // Parse level to int
+      final user = context.read<AuthCubit>().state as AuthLoggedIn;
+      final level = double.tryParse(levelController.text.trim());
 
-      if (level != null) { // Check if level is a valid integer
+      if (level != null) {
         await context.read<PosesCubit>().createNewPose(
           name: nameController.text.trim(),
-          apparatus: apparatusController.text.trim(),
-          level: level, // Use the parsed integer
           description: descriptionController.text.trim(),
-          cues: cuesController.text.trim(),
+          teachingCues: teachingCuesController.text.trim(),
+          safetyCues: safetyCuesController.text.trim(),
+          progressions: progressionsController.text.trim(),
+          apparatus: apparatusController.text.trim(),
+          level: level,
           primaryImageId: Constants.missingImageId,
+          token: user.user.token,
+          createdBy: user.user.id,
           // TODO add upload image portion on create new pose page
           // TODO OR allow image selection
           // TODO this should be default to exclamation point
-          token: user.user.token,
-          createdBy: user.user.id,
         );
       }
     }
@@ -59,158 +59,117 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
-    // TODO add other controllers here
+    teachingCuesController.dispose();
+    safetyCuesController.dispose();
+    progressionsController.dispose();
+    apparatusController.dispose();
+    levelController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: const Text("Add New Pose"),
-        ),
+        appBar: AppBar(title: const Text("Add New Pose")),
         body: BlocConsumer<PosesCubit, PosesState>(
           listener: (context, state) {
             if (state is PoseError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text("There was an error adding the pose")
-                )
-                // SnackBar(content: Text(state.error))
+                const SnackBar(content: Text("There was an error adding the pose")),
               );
             } else if (state is AddNewPoseSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Pose added successfully"))
+                const SnackBar(content: Text("Pose added successfully")),
               );
               Navigator.pushAndRemoveUntil(
-                  context,
-                  HomePage.route(),
-                      (_) => false
-                  // TODO should this go to pose specific PoseViewPage instead?
+                context,
+                HomePage.route(),
+                    (_) => false,
+                    // TODO should this go to pose specific page instead?
               );
             }
           },
           builder: (context, state) {
-            if(state is PoseLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+            if (state is PoseLoading) {
+              return const Center(child: CircularProgressIndicator());
             }
+
             return Padding(
               padding: const EdgeInsets.all(20),
               child: Form(
                 key: formKey,
-                child: Column( // TODO expanded widget here???
-                    children: [
-                      // Name Textbox
-                      TextFormField(
-                        controller: nameController,
-                        decoration: const InputDecoration(
-                          hintText: 'Pose Name',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Name cannot be empty";
-                          } else {
-                            return null;
-                          }
-                        },
+                child: ListView(
+                  children: [
+                    _inputField("Pose Name", nameController, required: true),
+                    const SizedBox(height: 10),
+                    _dropdownField(
+                      label: "Apparatus",
+                      controller: apparatusController,
+                      options: const ['Lyra', 'Hammock'],
+                    ),
+                    const SizedBox(height: 10),
+                    _dropdownField(
+                      label: "Level",
+                      controller: levelController,
+                      options: const ['0', '1', '2', '3', '4'],
+                    ),
+                    const SizedBox(height: 10),
+                    _inputField("Description", descriptionController, maxLines: 2),
+                    const SizedBox(height: 10),
+                    _inputField("Teaching Cues", teachingCuesController, maxLines: 2),
+                    const SizedBox(height: 10),
+                    _inputField("Safety Cues", safetyCuesController, maxLines: 2),
+                    const SizedBox(height: 10),
+                    _inputField("Progressions", progressionsController, maxLines: 2),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: createNewPose,
+                      child: const Text(
+                        "SUBMIT",
+                        style: TextStyle(fontSize: 18),
                       ),
-                      const SizedBox(height: 10,),
-
-                      // Apparatus Dropdown
-                      DropdownButtonFormField<String>(
-                        value: apparatusController.text.isNotEmpty ? apparatusController.text : null,
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            apparatusController.text = newValue;
-                          }
-                        },
-                        items: <String>['Lyra', 'Hammock']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'Apparatus',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select an apparatus';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Level Dropdown
-                      DropdownButtonFormField<int>(
-                        value: levelController.text.isNotEmpty ? int.tryParse(levelController.text) : null,
-                        onChanged: (int? newValue) {
-                          if (newValue != null) {
-                            levelController.text = newValue.toString();
-                          }
-                        },
-                        items: <int>[0, 1, 2, 3, 4,]
-                            .map<DropdownMenuItem<int>>((int value) {
-                          return DropdownMenuItem<int>(
-                            value: value,
-                            child: Text(value.toString()),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'Level',
-                        ),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select a level';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Description Textbox
-                      TextFormField(
-                        controller: descriptionController,
-                        decoration: const InputDecoration(
-                          hintText: 'Description',
-                        ),
-                        maxLines: 2,
-                      ),
-                      const SizedBox(height: 10,),
-
-                      // Cues Textbox
-                      TextFormField(
-                        controller: cuesController,
-                        decoration: const InputDecoration(
-                          hintText: 'Cues',
-                        ),
-                        maxLines: 3,
-                      ),
-                      const SizedBox(height: 10,),
-
-
-                      const SizedBox(height: 10,),
-                      ElevatedButton(
-                          onPressed: createNewPose,
-                          child: const Text(
-                              "SUBMIT",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.normal
-                              )
-                          )
-                      ),
-                    ]
+                    ),
+                  ],
                 ),
               ),
             );
           },
-        )
+        ),
+    );
+  }
+
+  Widget _inputField(String label, TextEditingController controller,
+      {int maxLines = 1, bool required = false}) {
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      decoration: InputDecoration(hintText: label),
+      validator: (value) {
+        if (required && (value == null || value.trim().isEmpty)) {
+          return "$label cannot be empty";
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _dropdownField({
+    required String label,
+    required TextEditingController controller,
+    required List<String> options,
+  }) {
+    return DropdownButtonFormField<String>(
+      value: controller.text.isNotEmpty ? controller.text : null,
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          controller.text = newValue;
+        }
+      },
+      items: options.map((value) {
+        return DropdownMenuItem(value: value, child: Text(value));
+      }).toList(),
+      decoration: InputDecoration(labelText: label),
+      validator: (value) => value == null || value.isEmpty ? 'Please select $label' : null,
     );
   }
 }

@@ -16,27 +16,15 @@ class PoseDetailsPage extends StatefulWidget {
 }
 
 class _PoseDetailsPageState extends State<PoseDetailsPage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController cuesController = TextEditingController();
-  TextEditingController apparatusController = TextEditingController();
-  TextEditingController levelController = TextEditingController();
-  // TextEditingController thumbnailURLController = TextEditingController();
-
   final formKey = GlobalKey<FormState>();
 
   @override
-  void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final pose = widget.pose;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.pose.name),
+        title: Text(pose.name),
         // actions: [
         //   IconButton(
         //     icon: const Icon(Icons.edit),
@@ -56,90 +44,55 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Main Image
             Expanded(
-              child: FormattedCachedNetworkImage( // TODO compare to customized version in ToSort folder.
-                widget.pose.primaryImageUrl,
-              ),
+              child: FormattedCachedNetworkImage(pose.primaryMediaPath),
             ),
-
             const SizedBox(height: 20),
 
-            // // TODO Alternative Names
-            // Row(
-            //   children: [
-            //     Text("Alternative Names: "),
-            //     Text(widget.pose.alternativeNames)
-            //   ],
+            // Apparatus
+            _infoRow("Apparatus:", pose.apparatus),
 
             // Level
-            Row(
-              children: [
-                const Text(
-                  "Level: ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  )
-                ),
-                Text('Level ${widget.pose.level}')
-              ],
-            ),
-
-            // Apparatus
-            Row(
-              children: [
-                const Text(
-                  "Apparatus: ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  )
-                ),
-                Text(widget.pose.apparatus)
-              ],
-            ),
+            _infoRow("Level:", "Level ${pose.level}"),
 
             // Description
-            Row(
-              children: [
-                const Text(
-                  "Description: ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  )
-                ),
-                if (widget.pose.description != null)
-                  Text('${widget.pose.description}')
-                else
-                  const Text(
-                    'None',
-                    style: TextStyle(fontStyle: FontStyle.italic),
-                  ),
-              ],
-            ),
+            _infoRow("Description:", pose.description),
 
-            // Cues
-            Row(
-              children: [
-                const Text(
-                    "Cues: ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    )
-                ),
-                if (widget.pose.cues != null)
-                  Text('${widget.pose.cues}')
-                else
-                  const Text(
-                    'None',
-                    style: TextStyle(fontStyle: FontStyle.italic),
-                  ),
-              ],
-            ),
+            // Teaching Cues
+            _infoRow("Teaching Cues:", pose.teachingCues),
+
+            // Safety Cues
+            _infoRow("Safety Cues:", pose.safetyCues),
+
+            // Progressions
+            _infoRow("Progressions:", pose.progressions),
           ],
-        )
-          // TODO Make a media slider for this page
-          // TODO media icon name should be more discrete - in dark translucent bar on bottom maybe?
-          // TODO Rename pose name to "original name by manual" if default, or "original name by _username_" if user uploaded
+        ),
       )
+    );
+  }
+
+  Widget _infoRow(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "$label ",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Expanded(
+            child: Text(
+              value?.isNotEmpty == true ? value! : 'None',
+              style: value?.isNotEmpty == true
+                  ? null
+                  : const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -13,7 +13,7 @@ class PoseMapper {
     return PoseEntity(
       id: model.id,
       name: model.name,
-      primaryImageId: model.primaryImageId,
+      primaryMediaId: model.primaryImageId,
       primaryMediaPath: mediaPath ?? Constants.missingImagePath,
       apparatus: model.apparatus,
       level: model.level,
@@ -34,7 +34,7 @@ class PoseMapper {
     return PoseModel(
       id: entity.id,
       name: entity.name,
-      primaryImageId: entity.primaryImageId,
+      primaryImageId: entity.primaryMediaId,
       apparatus: entity.apparatus,
       level: entity.level,
       description: entity.description,

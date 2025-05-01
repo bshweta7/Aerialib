@@ -3,7 +3,7 @@
 class PoseEntity {
   final String id;
   final String name;
-  final String primaryImageId;
+  final String primaryMediaId;
   final String primaryMediaPath;
   final String apparatus;
   final double level;
@@ -20,7 +20,7 @@ class PoseEntity {
   const PoseEntity({
     required this.id,
     required this.name,
-    required this.primaryImageId,
+    required this.primaryMediaId,
     required this.primaryMediaPath,
     required this.apparatus,
     required this.level,
@@ -42,7 +42,7 @@ class PoseEntity {
               runtimeType == other.runtimeType &&
               id == other.id &&
               name == other.name &&
-              primaryImageId == other.primaryImageId &&
+              primaryMediaId == other.primaryMediaId &&
               primaryMediaPath == other.primaryMediaPath &&
               apparatus == other.apparatus &&
               level == other.level &&
@@ -60,7 +60,7 @@ class PoseEntity {
   int get hashCode =>
       id.hashCode ^
       name.hashCode ^
-      primaryImageId.hashCode ^
+      primaryMediaId.hashCode ^
       primaryMediaPath.hashCode ^
       apparatus.hashCode ^
       level.hashCode ^

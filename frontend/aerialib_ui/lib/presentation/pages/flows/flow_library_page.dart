@@ -74,9 +74,9 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   }
 
   // Navigation
-  void _navigateToFlowPage(FlowEntity flow) {
-    Navigator.push(context, FlowDetailsPage.route(flow));
-  }
+  // void _navigateToFlowPage(FlowEntity flow) {
+  //   Navigator.push(context, FlowDetailsPage.route(flow));
+  // }
 
   // TODO - should I use this function instead? void _navigateToMediaPage(MediaIconEntity mediaItem) {
   //   Navigator.push(
@@ -94,7 +94,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                Navigator.push(context, AddNewFlowPage.route());
+                // Navigator.push(context, AddNewFlowPage.route());
               },
               tooltip: 'Add a new flow',
             ),
@@ -138,14 +138,14 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                 // TODO filters section
 
                 // Search Bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: FlowSearchBarWidget(
-                    hintText: 'Search Flows',
-                    onSearchChanged: _updateSearchQuery,
-                    suggestionList: sortedFlows,
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                //   child: FlowSearchBarWidget(
+                //     hintText: 'Search Flows',
+                //     onSearchChanged: _updateSearchQuery,
+                //     suggestionList: sortedFlows,
+                //   ),
+                // ),
 
                 const SizedBox(height: 15,),
 
@@ -159,7 +159,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                             MediaList(
                               mediaItems: mediaItems,
                               onMediaTap: (mediaItem) {
-                                _navigateToFlowPage(mediaItem.data as FlowEntity);
+                                // _navigateToFlowPage(mediaItem.data as FlowEntity);
                               }, // TODO verify - this doesnt align exactly with the pose library page
                             ),
                           ],
