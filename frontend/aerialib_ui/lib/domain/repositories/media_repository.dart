@@ -4,6 +4,8 @@ import 'package:frontend/data/models/media_model.dart';
 import 'package:frontend/domain/entities/media_entity.dart';
 
 import '../mappers/media_mapper.dart';
+import 'dart:io';
+import 'package:mime/mime.dart';
 
 class MediaRepository {
   final MediaLocalDataSource localDataSource;
@@ -13,6 +15,16 @@ class MediaRepository {
     required this.localDataSource,
     required this.remoteDataSource,
   });
+
+  String? _getMediaTypeFromPath(String path) {
+    final mimeType = lookupMimeType(path);
+    return mimeType?.split('/').first;
+  }
+
+  Future<int> _getFileSizeInBytes(String filePath) async {
+    final file = File(filePath);
+    return await file.length();
+  }
 
   /// Create a new media (tries remote first, fallback to local if offline)
   Future<MediaEntity> createMedia({
@@ -26,6 +38,10 @@ class MediaRepository {
     required String uploadedBy,
     required String token,
   }) async {
+
+    final type = _getMediaTypeFromPath(path) ?? 'unknown';
+    final fileSize = await _getFileSizeInBytes(path);
+
     try {
       final mediaModel = await remoteDataSource.createMedia(
         path: path,
