@@ -4,7 +4,6 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/auth/signup_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 
-// TODO set up username and allow login from username OR email
 // TODO allow tab to go from username textbox to password textbox
 // TODO arrows don't work in textboxes?
 
@@ -21,13 +20,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    emailController.dispose();
+    usernameController.dispose();
     passwordController.dispose();
     // formKey.currentState.validate()
     super.dispose();
@@ -37,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     if (formKey.currentState!.validate()) {
       // store the user data and call nodeJS express
       context.read<AuthCubit>().login(
-        email: emailController.text.trim(),
+        username: usernameController.text.trim(),
         password: passwordController.text.trim(),
       );
     }
@@ -93,18 +92,19 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 30,),
 
                   TextFormField(
-                    controller: emailController,
+                    controller: usernameController,
                     decoration: const InputDecoration(
-                      hintText: 'Email',
+                      hintText: 'Username',
                     ),
                     validator: (value) {
                       if(value == null ||
                           value.trim().isEmpty) {
-                        return "Email field cannot be empty!";
+                        return "Username field cannot be empty!";
                       }
-                      if(!value.trim().contains("@")) {
-                        return "Email is invalid!"; //TODO use real regex
-                      }
+                      // TODO function to check if username is valid
+                      // if(!value.trim().contains("@")) {
+                      //   return "Email is invalid!"; //TODO use real regex
+                      // }
                       return null;
                     },
                   ),

@@ -16,16 +16,16 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final nameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
+    usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    nameController.dispose();
     // formKey.currentState.validate()
     super.dispose();
   }
@@ -34,7 +34,7 @@ class _SignupPageState extends State<SignupPage> {
     if (formKey.currentState!.validate()) {
       // store the user data and call nodeJS express
       context.read<AuthCubit>().signUp(
-        name: nameController.text.trim(),
+        username: usernameController.text.trim(),
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
@@ -83,13 +83,13 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   const SizedBox(height: 30,),
                   TextFormField(
-                    controller: nameController,
+                    controller: usernameController,
                     decoration: const InputDecoration(
-                      hintText: 'Name',
+                      hintText: 'Username',
                     ),
                     validator: (value) {
                       if(value == null || value.trim().isEmpty) {
-                        return "Name field cannot be empty!";
+                        return "Username field cannot be empty!";
                       }
                       return null;
                     },
