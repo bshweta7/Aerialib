@@ -11,16 +11,23 @@ import '../entities/flow_pose_entity.dart';
 import 'flow_pose_mapper.dart';
 
 class FlowMapper {
-
   /// Converts a FlowModel to a FlowEntity with empty poses.
-  static FlowEntity modelToEntityMetaDataOnly(FlowModel flowModel) {
+  static FlowEntity modelToEntityMetaDataOnly(
+      FlowModel flowModel, {
+        required String thumbnailImagePath,
+      }) {
     return FlowEntity(
       id: flowModel.id,
       name: flowModel.name,
-      description: flowModel.description,
+      thumbnailImageId: flowModel.thumbnailImageId,
+      thumbnailImagePath: thumbnailImagePath,
       apparatus: flowModel.apparatus,
+      level: flowModel.level,
+      description: flowModel.description,
+      teachingCues: flowModel.teachingCues,
+      safetyCues: flowModel.safetyCues,
+      progressions: flowModel.progressions,
       poses: [],
-      // Empty, to be filled later
       createdBy: flowModel.createdBy,
       updatedBy: flowModel.updatedBy,
       createdAt: flowModel.createdAt,
@@ -29,12 +36,12 @@ class FlowMapper {
     );
   }
 
-  /// Converts a FlowModel to a FlowEntity.
-  /// Requires the list of associated PoseModels, already ordered.
+  /// Converts a FlowModel to a full FlowEntity with ordered pose data.
   static Future<FlowEntity> modelToFullEntity({
     required FlowModel flowModel,
     required List<FlowPoseModel> flowPoseModels,
     required Future<PoseModel?> Function(String id) getPoseById,
+    required String thumbnailImagePath,
   }) async {
     final List<FlowPoseEntity> flowPoseEntities = [];
 
@@ -50,8 +57,14 @@ class FlowMapper {
     return FlowEntity(
       id: flowModel.id,
       name: flowModel.name,
-      description: flowModel.description,
+      thumbnailImageId: flowModel.thumbnailImageId,
+      thumbnailImagePath: thumbnailImagePath,
       apparatus: flowModel.apparatus,
+      level: flowModel.level,
+      description: flowModel.description,
+      teachingCues: flowModel.teachingCues,
+      safetyCues: flowModel.safetyCues,
+      progressions: flowModel.progressions,
       poses: flowPoseEntities,
       createdBy: flowModel.createdBy,
       updatedBy: flowModel.updatedBy,
@@ -61,24 +74,22 @@ class FlowMapper {
     );
   }
 
-
   /// Converts a FlowEntity to a FlowModel (metadata only)
   static FlowModel entityToModel(FlowEntity entity) {
-    final primaryImageId = entity.poses.isNotEmpty ? entity.poses.first.pose.primaryImageId : '';
-    final primaryImageUrl = entity.poses.isNotEmpty ? entity.poses.first.pose.primaryImageUrl : Constants.missingImagePath;
-
-
     return FlowModel(
       id: entity.id,
       name: entity.name,
-      description: entity.description,
+      thumbnailImageId: entity.thumbnailImageId,
       apparatus: entity.apparatus,
+      level: entity.level,
+      description: entity.description,
+      teachingCues: entity.teachingCues,
+      safetyCues: entity.safetyCues,
+      progressions: entity.progressions,
       createdBy: entity.createdBy,
       updatedBy: entity.updatedBy,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
-      primaryImageId: primaryImageId,
-      primaryImageUrl: primaryImageUrl,
       isSynced: entity.isSynced,
     );
   }

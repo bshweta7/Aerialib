@@ -3,27 +3,36 @@ import 'dart:convert';
 class FlowModel {
   final String id;
   final String name;
+  final String thumbnailImageId;
+  final String apparatus;
+  final double level;
+
   final String? description;
-  final String? apparatus;
+  final String? teachingCues;
+  final String? safetyCues;
+  final String? progressions;
+
   final String createdBy;
   final String? updatedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String primaryImageId;
-  final String primaryImageUrl;
+
   final int isSynced;
 
   const FlowModel({
     required this.id,
     required this.name,
+    required this.thumbnailImageId,
+    required this.apparatus,
+    required this.level,
     this.description,
-    this.apparatus,
+    this.teachingCues,
+    this.safetyCues,
+    this.progressions,
     required this.createdBy,
     this.updatedBy,
     required this.createdAt,
     required this.updatedAt,
-    this.primaryImageId = '',
-    this.primaryImageUrl = '',
     required this.isSynced,
   });
 
@@ -31,13 +40,20 @@ class FlowModel {
     return FlowModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
+      thumbnailImageId: map['thumbnail_image_id'] ?? '',
+      apparatus: map['apparatus'] ?? '',
+      level: (map['level'] as num).toDouble(),
+
       description: map['description'],
-      apparatus: map['apparatus'],
+      teachingCues: map['teaching_cues'],
+      safetyCues: map['safety_cues'],
+      progressions: map['progressions'],
+
       createdBy: map['created_by'] ?? '',
       updatedBy: map['updated_by'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
-      isSynced: map['is_synced'] ?? 0, // Default to synced if not present
+      isSynced: map['is_synced'] ?? 0,
     );
   }
 
@@ -45,14 +61,17 @@ class FlowModel {
     return {
       'id': id,
       'name': name,
-      'description': description,
+      'thumbnail_image_id': thumbnailImageId,
       'apparatus': apparatus,
+      'level': level,
+      'description': description,
+      'teaching_cues': teachingCues,
+      'safety_cues': safetyCues,
+      'progressions': progressions,
       'created_by': createdBy,
       'updated_by': updatedBy,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
-      'primary_image_id': primaryImageId,
-      'primary_image_url': primaryImageUrl,
       'is_synced': isSynced,
     };
   }

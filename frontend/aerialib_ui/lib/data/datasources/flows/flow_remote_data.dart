@@ -12,21 +12,29 @@ class FlowRemoteDataSource {
   /// Create and return FlowModel
   Future<FlowModel> createFlow({
     required String name,
-    required String description,
+    required String thumbnailImageId,
     required String apparatus,
+    required double level,
+    String? description,
+    String? teachingCues,
+    String? safetyCues,
+    String? progressions,
     required String createdBy,
     required String token,
   }) async {
-
     final body = {
       'name': name,
-      'description': description,
+      'thumbnail_image_id': thumbnailImageId,
       'apparatus': apparatus,
-      'createdBy': createdBy,
+      'level': level,
+      'description': description,
+      'teaching_cues': teachingCues,
+      'safety_cues': safetyCues,
+      'progressions': progressions,
+      'created_by': createdBy,
     };
 
     try {
-      // first try POST into backend.
       final response = await httpService.post(
         path: "/flows",
         token: token,
@@ -34,14 +42,18 @@ class FlowRemoteDataSource {
       );
 
       return FlowModel.fromJson(response.body);
-
     } catch (e) {
       // Fallback: construct a local unsynced FlowModel
       return FlowModel(
         id: const Uuid().v6(),
         name: name,
-        description: description,
+        thumbnailImageId: thumbnailImageId,
         apparatus: apparatus,
+        level: level,
+        description: description,
+        teachingCues: teachingCues,
+        safetyCues: safetyCues,
+        progressions: progressions,
         createdBy: createdBy,
         updatedBy: createdBy,
         createdAt: DateTime.now(),
@@ -70,13 +82,12 @@ class FlowRemoteDataSource {
     required List<FlowModel> flows,
   }) async {
     final List<Map<String, dynamic>> flowListInMap = flows.map((flow) => flow.toMap()).toList();
-    print(flowListInMap);
+
     final response = await httpService.post(
       path: "/flows/sync",
       token: token,
       body: flowListInMap,
     );
-    print(response);
 
     return response.statusCode == 201;
   }

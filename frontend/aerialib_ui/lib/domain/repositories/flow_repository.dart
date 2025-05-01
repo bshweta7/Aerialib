@@ -1,53 +1,77 @@
 import 'package:frontend/data/datasources/flows/flow_local_data.dart';
 import 'package:frontend/data/datasources/flows/flow_remote_data.dart';
+import 'package:frontend/data/datasources/media/media_local_data.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:frontend/data/models/flow_model.dart';
+import 'package:frontend/data/models/media_model.dart';
+import 'package:frontend/domain/mappers/flow_mapper.dart';
 
-import '../../data/models/flow_model.dart';
-import '../mappers/flow_mapper.dart';
+import '../../core/constants/constants.dart';
 
 class FlowRepository {
   final FlowLocalDataSource localDataSource;
   final FlowRemoteDataSource remoteDataSource;
+  final MediaLocalDataSource mediaLocalDataSource;
 
   FlowRepository({
     required this.localDataSource,
     required this.remoteDataSource,
+    required this.mediaLocalDataSource,
   });
 
   /// Create a new flow (tries remote first, fallback to local if offline)
   Future<FlowEntity> createFlow({
     required String name,
-    required String description,
+    String? description,
+    String? teachingCues,
+    String? safetyCues,
+    String? progressions,
     required String apparatus,
+    required double level,
+    required String thumbnailImageId,
     required String createdBy,
     required String token,
   }) async {
     try {
-      // Create remotely
       final flowModel = await remoteDataSource.createFlow(
         name: name,
         description: description,
+        teachingCues: teachingCues,
+        safetyCues: safetyCues,
+        progressions: progressions,
         apparatus: apparatus,
-        createdBy: createdBy, 
+        level: level,
+        thumbnailImageId: thumbnailImageId,
+        createdBy: createdBy,
         token: token,
       );
       await localDataSource.insertFlow(flowModel);
 
-      return FlowMapper.modelToEntityMetaDataOnly(flowModel);
+      final mediaList = await mediaLocalDataSource.getPoseMedia();
+      final imagePath = mediaList
+          .firstWhere(
+            (m) => m.id == flowModel.thumbnailImageId,
+        orElse: () => MediaModel(path: Constants.missingImagePath, type: '', uploadedBy: '', uploadedAt: DateTime.now(), id: '', isSynced: 0),
+      )
+          .path;
+
+      return FlowMapper.modelToEntityMetaDataOnly(flowModel, thumbnailImagePath: imagePath);
     } catch (e) {
-      // TODO: Handle offline fallback or local-only mode if needed
       rethrow;
     }
   }
 
-
   /// Fetch all flows from local DB - initialize poses as []
   Future<List<FlowEntity>> getLocalFlows() async {
-    print("Fetching Flow Models from Local Database");
     final flowModels = await localDataSource.getFlows();
-    print("Converting to Flow Models to Entities (where poses is empty)");
+    final mediaList = await mediaLocalDataSource.getPoseMedia();
+    final mediaMap = {
+      for (var m in mediaList) m.id: m.path,
+    };
+
     return flowModels.map((model) {
-      return FlowMapper.modelToEntityMetaDataOnly(model);
+      final imagePath = mediaMap[model.thumbnailImageId] ?? Constants.missingImagePath;
+      return FlowMapper.modelToEntityMetaDataOnly(model, thumbnailImagePath: imagePath);
     }).toList();
   }
 
@@ -57,31 +81,24 @@ class FlowRepository {
     await localDataSource.insertFlows(flowModels);
   }
 
-
   /// Send unsynced local flows to remote, and mark them as synced
   Future<void> syncLocalToRemote(String token) async {
     final List<FlowModel> unsynced = await localDataSource.getUnsyncedFlows();
-    if (unsynced.isEmpty) {
-      return;
-    }
+    if (unsynced.isEmpty) return;
 
-    print("Retrieved unsynced flows from local");
     final success = await remoteDataSource.syncFlows(
       token: token,
       flows: unsynced,
     );
-    print("Synced flows to remote");
 
     if (success) {
       for (final flow in unsynced) {
         await localDataSource.setSyncedStatus(flow.id, 1);
       }
-      print("Updated flows synced status to synced");
     }
   }
 
-
-  /// Update a pose remotely and locally
+  /// Update a flow remotely and locally
   Future<void> updateFlow({
     required FlowEntity updatedFlow,
     required String token,
