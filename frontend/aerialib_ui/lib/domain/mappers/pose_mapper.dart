@@ -6,7 +6,10 @@ import '../../data/models/media_model.dart';
 
 class PoseMapper {
   /// Convert a PoseModel to a PoseEntity
-  static PoseEntity modelToEntity(PoseModel model, String mediaPath) {
+  static PoseEntity modelToEntity(
+      PoseModel model,
+      String mediaPath
+      ) {
     return PoseEntity(
       id: model.id,
       name: model.name,
