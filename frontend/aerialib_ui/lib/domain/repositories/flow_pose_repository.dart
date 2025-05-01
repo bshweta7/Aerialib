@@ -7,8 +7,8 @@ import '../../data/models/flow_model.dart';
 import '../../data/models/flow_pose_model.dart';
 import '../entities/pose_entity.dart';
 import '../mappers/flow_mapper.dart';
-import 'package:frontend/data/datasources/flows/flow_pose_local_data.dart';
-import 'package:frontend/data/datasources/flows/flow_pose_remote_data.dart';
+import 'package:frontend/data/datasources/flow_poses/flow_pose_local_data.dart';
+import 'package:frontend/data/datasources/flow_poses/flow_pose_remote_data.dart';
 import 'package:frontend/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/domain/mappers/flow_pose_mapper.dart';
 
