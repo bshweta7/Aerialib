@@ -33,6 +33,7 @@ const String createMediaTable = '''
     
     media_type TEXT NOT NULL,
     file_size INTEGER,
+    primary_media TEXT,
     
     name TEXT,
     description TEXT,
