@@ -26,14 +26,14 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void signUp({
-    required String name,
+    required String username,
     required String email,
     required String password,
   }) async {
     try {
       emit(const AuthLoading());
       final userEntity = await _userRepository.signUp(
-        name: name,
+        username: username,
         email: email,
         password: password,
       );
@@ -44,13 +44,13 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void login({
-    required String email,
+    required String username,
     required String password,
   }) async {
     try {
       emit(const AuthLoading());
       final userEntity = await _userRepository.login(
-        email: email,
+        username: username,
         password: password,
       );
       emit(AuthLoggedIn(userEntity));

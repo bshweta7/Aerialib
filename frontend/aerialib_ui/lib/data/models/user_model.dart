@@ -4,7 +4,6 @@ class UserModel {
   final String id;
   final String username;
   final String email;
-  final String password; // Consider how you'll handle this in the model (e.g., not always included)
   final String? firstName;
   final String? lastName;
   final String? bio;
@@ -17,7 +16,6 @@ class UserModel {
     required this.id,
     required this.username,
     required this.email,
-    required this.password,
     this.firstName,
     this.lastName,
     this.bio,
@@ -31,7 +29,6 @@ class UserModel {
     String? id,
     String? username,
     String? email,
-    String? password,
     String? firstName,
     String? lastName,
     String? bio,
@@ -44,7 +41,6 @@ class UserModel {
       id: id ?? this.id,
       username: username ?? this.username,
       email: email ?? this.email,
-      password: password ?? this.password,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       bio: bio ?? this.bio,
@@ -60,7 +56,6 @@ class UserModel {
       'id': id,
       'username': username,
       'email': email,
-      'password': password,
       'firstName': firstName,
       'lastName': lastName,
       'bio': bio,
@@ -76,7 +71,6 @@ class UserModel {
       id: map['id'] ?? '',
       username: map['username'] ?? '',
       email: map['email'] ?? '',
-      password: map['password'] ?? '',
       firstName: map['firstName'],
       lastName: map['lastName'],
       bio: map['bio'],
@@ -94,7 +88,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, username: $username, email: $email, password: $password, firstName: $firstName, lastName: $lastName, bio: $bio, createdAt: $createdAt, updatedAt: $updatedAt, lastLogin: $lastLogin, token: $token)';
+    return 'UserModel(id: $id, username: $username, email: $email, firstName: $firstName, lastName: $lastName, bio: $bio, createdAt: $createdAt, updatedAt: $updatedAt, lastLogin: $lastLogin, token: $token)';
   }
 
   @override
@@ -104,7 +98,6 @@ class UserModel {
     return other.id == id &&
         other.username == username &&
         other.email == email &&
-        other.password == password &&
         other.firstName == firstName &&
         other.lastName == lastName &&
         other.bio == bio &&
@@ -119,7 +112,6 @@ class UserModel {
     return id.hashCode ^
     username.hashCode ^
     email.hashCode ^
-    password.hashCode ^
     firstName.hashCode ^
     lastName.hashCode ^
     bio.hashCode ^

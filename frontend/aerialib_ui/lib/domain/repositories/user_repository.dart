@@ -16,11 +16,15 @@ class UserRepository {
   UserEntity _userModelToEntity(UserModel userModel) {
     return UserEntity(
       id: userModel.id,
+      username: userModel.username,
       email: userModel.email,
-      name: userModel.name,
-      token: userModel.token,
+      firstName: userModel.firstName,
+      lastName: userModel.lastName,
+      bio: userModel.bio,
       createdAt: userModel.createdAt,
       updatedAt: userModel.updatedAt,
+      lastLogin: userModel.lastLogin,
+      token: userModel.token,
     );
   }
 
@@ -28,22 +32,26 @@ class UserRepository {
   UserModel _userEntityToModel(UserEntity userEntity) {
     return UserModel(
       id: userEntity.id,
+      username: userEntity.username,
       email: userEntity.email,
-      name: userEntity.name,
-      token: userEntity.token,
+      firstName: userEntity.firstName,
+      lastName: userEntity.lastName,
+      bio: userEntity.bio,
       createdAt: userEntity.createdAt,
       updatedAt: userEntity.updatedAt,
+      lastLogin: userEntity.lastLogin,
+      token: userEntity.token,
     );
   }
 
   /// Signs up a new user via the remote data source and saves the user locally upon success.
   Future<UserEntity> signUp({
-    required String name,
+    required String username,
     required String email,
     required String password,
   }) async {
     final userModel = await remoteDataSource.signUp(
-      name: name,
+      username: username,
       email: email,
       password: password,
     );
@@ -53,11 +61,11 @@ class UserRepository {
 
   /// Logs in an existing user via the remote data source and saves the user locally upon success.
   Future<UserEntity> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
     final userModel = await remoteDataSource.login(
-      email: email,
+      username: username,
       password: password,
     );
     await localDataSource.insertUser(userModel);
