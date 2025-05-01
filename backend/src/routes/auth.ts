@@ -109,7 +109,6 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
             firstName: existingUser.firstName,
             lastName: existingUser.lastName,
             bio: existingUser.bio,
-            preferences: existingUser.preferences,
         });
 
     } catch (e) {

@@ -12,13 +12,13 @@ class UserRemoteDataSource {
 
   /// Create new user
   Future<UserModel> signUp({
-    required String name,
+    required String username,
     required String email,
     required String password
   }) async {
 
     final body = {
-      'name': name,
+      'username': username,
       'email': email,
       'password': password,
     };
@@ -36,13 +36,13 @@ class UserRemoteDataSource {
   }
 
   /// Login user
-  // TODO : add last logged in time (might have to go in backend)
+  // TODO : add last logged in time
   Future<UserModel> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
     final body = {
-      'email': email,
+      'email': username,
       'password': password,
     };
 
