@@ -1,18 +1,26 @@
 class UserEntity {
   final String id;
+  final String username;
   final String email;
-  final String name;
-  final String token;
+  final String? firstName;
+  final String? lastName;
+  final String? bio;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final DateTime lastLogin;
+  final String token;
 
   const UserEntity({
     required this.id,
+    required this.username,
     required this.email,
-    required this.name,
-    required this.token,
+    this.firstName,
+    this.lastName,
+    this.bio,
     required this.createdAt,
     required this.updatedAt,
+    required this.lastLogin,
+    required this.token,
   });
 
   @override
@@ -21,18 +29,26 @@ class UserEntity {
           other is UserEntity &&
               runtimeType == other.runtimeType &&
               id == other.id &&
+              username == other.username &&
               email == other.email &&
-              name == other.name &&
-              token == other.token &&
+              firstName == other.firstName &&
+              lastName == other.lastName &&
+              bio == other.bio &&
               createdAt == other.createdAt &&
-              updatedAt == other.updatedAt;
+              updatedAt == other.updatedAt &&
+              lastLogin == other.lastLogin &&
+              token == other.token;
 
   @override
   int get hashCode =>
       id.hashCode ^
+      username.hashCode ^
       email.hashCode ^
-      name.hashCode ^
-      token.hashCode ^
+      firstName.hashCode ^
+      lastName.hashCode ^
+      bio.hashCode ^
       createdAt.hashCode ^
-      updatedAt.hashCode;
+      updatedAt.hashCode ^
+      lastLogin.hashCode ^
+      token.hashCode;
 }
