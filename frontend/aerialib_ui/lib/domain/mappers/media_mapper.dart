@@ -6,7 +6,10 @@ class MediaMapper {
   static MediaEntity modelToEntity(MediaModel model) {
     return MediaEntity(
       id: model.id,
-      mediaPath: model.path,
+      path: model.path,
+      type: model.type,
+      fileSize: model.fileSize,
+      primaryMedia: model.primaryMedia,
       name: model.name,
       description: model.description,
       apparatus: model.apparatus,
@@ -20,7 +23,10 @@ class MediaMapper {
   static MediaModel entityToModel(MediaEntity entity) {
     return MediaModel(
       id: entity.id,
-      path: entity.mediaPath,
+      path: entity.path,
+      type: entity.type,
+      fileSize: entity.fileSize,
+      primaryMedia: entity.primaryMedia,
       name: entity.name,
       description: entity.description,
       apparatus: entity.apparatus,
@@ -29,6 +35,7 @@ class MediaMapper {
       isSynced: entity.isSynced,
     );
   }
+
   /// Convert a list of MediaModels to a list of MediaEntities
   static List<MediaEntity> modelsToEntities(List<MediaModel> models) {
     return models.map(modelToEntity).toList();

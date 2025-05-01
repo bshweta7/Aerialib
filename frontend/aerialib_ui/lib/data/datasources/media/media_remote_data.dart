@@ -9,10 +9,10 @@ class MediaRemoteDataSource {
   final HttpService httpService;
 
   MediaRemoteDataSource({required this.httpService});
-  
+
   Future<MediaModel> createMedia({
-    required String mediaPath,
-    required String mediaType,
+    required String path,
+    required String type,
     int? fileSize,
     String? primaryMedia,
     String? name,
@@ -22,18 +22,18 @@ class MediaRemoteDataSource {
     required String token,
   }) async {
     final body = {
-      'media_path': mediaPath,
-      'media_type': mediaType,
-      if (fileSize != null) 'file_size': fileSize,
-      if (primaryMedia != null) 'primary_media': primaryMedia,
+      'mediaPath': path,
+      'mediaType': type,
+      if (fileSize != null) 'fileSize': fileSize,
+      if (primaryMedia != null) 'primaryMedia': primaryMedia,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       if (apparatus != null) 'apparatus': apparatus,
-      'uploaded_by': uploadedBy,
+      'uploadedBy': uploadedBy,
     };
 
     try {
-      // First try POST into backend
+      // POST to backend
       final response = await httpService.post(
         path: "/media",
         token: token,
@@ -43,16 +43,16 @@ class MediaRemoteDataSource {
       return MediaModel.fromJson(response.body);
 
     } catch (e) {
-      // Fallback: construct a local unsynced MediaModel (but leave inserting to MediaRepository)
+      // Fallback: construct local unsynced MediaModel
       return MediaModel(
         id: const Uuid().v6(),
-        path: mediaPath,
-        type: mediaType,
+        path: path,
+        type: type,
         fileSize: fileSize,
         primaryMedia: primaryMedia,
-        name: name ?? '',
-        description: description ?? '',
-        apparatus: apparatus ?? '',
+        name: name,
+        description: description,
+        apparatus: apparatus,
         uploadedBy: uploadedBy,
         uploadedAt: DateTime.now(),
         isSynced: 0,

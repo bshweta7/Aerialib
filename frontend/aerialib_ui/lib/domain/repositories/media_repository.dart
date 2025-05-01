@@ -16,22 +16,29 @@ class MediaRepository {
 
   /// Create a new media (tries remote first, fallback to local if offline)
   Future<MediaEntity> createMedia({
-    required String mediaPath,
-    required String name,
-    required String description,
-    required String apparatus,
+    required String path,
+    required String type,
+    int? fileSize,
+    String? primaryMedia,
+    String? name,
+    String? description,
+    String? apparatus,
     required String uploadedBy,
     required String token,
   }) async {
     try {
       final mediaModel = await remoteDataSource.createMedia(
-        mediaPath: mediaPath,
+        path: path,
+        type: type,
+        fileSize: fileSize,
+        primaryMedia: primaryMedia,
         name: name,
         description: description,
         apparatus: apparatus,
         uploadedBy: uploadedBy,
         token: token,
       );
+
       await localDataSource.insertMedia(mediaModel);
       return MediaMapper.modelToEntity(mediaModel);
     } catch (e) {
