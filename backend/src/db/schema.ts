@@ -24,7 +24,6 @@ export type User = typeof usersTable.$inferSelect;
 export type NewUser = typeof usersTable.$inferInsert;
 
 
-
 /* MEDIA */
 export const mediaTable = pgTable("media", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -48,7 +47,6 @@ export type Media = typeof mediaTable.$inferSelect;
 export type NewMedia = typeof mediaTable.$inferInsert;
 
 
-
 /* POSES */
 export const posesTable = pgTable("poses", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -70,7 +68,6 @@ export const posesTable = pgTable("poses", {
 
 export type Pose = typeof posesTable.$inferSelect;
 export type NewPose = typeof posesTable.$inferInsert;
-
 
 
 /* TRANSITIONS */

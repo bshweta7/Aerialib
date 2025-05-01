@@ -1,3 +1,54 @@
+/* USERS */
+const String userTable = "users";
+
+const String createUserTable = '''
+  CREATE TABLE $userTable (
+    id TEXT PRIMARY KEY,
+
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+
+    first_name TEXT,
+    last_name TEXT,
+    bio TEXT,
+    
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    last_login TEXT NOT NULL
+    
+    token TEXT NOT NULL,
+  )
+''';
+
+const String dropUserTable = 'DROP TABLE IF EXISTS $userTable';
+
+
+/* MEDIA */
+const String mediaTable = "media";
+
+const String createMediaTable = '''
+  CREATE TABLE $mediaTable (
+    id TEXT PRIMARY KEY,
+    media_path TEXT NOT NULL,
+    
+    media_type TEXT NOT NULL,
+    file_size INTEGER,
+    
+    name TEXT,
+    description TEXT,
+    apparatus TEXT,
+    
+    uploaded_by TEXT NOT NULL, 
+    uploaded_at TEXT NOT NULL,
+    
+    is_synced INTEGER NOT NULL
+  )
+''';
+// TODO generate alt text and add into Media Model
+const String dropMediaTable = 'DROP TABLE IF EXISTS $mediaTable';
+
+
 /* POSES */
 const String poseTable = "poses";
 
@@ -87,7 +138,7 @@ const String createFlowTable = '''
 const String dropFlowTable = 'DROP TABLE IF EXISTS $flowTable';
 
 
-/* FLOW POSES */
+/* FLOW POSES CONNECTOR */
 const String flowPoseTable = "flow_poses";
 
 const String createFlowPoseTable = '''
@@ -102,53 +153,3 @@ const String createFlowPoseTable = '''
 ''';
 const String dropFlowPoseTable = 'DROP TABLE IF EXISTS $flowPoseTable';
 
-
-/* MEDIA */
-const String mediaTable = "media";
-
-const String createMediaTable = '''
-  CREATE TABLE $mediaTable (
-    id TEXT PRIMARY KEY,
-    media_path TEXT NOT NULL,
-    
-    media_type TEXT NOT NULL,
-    file_size INTEGER,
-    
-    name TEXT,
-    description TEXT,
-    apparatus TEXT,
-    
-    uploaded_by TEXT NOT NULL, 
-    uploaded_at TEXT NOT NULL,
-    
-    is_synced INTEGER NOT NULL
-  )
-''';
-// TODO generate alt text and add into Media Model
-const String dropMediaTable = 'DROP TABLE IF EXISTS $mediaTable';
-
-
-/* USERS */
-const String userTable = "users";
-
-const String createUserTable = '''
-  CREATE TABLE $userTable (
-    id TEXT PRIMARY KEY,
-
-    username TEXT NOT NULL UNIQUE,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-
-    first_name TEXT,
-    last_name TEXT,
-    bio TEXT,
-    
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL,
-    last_login TEXT NOT NULL
-    
-    token TEXT NOT NULL,
-  )
-''';
-
-const String dropUserTable = 'DROP TABLE IF EXISTS $userTable';
