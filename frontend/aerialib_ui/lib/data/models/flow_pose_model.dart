@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-// TODO missing some fields...
-
 class FlowPoseModel {
-  final String id; // Primary Key (UUID)
-  final String flowId; // Foreign Key to flow table (UUID)
-  final String poseId; // Foreign Key to poses table (UUID)
-  final int poseOrder; // Position in the flow
-  final String transitionId;
+  final String id;
+  final String flowId;
+  final String poseId;
+  final int poseOrder;
+  final String? transitionId;
   final int isSynced;
 
   const FlowPoseModel({
@@ -15,7 +13,7 @@ class FlowPoseModel {
     required this.flowId,
     required this.poseId,
     required this.poseOrder,
-    required this.transitionId,
+    this.transitionId,
     required this.isSynced,
   });
 
@@ -25,8 +23,8 @@ class FlowPoseModel {
       flowId: map['flow_id'] ?? '',
       poseId: map['pose_id'] ?? '',
       poseOrder: map['pose_order'] ?? -1,
-      transitionId: map['transition_id'] ?? '',
-      isSynced: map['is_synced'] ?? 0, // Default to synced if not present
+      transitionId: map['transition_id'], // no default
+      isSynced: map['is_synced'] ?? 0,
     );
   }
 
@@ -36,7 +34,7 @@ class FlowPoseModel {
       'flow_id': flowId,
       'pose_id': poseId,
       'pose_order': poseOrder,
-      'transition_id': transitionId,
+      if (transitionId != null) 'transition_id': transitionId,
       'is_synced': isSynced,
     };
   }

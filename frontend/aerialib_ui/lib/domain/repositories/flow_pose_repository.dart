@@ -13,48 +13,54 @@ import 'package:frontend/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/domain/mappers/flow_pose_mapper.dart';
 
 import '../mappers/pose_mapper.dart';
+import 'package:frontend/data/datasources/transitions/transition_local_data.dart';
+import 'package:frontend/data/models/transition_model.dart';
 
 class FlowPoseRepository {
   final FlowPoseLocalDataSource localDataSource;
   final FlowPoseRemoteDataSource remoteDataSource;
   final PoseLocalDataSource poseLocalDataSource;
+  final TransitionLocalDataSource transitionLocalDataSource;
 
   FlowPoseRepository({
     required this.localDataSource,
     required this.remoteDataSource,
-    required this.poseLocalDataSource
+    required this.poseLocalDataSource,
+    required this.transitionLocalDataSource,
   });
 
   /// Create a new flow pose (tries remote first, fallback to local if offline)
   Future<FlowPoseEntity> createFlowPose({
     required String flowId,
     required String poseId,
-    required int order,
+    required int poseOrder,
+    String? transitionId,
     required String token,
   }) async {
     try {
-      // Create remotely
       final createdModel = await remoteDataSource.createFlowPose(
         flowId: flowId,
         poseId: poseId,
-        order: order,
-        transitionId: '',
+        poseOrder: poseOrder,
+        transitionId: transitionId,
         token: token,
       );
 
-      // Save locally
       await localDataSource.insertFlowPose(createdModel);
 
-      // Fetch the PoseModel
       final poseModel = await poseLocalDataSource.getPoseById(poseId);
       if (poseModel == null) {
         throw Exception('Pose not found locally for poseId $poseId');
       }
 
-      // Build and return FlowPoseEntity
+      final TransitionModel? transitionModel = createdModel.transitionId != null
+          ? await transitionLocalDataSource.getTransitionById(createdModel.transitionId!)
+          : null;
+
       return FlowPoseMapper.modelToEntity(
         model: createdModel,
         poseModel: poseModel,
+        transitionModel: transitionModel,
       );
     } catch (e) {
       rethrow;
@@ -79,15 +85,31 @@ class FlowPoseRepository {
     final poseModels = await poseLocalDataSource.getPosesByIds(poseIds);
     final poseMap = {for (var pose in poseModels) pose.id: pose};
 
+    final transitionIds = flowPoseModels
+        .map((fp) => fp.transitionId)
+        .where((id) => id != null)
+        .cast<String>()
+        .toSet()
+        .toList();
+
+    final transitionModels = await transitionLocalDataSource.getTransitionsByIds(transitionIds);
+    final transitionMap = {for (var t in transitionModels) t.id: t};
+
     print("Converting to Flow Pose Models to Entities");
     return flowPoseModels.map((flowPose) {
       final poseModel = poseMap[flowPose.poseId];
       if (poseModel == null) {
         throw Exception('PoseModel not found for poseId ${flowPose.poseId}');
       }
+
+      final transitionModel = flowPose.transitionId != null
+          ? transitionMap[flowPose.transitionId!]
+          : null;
+
       return FlowPoseMapper.modelToEntity(
         model: flowPose,
         poseModel: poseModel,
+        transitionModel: transitionModel,
       );
     }).toList();
   }

@@ -9,46 +9,43 @@ class FlowPoseRemoteDataSource {
 
   FlowPoseRemoteDataSource({required this.httpService});
 
-  /// Create and return FlowModel
+  /// Create and return FlowPoseModel
   Future<FlowPoseModel> createFlowPose({
     required String flowId,
     required String poseId,
-    required int order,
-    required String transitionId,
+    required int poseOrder,
+    String? transitionId,
     required String token,
   }) async {
-
     final body = {
-      'flowId': flowId,
-      'poseId': poseId,
-      'order': order,
-      'transitionId': transitionId,
+      'flow_id': flowId,
+      'pose_id': poseId,
+      'pose_order': poseOrder,
+      if (transitionId != null) 'transition_id': transitionId,
     };
 
     try {
-      // first try POST into backend.
       final response = await httpService.post(
-        path: "/flow_pose",
+        path: "/flow_poses",
         token: token,
         body: body,
       );
 
       return FlowPoseModel.fromJson(response.body);
-
     } catch (e) {
-      // Fallback: construct a local unsynced FlowModel
+      // Fallback: construct a local unsynced FlowPoseModel
       return FlowPoseModel(
         id: const Uuid().v6(),
         flowId: flowId,
         poseId: poseId,
-        poseOrder: order,
+        poseOrder: poseOrder,
         transitionId: transitionId,
         isSynced: 0,
       );
     }
   }
 
-  /// Retrieve flow poses from remote data source and return list of FlowPoseModels
+  /// Retrieve all FlowPoseModels from remote
   Future<List<FlowPoseModel>> fetchRemoteFlowPoses({
     required String token,
   }) async {
@@ -61,26 +58,24 @@ class FlowPoseRemoteDataSource {
     return jsonList.map((e) => FlowPoseModel.fromMap(e)).toList();
   }
 
-
-  /// Sync local flows to remote data source
+  /// Sync local flow poses to remote
   Future<bool> syncFlowPoses({
     required String token,
     required List<FlowPoseModel> flowPoses,
   }) async {
-    final List<Map<String, dynamic>> flowPoseListInMap = flowPoses.map((flowPose) => flowPose.toMap()).toList();
-    print(flowPoseListInMap);
+    final List<Map<String, dynamic>> flowPoseListInMap =
+    flowPoses.map((fp) => fp.toMap()).toList();
+
     final response = await httpService.post(
       path: "/flow_poses/sync",
       token: token,
       body: flowPoseListInMap,
     );
-    print(response);
 
     return response.statusCode == 201;
   }
 
-  /// Update flow pose
-  /// /// TODO might not need this
+  /// Update a flow pose remotely
   Future<FlowPoseModel> updateFlowPose({
     required FlowPoseModel updatedFlowPose,
     required String token,
