@@ -5,7 +5,8 @@ import 'dart:ui';
 class Constants {
   // Urls
   // static String backendUrl = "http://10.20.29.99:8000";
-  static String backendUrl = "https://aerialib.com/api";
+  static String backendUrl = "http://localhost:8000";
+  // static String backendUrl = "https://aerialib.com/api";
   /*static String backendUrl =
     kReleaseMode ? "https://aerialib.com/api"
       : (Platform.isAndroid || Platform.isIOS)

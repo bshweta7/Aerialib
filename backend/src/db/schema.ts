@@ -11,17 +11,13 @@ export const usersTable = pgTable("users", {
     email: text("email").notNull().unique(),
     password: text("password").notNull(),
 
-
     firstName: text("first_name"),
     lastName: text("last_name"),
     bio: text("bio"),
-    preferences: jsonb("preferences"),
 
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
     lastLogin: timestamp("last_login").defaultNow(),
-
-
 });
 
 export type User = typeof usersTable.$inferSelect;
@@ -44,7 +40,6 @@ export const mediaTable = pgTable("media", {
     uploadedBy: uuid("uploaded_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     uploadedAt: timestamp("uploaded_at").defaultNow(),
 
-    // TODO alt text should combine all the relevant info in front end
     // TODO delete metadata EXIF (security)
 });
 
@@ -110,6 +105,7 @@ export type NewTransition = typeof transitionsTable.$inferInsert;
 export const flowsTable = pgTable("flows", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(), // NOTE: Give suggestions in frontend (like April Flow) or default to date created
+    thumbnailImageId: uuid("thumbnail_image_id").notNull().references(() => mediaTable.id),
     apparatus: text("apparatus").notNull(), // NOTE: this can be interpreted from poses contained within it, don't need to ask the user to enter it
     level: doublePrecision("level").notNull(),
 
@@ -139,7 +135,7 @@ export const flowPosesTable = pgTable("flow_poses", {
         onDelete: 'cascade', // TODO check this - need better way of handling this
         onUpdate: 'no action',
     }),
-    order: integer('order').notNull(),
+    poseOrder: integer('pose_order').notNull(),
     transitionId: uuid('transition_id').references(() => transitionsTable.id, {
         onDelete: 'cascade',
         onUpdate: 'no action',

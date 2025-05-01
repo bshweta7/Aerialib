@@ -1,58 +1,93 @@
-/*
-  POSES
-*/
+/* POSES */
 const String poseTable = "poses";
 
 const String createPoseTable = '''
-  CREATE TABLE $poseTable (
+  CREATE TABLE $poseTable (  
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    description TEXT,
-    cues TEXT,
+    primary_image_id TEXT NOT NULL,
     apparatus TEXT NOT NULL,
-    level INTEGER NOT NULL,
+    level REAL NOT NULL,
+  
+    description TEXT,
+    teaching_cues TEXT,
+    safety_cues TEXT,
+    progressions TEXT,
+  
     created_by TEXT NOT NULL,
     updated_by TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    primary_image_id TEXT NOT NULL,
-    primary_image_url TEXT NOT NULL,
-    is_synced INTEGER NOT NULL
+  
+    is_synced INTEGER NOT NULL,
   )
 ''';
 
 const String dropPoseTable = 'DROP TABLE IF EXISTS $poseTable';
 
 
+/* TRANSITIONS */
+const String transitionTable = "transitions";
 
-/*
-  FLOWS
-*/
+const String createTransitionTable = '''
+  CREATE TABLE $transitionTable (
+    id TEXT PRIMARY KEY,
+    
+    from_pose_id TEXT NOT NULL,
+    to_pose_id TEXT NOT NULL, 
+    level REAL NOT NULL,
+    
+    name TEXT,
+    description TEXT,
+    teaching_cues TEXT,
+    safety_cues TEXT,
+    progressions TEXT,
+    
+    transition_type TEXT,
+    starting_grip TEXT,
+    ending_grip TEXT,
+    
+    created_by TEXT NOT NULL,
+    updated_by TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    
+    is_synced INTEGER NOT NULL,
+  )
+''';
 
+const String dropTransitionTable = 'DROP TABLE IF EXISTS $transitionTable';
+
+
+/* FLOWS */
 const String flowTable = "flows";
 
 const String createFlowTable = '''
   CREATE TABLE $flowTable (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
+    thumbnail_image_id TEXT NOT NULL,
+    apparatus TEXT NOT NULL,
+    level REAL NOT NULL,
+    
     description TEXT,
-    apparatus TEXT,    
+    teaching_cues TEXT,
+    safety_cues TEXT,
+    progressions TEXT,
+    
     created_by TEXT NOT NULL,
     updated_by TEXT, 
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    primary_image_id TEXT NOT NULL,
-    primary_image_url TEXT NOT NULL,
+    
     is_synced INTEGER NOT NULL
   )
 ''';
 
 const String dropFlowTable = 'DROP TABLE IF EXISTS $flowTable';
 
-/*
-  FLOW POSES
-*/
 
+/* FLOW POSES */
 const String flowPoseTable = "flow_poses";
 
 const String createFlowPoseTable = '''
@@ -61,60 +96,58 @@ const String createFlowPoseTable = '''
     flow_id TEXT NOT NULL,
     pose_id TEXT NOT NULL,
     pose_order INTEGER NOT NULL,
-    transition_id TEXT, 
+    transition_id TEXT,
     is_synced INTEGER NOT NULL
   )
 ''';
-
-/*
-TODO : ADD THESE ?
-  created_by TEXT NOT NULL,
-  updated_by TEXT,
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-
-  Change transition ID to transition note or something
- */
-
 const String dropFlowPoseTable = 'DROP TABLE IF EXISTS $flowPoseTable';
 
 
-/*
-  MEDIA
-*/
-
+/* MEDIA */
 const String mediaTable = "media";
 
 const String createMediaTable = '''
   CREATE TABLE $mediaTable (
     id TEXT PRIMARY KEY,
-    mediaURL TEXT NOT NULL,
+    media_path TEXT NOT NULL,
+    
+    media_type TEXT NOT NULL,
+    file_size INTEGER,
+    
     name TEXT,
     description TEXT,
     apparatus TEXT,
-    uploadedBy TEXT NOT NULL,
-    uploadedAt TEXT NOT NULL,
-    isSynced INTEGER NOT NULL
+    
+    uploaded_by TEXT NOT NULL, 
+    uploaded_at TEXT NOT NULL,
+    
+    is_synced INTEGER NOT NULL
   )
 ''';
-
+// TODO generate alt text and add into Media Model
 const String dropMediaTable = 'DROP TABLE IF EXISTS $mediaTable';
 
 
-/*
-  USERS
-*/
-
+/* USERS */
 const String userTable = "users";
 
 const String createUserTable = '''
   CREATE TABLE $userTable (
     id TEXT PRIMARY KEY,
-    email TEXT NOT NULL,
+
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+
+    first_name TEXT,
+    last_name TEXT,
+    bio TEXT,
+    
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    last_login TEXT NOT NULL
+    
     token TEXT NOT NULL,
-    name TEXT NOT NULL,
-    createdAt TEXT NOT NULL,
-    updatedAt TEXT NOT NULL
   )
 ''';
 

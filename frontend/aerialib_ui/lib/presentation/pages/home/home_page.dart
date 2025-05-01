@@ -119,21 +119,21 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 10,),
 
-                    // Media Library Navigation
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, MediaLibraryPage.route());
-                        },
-                        child: const Text(
-                            "Media Library",
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 20,
-                            )
-                        )
-                    ),
-                    SizedBox(height: 10,),
+                    // // Media Library Navigation
+                    // ElevatedButton(
+                    //     onPressed: () {
+                    //       Navigator.push(context, MediaLibraryPage.route());
+                    //     },
+                    //     child: const Text(
+                    //         "Media Library",
+                    //         style: TextStyle(
+                    //           // fontWeight: FontWeight.bold,
+                    //           color: Colors.white,
+                    //           fontSize: 20,
+                    //         )
+                    //     )
+                    // ),
+                    // SizedBox(height: 10,),
 
                     // Flow Library Navigation
                     ElevatedButton(
