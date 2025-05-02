@@ -3,14 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/domain/repositories/pose_repository.dart';
 
-// TODO note - maybe I shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
-// TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional PoseError state to handle those errors.
-// TODO - The syncPoses method has been modified to first sync local unsynced poses and then sync remote poses back to local. You might want to consider handling the case where network is unavailable or when some poses are not synced successfully.
-
 part 'poses_state.dart';
 
 class PosesCubit extends Cubit<PosesState> {
   final PoseRepository _poseRepository;
+  bool _isSyncing = false;
 
   PosesCubit(this._poseRepository) : super(const PoseInitial());
 
@@ -55,38 +52,30 @@ class PosesCubit extends Cubit<PosesState> {
   /// Fetch all poses (from local storage or remote if needed)
   Future<void> getAllPoses({required String token}) async {
     try {
-      print("Fetching poses...");
+      print('[PosesCubit] Fetching poses...');
       emit(const PoseLoading());
 
       List<PoseEntity> poses = await _poseRepository.getAllPoses();  // Fetch local poses
-      if (poses.isEmpty) {
-        // If no local poses, sync from remote and retry
-        print("No poses in local datasource, syncing from remote");
-        await _poseRepository.syncRemoteToLocal(token);
-
-        poses = await _poseRepository.getAllPoses();
-      }
-
-      print("Number of Poses Retrieved: ${poses.length}");
+      print('[PosesCubit] Number of Poses Retrieved: ${poses.length}');
       emit(GetPosesSuccess(poses));
 
     } catch (e) {
-      print("Cubit GetAllPoses failed");
-      print(e.toString());
+      print('[PosesCubit] GetAllPoses failed: $e');
       emit(PoseError(e.toString()));
     }
   }
 
   /// Run a one-time sync of poses when network is available (sync the unsynced local poses with remote)
   Future<void> syncPoses(String token) async {
+    if (_isSyncing) return;
+    _isSyncing = true;
+
     print("[PosesCubit] Starting one-shot sync...");
 
     try {
-      print('[PosesCubit] Syncing local to remote...');
       await _poseRepository.syncLocalToRemote(token);
       print('[PosesCubit] Synced local to remote.');
 
-      print('[PosesCubit] Syncing remote to local...');
       await _poseRepository.syncRemoteToLocal(token);
       print('[PosesCubit] Synced remote to local.');
 
@@ -95,6 +84,8 @@ class PosesCubit extends Cubit<PosesState> {
     } catch (e) {
       print('[PosesCubit] Sync error: $e');
       emit(PoseError('[PosesCubit] Sync error: $e'));
+    } finally {
+      _isSyncing = false;
     }
   }
 
@@ -122,17 +113,16 @@ class PosesCubit extends Cubit<PosesState> {
     try {
       emit(const PoseLoading());
       await _poseRepository.deletePose(poseId);
-      // Optionally: refetch or emit success directly
-      final poses = await _poseRepository.getAllPoses();
       emit(DeletePoseSuccess(poseId));
     } catch (e) {
-      print("Error deleting pose: $e");
-      emit(PoseError("Error deleting pose: $e"));
+      print('[PosesCubit] Deleting error: $e');
+      emit(PoseError('[PosesCubit] Deleting error: $e'));
     }
   }
 
 }
 
 
-
+// TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional PoseError state to handle those errors.
+// TODO - The syncPoses method has been modified to first sync local unsynced poses and then sync remote poses back to local. You might want to consider handling the case where network is unavailable or when some poses are not synced successfully.
 // TODO see his next video on background plugin that syncs every 7 days.

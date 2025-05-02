@@ -28,23 +28,9 @@ class _HomePageState extends State<HomePage> {
 
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    context.read<PosesCubit>().getAllPoses(token: user.user.token);
-
     // Fetch local poses
-    context.read<PosesCubit>().syncPoses(user.user.token);
+    context.read<PosesCubit>().getAllPoses(token: user.user.token);
     // TODO add other imports here
-
-
-
-    // Connectivity().onConnectivityChanged.listen((data) async {
-    //   if (data.contains(ConnectivityResult.wifi) || data.contains(ConnectivityResult.ethernet)) { // TODO add other options, possibly move to connectivity_service.dart
-    //     print("Wifi Available");
-    //     await context.read<PosesCubit>().syncPoses(user.user.token);
-    //
-    //   } else {
-    //     print("No wifi available");
-    //   }
-    // });
 
     // TODO - Consider caching the last sync time in shared prefs (via sp_service.dart maybe?)
     // TODO - move this "import data" logic to a StartupManager or AppInitializer class for even cleaner structure

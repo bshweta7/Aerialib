@@ -26,7 +26,7 @@ class MediaRemoteDataSource {
       'mediaType': type,
       if (fileSize != null) 'fileSize': fileSize,
       if (primaryMedia != null) 'primaryMedia': primaryMedia,
-      if (name != null) 'name': name,
+      if (name != null) 'name': name, // TODO generate name based on user uploading and date?
       if (description != null) 'description': description,
       if (apparatus != null) 'apparatus': apparatus,
       'uploadedBy': uploadedBy,
