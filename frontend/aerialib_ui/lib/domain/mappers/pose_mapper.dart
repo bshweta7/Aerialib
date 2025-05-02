@@ -6,15 +6,12 @@ import '../../data/models/media_model.dart';
 
 class PoseMapper {
   /// Convert a PoseModel to a PoseEntity
-  static PoseEntity modelToEntity(
-      PoseModel model,
-      String mediaPath
-      ) {
+  static PoseEntity modelToEntity(PoseModel model,) {
     return PoseEntity(
       id: model.id,
       name: model.name,
-      primaryMediaId: model.primaryImageId,
-      primaryMediaPath: mediaPath ?? Constants.missingImagePath,
+      primaryMediaId: model.primaryMediaId,
+      primaryMediaPath: model.primaryMediaPath,
       apparatus: model.apparatus,
       level: model.level,
       description: model.description,
@@ -34,7 +31,8 @@ class PoseMapper {
     return PoseModel(
       id: entity.id,
       name: entity.name,
-      primaryImageId: entity.primaryMediaId,
+      primaryMediaId: entity.primaryMediaId,
+      primaryMediaPath: entity.primaryMediaPath,
       apparatus: entity.apparatus,
       level: entity.level,
       description: entity.description,
@@ -50,19 +48,20 @@ class PoseMapper {
   }
 
   /// Convert a list of PoseModels to a list of PoseEntities
-  static List<PoseEntity> modelsToEntities(
-      List<PoseModel> models,
-      List<MediaModel> mediaList,
-      ) {
-    // Create a lookup map for faster access
-    final mediaPathMap = {
-      for (var media in mediaList) media.id: media.path,
-    };
-
+  static List<PoseEntity> modelsToEntities(List<PoseModel> models) {
     return models.map((model) {
-      final mediaPath = mediaPathMap[model.primaryImageId] ?? Constants.missingImagePath;
-      return modelToEntity(model, mediaPath);
+      return modelToEntity(model);
     }).toList();
+
+    // // Create a lookup map for faster access
+    // final mediaPathMap = {
+    //   for (var media in mediaList) media.id: media.path,
+    // };
+    //
+    // return models.map((model) {
+    //   final mediaPath = mediaPathMap[model.primaryMediaId] ?? Constants.missingImagePath;
+    //   return modelToEntity(model, mediaPath);
+    // }).toList();
   }
 
 

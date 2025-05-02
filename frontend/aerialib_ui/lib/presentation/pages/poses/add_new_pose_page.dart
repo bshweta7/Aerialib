@@ -44,7 +44,8 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
           progressions: progressionsController.text.trim(),
           apparatus: apparatusController.text.trim(),
           level: level,
-          primaryImageId: Constants.missingImageId,
+          primaryMediaId: Constants.missingImageId,
+          primaryMediaPath: Constants.missingImagePath,
           token: user.user.token,
           createdBy: user.user.id,
           // TODO add upload image portion on create new pose page

@@ -26,7 +26,8 @@ class PoseRepository {
     String? progressions,
     required String apparatus,
     required double level,
-    required String primaryImageId,
+    required String primaryMediaId,
+    required String primaryMediaPath,
     required String token,
     required String createdBy,
   }) async {
@@ -40,23 +41,24 @@ class PoseRepository {
         progressions: progressions,
         apparatus: apparatus,
         level: level,
-        primaryImageId: primaryImageId,
-        token: token,
+        primaryMediaId: primaryMediaId,
+        primaryMediaPath: primaryMediaPath,
         createdBy: createdBy,
+        token: token,
       );
 
       await localDataSource.insertPose(poseModel);
 
-      // Get media path for the associated primary image
-      final mediaList = await mediaLocalDataSource.getPoseMedia();
-      final mediaPath = mediaList
-          .firstWhere(
-            (m) => m.id.toString() == primaryImageId,
-        // orElse: () => MediaModel(path: Constants.missingImagePath), TODO - make a mediaModel for the missing image.
-      )
-          .path;
+      // // Get media path for the associated primary image
+      // final mediaList = await mediaLocalDataSource.getPoseMedia();
+      // final mediaPath = mediaList
+      //     .firstWhere(
+      //       (m) => m.id.toString() == primaryImageId,
+      //   // orElse: () => MediaModel(path: Constants.missingImagePath), TODO - make a mediaModel for the missing image.
+      // )
+      //     .path;
 
-      return PoseMapper.modelToEntity(poseModel, mediaPath);
+      return PoseMapper.modelToEntity(poseModel);
     } catch (e) {
       // TODO Handle other potential errors (e.g., local database issues)
       rethrow;
@@ -66,16 +68,15 @@ class PoseRepository {
 
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllPoses() async {
-    print("Fetching PoseModels and Media from Local Database");
-    final poseModels = await localDataSource.getAllPoses();
-    print(poseModels);
-    print("GOT POSE MODELS");
-    final mediaList = await mediaLocalDataSource.getPoseMedia();
-    print("GOT MEDIA LIST");
+    print('[PosesRepository] Fetching PoseModels from local database');
 
-    print("Converting to Pose Models to Entities");
-    final poseEntitiesList = PoseMapper.modelsToEntities(poseModels, mediaList);
-    print("CONVERTED");
+    final poseModels = await localDataSource.getAllPoses();
+    print('[PosesRepository] Got ${poseModels.length} pose models');
+
+    print('[PosesRepository] Converting models to entities');
+    final poseEntitiesList = PoseMapper.modelsToEntities(poseModels);
+    print('[PosesRepository] Conversion complete');
+
     return poseEntitiesList;
   }
 

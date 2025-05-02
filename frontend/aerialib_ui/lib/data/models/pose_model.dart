@@ -4,7 +4,8 @@ import 'package:frontend/core/constants/constants.dart';
 class PoseModel {
   final String id;
   final String name;
-  final String primaryImageId;
+  final String primaryMediaId;
+  final String primaryMediaPath;
   final String apparatus;
   final double level;
   final String? description;
@@ -20,7 +21,8 @@ class PoseModel {
   const PoseModel({
     required this.id,
     required this.name,
-    required this.primaryImageId,
+    required this.primaryMediaId,
+    required this.primaryMediaPath,
     required this.apparatus,
     required this.level,
     this.description,
@@ -38,7 +40,8 @@ class PoseModel {
     return PoseModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
-      primaryImageId: map['primary_image_id'] ?? Constants.missingImageId,
+      primaryMediaId: map['primary_media_id'] ?? Constants.missingImageId,
+      primaryMediaPath: map['primary_media_path'] ?? Constants.missingImagePath,
       apparatus: map['apparatus'] ?? '',
       level: (map['level'] is int ? (map['level'] as int).toDouble() : map['level']) ?? -1.0, // Handle potential int or double
       description: map['description'],
@@ -57,7 +60,8 @@ class PoseModel {
     return {
       'id': id,
       'name': name,
-      'primary_image_id': primaryImageId,
+      'primary_media_id': primaryMediaId,
+      'primary_media_path': primaryMediaPath,
       'apparatus': apparatus,
       'level': level,
       'description': description,
@@ -68,7 +72,6 @@ class PoseModel {
       'updated_by': updatedBy,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
-      // 'is_synced': isSynced,
     };
   }
 

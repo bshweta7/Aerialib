@@ -33,7 +33,6 @@ const String createMediaTable = '''
     
     media_type TEXT NOT NULL,
     file_size INTEGER,
-    primary_media TEXT,
     
     name TEXT,
     description TEXT,
@@ -56,9 +55,11 @@ const String createPoseTable = '''
   CREATE TABLE $poseTable (  
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    primary_image_id TEXT NOT NULL,
     apparatus TEXT NOT NULL,
     level REAL NOT NULL,
+    
+    primary_media_id TEXT NOT NULL,
+    primary_media_path TEXT NOT NULL,
   
     description TEXT,
     teaching_cues TEXT,

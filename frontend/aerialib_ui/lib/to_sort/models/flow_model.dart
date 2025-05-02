@@ -92,7 +92,7 @@ class FlowModel {
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
       isSynced: map['is_synced'] ?? 1,
-      primaryImageId: map['primary_image_id'] ?? '', // Replace with your default image ID
+      primaryImageId: map['primary_image_id'] ?? '', // TODO Replace with your default image ID
       primaryImageUrl: map['primary_image_url'] ?? '',
 
       // createdBy: map['createdBy'] ?? '',

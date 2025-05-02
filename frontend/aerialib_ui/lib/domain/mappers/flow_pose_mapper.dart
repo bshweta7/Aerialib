@@ -16,7 +16,7 @@ class FlowPoseMapper {
     return FlowPoseEntity(
       id: model.id,
       flowId: model.flowId,
-      pose: PoseMapper.modelToEntity(poseModel, mediaPath),
+      pose: PoseMapper.modelToEntity(poseModel),
       poseOrder: model.poseOrder,
       transition: transitionModel != null
           ? TransitionMapper.modelToEntity(transitionModel)

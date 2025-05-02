@@ -70,7 +70,7 @@ class FlowPoseRepository {
       final mediaList = await mediaLocalDataSource.getPoseMedia();
       final mediaPath = mediaList
           .firstWhere(
-            (m) => m.id == poseModel.primaryImageId,
+            (m) => m.id == poseModel.primaryMediaId,
         orElse: () => MediaModel(
           id: '',
           path: Constants.missingImagePath,
@@ -136,7 +136,7 @@ class FlowPoseRepository {
           ? transitionMap[flowPose.transitionId!]
           : null;
 
-      final mediaPath = mediaMap[poseModel.primaryImageId] ?? Constants.missingImagePath;
+      final mediaPath = mediaMap[poseModel.primaryMediaId] ?? Constants.missingImagePath;
 
       return FlowPoseMapper.modelToEntity(
         model: flowPose,
@@ -223,11 +223,10 @@ class FlowPoseRepository {
 
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllLocalPoses() async {
-    print("Fetching PoseModels for Flow Cubit");
+    print("[FlowPoseRepo] Fetching PoseModels for Flow Cubit");
     final poseModels = await poseLocalDataSource.getAllPoses();
-    final mediaList = await mediaLocalDataSource.getPoseMedia();
 
-    return PoseMapper.modelsToEntities(poseModels, mediaList);
+    return PoseMapper.modelsToEntities(poseModels);
   }
 
 

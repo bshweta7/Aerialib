@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
@@ -24,7 +23,8 @@ class PosesCubit extends Cubit<PosesState> {
     String? progressions,
     required String apparatus,
     required double level,
-    required String primaryImageId,
+    required String primaryMediaId,
+    required String primaryMediaPath,
     required String token,
     required String createdBy,
   }) async {
@@ -39,7 +39,8 @@ class PosesCubit extends Cubit<PosesState> {
         progressions: progressions,
         apparatus: apparatus,
         level: level,
-        primaryImageId: primaryImageId,
+        primaryMediaId: primaryMediaId,
+        primaryMediaPath: primaryMediaPath,
         token: token,
         createdBy: createdBy,
       );
