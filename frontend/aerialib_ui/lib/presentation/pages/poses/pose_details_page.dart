@@ -21,6 +21,7 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final pose = widget.pose;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,33 +40,27 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
         //   ] // TODO ADD EDITING
       ),
         // TODO Ask about ordering of items on page, ensure consistency across add, edit, and details pages
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Main Image
-            Expanded(
+            // Constrain image height to avoid overflow
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: screenHeight * 0.4,
+                minHeight: 20,
+              ),
+              width: double.infinity,
               child: FormattedCachedNetworkImage(pose.primaryMediaPath),
             ),
             const SizedBox(height: 20),
 
-            // Apparatus
             _infoRow("Apparatus:", pose.apparatus),
-
-            // Level
             _infoRow("Level:", "Level ${pose.level}"),
-
-            // Description
             _infoRow("Description:", pose.description),
-
-            // Teaching Cues
             _infoRow("Teaching Cues:", pose.teachingCues),
-
-            // Safety Cues
             _infoRow("Safety Cues:", pose.safetyCues),
-
-            // Progressions
             _infoRow("Progressions:", pose.progressions),
           ],
         ),

@@ -104,8 +104,8 @@ class PoseRemoteDataSource {
       body: poseListInMap,
     );
 
-    print('[PoseRemoteDataSource] Sync response status: ${response.statusCode}');
-    print('[PoseRemoteDataSource] Sync response body: ${response.body}');
+    // print('[PoseRemoteDataSource] Sync response status: ${response.statusCode}');
+    // print('[PoseRemoteDataSource] Sync response body: ${response.body}');
 
     if (response.statusCode == 201) {
       print('[PoseRemoteDataSource] Sync successful');
