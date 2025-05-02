@@ -1,6 +1,8 @@
+// flow.ts
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
-import { NewFlow, flowsTable } from "../db/schema";
+
+import { NewFlow, flowsTable, flowPosesTable, posesTable, mediaTable } from "../db/schema";
 import { db } from "../db";
 import { eq, sql } from "drizzle-orm";
 
@@ -8,9 +10,9 @@ const flowRouter = Router();
 
 flowRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
-        //create new flow in db 
+        //create new flow in db
 
-        req.body = { ...req.body, uid: req.user }; 
+        req.body = { ...req.body, uid: req.user };
         const NewFlow: NewFlow = req.body;
         console.log(NewFlow);
 
@@ -37,14 +39,14 @@ flowRouter.get("/", auth, async (req: AuthRequest, res) => {
       `;
 
       // Execute the raw SQL query using db.execute()
-      const result = await db.execute(query); 
+      const result = await db.execute(query);
 
       // Access the rows from the result
-      const allFlows = result.rows; 
+      const allFlows = result.rows;
 
       res.json(allFlows);
 
-      
+
       // const allPoses = await db.select().from(posesTable);
       // // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
 

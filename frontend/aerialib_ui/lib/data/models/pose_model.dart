@@ -40,18 +40,18 @@ class PoseModel {
     return PoseModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
-      primaryMediaId: map['primary_media_id'] ?? Constants.missingImageId,
-      primaryMediaPath: map['primary_media_path'] ?? Constants.missingImagePath,
+      primaryMediaId: map['primary_media_id'] ?? map['primaryMediaId'] ?? Constants.missingImageId,
+      primaryMediaPath: map['primary_media_path'] ?? map['primaryMediaPath'] ?? Constants.missingImagePath,
       apparatus: map['apparatus'] ?? '',
       level: (map['level'] is int ? (map['level'] as int).toDouble() : map['level']) ?? -1.0, // Handle potential int or double
       description: map['description'],
       teachingCues: map['teaching_cues'],
       safetyCues: map['safety_cues'],
       progressions: map['progressions'],
-      createdBy: map['created_by'] ?? '',
-      updatedBy: map['updated_by'],
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
+      createdBy: map['created_by'] ?? map['createdBy'] ?? '',
+      updatedBy: map['updated_by'] ?? map['updatedBy'],
+      createdAt: DateTime.parse(map['created_at'] ?? map['createdAt']),
+      updatedAt: DateTime.parse(map['updated_at'] ?? map['updatedAt']),
       isSynced: map['is_synced'] ?? 1,
     );
   }

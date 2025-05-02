@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 
+import 'edit_pose_page.dart';
+
 class PoseDetailsPage extends StatefulWidget {
   final PoseEntity pose;
 
@@ -26,18 +28,18 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(pose.name),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.edit),
-        //     onPressed: () {
-        //       // Navigator.push(
-        //       //     context,
-        //       //     UpdatePosePage.route(widget.pose)
-        //       // );
-        //     },
-        //     tooltip: 'Edit this pose',
-        //   ),
-        //   ] // TODO ADD EDITING
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  UpdatePosePage.route(widget.pose)
+              );
+            },
+            tooltip: 'Edit this pose',
+          ),
+          ] // TODO ADD EDITING
       ),
         // TODO Ask about ordering of items on page, ensure consistency across add, edit, and details pages
       body: SingleChildScrollView(
@@ -58,6 +60,7 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
 
             _infoRow("Apparatus:", pose.apparatus),
             _infoRow("Level:", "Level ${pose.level}"),
+
             _infoRow("Description:", pose.description),
             _infoRow("Teaching Cues:", pose.teachingCues),
             _infoRow("Safety Cues:", pose.safetyCues),

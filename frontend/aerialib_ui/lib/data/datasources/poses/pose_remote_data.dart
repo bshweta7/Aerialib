@@ -124,11 +124,23 @@ class PoseRemoteDataSource {
     final response = await httpService.put(
       path: "/poses/update/${updatedPose.id}",
       token: token,
-      body: updatedPose.toJson(),
+      body: updatedPose.toMap(), // or explicit map
     );
+    print("____________________");
 
-    return PoseModel.fromJson(response.body);
+    print("Backend response body: ${response.body}");
+
+    if (response.statusCode != 200) {
+      print("[PoseRemoteDataSource] Failed to update pose:");
+      print("[PoseRemoteDataSource] Status: ${response.statusCode}");
+      print("[PoseRemoteDataSource] Body: ${response.body}");
+      throw Exception("[PoseRemoteDataSource] Failed to update pose remotely");
+    }
+
+    final json = jsonDecode(response.body);
+    return PoseModel.fromMap(json);
   }
 
-  // TODO delete pose option
+
+// TODO delete pose option
 }

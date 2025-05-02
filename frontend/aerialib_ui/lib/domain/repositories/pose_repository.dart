@@ -125,12 +125,16 @@ class PoseRepository {
   }) async {
     final poseModel = PoseMapper.entityToModel(updatedPose);
 
+    print("[PoseRepository] Updating pose remotely...");
     final updatedModel = await remoteDataSource.updatePose(
       updatedPose: poseModel,
       token: token,
     );
+    print("[PoseRepository] Remote update successful");
 
+    print("[PoseRepository] Updating pose locally...");
     await localDataSource.updatePose(updatedModel);
+    print("[PoseRepository] Local update successful");
   }
 
   /// Delete locally
