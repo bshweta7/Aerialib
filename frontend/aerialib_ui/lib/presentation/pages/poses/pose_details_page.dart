@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 
+import '../../cubit/poses/poses_cubit.dart';
 import 'edit_pose_page.dart';
 
 class PoseDetailsPage extends StatefulWidget {
@@ -23,6 +25,16 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final pose = widget.pose;
+    // final state = context.read<PosesCubit>().state;
+    // late final PoseEntity updatedPose;
+    //
+    // if (state is GetPosesSuccess) {
+    //   updatedPose = state.poses.firstWhere((p) => p.id == widget.pose.id);
+    // } else {
+    //   // fallback to old pose if needed
+    //   updatedPose = widget.pose;
+    // }
+    //
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(

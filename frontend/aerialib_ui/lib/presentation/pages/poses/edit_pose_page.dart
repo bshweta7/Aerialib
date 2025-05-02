@@ -4,6 +4,7 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 
 class UpdatePosePage extends StatefulWidget {
   final PoseEntity pose;
@@ -86,7 +87,13 @@ class _UpdatePosePageState extends State<UpdatePosePage> {
       token: user.user.token,
     );
 
-    Navigator.pop(context);
+    await context.read<PosesCubit>().getAllPoses(token: user.user.token);
+    Navigator.pushAndRemoveUntil(
+      context,
+      PoseLibraryPage.route(),
+          (route) => false, // Clears the entire navigation stack
+    );
+
   }
 
   @override
