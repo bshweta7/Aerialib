@@ -8,7 +8,9 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final UserRepository _userRepository;
 
-  AuthCubit(this._userRepository) : super(const AuthInitial());
+  AuthCubit(this._userRepository) : super(const AuthInitial()) {
+    getUserData();
+  }
 
   void getUserData() async {
     try {

@@ -30,6 +30,7 @@ import 'data/datasources/flow_poses/flow_pose_remote_data.dart';
 import 'data/datasources/flows/flow_remote_data.dart';
 import 'data/datasources/media/media_local_data.dart';
 import 'data/datasources/media/media_remote_data.dart';
+import 'data/services/connectivity_service.dart';
 import 'domain/repositories/flow_pose_repository.dart';
 import 'domain/repositories/flow_repository.dart';
 import 'domain/repositories/media_repository.dart';
@@ -108,10 +109,18 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
+  late final ConnectivityService _connectivityService;
+
   @override
   void initState() {
     super.initState();
-    context.read<AuthCubit>().getUserData();
+    _connectivityService = ConnectivityService();
+  }
+
+  @override
+  void dispose() {
+    _connectivityService.stopLiveSync();
+    super.dispose();
   }
 
   // This widget is the root of your application.
@@ -170,18 +179,22 @@ class _MyAppState extends State<MyApp> {
       home: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             if (state is AuthLoggedIn) {
+              // Start sync listener
+              _connectivityService.startLiveSync(
+                posesCubit: context.read<PosesCubit>(),
+                token: state.token,
+              );
               return const HomePage();
-            } else {
-              if (kIsWeb) {
+
+            } else if (kIsWeb) {
                 // running on the web!
                 return const WebLandingPage();
-              } else {
-                // TODO Mobile landing page
-                return const LoginPage();
-                // NOT running on the web! You can check for additional platforms here.
-              }
-            }
 
+            } else {
+              // TODO Mobile landing page
+              return const LoginPage();
+              // NOT running on the web! You can check for additional platforms here.
+            }
           }
       ),
     );

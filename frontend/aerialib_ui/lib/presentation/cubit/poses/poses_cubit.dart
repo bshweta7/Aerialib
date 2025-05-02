@@ -84,6 +84,7 @@ class PosesCubit extends Cubit<PosesState> {
         try {
           print("Syncing local to remote");
           await _poseRepository.syncLocalToRemote(token);
+          print("synced local to remote");
 
           print("Syncing remote to local");
           await _poseRepository.syncRemoteToLocal(token);

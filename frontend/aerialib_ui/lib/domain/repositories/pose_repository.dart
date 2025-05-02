@@ -4,7 +4,6 @@ import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
 import '../../data/datasources/media/media_local_data.dart';
-import '../../data/models/media_model.dart';
 import '../mappers/pose_mapper.dart';
 
 class PoseRepository {
@@ -69,10 +68,15 @@ class PoseRepository {
   Future<List<PoseEntity>> getAllPoses() async {
     print("Fetching PoseModels and Media from Local Database");
     final poseModels = await localDataSource.getAllPoses();
+    print(poseModels);
+    print("GOT POSE MODELS");
     final mediaList = await mediaLocalDataSource.getPoseMedia();
+    print("GOT MEDIA LIST");
 
     print("Converting to Pose Models to Entities");
-    return PoseMapper.modelsToEntities(poseModels, mediaList);
+    final poseEntitiesList = PoseMapper.modelsToEntities(poseModels, mediaList);
+    print("CONVERTED");
+    return poseEntitiesList;
   }
 
   // TODO get all poses - try to sync and if not possible, return local poses with note that its local only (or last synced time)
@@ -80,6 +84,7 @@ class PoseRepository {
   /// Fetch all poses from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
     final poseModels = await remoteDataSource.fetchRemotePoses(token: token);
+    print(poseModels);
     await localDataSource.insertPoses(poseModels);
   }
 

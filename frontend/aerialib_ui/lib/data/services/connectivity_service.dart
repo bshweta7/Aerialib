@@ -1,19 +1,47 @@
 // core/services/connectivity_service.dart
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+
+import '../../presentation/cubit/flows/flows_cubit.dart';
+import '../../presentation/cubit/poses/poses_cubit.dart';
 
 class ConnectivityService {
   static Future<int> isConnected() async {
     List<ConnectivityResult> resultList = await Connectivity().checkConnectivity();
-    ConnectivityResult result = resultList.first;
-    return _isConnected(result) ? 1 : 0;
+    return _isConnected(resultList) ? 1 : 0;
   }
 
-  static bool _isConnected(ConnectivityResult result) {
+  static bool _isConnected(List<ConnectivityResult> resultList) {
+    ConnectivityResult result = resultList.first;
     return result == ConnectivityResult.mobile ||
         result == ConnectivityResult.wifi ||
         result == ConnectivityResult.ethernet ||
         result == ConnectivityResult.vpn ||
         result == ConnectivityResult.other; // Consider 'other' based on your needs
   }
-}
 
+  // Live Listener Support
+  StreamSubscription? _subscription;
+
+  void startLiveSync({
+    required PosesCubit posesCubit,
+    // required FlowsCubit flowsCubit,
+    required String token,
+  }) {
+    _subscription = Connectivity().onConnectivityChanged.listen((resultList) async {
+      if (_isConnected(resultList)) {
+        print('[ConnectivityService] Connected, triggering sync...');
+        await posesCubit.syncPoses(token);
+        // TODO add other syncs
+        //  await flowsCubit.syncFlows(token);
+      } else {
+        print('[ConnectivityService] Offline');
+      }
+    });
+  }
+
+  void stopLiveSync() {
+    _subscription?.cancel();
+  }
+}

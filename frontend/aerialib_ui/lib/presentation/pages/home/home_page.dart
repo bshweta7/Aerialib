@@ -7,7 +7,6 @@ import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
-import 'package:frontend/to_sort/pages/media/media_library_page.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -29,10 +28,10 @@ class _HomePageState extends State<HomePage> {
 
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    context.read<PosesCubit>().syncPoses(user.user.token);
+    context.read<PosesCubit>().getAllPoses(token: user.user.token);
 
     // Fetch local poses
-    context.read<PosesCubit>().getAllPoses(token: user.user.token);
+    context.read<PosesCubit>().syncPoses(user.user.token);
     // TODO add other imports here
 
 
