@@ -29,6 +29,7 @@ class ConnectivityService {
     // required FlowsCubit flowsCubit,
     required String token,
   }) {
+    print("Starting Live Sync");
     _subscription = Connectivity().onConnectivityChanged.listen((resultList) async {
       if (_isConnected(resultList)) {
         print('[ConnectivityService] Connected, triggering sync...');
@@ -42,6 +43,7 @@ class ConnectivityService {
   }
 
   void stopLiveSync() {
+    print("Stopping Live Sync");
     _subscription?.cancel();
   }
 }
