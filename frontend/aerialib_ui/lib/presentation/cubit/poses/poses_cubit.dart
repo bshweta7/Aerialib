@@ -76,29 +76,26 @@ class PosesCubit extends Cubit<PosesState> {
     }
   }
 
-  /// Sync poses (sync unsynced local poses with remote)
+  /// Run a one-time sync of poses when network is available (sync the unsynced local poses with remote)
   Future<void> syncPoses(String token) async {
-    Connectivity().onConnectivityChanged.listen((data) async {
-      if (data.contains(ConnectivityResult.wifi) || data.contains(ConnectivityResult.ethernet)) { // TODO add other options, possibly move to connectivity_service.dart
-        print("Wifi available.");
-        try {
-          print("Syncing local to remote");
-          await _poseRepository.syncLocalToRemote(token);
-          print("synced local to remote");
+    print("[PosesCubit] Starting one-shot sync...");
 
-          print("Syncing remote to local");
-          await _poseRepository.syncRemoteToLocal(token);
+    try {
+      print("Syncing local to remote...");
+      await _poseRepository.syncLocalToRemote(token);
+      print("Synced local to remote.");
 
-        } catch (e) {
-          print("Sync error: $e");
-          // Optional: emit a sync error state if needed
-          emit(PoseError("Sync error: $e"));
-        }
+      print("Syncing remote to local...");
+      await _poseRepository.syncRemoteToLocal(token);
+      print("Synced remote to local.");
 
-      } else {
-        print("No wifi available");
-      }
-    });
+      // Optionally re-emit fresh poses
+      final updatedPoses = await _poseRepository.getAllPoses();
+      emit(GetPosesSuccess(updatedPoses));
+    } catch (e) {
+      print("Sync error: $e");
+      emit(PoseError("Sync error: $e"));
+    }
   }
 
   /// Update pose info (both local and remote)
