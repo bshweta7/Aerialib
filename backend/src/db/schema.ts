@@ -51,7 +51,7 @@ export type NewMedia = typeof mediaTable.$inferInsert;
 export const posesTable = pgTable("poses", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
-    primaryImageId: uuid("primary_image_id").notNull().references(() => mediaTable.id),
+    primaryMediaId: uuid("primary_media_id").notNull().references(() => mediaTable.id),
     apparatus: text("apparatus").notNull(),
     level: doublePrecision("level").notNull(),
 

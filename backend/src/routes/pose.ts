@@ -33,9 +33,9 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
     const query = sql`
       SELECT 
         poses.*, 
-        media.media_path AS primary_image_path
+        media.media_path AS primary_media_path
       FROM poses
-      JOIN media ON poses.primary_image_id = media.id;
+      JOIN media ON poses.primary_media_id = media.id;
       `;
 
     // Execute the raw SQL query using db.execute()
@@ -73,19 +73,61 @@ poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
   try {
     const posesList = req.body;
     const filteredPoses: NewPose[] = [];
+      // TODO
+      // for (let t of posesList) {
+      //     // 👇 Strip frontend camelCase keys and normalize
+      //     const cleaned = {
+      //         id: t.id,
+      //         name: t.name,
+      //         primary_media_id: t.primary_media_id,
+      //         apparatus: t.apparatus,
+      //         level: t.level,
+      //         description: t.description,
+      //         teaching_cues: t.teaching_cues,
+      //         safety_cues: t.safety_cues,
+      //         progressions: t.progressions,
+      //         created_by: t.created_by ?? req.user,
+      //         updated_by: t.updated_by ?? req.user,
+      //         created_at: new Date(t.created_at),
+      //         updated_at: new Date(t.updated_at),
+      //     };
+      //
+      //     filteredPoses.push(cleaned);
+      // }
 
-    for (let t of posesList) {
+      posesList.forEach((pose: { primary_media_id: any; }) => {
+          console.log('[PoseRouter] Received primary_media_id:', pose.primary_media_id);
+      });
+
+      console.log(req.body);
+
+      for (let t of posesList) {
       t = {
-        ...t,
-        createdAt: new Date(t.createdAt),
-        updatedAt: new Date(t.updatedAt),
-        createdBy: req.user, // TODO Double check if this is right
+        // ...t,
+        id: t.id,
+        name: t.name,
+        primaryMediaId: t.primary_media_id,
+        apparatus: t.apparatus,
+        level: t.level,
+        description: t.description,
+        teachingCues: t.teaching_cues,
+        safetyCues: t.safety_cues,
+        progressions: t.progressions,
+        createdBy: req.user,
+        updatedBy: req.user,
+        createdAt: new Date(t.created_at),
+        updatedAt: new Date(t.updated_at),
       };
       filteredPoses.push(t);
     }
 
+      filteredPoses.forEach(pose => {
+          console.log('[PoseRouter] Received primary_media_id (AFTER FILTERING):', pose.primaryMediaId);
+      });
+
     console.log('[PoseRouter] Inserting poses with keys:');
     filteredPoses.forEach(p => console.log(Object.keys(p)));
+    filteredPoses.forEach(p => console.log(Object.values(p)));
 
     const pushedPoses = await db
       .insert(posesTable)

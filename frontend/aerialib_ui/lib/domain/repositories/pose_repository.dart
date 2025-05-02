@@ -32,7 +32,9 @@ class PoseRepository {
     required String createdBy,
   }) async {
     try {
-      // Create remotely and store locally
+      print('[PoseRepository] Creating pose remotely...');
+
+      // Step 1: Create pose on backend
       final poseModel = await remoteDataSource.createPose(
         name: name,
         description: description,
@@ -47,20 +49,19 @@ class PoseRepository {
         token: token,
       );
 
+      print('[PoseRepository] Remote pose created with ID: ${poseModel.id}');
+
+      // Step 2: Insert into local DB
       await localDataSource.insertPose(poseModel);
+      print('[PoseRepository] Pose inserted into local database.');
 
-      // // Get media path for the associated primary image
-      // final mediaList = await mediaLocalDataSource.getPoseMedia();
-      // final mediaPath = mediaList
-      //     .firstWhere(
-      //       (m) => m.id.toString() == primaryImageId,
-      //   // orElse: () => MediaModel(path: Constants.missingImagePath), TODO - make a mediaModel for the missing image.
-      // )
-      //     .path;
+      // Step 3: Return mapped PoseEntity
+      final entity = PoseMapper.modelToEntity(poseModel);
+      print('[PoseRepository] Mapped PoseModel to PoseEntity: ${entity.id}');
+      return entity;
 
-      return PoseMapper.modelToEntity(poseModel);
     } catch (e) {
-      // TODO Handle other potential errors (e.g., local database issues)
+      print('[PoseRepository] Error creating pose: $e');
       rethrow;
     }
   }
@@ -97,12 +98,12 @@ class PoseRepository {
       return;
     }
 
-    print("Retrieved unsynced poses from local");
+    print("[PoseRepository] Retrieved unsynced poses from local");
     final success = await remoteDataSource.syncPoses(
       token: token,
       poses: unsynced,
     );
-    print("Synced poses to remote");
+    print("[PoseRepository] Synced poses to remote");
 
     if (success) {
       for (final pose in unsynced) {

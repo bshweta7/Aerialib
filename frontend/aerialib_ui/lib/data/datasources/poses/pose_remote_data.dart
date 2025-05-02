@@ -30,7 +30,7 @@ class PoseRemoteDataSource {
       'apparatus': apparatus,
       'level': level,
       'primaryMediaId': primaryMediaId,
-      'primaryMediaPath': primaryMediaPath,
+      // 'primaryMediaPath': primaryMediaPath,
       'createdBy': createdBy,
       if (description != null) 'description': description,
       if (teachingCues != null) 'teachingCues': teachingCues,
@@ -85,18 +85,35 @@ class PoseRemoteDataSource {
     required String token,
     required List<PoseModel> poses,
   }) async {
-    final List<Map<String, dynamic>> poseListInMap = poses.map((pose) => pose.toMap()).toList();
+    final poseListInMap = poses.map((pose) {
+      final map = pose.toMap();
+      map.remove('is_synced');
+      map.remove('primary_media_path');
+      print("MEDIA: ${pose.primaryMediaId}");
+      return map;
+    }).toList();
+
     print('[PoseRemoteDataSource] Sync payload:');
-    poseListInMap.forEach((map) => print(map.keys));
+    for (final map in poseListInMap) {
+      print(map.keys);
+    }
 
     final response = await httpService.post(
       path: "/poses/sync",
       token: token,
       body: poseListInMap,
     );
-    print(response);
 
-    return response.statusCode == 201;
+    print('[PoseRemoteDataSource] Sync response status: ${response.statusCode}');
+    print('[PoseRemoteDataSource] Sync response body: ${response.body}');
+
+    if (response.statusCode == 201) {
+      print('[PoseRemoteDataSource] Sync successful');
+      return true;
+    } else {
+      print('[PoseRemoteDataSource] Sync failed');
+      return false;
+    }
   }
 
 
