@@ -68,7 +68,7 @@ class PoseModel {
       'updated_by': updatedBy,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
-      'is_synced': isSynced,
+      // 'is_synced': isSynced,
     };
   }
 

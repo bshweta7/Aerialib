@@ -83,7 +83,9 @@ class PoseRemoteDataSource {
     required List<PoseModel> poses,
   }) async {
     final List<Map<String, dynamic>> poseListInMap = poses.map((pose) => pose.toMap()).toList();
-    print(poseListInMap);
+    print('[PoseRemoteDataSource] Sync payload:');
+    poseListInMap.forEach((map) => print(map.keys));
+
     final response = await httpService.post(
       path: "/poses/sync",
       token: token,

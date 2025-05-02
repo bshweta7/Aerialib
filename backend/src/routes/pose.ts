@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
-import { NewPose, posesTable } from "../db/schema";
+import {mediaTable, NewPose, posesTable} from "../db/schema";
 import { db } from "../db";
 import { eq, sql } from "drizzle-orm";
+import mediaRouter from "./media";
 
 const poseRouter = Router();
 
@@ -28,14 +29,13 @@ poseRouter.post("/", auth, async (req: AuthRequest, res) => {
 poseRouter.get("/", auth, async (req: AuthRequest, res) => {
     
   try {
+      // TODO use drizzle ORM instead of sql query
     const query = sql`
       SELECT 
         poses.*, 
-        media.media_url AS primary_image_url
-      FROM 
-        poses
-      JOIN 
-        media ON poses.primary_image_id = media.id;
+        media.media_path AS primary_image_path
+      FROM poses
+      JOIN media ON poses.primary_image_id = media.id;
       `;
 
     // Execute the raw SQL query using db.execute()
@@ -79,14 +79,17 @@ poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
         ...t,
         createdAt: new Date(t.createdAt),
         updatedAt: new Date(t.updatedAt),
-        createdBy: req.user, // TODO Double check if this is right 
+        createdBy: req.user, // TODO Double check if this is right
       };
       filteredPoses.push(t);
     }
 
+    console.log('[PoseRouter] Inserting poses with keys:');
+    filteredPoses.forEach(p => console.log(Object.keys(p)));
+
     const pushedPoses = await db
       .insert(posesTable)
-      .values(posesList)
+      .values(filteredPoses)
       .returning();
 
     res.status(201).json(pushedPoses);

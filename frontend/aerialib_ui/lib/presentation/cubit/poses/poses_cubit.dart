@@ -81,22 +81,22 @@ class PosesCubit extends Cubit<PosesState> {
     print("[PosesCubit] Starting one-shot sync...");
 
     try {
-      print("Syncing local to remote...");
+      print('[PosesCubit] Syncing local to remote...');
       await _poseRepository.syncLocalToRemote(token);
-      print("Synced local to remote.");
+      print('[PosesCubit] Synced local to remote.');
 
-      print("Syncing remote to local...");
+      print('[PosesCubit] Syncing remote to local...');
       await _poseRepository.syncRemoteToLocal(token);
-      print("Synced remote to local.");
+      print('[PosesCubit] Synced remote to local.');
 
-      // Optionally re-emit fresh poses
       final updatedPoses = await _poseRepository.getAllPoses();
       emit(GetPosesSuccess(updatedPoses));
     } catch (e) {
-      print("Sync error: $e");
-      emit(PoseError("Sync error: $e"));
+      print('[PosesCubit] Sync error: $e');
+      emit(PoseError('[PosesCubit] Sync error: $e'));
     }
   }
+
 
   /// Update pose info (both local and remote)
   Future<void> updatePoseInfo({

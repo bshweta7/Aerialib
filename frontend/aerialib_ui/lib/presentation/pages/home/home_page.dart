@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
             }
 
             if (state is PoseError) {
-              print("Error: State is Pose Error");
+              print("[HomePage] Error: State is Pose Error");
               return Center(
                 child: Column(
                   children: [
