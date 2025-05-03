@@ -63,13 +63,22 @@ class _PoseFiltersState extends State<PoseFilters> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
       decoration: BoxDecoration(
-        color: Colors.purple.shade100,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 1),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,12 +86,9 @@ class _PoseFiltersState extends State<PoseFilters> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Filters",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               IconButton(
                 icon: const Icon(Icons.refresh),
@@ -92,21 +98,17 @@ class _PoseFiltersState extends State<PoseFilters> {
             ],
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
           // Apparatus Filter
-          Wrap(
-            alignment: WrapAlignment.start,
-            spacing: 8.0,
-            runSpacing: 4.0,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Apparatus:",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+              Text(
+                "Apparatus",
+                style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500),
               ),
+              const SizedBox(height: 6),
               FilterMultiSelect<String>(
                 options: Constants.apparatusOptions,
                 initialValues: widget.initialApparatus,
@@ -119,36 +121,32 @@ class _PoseFiltersState extends State<PoseFilters> {
                   return null;
                 },
               ),
+              if (_apparatusError)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    'Please select at least one apparatus',
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
             ],
           ),
-          if (_apparatusError)
-            const Padding(
-              padding: EdgeInsets.only(top: 4.0),
-              child: Text(
-                'Please select at least one apparatus',
-                style: TextStyle(color: Colors.red, fontSize: 12),
-              ),
-            ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
 
           // Level Filter
-          Wrap(
-            alignment: WrapAlignment.start,
-            spacing: 8.0,
-            runSpacing: 4.0,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Level:",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+              Text(
+                "Level",
+                style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500),
               ),
+              const SizedBox(height: 6),
               FilterMultiSelect<int>(
                 options: Constants.levelOptions,
                 initialValues: widget.initialLevels,
-                getLabel: (int level) => 'Level \$level',
+                getLabel: (int level) => 'Level $level',
                 onSelectionChanged: _onLevelsSelectionChanged,
                 validator: (value) {
                   if (value == null || value.isEmpty) {

@@ -14,7 +14,8 @@ class Constants {
   static String mediaUrlPrefix = "$backendUrl/media/data";
 
   // Options
-  static List<String> apparatusOptions = ["Lyra", "Hammock", "Conditioning", "Warm Up", "Cool Down"];
+  // TODO make separate pages for warm up/cool down (dont include warm up/cooldown/ conditioning in poses, make it separate).
+  static List<String> apparatusOptions = ["Lyra", "Hammock"]; //, "Conditioning", "Warm Up", "Cool Down"];
   static List<int> levelOptions = [0, 1, 2, 3];
   static List<String> shareOptions = ["Default", "My Images", "Shared with Me"];
 

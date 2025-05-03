@@ -61,7 +61,10 @@ class _FilterMultiSelectState<T> extends State<FilterMultiSelect<T>> {
           children: widget.options.map((option) {
             final isSelected = _selectedValues.contains(option);
             return FilterChip(
-              label: Text(widget.getLabel(option)),
+              label: Text(
+                widget.getLabel(option),
+                style: const TextStyle(fontSize: 12),
+              ),
               selected: isSelected,
               onSelected: (bool selected) {
                 _toggleValue(option);

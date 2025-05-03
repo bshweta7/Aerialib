@@ -84,6 +84,56 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     });
   }
 
+  void _openFilterSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent, // Transparent for rounded corners
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6, // start at 60%
+          minChildSize: 0.4,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    PoseFilters(
+                      initialApparatus: selectedApparatus,
+                      initialLevels: selectedLevels,
+                      onApparatusChanged: _updateApparatusFilter,
+                      onLevelsChanged: _updateLevelsFilter,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+
   // Search Bar
   void _updateSearchQuery(String newQuery) {
     print(newQuery);
@@ -199,11 +249,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                           tooltip: _showFilters
                               ? 'Hide filters'
                               : 'Show filters',
-                          onPressed: () {
-                            setState(() {
-                              _showFilters = !_showFilters;
-                            });
-                          },
+                          onPressed: () => _openFilterSheet(context),
                         ),
                       ],
                     ),
@@ -216,9 +262,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Filters: \${selectedApparatus.length + selectedLevels.length} Active',
-                            style: Theme.of(context).textTheme.bodyMedium,
+                          Tooltip(
+                            message: '${selectedApparatus.length} Apparatus, ${selectedLevels.length} Levels',
+                            child: Text(
+                              'Filters: ${selectedApparatus.length + selectedLevels.length} Active',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
                           TextButton(
                             onPressed: () {
@@ -233,16 +282,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                       ),
                     ),
 
-                  // Pose Filters Selector
-                  if (_showFilters)
-                    PoseFilters(
-                      initialApparatus: selectedApparatus,
-                      initialLevels: selectedLevels,
-                      onApparatusChanged: _updateApparatusFilter,
-                      onLevelsChanged: _updateLevelsFilter,
-                    ),
-
-                  const SizedBox(height: 15),
+                  // const SizedBox(height: 15),
 
                   Expanded(
                     child: Stack(
