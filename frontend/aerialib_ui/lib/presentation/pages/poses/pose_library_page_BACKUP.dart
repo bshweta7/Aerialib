@@ -189,30 +189,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                   // Search Bar
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        // Expanded Search Bar
-                        Expanded(
-                          child: PoseSearchBarWidget(
-                            hintText: 'Search Poses',
-                            onSearchChanged: _updateSearchQuery,
-                            suggestionList: sortedPoses,
-                          ),
-                        ),
-
-                        const SizedBox(width: 10),
-
-                        // Filter Icon Button
-                        IconButton(
-                          icon: const Icon(Icons.filter_alt_outlined),
-                          tooltip: 'Show Filters',
-                          onPressed: () {
-                            // setState(() {
-                            //   _showAllFilters = !_showAllFilters;
-                            // });
-                          },
-                        ),
-                      ],
+                    child: PoseSearchBarWidget(
+                      hintText: 'Search Poses',
+                      onSearchChanged: _updateSearchQuery,
+                      suggestionList: sortedPoses,
                     ),
                   ),
 

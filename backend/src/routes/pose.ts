@@ -9,8 +9,7 @@ const poseRouter = Router();
 
 poseRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
-      // TODO make sure the pose doesn't exist already? 
-        // TODO: check that the values were actually provided because it error if you dont
+      // TODO make sure the pose doesn't exist already?
         //create new pose in db 
         req.body = { ...req.body, uid: req.user }; 
         const NewPose: NewPose = req.body;
