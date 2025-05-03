@@ -19,6 +19,61 @@ class PoseFilters extends StatefulWidget {
 
   @override
   State<PoseFilters> createState() => _PoseFiltersState();
+
+  /// Modal Bottom Sheet entry point
+  static Future<void> showFilterSheet({
+    required BuildContext context,
+    required List<String> selectedApparatus,
+    required List<int> selectedLevels,
+    required ValueChanged<List<String>> onApparatusChanged,
+    required ValueChanged<List<int>> onLevelsChanged,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          minChildSize: 0.4,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    PoseFilters(
+                      initialApparatus: selectedApparatus,
+                      initialLevels: selectedLevels,
+                      onApparatusChanged: onApparatusChanged,
+                      onLevelsChanged: onLevelsChanged,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }
 
 class _PoseFiltersState extends State<PoseFilters> {

@@ -14,7 +14,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
 
-import 'package:frontend/presentation/widgets/filters/pose_filter.dart';
+import 'package:frontend/presentation/widgets/filters/pose_filter_screen.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
@@ -83,56 +83,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
       selectedLevels = newLevels;
     });
   }
-
-  void _openFilterSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent, // Transparent for rounded corners
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.6, // start at 60%
-          minChildSize: 0.4,
-          maxChildSize: 0.95,
-          expand: false,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 4,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    PoseFilters(
-                      initialApparatus: selectedApparatus,
-                      initialLevels: selectedLevels,
-                      onApparatusChanged: _updateApparatusFilter,
-                      onLevelsChanged: _updateLevelsFilter,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-
 
   // Search Bar
   void _updateSearchQuery(String newQuery) {
@@ -249,7 +199,15 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                           tooltip: _showFilters
                               ? 'Hide filters'
                               : 'Show filters',
-                          onPressed: () => _openFilterSheet(context),
+                          onPressed: () {
+                            PoseFilters.showFilterSheet(
+                              context: context,
+                              selectedApparatus: selectedApparatus,
+                              selectedLevels: selectedLevels,
+                              onApparatusChanged: _updateApparatusFilter,
+                              onLevelsChanged: _updateLevelsFilter,
+                            );
+                          },
                         ),
                       ],
                     ),
