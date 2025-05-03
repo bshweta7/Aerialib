@@ -4,7 +4,7 @@ import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 
 import '../../cubit/poses/poses_cubit.dart';
-import 'edit_pose_page.dart';
+import 'pose_edit_page.dart';
 
 class PoseDetailsPage extends StatefulWidget {
   final PoseEntity pose;

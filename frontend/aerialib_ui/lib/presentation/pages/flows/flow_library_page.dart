@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/utils/conversions.dart';
-
 import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:frontend/domain/entities/media_icon_entity.dart';
 
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 import 'package:frontend/presentation/pages/flows/flow_details_page.dart';
+import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
 
+import 'package:frontend/presentation/widgets/filters/pose_filter_screen.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
-import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
+import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 
-import 'add_new_flow_page.dart';
+import '../../../core/utils/conversions.dart';
 
 class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -28,15 +29,10 @@ class FlowLibraryPage extends StatefulWidget {
 }
 
 class _FlowLibraryPageState extends State<FlowLibraryPage> {
-
   final ScrollController _scrollController = ScrollController();
 
-  // TODO - is grid view needed here?
-
-  // TODO Filtering
   List<String> selectedApparatus = Constants.apparatusOptions;
-
-  // Search Bar
+  List<int> selectedLevels = Constants.levelOptions;
   String _searchQuery = '';
 
   @override
@@ -52,57 +48,48 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
     super.dispose();
   }
 
-  // TODO - Filtering
-  // void _updateApparatusFilter(List<String> newApparatus) {
-  //   setState(() {
-  //     selectedApparatus = newApparatus;
-  //   });
-  // }
-  //
-  // void _updateLevelsFilter(List<int> newLevels) {
-  //   setState(() {
-  //     selectedLevels = newLevels;
-  //   });
-  // }
+  void _updateApparatusFilter(List<String> newApparatus) {
+    setState(() {
+      selectedApparatus = newApparatus;
+    });
+  }
 
-  // Search Bar
+  void _updateLevelsFilter(List<int> newLevels) {
+    setState(() {
+      selectedLevels = newLevels;
+    });
+  }
+
   void _updateSearchQuery(String newQuery) {
-    print(newQuery);
     setState(() {
       _searchQuery = newQuery;
     });
   }
 
-  // Navigation
-  // void _navigateToFlowPage(FlowEntity flow) {
-  //   Navigator.push(context, FlowDetailsPage.route(flow));
-  // }
-
-  // TODO - should I use this function instead? void _navigateToMediaPage(MediaIconEntity mediaItem) {
-  //   Navigator.push(
-  //     context,
-  //     PoseDetailsPage.route(mediaItem.data),
-  //   );
-  // }
+  void _navigateToFlowPage(MediaIconEntity mediaItem) {
+    Navigator.push(
+      context,
+      FlowDetailsPage.route(mediaItem.data),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Flows"),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                // Navigator.push(context, AddNewFlowPage.route());
-              },
-              tooltip: 'Add a new flow',
-            ),
-          ]
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(context, AddNewFlowPage.route());
+            },
+            tooltip: 'Add a new flow',
+          ),
+        ],
       ),
       body: BlocBuilder<FlowsCubit, FlowsState>(
         builder: (context, state) {
-
           if (state is FlowLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -112,42 +99,79 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
           }
 
           if (state is GetFlowsSuccess) {
-            final flows = state.flows;
-            if (flows.isEmpty) {
-              return const Center(child: Text("No flows available."));
-            }
+            final List<FlowEntity> filteredFlows = state.flows.where((flow) {
+              return selectedApparatus.contains(flow.apparatus) &&
+                  selectedLevels.contains(flow.level);
+            }).toList();
 
-            // TODO add filtering
-            // List<PoseEntity> filteredPoses = state.poses.where(
-            //       (elem) =>
-            //   selectedApparatus.contains(elem.apparatus) &&
-            //       selectedLevels.contains(elem.level),
-            // ).toList();
-            //
-            // List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
+            final List<MediaIconEntity> mediaIcons = filteredFlows.map((flow) => MediaIconEntity(
+              imageUrl: flow.thumbnailImagePath,
+              title: flow.name,
+              subtitle: "Level ${flow.level} | ${flow.apparatus}",
+              type: MediaType.flow,
+              data: flow,
+            )).toList();
 
-            final mediaItems = flowsToMediaIcons(state.flows);
-
-            // Search suggestion list
-            final List<FlowEntity> sortedFlows = List<FlowEntity>.from(state.flows)
+            final List<FlowEntity> sortedFlows = List.from(state.flows)
               ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
             return Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                  child: Row(
+                    children: [
+                      // Expanded(
+                      //   child: PoseSearchBarWidget(
+                      //     hintText: 'Search Flows',
+                      //     onSearchChanged: _updateSearchQuery,
+                      //     suggestionList: sortedFlows,
+                      //   ),
+                      // ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        icon: const Icon(Icons.filter_alt_outlined),
+                        tooltip: 'Show filters',
+                        onPressed: () {
+                          PoseFilters.showFilterSheet(
+                            context: context,
+                            selectedApparatus: selectedApparatus,
+                            selectedLevels: selectedLevels,
+                            onApparatusChanged: _updateApparatusFilter,
+                            onLevelsChanged: _updateLevelsFilter,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
 
-                // TODO filters section
-
-                // Search Bar
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                //   child: FlowSearchBarWidget(
-                //     hintText: 'Search Flows',
-                //     onSearchChanged: _updateSearchQuery,
-                //     suggestionList: sortedFlows,
-                //   ),
-                // ),
-
-                const SizedBox(height: 15,),
+                if (selectedApparatus.length < Constants.apparatusOptions.length ||
+                    selectedLevels.length < Constants.levelOptions.length)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Tooltip(
+                          message: '${selectedApparatus.length} Apparatus, ${selectedLevels.length} Levels',
+                          child: Text(
+                            'Filters: ${selectedApparatus.length + selectedLevels.length} Active',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedApparatus = Constants.apparatusOptions;
+                              selectedLevels = Constants.levelOptions;
+                            });
+                          },
+                          child: const Text('Clear All'),
+                        ),
+                      ],
+                    ),
+                  ),
 
                 Expanded(
                   child: Stack(
@@ -157,10 +181,8 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                         child: Column(
                           children: [
                             MediaList(
-                              mediaItems: mediaItems,
-                              onMediaTap: (mediaItem) {
-                                // _navigateToFlowPage(mediaItem.data as FlowEntity);
-                              }, // TODO verify - this doesnt align exactly with the pose library page
+                              mediaItems: mediaIcons,
+                              onMediaTap: _navigateToFlowPage,
                             ),
                           ],
                         ),
