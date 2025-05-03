@@ -19,4 +19,5 @@ class MediaIconEntity {
 enum MediaType {
   pose,
   flow,
+  media,
 }

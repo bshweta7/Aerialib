@@ -59,7 +59,7 @@ class MediaCubit extends Cubit<MediaState>{
 
 
   /// Fetch all medias (from local storage or remote if needed)
-  Future<void> getAllMedias({required String token}) async {
+  Future<void> getAllMedia({required String token}) async {
     try {
       print("Fetching medias...");
       emit(const MediaLoading());
@@ -74,7 +74,7 @@ class MediaCubit extends Cubit<MediaState>{
       }
 
       print("Number of Medias Retrieved: ${medias.length}");
-      emit(GetMediaListSuccess(medias));
+      emit(GetMediaSuccess(medias));
 
     } catch (e) {
       print("Cubit GetAllMedias failed");

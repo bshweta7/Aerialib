@@ -15,9 +15,9 @@ class MediaLoading extends MediaState {
   const MediaLoading();
 }
 
-class GetMediaListSuccess extends MediaState {
+class GetMediaSuccess extends MediaState {
   final List<MediaEntity> mediaList;
-  const GetMediaListSuccess(this.mediaList);
+  const GetMediaSuccess(this.mediaList);
 
   @override
   List<Object?> get props => [mediaList];

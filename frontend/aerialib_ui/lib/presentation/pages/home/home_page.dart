@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
 import 'package:frontend/to_sort/pages/home/test_page.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
@@ -103,21 +104,20 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 10,),
 
-                    // // Media Library Navigation
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       Navigator.push(context, MediaLibraryPage.route());
-                    //     },
-                    //     child: const Text(
-                    //         "Media Library",
-                    //         style: TextStyle(
-                    //           // fontWeight: FontWeight.bold,
-                    //           color: Colors.white,
-                    //           fontSize: 20,
-                    //         )
-                    //     )
-                    // ),
-                    // SizedBox(height: 10,),
+                    // Media Library Navigation
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MediaGalleryPage.route());
+                        },
+                        child: const Text(
+                            "Media Gallery",
+                            style: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            )
+                        )
+                    ),
+                    SizedBox(height: 10,),
 
                     // Flow Library Navigation
                     ElevatedButton(
