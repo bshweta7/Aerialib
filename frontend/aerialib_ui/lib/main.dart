@@ -45,9 +45,9 @@ Future<void> main() async {
     await windowManager.ensureInitialized();
 
     WindowOptions windowOptions = const WindowOptions(
-      size: Size(300, 600), // Set your desired default width and height
-      center: true, // Optional: Center the window on the screen
-      title: 'Aerialib Linux', // Optional: Set the window title
+      size: Size(300, 600),
+      center: true,
+      title: 'Aerialib Linux',
     );
 
     windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -60,7 +60,6 @@ Future<void> main() async {
   final poseRepo = PoseRepository(
     localDataSource: PoseLocalDataSource(),
     remoteDataSource: PoseRemoteDataSource(httpService: HttpService()),
-    mediaLocalDataSource: MediaLocalDataSource(),
   );
 
   final userRepo = UserRepository(
@@ -106,7 +105,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   late final ConnectivityService _connectivityService;
 
   @override
@@ -121,59 +119,99 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Aerialib',
       theme: ThemeData(
-        // TODO add dark mode. reference: https://api.flutter.dev/flutter/material/SearchBar-class.html
-        appBarTheme: const AppBarTheme(
-          // color: Colors.indigo,
-          // titleTextStyle: TextStyle(
-          //   color: Colors.white
-          // )
-          // TODO update text style for title and make icons white
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFB39DDB), // Lavender
+          background: const Color(0xFFFFFDF8), // Soft off-white background
+        ).copyWith(
+          primary: const Color(0xFFB39DDB), // Lavender
+          secondary: const Color(0xFF80CBC4), // Muted Teal
         ),
+        scaffoldBackgroundColor: const Color(0xFFE4E2ED),
         fontFamily: "Cera Pro",
-        inputDecorationTheme: InputDecorationTheme(
-          contentPadding: const EdgeInsets.all(27),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.grey.shade300,
-              width: 3,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 3,
-              )
-          ),
-          errorBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.red,
-                width: 3,
-              )
-          ),
-          border: const OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 3,
-              )
-          ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: const Color(0xFF3A2E58), // plum text
+          foregroundColor: Colors.white,
+          titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          iconTheme: IconThemeData(color: Colors.white),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            minimumSize: const Size(double.infinity, 60),
+            backgroundColor: const Color(0xFFE3DFF5), // softer lavender backgroundColor: const Color(0xFFB39DDB), // lavender
+            foregroundColor: const Color(0xFF3A2E58), // plum text
+            shadowColor: Colors.black12,
+            elevation: 1,
+            minimumSize: const Size(double.infinity, 50),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
+              side: const BorderSide(
+                color: const Color(0xFF3A2E58), // plum text color: Color(0xFF80CBC4), // muted teal border
+                width: 2,
+              ),
+
+            ),
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.4,
+              color: Color(0xFF3A2E58),
             ),
           ),
         ),
 
-        useMaterial3: true,
+        inputDecorationTheme: InputDecorationTheme(
+          contentPadding: const EdgeInsets.all(20),
+          filled: true,
+          fillColor: Colors.white,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.grey.shade300,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: Color(0xFFB39DDB),
+              width: 2.5,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.red, width: 2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          border: OutlineInputBorder(
+            borderSide: const BorderSide(width: 2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+
+        searchBarTheme: SearchBarThemeData(
+          backgroundColor: MaterialStateProperty.all(const Color(0xFFF5F3FB)), // light lavender
+          // surfaceTintColor: Colors.transparent, // removes default Material3 overlay tint
+          // shadowColor: Colors.transparent,
+          hintStyle: MaterialStateProperty.all(
+            TextStyle(color: Colors.grey[600]),
+          ),
+          textStyle: MaterialStateProperty.all(
+            const TextStyle(color: Color(0xFF3A2E58)), // deep plum text
+          ),
+          // shape: MaterialStateProperty.all(
+          //   RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(30),
+          //     side: const BorderSide(color: Color(0xFFB39DDB), width: 1.5),
+          //   ),
+          // ),
+        ),
+
       ),
+      // TODO add dark mode. reference: https://api.flutter.dev/flutter/material/SearchBar-class.html
 
       home: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {

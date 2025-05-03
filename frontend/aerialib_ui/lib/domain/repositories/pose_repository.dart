@@ -3,18 +3,15 @@ import 'package:frontend/data/datasources/poses/pose_remote_data.dart';
 import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
-import '../../data/datasources/media/media_local_data.dart';
 import '../mappers/pose_mapper.dart';
 
 class PoseRepository {
   final PoseLocalDataSource localDataSource;
   final PoseRemoteDataSource remoteDataSource;
-  final MediaLocalDataSource mediaLocalDataSource;
 
   PoseRepository({
     required this.localDataSource,
     required this.remoteDataSource,
-    required this.mediaLocalDataSource,
   });
 
   /// Create a new pose (tries remote first, fallback to local if offline)

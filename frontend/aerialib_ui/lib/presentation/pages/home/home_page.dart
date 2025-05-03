@@ -97,7 +97,6 @@ class _HomePageState extends State<HomePage> {
                           "Pose Library",
                           style: TextStyle(
                             // fontWeight: FontWeight.bold,
-                            color: Colors.white,
                             fontSize: 20,
                           )
                         )
@@ -129,7 +128,6 @@ class _HomePageState extends State<HomePage> {
                             "Flow Library",
                             style: TextStyle(
                               // fontWeight: FontWeight.bold,
-                              color: Colors.white,
                               fontSize: 20,
                             )
                         )
@@ -157,7 +155,6 @@ class _HomePageState extends State<HomePage> {
                             "TEST PAGE",
                             style: TextStyle(
                               // fontWeight: FontWeight.bold,
-                              color: Colors.white,
                               fontSize: 20,
                             )
                         )

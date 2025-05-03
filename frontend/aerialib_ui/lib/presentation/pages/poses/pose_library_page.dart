@@ -178,7 +178,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                 children: [
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                     child: Row(
                       children: [
 
