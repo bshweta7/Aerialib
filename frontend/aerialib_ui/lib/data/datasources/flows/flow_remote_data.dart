@@ -13,6 +13,7 @@ class FlowRemoteDataSource {
   Future<FlowModel> createFlow({
     required String name,
     required String thumbnailImageId,
+    required String thumbnailImagePath,
     required String apparatus,
     required double level,
     String? description,
@@ -27,11 +28,11 @@ class FlowRemoteDataSource {
       'thumbnail_image_id': thumbnailImageId,
       'apparatus': apparatus,
       'level': level,
-      'description': description,
-      'teaching_cues': teachingCues,
-      'safety_cues': safetyCues,
-      'progressions': progressions,
       'created_by': createdBy,
+      if (description != null) 'description': description,
+      if (teachingCues != null) 'teaching_cues': teachingCues,
+      if (safetyCues != null) 'safety_cues': safetyCues,
+      if (progressions != null) 'progressions': progressions,
     };
 
     try {
@@ -48,6 +49,7 @@ class FlowRemoteDataSource {
         id: const Uuid().v6(),
         name: name,
         thumbnailImageId: thumbnailImageId,
+        thumbnailImagePath: thumbnailImagePath,
         apparatus: apparatus,
         level: level,
         description: description,

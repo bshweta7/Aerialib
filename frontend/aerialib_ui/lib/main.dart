@@ -71,7 +71,6 @@ Future<void> main() async {
   final flowRepo = FlowRepository(
     localDataSource: FlowLocalDataSource(),
     remoteDataSource: FlowRemoteDataSource(httpService: HttpService()),
-    mediaLocalDataSource: MediaLocalDataSource(),
   );
 
   final flowPoseRepo = FlowPoseRepository(
@@ -79,7 +78,6 @@ Future<void> main() async {
     remoteDataSource: FlowPoseRemoteDataSource(httpService: HttpService()),
     poseLocalDataSource: PoseLocalDataSource(),
     transitionLocalDataSource: TransitionLocalDataSource(),
-    mediaLocalDataSource: MediaLocalDataSource(),
   );
 
   final mediaRepo = MediaRepository(

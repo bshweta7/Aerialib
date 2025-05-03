@@ -2,25 +2,17 @@ import 'package:frontend/data/models/flow_model.dart';
 import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/data/models/flow_pose_model.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
-import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:frontend/domain/mappers/pose_mapper.dart';
-import 'package:uuid/uuid.dart';
-
-import '../../core/constants/constants.dart';
 import '../entities/flow_pose_entity.dart';
 import 'flow_pose_mapper.dart';
 
 class FlowMapper {
   /// Converts a FlowModel to a FlowEntity with empty poses.
-  static FlowEntity modelToEntityMetaDataOnly(
-      FlowModel flowModel, {
-        required String thumbnailImagePath,
-      }) {
+  static FlowEntity modelToEntityMetaDataOnly(FlowModel flowModel) {
     return FlowEntity(
       id: flowModel.id,
       name: flowModel.name,
       thumbnailImageId: flowModel.thumbnailImageId,
-      thumbnailImagePath: thumbnailImagePath,
+      thumbnailImagePath: flowModel.thumbnailImagePath,
       apparatus: flowModel.apparatus,
       level: flowModel.level,
       description: flowModel.description,
@@ -41,7 +33,6 @@ class FlowMapper {
     required FlowModel flowModel,
     required List<FlowPoseModel> flowPoseModels,
     required Future<PoseModel?> Function(String id) getPoseById,
-    required String thumbnailImagePath,
   }) async {
     final List<FlowPoseEntity> flowPoseEntities = [];
 
@@ -52,7 +43,6 @@ class FlowMapper {
           FlowPoseMapper.modelToEntity(
               model: model,
               poseModel: poseModel,
-              mediaPath: thumbnailImagePath,
               // TODO transitionModel: transitionModel
           ),
         );
@@ -63,7 +53,7 @@ class FlowMapper {
       id: flowModel.id,
       name: flowModel.name,
       thumbnailImageId: flowModel.thumbnailImageId,
-      thumbnailImagePath: thumbnailImagePath,
+      thumbnailImagePath: flowModel.thumbnailImagePath,
       apparatus: flowModel.apparatus,
       level: flowModel.level,
       description: flowModel.description,
@@ -85,6 +75,7 @@ class FlowMapper {
       id: entity.id,
       name: entity.name,
       thumbnailImageId: entity.thumbnailImageId,
+      thumbnailImagePath: entity.thumbnailImagePath,
       apparatus: entity.apparatus,
       level: entity.level,
       description: entity.description,

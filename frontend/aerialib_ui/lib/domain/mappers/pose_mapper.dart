@@ -1,9 +1,6 @@
 import 'package:frontend/data/models/pose_model.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
-import '../../core/constants/constants.dart';
-import '../../data/models/media_model.dart';
-
 class PoseMapper {
   /// Convert a PoseModel to a PoseEntity
   static PoseEntity modelToEntity(PoseModel model,) {

@@ -1,22 +1,19 @@
 import 'package:frontend/data/datasources/flows/flow_local_data.dart';
 import 'package:frontend/data/datasources/flows/flow_remote_data.dart';
-import 'package:frontend/data/datasources/media/media_local_data.dart';
-import 'package:frontend/domain/entities/flow_entity.dart';
-import 'package:frontend/data/models/flow_model.dart';
-import 'package:frontend/data/models/media_model.dart';
-import 'package:frontend/domain/mappers/flow_mapper.dart';
 
-import '../../core/constants/constants.dart';
+import 'package:frontend/data/models/flow_model.dart';
+
+import 'package:frontend/domain/mappers/flow_mapper.dart';
+import 'package:frontend/domain/entities/flow_entity.dart';
+
 
 class FlowRepository {
   final FlowLocalDataSource localDataSource;
   final FlowRemoteDataSource remoteDataSource;
-  final MediaLocalDataSource mediaLocalDataSource;
 
   FlowRepository({
     required this.localDataSource,
     required this.remoteDataSource,
-    required this.mediaLocalDataSource,
   });
 
   /// Create a new flow (tries remote first, fallback to local if offline)
@@ -29,6 +26,7 @@ class FlowRepository {
     required String apparatus,
     required double level,
     required String thumbnailImageId,
+    required String thumbnailImagePath,
     required String createdBy,
     required String token,
   }) async {
@@ -42,20 +40,13 @@ class FlowRepository {
         apparatus: apparatus,
         level: level,
         thumbnailImageId: thumbnailImageId,
+        thumbnailImagePath: thumbnailImagePath,
         createdBy: createdBy,
         token: token,
       );
       await localDataSource.insertFlow(flowModel);
 
-      final mediaList = await mediaLocalDataSource.getPoseMedia();
-      final imagePath = mediaList
-          .firstWhere(
-            (m) => m.id == flowModel.thumbnailImageId,
-        orElse: () => MediaModel(path: Constants.missingImagePath, type: '', uploadedBy: '', uploadedAt: DateTime.now(), id: '', isSynced: 0),
-      )
-          .path;
-
-      return FlowMapper.modelToEntityMetaDataOnly(flowModel, thumbnailImagePath: imagePath);
+      return FlowMapper.modelToEntityMetaDataOnly(flowModel);
     } catch (e) {
       rethrow;
     }
@@ -64,14 +55,9 @@ class FlowRepository {
   /// Fetch all flows from local DB - initialize poses as []
   Future<List<FlowEntity>> getLocalFlows() async {
     final flowModels = await localDataSource.getFlows();
-    final mediaList = await mediaLocalDataSource.getPoseMedia();
-    final mediaMap = {
-      for (var m in mediaList) m.id: m.path,
-    };
 
     return flowModels.map((model) {
-      final imagePath = mediaMap[model.thumbnailImageId] ?? Constants.missingImagePath;
-      return FlowMapper.modelToEntityMetaDataOnly(model, thumbnailImagePath: imagePath);
+      return FlowMapper.modelToEntityMetaDataOnly(model);
     }).toList();
   }
 

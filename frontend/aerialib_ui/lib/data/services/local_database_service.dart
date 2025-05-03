@@ -27,7 +27,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 1, // (Increment carefully if you add new tables later)
+      version: 2, // (Increment carefully if you add new tables later)
       onCreate: (db, version) async {
         await db.execute(createPoseTable);
         await db.execute(createFlowTable);

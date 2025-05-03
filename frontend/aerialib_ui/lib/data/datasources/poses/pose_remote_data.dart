@@ -48,7 +48,6 @@ class PoseRemoteDataSource {
       return PoseModel.fromJson(response.body);
     } catch (e) {
       // Fallback: construct a local unsynced PoseModel
-      final now = DateTime.now();
       return PoseModel(
         id: const Uuid().v6(),
         name: name,
@@ -62,8 +61,8 @@ class PoseRemoteDataSource {
         progressions: progressions,
         createdBy: createdBy,
         updatedBy: createdBy,
-        createdAt: now,
-        updatedAt: now,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         isSynced: 0,
       );
     }

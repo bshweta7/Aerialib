@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import '../../core/constants/constants.dart';
+
 class FlowModel {
   final String id;
   final String name;
   final String thumbnailImageId;
+  final String thumbnailImagePath;
   final String apparatus;
   final double level;
 
@@ -23,6 +26,7 @@ class FlowModel {
     required this.id,
     required this.name,
     required this.thumbnailImageId,
+    required this.thumbnailImagePath,
     required this.apparatus,
     required this.level,
     this.description,
@@ -40,7 +44,8 @@ class FlowModel {
     return FlowModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
-      thumbnailImageId: map['thumbnail_image_id'] ?? '',
+      thumbnailImageId: map['thumbnail_image_id'] ?? Constants.missingImageId,
+      thumbnailImagePath: map['thumbnail_image_path'] ?? Constants.missingImagePath,
       apparatus: map['apparatus'] ?? '',
       level: (map['level'] as num).toDouble(),
 
@@ -62,6 +67,7 @@ class FlowModel {
       'id': id,
       'name': name,
       'thumbnail_image_id': thumbnailImageId,
+      'thumbnail_image_path': thumbnailImagePath,
       'apparatus': apparatus,
       'level': level,
       'description': description,

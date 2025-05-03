@@ -45,6 +45,7 @@ class FlowsCubit extends Cubit<FlowsState> {
     required String apparatus,
     required double level,
     required String thumbnailImageId,
+    required String thumbnailImagePath,
     required String createdBy,
     required String token,
   }) async {
@@ -60,6 +61,7 @@ class FlowsCubit extends Cubit<FlowsState> {
         apparatus: apparatus,
         level: level,
         thumbnailImageId: thumbnailImageId,
+        thumbnailImagePath: thumbnailImagePath,
         createdBy: createdBy,
         token: token,
       );

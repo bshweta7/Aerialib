@@ -28,14 +28,14 @@ flowRouter.post("/", auth, async (req: AuthRequest, res) => {
 
 flowRouter.get("/", auth, async (req: AuthRequest, res) => {
   try {
-    const query = sql`
-      SELECT 
-        flows.*, 
-        media.media_url AS primary_image_url
-      FROM 
-        flows
-      JOIN 
-        media ON flows.primary_image_id = media.id;
+      const query = sql`
+          SELECT
+              flows.*,
+              media.media_path AS thumbnail_media_path
+          FROM
+              flows
+                  JOIN
+              media ON flows.thumbnail_image_id = media.id;
       `;
 
       // Execute the raw SQL query using db.execute()

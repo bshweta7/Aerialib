@@ -119,6 +119,7 @@ const String createFlowTable = '''
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     thumbnail_image_id TEXT NOT NULL,
+    thumbnail_image_path TEXT NOT NULL,
     apparatus TEXT NOT NULL,
     level REAL NOT NULL,
     
