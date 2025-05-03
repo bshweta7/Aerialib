@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/formatters.dart';
-import 'package:frontend/presentation/widgets/functional_buttons/filters/filter_multi_select.dart';
+import 'package:frontend/presentation/widgets/filters/filter_multi_select.dart';
 
 import 'active_filters.dart';
 
-class PoseFilters extends StatefulWidget {
+// TODO NOTE - THIS IS THE OLD VERSION - NO LONGER USED 
+
+class PoseFiltersOLD extends StatefulWidget {
   final List<String> initialApparatus;
   final List<int> initialLevels;
   final ValueChanged<List<String>> onApparatusChanged;
   final ValueChanged<List<int>> onLevelsChanged;
 
-  const PoseFilters({
+  const PoseFiltersOLD({
     super.key,
     required this.initialApparatus,
     required this.initialLevels,
@@ -20,10 +22,10 @@ class PoseFilters extends StatefulWidget {
   });
 
   @override
-  State<PoseFilters> createState() => _PoseFiltersState();
+  State<PoseFiltersOLD> createState() => _PoseFiltersOLDState();
 }
 
-class _PoseFiltersState extends State<PoseFilters> {
+class _PoseFiltersOLDState extends State<PoseFiltersOLD> {
   bool _isContainerVisible = false;
   late List<String> _selectedApparatus;
   late List<int> _selectedLevels;

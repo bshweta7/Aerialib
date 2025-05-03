@@ -14,7 +14,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
 
-import 'package:frontend/presentation/widgets/functional_buttons/filters/pose_filter.dart';
+import 'package:frontend/presentation/widgets/filters/pose_filter.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
@@ -43,6 +43,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   // Filtering
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
+  bool _showFilters = false;
 
   // Search Bar
   String _searchQuery = '';
@@ -159,7 +160,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             }
 
             if (state is GetPosesSuccess) {
-              // TODO move filtering to cubit?
               // Filtering
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
@@ -172,26 +172,17 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               // Search suggestion list
               final List<PoseEntity> sortedPoses = List<PoseEntity>.from(state.poses)
                 ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+              // TODO - decide if search list should only show filtered poses or all poses
 
               return Column(
                 children: [
-                  // Pose Filters
-                  // TODO check expandable cards builtin function in flutter
-                  PoseFilters(
-                    initialApparatus: selectedApparatus,
-                    initialLevels: selectedLevels,
-                    onApparatusChanged: _updateApparatusFilter,
-                    onLevelsChanged: _updateLevelsFilter,
-                  ),
-                  // TODO consider "Sticky Behavior" for filter box scrolling (currently stationary)
-                  // A sticky behavior means the filter section scrolls normally at the top but then "sticks" to a certain position as the user scrolls down the list of poses. Flutter's SliverAppBar with pinned: true can achieve a similar effect for app bar sections, but for a regular widget in the body, it's a bit more involved and might require using ScrollController and Transform.translate or custom Sliver widgets.
 
-                  // Search Bar
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Row(
                       children: [
-                        // Expanded Search Bar
+
+                        // Search Bar
                         Expanded(
                           child: PoseSearchBarWidget(
                             hintText: 'Search Poses',
@@ -205,18 +196,53 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                         // Filter Icon Button
                         IconButton(
                           icon: const Icon(Icons.filter_alt_outlined),
-                          tooltip: 'Show Filters',
+                          tooltip: _showFilters
+                              ? 'Hide filters'
+                              : 'Show filters',
                           onPressed: () {
-                            // setState(() {
-                            //   _showAllFilters = !_showAllFilters;
-                            // });
+                            setState(() {
+                              _showFilters = !_showFilters;
+                            });
                           },
                         ),
                       ],
                     ),
                   ),
 
-                  const SizedBox(height: 15,),
+                  if (selectedApparatus.length < Constants.apparatusOptions.length ||
+                      selectedLevels.length < Constants.levelOptions.length)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Filters: \${selectedApparatus.length + selectedLevels.length} Active',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedApparatus = Constants.apparatusOptions;
+                                selectedLevels = Constants.levelOptions;
+                              });
+                            },
+                            child: const Text('Clear All'),
+                          )
+                        ],
+                      ),
+                    ),
+
+                  // Pose Filters Selector
+                  if (_showFilters)
+                    PoseFilters(
+                      initialApparatus: selectedApparatus,
+                      initialLevels: selectedLevels,
+                      onApparatusChanged: _updateApparatusFilter,
+                      onLevelsChanged: _updateLevelsFilter,
+                    ),
+
+                  const SizedBox(height: 15),
 
                   Expanded(
                     child: Stack(
@@ -225,12 +251,9 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                           controller: _scrollController,
                           child: Column(
                             children: [
-                              // TODO Search bar goes here
-
-
                               // List poses
                               MediaList(
-                                mediaItems: filteredMediaIcons, // TODO should i define a new list to hold search results?
+                                mediaItems: filteredMediaIcons,
                                 onMediaTap: _navigateToPosePage,
                               ),
                             ],
@@ -239,6 +262,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                         // Scroll to top floating button
                         ScrollToTopButton(scrollController: _scrollController), // Add the button
+
                       ],
                     ),
                   ),
