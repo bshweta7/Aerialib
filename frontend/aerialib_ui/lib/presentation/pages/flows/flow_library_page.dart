@@ -10,13 +10,13 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 import 'package:frontend/presentation/pages/flows/flow_details_page.dart';
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
+import 'package:frontend/presentation/widgets/filters/flow_filter_screen.dart';
 
 import 'package:frontend/presentation/widgets/filters/pose_filter_screen.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
-import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
+import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
 
-import '../../../core/utils/conversions.dart';
 
 class FlowLibraryPage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -121,19 +121,19 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                   child: Row(
                     children: [
-                      // Expanded(
-                      //   child: PoseSearchBarWidget(
-                      //     hintText: 'Search Flows',
-                      //     onSearchChanged: _updateSearchQuery,
-                      //     suggestionList: sortedFlows,
-                      //   ),
-                      // ),
+                      Expanded(
+                        child: FlowSearchBarWidget(
+                          hintText: 'Search Flows',
+                          onSearchChanged: _updateSearchQuery,
+                          suggestionList: sortedFlows,
+                        ),
+                      ),
                       const SizedBox(width: 10),
                       IconButton(
                         icon: const Icon(Icons.filter_alt_outlined),
                         tooltip: 'Show filters',
                         onPressed: () {
-                          PoseFilters.showFilterSheet(
+                          FlowFilters.showFilterSheet(
                             context: context,
                             selectedApparatus: selectedApparatus,
                             selectedLevels: selectedLevels,
