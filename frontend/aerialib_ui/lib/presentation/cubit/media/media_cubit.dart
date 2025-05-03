@@ -67,17 +67,17 @@ class MediaCubit extends Cubit<MediaState>{
       List<MediaEntity> medias = await _mediaRepository.getLocalMedias();  // Fetch local medias
       if (medias.isEmpty) {
         // If no local medias, sync from remote and retry
-        print("No medias in local datasource, syncing from remote");
+        print("[MediaCubit] No medias in local datasource, syncing from remote");
         await _mediaRepository.syncRemoteToLocal(token);
 
         medias = await _mediaRepository.getLocalMedias();
       }
 
-      print("Number of Medias Retrieved: ${medias.length}");
+      print("[MediaCubit] Number of Medias Retrieved: ${medias.length}");
       emit(GetMediaSuccess(medias));
 
     } catch (e) {
-      print("Cubit GetAllMedias failed");
+      print("[MediaCubit] Cubit GetAllMedia failed");
       print(e.toString());
       emit(MediaError(e.toString()));
     }

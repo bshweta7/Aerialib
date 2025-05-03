@@ -73,7 +73,10 @@ class MediaRepository {
 
   /// Fetch all medias from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
+    print("[MediaRepository] Fetching from remote data source");
     final mediaModels = await remoteDataSource.fetchRemoteMediaList(token: token);
+
+    print("[MediaRepository] Inserting data into local data source");
     await localDataSource.insertMediaList(mediaModels);
   }
 

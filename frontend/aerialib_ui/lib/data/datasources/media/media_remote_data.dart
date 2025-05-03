@@ -64,12 +64,29 @@ class MediaRemoteDataSource {
   Future<List<MediaModel>> fetchRemoteMediaList({ // TODO refactored from getMediaList
     required String token,
   }) async {
+    print("[MediaRemoteDataSource] Sending GET request... ");
     final response = await httpService.get(
       path: "/media",
       token: token,
     );
 
+    print("[MediaRemoteDataSource] Mapping response to MediaModel... ");
     final List<dynamic> jsonList = jsonDecode(response.body);
+
+    for (var e in jsonList) {
+      try {
+        print("Mapping: $e");
+        final media = MediaModel.fromMap(e);
+        // Optionally print media to confirm success
+      } catch (error, stack) {
+        print("Failed to map media: $e");
+        print("Error: $error");
+        print("Stack: $stack");
+        rethrow; // Optional: or return a fallback
+      }
+    }
+
+
     return jsonList.map((e) => MediaModel.fromMap(e)).toList();
   }
 

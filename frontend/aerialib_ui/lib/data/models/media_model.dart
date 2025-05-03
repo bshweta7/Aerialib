@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 class MediaModel {
   final String id;
   final String path; // maps to 'media_path'
@@ -27,29 +29,38 @@ class MediaModel {
     required this.isSynced,
   });
 
+  // TODO - switch to snake_case (to match pose model). needs backend changes
   factory MediaModel.fromMap(Map<String, dynamic> map) {
-    return MediaModel(
-      id: map['id'] ?? '',
-      path: map['media_path'] ?? '',
-      type: map['type'] ?? '',
-      fileSize: map['file_size'],
-      primaryMedia: map['primary_media'],
-      name: map['name'],
-      description: map['description'],
-      apparatus: map['apparatus'],
-      uploadedBy: map['uploaded_by'] ?? '',
-      uploadedAt: DateTime.parse(map['uploaded_at']),
-      isSynced: map['is_synced'] ?? 1,
-    );
+    try {
+      return MediaModel(
+        id: map['id'] ?? '',
+        path: map['media_path'] ?? map['mediaPath'] ?? '',
+        type: map['media_type'] ?? map['mediaType'] ?? '',
+        fileSize: map['file_size'] ?? map['fileSize'],
+        primaryMedia: map['primary_media'] ?? map['primaryMedia'],
+        name: map['name'],
+        description: map['description'],
+        apparatus: map['apparatus'],
+        uploadedBy: map['uploaded_by'] ?? map['uploadedBy'] ?? '',
+        uploadedAt: DateTime.parse(map['uploaded_at'] ?? map['uploadedAt']),
+        isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
+      );
+    } catch (e, stack) {
+      debugPrint("Failed to map media: $map");
+      debugPrint("Error: $e\nStack: $stack");
+      rethrow;
+    }
   }
+
+
+
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'media_path': path,
-      'type': type,
+      'media_type': type,
       'file_size': fileSize,
-      'primary_media': primaryMedia,
       'name': name,
       'description': description,
       'apparatus': apparatus,
