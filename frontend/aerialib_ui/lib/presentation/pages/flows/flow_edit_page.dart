@@ -163,7 +163,7 @@ class _EditFlowPageState extends State<EditFlowPage> {
 
                 /// Search Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                   child: PoseSearchBarWidget(
                     onSearchChanged: _updateSearchQuery,
                     suggestionList: availablePoses,
