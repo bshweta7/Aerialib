@@ -158,7 +158,7 @@ Variations/PoseFamilies: BasePoseId, VariantPoseId
 
 RELATED TO MEDIA
 MediaSharing: MediaID, UserId(sharedTo)
-ThumbnailId: videoMediaID and thumbnailMediaID
+ThumbnailId: videoMediaID and thumbnailImageID
 AssociatedPoses / Flows : MediaID, PoseID
 
 */
@@ -222,7 +222,7 @@ export const mediaSharingTable = pgTable("media_sharing", {
 export const mediaTable = pgTable("media", {
     id: uuid("id").primaryKey().defaultRandom(),
     // ... other media fields
-    thumbnailMediaId: uuid("thumbnail_media_id").references(() => mediaTable.id),
+    thumbnailImageId: uuid("thumbnail_image_id").references(() => mediaTable.id),
     // For videos, you might also have a previewImageId
     previewImageId: uuid("preview_image_id").references(() => mediaTable.id),
 });

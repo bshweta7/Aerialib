@@ -108,7 +108,7 @@ class FlowRemoteDataSource {
     required FlowModel updatedFlow,
     required String token,
   }) async {
-    print(updatedFlow);
+    print(jsonEncode(updatedFlow.toMap()));
 
     final response = await httpService.put(
       path: "/flows/update/${updatedFlow.id}",
@@ -116,9 +116,8 @@ class FlowRemoteDataSource {
       body: updatedFlow.toMap(),
     );
 
-    print("____________________");
-
-    print("Backend response body: ${response.body}");
+    print("[FlowRemoteDataSource] Backend response body: ${response.body}");
+    print("[FlowRemoteDataSource] Backend response status code: ${response.statusCode}");
 
     if (response.statusCode != 200) {
       print("[FlowRemoteDataSource] Failed to update flow:");
@@ -128,6 +127,6 @@ class FlowRemoteDataSource {
     }
 
     final json = jsonDecode(response.body);
-    return FlowModel.fromJson(json);
+    return FlowModel.fromMap(json);
   }
 }

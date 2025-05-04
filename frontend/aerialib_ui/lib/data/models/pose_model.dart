@@ -44,15 +44,18 @@ class PoseModel {
       primaryMediaPath: map['primary_media_path'] ?? map['primaryMediaPath'] ?? Constants.missingImagePath,
       apparatus: map['apparatus'] ?? '',
       level: (map['level'] is int ? (map['level'] as int).toDouble() : map['level']) ?? -1.0, // Handle potential int or double
+
       description: map['description'],
-      teachingCues: map['teaching_cues'],
-      safetyCues: map['safety_cues'],
+      teachingCues: map['teaching_cues'] ?? map['teachingCues'],
+      safetyCues: map['safety_cues'] ?? map['safetyCues'],
       progressions: map['progressions'],
+
       createdBy: map['created_by'] ?? map['createdBy'] ?? '',
       updatedBy: map['updated_by'] ?? map['updatedBy'],
       createdAt: DateTime.parse(map['created_at'] ?? map['createdAt']),
       updatedAt: DateTime.parse(map['updated_at'] ?? map['updatedAt']),
-      isSynced: map['is_synced'] ?? 1,
+
+      isSynced: map['is_synced'] ?? map['isSynced'] ?? 0,
     );
   }
 
