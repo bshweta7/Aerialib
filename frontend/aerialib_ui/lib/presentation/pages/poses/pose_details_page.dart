@@ -59,27 +59,34 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Constrain image height to avoid overflow
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: screenHeight * 0.4,
-                minHeight: 20,
+            // Updated: image in a rounded Card
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
-              width: double.infinity,
-              child: FormattedCachedNetworkImage(pose.primaryMediaPath),
+              clipBehavior: Clip.antiAlias,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: screenHeight * 0.4,
+                  minHeight: 20,
+                ),
+                width: double.infinity,
+                child: FormattedCachedNetworkImage(pose.primaryMediaPath),
+              ),
             ),
             const SizedBox(height: 20),
 
             _infoRow("Apparatus:", pose.apparatus),
             _infoRow("Level:", "Level ${pose.level}"),
-
+            const Divider(),
             _infoRow("Description:", pose.description),
             _infoRow("Teaching Cues:", pose.teachingCues),
             _infoRow("Safety Cues:", pose.safetyCues),
             _infoRow("Progressions:", pose.progressions),
           ],
         ),
-      )
+      ),
     );
   }
 
@@ -96,9 +103,12 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
           Expanded(
             child: Text(
               value?.isNotEmpty == true ? value! : 'None',
-              style: value?.isNotEmpty == true
-                  ? null
-                  : const TextStyle(fontStyle: FontStyle.italic),
+              style: TextStyle(
+                fontStyle: value?.isNotEmpty == true
+                    ? FontStyle.normal
+                    : FontStyle.italic,
+                color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
+              ),
             ),
           ),
         ],
