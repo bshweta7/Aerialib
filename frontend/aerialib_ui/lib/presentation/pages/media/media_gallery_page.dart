@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/conversions.dart';
+import 'package:frontend/core/utils/formatters.dart';
 
 import 'package:frontend/domain/entities/media_icon_entity.dart';
 import 'package:frontend/domain/entities/media_entity.dart';
 
 import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/pages/media/upload_new_media_page.dart';
 
 // import 'package:frontend/presentation/pages/media/media_details_page.dart';
 // import 'package:frontend/presentation/pages/media/add_new_media_page.dart';
@@ -16,6 +18,8 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 // import 'package:frontend/presentation/widgets/filters/media_filter_screen.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
+
+import '../../widgets/filters/media_filter_screen.dart';
 // import 'package:frontend/presentation/widgets/search_bars/media_search_bar.dart';
 
 class MediaGalleryPage extends StatefulWidget {
@@ -31,7 +35,7 @@ class _MediaGalleryPageState extends State<MediaGalleryPage> {
   final ScrollController _scrollController = ScrollController();
 
   List<String> selectedApparatus = Constants.apparatusOptions;
-  List<int> selectedLevels = Constants.levelOptions;
+  List<String> selectedMediaTypes = Constants.mediaTypeOptions;
   String _searchQuery = '';
 
   @override
@@ -47,15 +51,33 @@ class _MediaGalleryPageState extends State<MediaGalleryPage> {
     super.dispose();
   }
 
+  /* TODO Search Bar:
+    Search field: name (fallback to partial match).
+    Optional: also include description, if populated often.
+    Why: Users will likely remember keywords like “split” or “back bend” more than exact dates or file names.
+   */
+
+  /* TODO: FILTERING:
+  Core filters (show by default):
+    DONE ✅ Media type (image / video)
+    ✅ Shared with me / My media
+    ✅ Apparatus / Class Type (e.g. hoop, hammock, silks)
+    ✅ Class info (if tracked) — optional
+Advanced filters (inside an expandable section or modal):
+    📅 Date uploaded range slider
+    📸 Date photo taken (if metadata available)
+    🎭 Class session (e.g. Tuesday 6PM L2) — if tied to flow/session structure
+   */
+
   void _updateApparatusFilter(List<String> newApparatus) {
     setState(() {
       selectedApparatus = newApparatus;
     });
   }
 
-  void _updateLevelsFilter(List<int> newLevels) {
+  void _updateMediaTypesFilter(List<String> newMediaTypes) {
     setState(() {
-      selectedLevels = newLevels;
+      selectedMediaTypes = newMediaTypes;
     });
   }
 
@@ -81,7 +103,7 @@ class _MediaGalleryPageState extends State<MediaGalleryPage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // Navigator.push(context, AddNewMediaPage.route());
+              Navigator.push(context, UploadNewMediaPage.route());
             },
             tooltip: 'Add new media',
           ),
@@ -98,13 +120,16 @@ class _MediaGalleryPageState extends State<MediaGalleryPage> {
           }
 
           if (state is GetMediaSuccess) {
+            // final filteredMedia = state.mediaList;
             final filteredMedia = state.mediaList.where((media) =>
-            selectedApparatus.contains(media.apparatus)
-                // && selectedLevels.contains(media.level)
+            selectedMediaTypes.contains(capitalizeFirstLetter(media.type))
+            // selectedApparatus.contains(media.apparatus)
+                // && selectedMediaTypes.contains(media.mediaType)
             ).toList();
 
             final mediaIcons = mediaToMediaIcons(filteredMedia);
 
+            // TODO sort by date (or allow user to specify sort by)
             // final sortedMedia = List<MediaEntity>.from(state.media)
             //   ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
@@ -126,29 +151,27 @@ class _MediaGalleryPageState extends State<MediaGalleryPage> {
                         icon: const Icon(Icons.filter_alt_outlined),
                         tooltip: 'Show filters',
                         onPressed: () {
-                          // MediaFilters.showFilterSheet(
-                          //   context: context,
-                          //   selectedApparatus: selectedApparatus,
-                          //   selectedLevels: selectedLevels,
-                          //   onApparatusChanged: _updateApparatusFilter,
-                          //   onLevelsChanged: _updateLevelsFilter,
-                          // );
+                          MediaFilters.showFilterSheet(
+                            context: context,
+                            selectedMediaTypes: selectedMediaTypes,
+                            onMediaTypesChanged: _updateMediaTypesFilter,
+                          );
                         },
                       ),
                     ],
                   ),
                 ),
                 if (selectedApparatus.length < Constants.apparatusOptions.length ||
-                    selectedLevels.length < Constants.levelOptions.length)
+                    selectedMediaTypes.length < Constants.mediaTypeOptions.length)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Tooltip(
-                          message: '${selectedApparatus.length} Apparatus, ${selectedLevels.length} Levels',
+                          message: '${selectedApparatus.length} Apparatus, ${selectedMediaTypes.length} MediaTypes',
                           child: Text(
-                            'Filters: ${selectedApparatus.length + selectedLevels.length} Active',
+                            'Filters: ${selectedApparatus.length + selectedMediaTypes.length} Active',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),
@@ -156,7 +179,7 @@ class _MediaGalleryPageState extends State<MediaGalleryPage> {
                           onPressed: () {
                             setState(() {
                               selectedApparatus = Constants.apparatusOptions;
-                              selectedLevels = Constants.levelOptions;
+                              selectedMediaTypes = Constants.mediaTypeOptions;
                             });
                           },
                           child: const Text('Clear All'),
