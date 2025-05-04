@@ -135,7 +135,6 @@ class _LoginPageState extends State<LoginPage> {
                           'LOGIN',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
                           )
                       )
                   ),
