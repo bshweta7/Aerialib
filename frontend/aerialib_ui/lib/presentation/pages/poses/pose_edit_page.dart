@@ -91,7 +91,10 @@ class _UpdatePosePageState extends State<UpdatePosePage> {
     Navigator.pushAndRemoveUntil(
       context,
       PoseLibraryPage.route(),
-          (route) => false, // Clears the entire navigation stack
+          (route) => true,
+      // TODO change this to false so it clears the entire navigation stack
+      // TODO need to make bottom bar for navigation
+
     );
 
   }

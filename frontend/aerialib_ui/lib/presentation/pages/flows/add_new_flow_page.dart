@@ -2,7 +2,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
-import 'package:frontend/presentation/pages/flows/flow_edit_page.dart';
+import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:intl/intl.dart';
