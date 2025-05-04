@@ -6,21 +6,21 @@ import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 
-class UpdatePosePage extends StatefulWidget {
+class PoseEditDetailsPage extends StatefulWidget {
   final PoseEntity pose;
 
-  const UpdatePosePage({super.key, required this.pose});
+  const PoseEditDetailsPage({super.key, required this.pose});
 
   static MaterialPageRoute route(PoseEntity pose) => MaterialPageRoute(
-    builder: (context) => UpdatePosePage(pose: pose),
+    builder: (context) => PoseEditDetailsPage(pose: pose),
   );
 
   @override
-  State<UpdatePosePage> createState() => _UpdatePosePageState();
+  State<PoseEditDetailsPage> createState() => _PoseEditDetailsPageState();
 }
 
 
-class _UpdatePosePageState extends State<UpdatePosePage> {
+class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
   final formKey = GlobalKey<FormState>();
 
   late TextEditingController nameController;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 
+import 'flow_edit_page.dart';
 import 'flow_edit_poses_page.dart';
 
 class FlowDetailsPage extends StatelessWidget {
@@ -23,7 +24,7 @@ class FlowDetailsPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              Navigator.push(context, EditFlowPage.route(flow));
+              Navigator.push(context, FlowEditDetailsPage.route(flow));
             },
             tooltip: 'Edit this flow',
           ),

@@ -83,7 +83,17 @@ class FlowRemoteDataSource {
     required String token,
     required List<FlowModel> flows,
   }) async {
-    final List<Map<String, dynamic>> flowListInMap = flows.map((flow) => flow.toMap()).toList();
+    final List<Map<String, dynamic>> flowListInMap = flows.map((flow) {
+      final map = flow.toMap();
+      map.remove('is_synced');
+      map.remove('thumbnail_image_path');
+      return map;
+    }).toList();
+
+    print('[FlowRemoteDataSource] Sync payload:');
+    for (final map in flowListInMap) {
+      print(map.keys);
+    }
 
     final response = await httpService.post(
       path: "/flows/sync",
@@ -98,12 +108,26 @@ class FlowRemoteDataSource {
     required FlowModel updatedFlow,
     required String token,
   }) async {
+    print(updatedFlow);
+
     final response = await httpService.put(
       path: "/flows/update/${updatedFlow.id}",
       token: token,
-      body: updatedFlow.toJson(),
+      body: updatedFlow.toMap(),
     );
 
-    return FlowModel.fromJson(response.body);
+    print("____________________");
+
+    print("Backend response body: ${response.body}");
+
+    if (response.statusCode != 200) {
+      print("[FlowRemoteDataSource] Failed to update flow:");
+      print("[FlowRemoteDataSource] Status: ${response.statusCode}");
+      print("[FlowRemoteDataSource] Body: ${response.body}");
+      throw Exception("[FlowRemoteDataSource] Failed to update flow remotely");
+    }
+
+    final json = jsonDecode(response.body);
+    return FlowModel.fromJson(json);
   }
 }

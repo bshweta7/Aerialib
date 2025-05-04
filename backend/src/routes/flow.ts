@@ -31,7 +31,7 @@ flowRouter.get("/", auth, async (req: AuthRequest, res) => {
       const query = sql`
           SELECT
               flows.*,
-              media.media_path AS thumbnail_media_path
+              media.media_path AS thumbnail_image_path
           FROM
               flows
                   JOIN
@@ -45,12 +45,6 @@ flowRouter.get("/", auth, async (req: AuthRequest, res) => {
       const allFlows = result.rows;
 
       res.json(allFlows);
-
-
-      // const allPoses = await db.select().from(posesTable);
-      // // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
-
-      // res.json(allPoses);
 
       } catch (e) {
           res.status(500).json({ error: e })
@@ -80,7 +74,7 @@ flowRouter.delete("/", auth, async (req: AuthRequest, res) => {
 //         ...t,
 //         createdAt: new Date(t.createdAt),
 //         updatedAt: new Date(t.updatedAt),
-//         createdBy: req.user, // TODO Double check if this is right 
+//         createdBy: req.user, // TODO Double check if this is right
 //       };
 //       filteredFlows.push(t);
 //     }
@@ -96,34 +90,83 @@ flowRouter.delete("/", auth, async (req: AuthRequest, res) => {
 //     res.status(500).json({ error: e });
 //   }
 // });
-  
+flowRouter.post("/sync", auth, async (req: AuthRequest, res) => {
+    try {
+        const flowsList = req.body;
+        const filteredFlows: NewFlow[] = [];
 
-// TODO enable update
-// flowRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
-//   try {
-//     const poseId = req.params.id; // Get the pose ID from the URL
-//     req.body = { ...req.body, uid: req.user };
-//     const updatedPose: NewPose = req.body;
-//     console.log("Updating Pose:", updatedPose);
+        flowsList.forEach((flow: { thumbnail_image_id: any; }) => {
+            console.log('[FlowRouter] Received thumbnail_image_id:', flow.thumbnail_image_id);
+        });
 
-//     const [pose] = await db
-//       .update(posesTable)
-//       .set(updatedPose) // Use set to update the values
-//       .where(eq(posesTable.id, poseId)) // Use where to target the pose
-//       .returning();
+        console.log(req.body);
 
-//     if (!pose) {
-//         res.status(404).json({error: "Pose not found"});
-//         return;
-//     }
+        // Clean and transform incoming flow objects
+        for (let t of flowsList) {
+            t = {
+                id: t.id,
+                name: t.name,
+                thumbnailImageId: t.thumbnail_image_id,
+                apparatus: t.apparatus,
+                level: t.level,
+                description: t.description,
+                teachingCues: t.teaching_cues,
+                safetyCues: t.safety_cues,
+                progressions: t.progressions,
+                createdBy: t.created_by, // TODO check
+                updatedBy: req.user,
+                createdAt: new Date(t.created_at),
+                updatedAt: new Date(t.updated_at),
+            };
 
-//     res.status(200).json(pose); // Change status to 200 (OK)
+            filteredFlows.push(t);
+        }
 
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({ error: e });
-//   }
-// });
+        // Debug logs (optional)
+        filteredFlows.forEach((flow, i) => {
+            console.log(`[FlowRouter] Flow ${i + 1}:`, flow);
+        });
+
+        const pushedFlows = await db
+            .insert(flowsTable)
+            .values(filteredFlows)
+            .onConflictDoNothing() // Optional: handle duplicates
+            .returning();
+
+        res.status(201).json(pushedFlows);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e });
+    }
+});
+
+
+
+flowRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
+    try {
+        const flowId = req.params.id; // Get the flow ID from the URL
+        req.body = { ...req.body, uid: req.user };
+        const updatedFlow: NewFlow = req.body;
+        console.log("Updating Flow:", updatedFlow);
+
+        const [flow] = await db
+            .update(flowsTable)
+            .set(updatedFlow)
+            .where(eq(flowsTable.id, flowId))
+            .returning();
+
+        if (!flow) {
+            res.status(404).json({ error: "Flow not found" });
+            return;
+        }
+
+        res.status(200).json(flow);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e });
+    }
+});
+
 
 
 export default flowRouter;

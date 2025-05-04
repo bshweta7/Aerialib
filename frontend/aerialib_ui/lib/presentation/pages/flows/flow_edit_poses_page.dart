@@ -14,22 +14,22 @@ import '../../cubit/users/auth_cubit.dart';
 import '../../widgets/media_display/media_list/list_card.dart';
 import '../poses/pose_details_page.dart';
 
-class EditFlowPage extends StatefulWidget {
+class FlowEditPosesPage extends StatefulWidget {
   final FlowEntity flow;
 
-  const EditFlowPage({super.key, required this.flow});
+  const FlowEditPosesPage({super.key, required this.flow});
 
   static MaterialPageRoute route(FlowEntity flow) {
     return MaterialPageRoute(
-      builder: (context) => EditFlowPage(flow: flow),
+      builder: (context) => FlowEditPosesPage(flow: flow),
     );
   }
 
   @override
-  State<EditFlowPage> createState() => _EditFlowPageState();
+  State<FlowEditPosesPage> createState() => _FlowEditPosesPageState();
 }
 
-class _EditFlowPageState extends State<EditFlowPage> {
+class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
   late List<FlowPoseEntity> poses;
   String _searchQuery = '';
   final TextEditingController _textController = TextEditingController();
@@ -85,6 +85,8 @@ class _EditFlowPageState extends State<EditFlowPage> {
     }
 
     context.read<FlowsCubit>().updateFlowPoses(poses);
+    print("UPDATED");
+
     context.read<FlowsCubit>().saveFlow(user.user.token);
 
     print("Saved Poses");

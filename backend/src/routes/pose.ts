@@ -112,7 +112,7 @@ poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
         teachingCues: t.teaching_cues,
         safetyCues: t.safety_cues,
         progressions: t.progressions,
-        createdBy: req.user,
+        createdBy: t.created_by,
         updatedBy: req.user,
         createdAt: new Date(t.created_at),
         updatedAt: new Date(t.updated_at),

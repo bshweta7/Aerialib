@@ -87,7 +87,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                   context,
                   MaterialPageRoute(
                     // builder: (context) => FlowEditPage(flow: state.flow),
-                    builder: (context) => EditFlowPage(flow: state.flow),
+                    builder: (context) => FlowEditPosesPage(flow: state.flow),
                   ),
                   // FlowEditPage(flow: state.flow).route(),
                   //     (_) => false

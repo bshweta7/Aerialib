@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/auth/login_page.dart';
 
+import '../../cubit/flows/flows_cubit.dart';
+
 class UserProfilePage extends StatefulWidget {
   static MaterialPageRoute route() =>
       MaterialPageRoute(builder: (context) => const UserProfilePage());
@@ -92,6 +94,21 @@ class _UserProfilePage extends State<UserProfilePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
                   ),
+
+
+                  // TODO move this to an advanced settings section
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                      context.read<FlowsCubit>().syncFlows(user.user.token);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Flow sync triggered.")),
+                      );
+                    },
+                    icon: const Icon(Icons.sync),
+                    label: const Text("Sync Flows Now"),
+                  ),
+
                 ],
               ),
             );

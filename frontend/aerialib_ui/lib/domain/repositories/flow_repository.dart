@@ -53,7 +53,7 @@ class FlowRepository {
   }
 
   /// Fetch all flows from local DB - initialize poses as []
-  Future<List<FlowEntity>> getLocalFlows() async {
+  Future<List<FlowEntity>> getAllFlows() async {
     final flowModels = await localDataSource.getFlows();
 
     return flowModels.map((model) {
@@ -72,10 +72,23 @@ class FlowRepository {
     final List<FlowModel> unsynced = await localDataSource.getUnsyncedFlows();
     if (unsynced.isEmpty) return;
 
+    print("[FlowRepository] Fetched ${unsynced.length} unsynced flows from local data source");
+
+    // for (final flow in unsynced) {
+    //   final flowMap = flow.toMap(); // or toMap() if you use that instead
+    //
+    //   print("[FlowRepository] Flow ID: ${flow.id}");
+    //   flowMap.forEach((key, value) {
+    //     print("  $key: $value");
+    //   });
+    // }
+
     final success = await remoteDataSource.syncFlows(
       token: token,
       flows: unsynced,
     );
+
+    print("[FlowRepository] Synced flows to remote");
 
     if (success) {
       for (final flow in unsynced) {
@@ -90,11 +103,18 @@ class FlowRepository {
     required String token,
   }) async {
     final flowModel = FlowMapper.entityToModel(updatedFlow);
+
+    print("[FlowRepository] Updating pose remotely...");
     final updatedModel = await remoteDataSource.updateFlow(
       updatedFlow: flowModel,
       token: token,
     );
+    print("[FlowRepository] Remote update successful");
+
+    print("[FlowRepository] Updating pose locally...");
     await localDataSource.updateFlow(updatedModel);
+    print("[FlowRepository] Local update successful");
+
   }
 
   /// Delete locally

@@ -46,7 +46,7 @@ class _PoseDetailsPageState extends State<PoseDetailsPage> {
             onPressed: () {
               Navigator.push(
                   context,
-                  UpdatePosePage.route(widget.pose)
+                  PoseEditDetailsPage.route(widget.pose)
               );
             },
             tooltip: 'Edit this pose',

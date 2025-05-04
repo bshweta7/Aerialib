@@ -13,7 +13,8 @@ part 'flows_state.dart';
 class FlowsCubit extends Cubit<FlowsState> {
   final FlowRepository _flowRepository;
   final FlowPoseRepository _flowPoseRepository;
-
+  bool _isSyncing = false;
+  
   FlowsCubit(
       this._flowRepository,
       this._flowPoseRepository,
@@ -23,10 +24,10 @@ class FlowsCubit extends Cubit<FlowsState> {
   Future<void> getAllFlows({required String token}) async {
     try {
       emit(const FlowLoading());
-      List<FlowEntity> flows = await _flowRepository.getLocalFlows();
+      List<FlowEntity> flows = await _flowRepository.getAllFlows();
       if (flows.isEmpty) {
         await _flowRepository.syncRemoteToLocal(token);
-        flows = await _flowRepository.getLocalFlows();
+        flows = await _flowRepository.getAllFlows();
       }
       emit(GetFlowsSuccess(flows));
     } catch (e) {
@@ -34,6 +35,31 @@ class FlowsCubit extends Cubit<FlowsState> {
       emit(FlowError(e.toString()));
     }
   }
+
+  /// Run a one-time sync of flows when network is available (sync the unsynced local flows with remote)
+  Future<void> syncFlows(String token) async {
+    if (_isSyncing) return;
+    _isSyncing = true;
+
+    print("[FlowsCubit] Starting one-shot sync...");
+
+    try {
+      await _flowRepository.syncLocalToRemote(token);
+      print('[FlowsCubit] Synced local to remote.');
+
+      await _flowRepository.syncRemoteToLocal(token);
+      print('[FlowsCubit] Synced remote to local.');
+
+      final updatedFlows = await _flowRepository.getAllFlows();
+      emit(GetFlowsSuccess(updatedFlows));
+    } catch (e) {
+      print('[FlowsCubit] Sync error: $e');
+      emit(FlowError('[FlowsCubit] Sync error: $e'));
+    } finally {
+      _isSyncing = false;
+    }
+  }
+
 
   /// Create a new flow (metadata only)
   Future<void> createNewFlow({
@@ -114,12 +140,30 @@ class FlowsCubit extends Cubit<FlowsState> {
   //   emit(currentState.copyWith(flow: updatedFlow));
   // }
 
+  /// Update flow info (both local and remote)
+  Future<void> updateFlowInfo({
+    required FlowEntity updatedFlow,
+    required String token,
+  }) async {
+    try {
+      emit(const FlowLoading());
+      await _flowRepository.updateFlow(
+        updatedFlow: updatedFlow,
+        token: token,
+      );
+      emit(UpdateFlowSuccess(updatedFlow));
+    } catch (e) {
+      print(e.toString());
+      emit(FlowError(e.toString()));
+    }
+  }
+
   /// Sets flow.poses to the new set of poses
   void updateFlowPoses(List<FlowPoseEntity> newPoses) {
     if (state is! EditFlowState) return;
     final currentState = state as EditFlowState;
     final updatedFlow = currentState.flow.copyWith(poses: newPoses);
-    print("Updated flow with new poses");
+    print("[FlowsCubit] Updated flow with new poses");
 
     emit(currentState.copyWith(flow: updatedFlow));
   }
@@ -132,17 +176,19 @@ class FlowsCubit extends Cubit<FlowsState> {
     emit(currentState.copyWith(isSaving: true));
 
     try {
+      print("[FlowsCubit] Updating flow...");
       await _flowRepository.updateFlow(
         updatedFlow: currentState.flow,
         token: token,
       );
+      print("[FlowsCubit] Replacing flow poses in flow...");
       await _flowPoseRepository.replaceFlowPosesInFlow(
         flowId: currentState.flow.id,
         newPoses: currentState.flow.poses,
       );
       emit(currentState.copyWith(isSaving: false, saveSuccess: true));
     } catch (e) {
-      print("Error saving flow: $e");
+      print("[FlowsCubit] Error saving flow: $e");
       emit(currentState.copyWith(isSaving: false, errorMessage: e.toString()));
     }
   }
