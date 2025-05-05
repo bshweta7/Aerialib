@@ -4,6 +4,7 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 
 class PoseEditDetailsPage extends StatefulWidget {
@@ -87,14 +88,13 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
     );
 
     await context.read<PosesCubit>().getAllPoses(token: user.user.token);
-    Navigator.pushAndRemoveUntil(
-      context,
-      PoseLibraryPage.route(),
-          (route) => true,
-      // TODO change this to false so it clears the entire navigation stack
-      // TODO need to make bottom bar for navigation
 
-    );
+    // Save completed
+    Navigator.pop(context); // pop PoseEdit → returns to PoseDetails
+    Navigator.pop(context); // pop PoseDetails → back to PoseLibrary
+
+    // Then push PoseDetails again (fresh)
+    Navigator.push(context, PoseDetailsPage.route(updatedPose));
 
   }
 

@@ -95,7 +95,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                     ),
                   ),
 
-
+                  const SizedBox(height: 30),
                   // TODO move this to an advanced settings section
                   ElevatedButton.icon(
                     onPressed: () {
