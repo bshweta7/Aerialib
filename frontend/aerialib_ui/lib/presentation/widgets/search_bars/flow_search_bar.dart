@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
-import 'package:frontend/presentation/pages/flows/flow_details_page.dart';
+import 'package:frontend/presentation/pages/flows/flow_poses_page.dart';
 
 class FlowSearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
@@ -63,7 +63,7 @@ class _FlowSearchBarWidgetState extends State<FlowSearchBarWidget> {
               });
               Navigator.push(
                 context,
-                FlowDetailsPage.route(flow), // Navigate directly to FlowViewPage
+                FlowPosesPage.route(flow), // Navigate directly to FlowViewPage
               );
             },
           );

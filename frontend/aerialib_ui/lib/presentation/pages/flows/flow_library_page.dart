@@ -8,7 +8,7 @@ import 'package:frontend/domain/entities/media_icon_entity.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
-import 'package:frontend/presentation/pages/flows/flow_details_page.dart';
+import 'package:frontend/presentation/pages/flows/flow_poses_page.dart';
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
 import 'package:frontend/presentation/widgets/filters/flow_filter_screen.dart';
 
@@ -69,7 +69,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   void _navigateToFlowPage(MediaIconEntity mediaItem) {
     Navigator.push(
       context,
-      FlowDetailsPage.route(mediaItem.data),
+      FlowPosesPage.route(mediaItem.data),
     );
   }
 
