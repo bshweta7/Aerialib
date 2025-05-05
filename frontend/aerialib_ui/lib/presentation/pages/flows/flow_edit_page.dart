@@ -5,6 +5,8 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 
+import 'flow_poses_page.dart';
+
 class FlowEditDetailsPage extends StatefulWidget {
   final FlowEntity flow;
 
@@ -23,6 +25,10 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
   late TextEditingController nameController;
   late TextEditingController descriptionController;
+  late TextEditingController teachingCuesController;
+  late TextEditingController safetyCuesController;
+  late TextEditingController progressionsController;
+  late TextEditingController apparatusController;
   late double level;
 
   @override
@@ -30,6 +36,10 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     super.initState();
     nameController = TextEditingController(text: widget.flow.name);
     descriptionController = TextEditingController(text: widget.flow.description);
+    teachingCuesController = TextEditingController(text: widget.flow.teachingCues);
+    safetyCuesController = TextEditingController(text: widget.flow.safetyCues);
+    progressionsController = TextEditingController(text: widget.flow.progressions);
+    apparatusController = TextEditingController(text: widget.flow.apparatus);
     level = widget.flow.level ?? 0;
   }
 
@@ -37,6 +47,10 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
+    teachingCuesController.dispose();
+    safetyCuesController.dispose();
+    progressionsController.dispose();
+    apparatusController.dispose();
     super.dispose();
   }
 
@@ -46,6 +60,10 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     final updatedFlow = widget.flow.copyWith(
       name: nameController.text.trim(),
       description: descriptionController.text.trim(),
+      teachingCues: teachingCuesController.text.trim(),
+      safetyCues: safetyCuesController.text.trim(),
+      progressions: progressionsController.text.trim(),
+      apparatus: apparatusController.text.trim(),
       level: level,
       updatedBy: user.user.id,
       updatedAt: DateTime.now(),
@@ -59,14 +77,11 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
     await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      FlowLibraryPage.route(),
-          (route) => true,
-      // TODO change this to false so it clears the entire navigation stack
-      // TODO need to make bottom bar for navigation
-    );
+    Navigator.pop(context); // Pop FlowEditDetails
+    Navigator.pop(context); // Pop FlowDetails
+    Navigator.push(context, FlowPosesPage.route(updatedFlow)); // Push refreshed
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +103,8 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  maxLines: 3,
+                  controller: apparatusController,
+                  decoration: const InputDecoration(labelText: 'Apparatus'),
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
@@ -102,6 +116,30 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                       level = double.tryParse(value) ?? level;
                     });
                   },
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: teachingCuesController,
+                  decoration: const InputDecoration(labelText: 'Teaching Cues'),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: safetyCuesController,
+                  decoration: const InputDecoration(labelText: 'Safety Cues'),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: progressionsController,
+                  decoration: const InputDecoration(labelText: 'Progressions'),
+                  maxLines: 2,
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(

@@ -14,7 +14,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
 
-import 'package:frontend/presentation/widgets/filters/pose_filter_screen.dart';
+import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
@@ -200,7 +200,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                               ? 'Hide filters'
                               : 'Show filters',
                           onPressed: () {
-                            PoseFilters.showFilterSheet(
+                            PoseFiltersSheet.showFilterSheet(
                               context: context,
                               selectedApparatus: selectedApparatus,
                               selectedLevels: selectedLevels,

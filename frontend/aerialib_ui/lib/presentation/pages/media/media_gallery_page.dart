@@ -15,11 +15,11 @@ import 'package:frontend/presentation/pages/media/upload_new_media_page.dart';
 // import 'package:frontend/presentation/pages/media/media_details_page.dart';
 // import 'package:frontend/presentation/pages/media/add_new_media_page.dart';
 
-// import 'package:frontend/presentation/widgets/filters/media_filter_screen.dart';
+// import 'package:frontend/presentation/widgets/filters/media_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 
-import '../../widgets/filters/media_filter_screen.dart';
+import '../../widgets/filters/media_filter_sheet.dart';
 // import 'package:frontend/presentation/widgets/search_bars/media_search_bar.dart';
 
 class MediaGalleryPage extends StatefulWidget {
@@ -151,7 +151,7 @@ Advanced filters (inside an expandable section or modal):
                         icon: const Icon(Icons.filter_alt_outlined),
                         tooltip: 'Show filters',
                         onPressed: () {
-                          MediaFilters.showFilterSheet(
+                          MediaFiltersSheet.showFilterSheet(
                             context: context,
                             selectedMediaTypes: selectedMediaTypes,
                             onMediaTypesChanged: _updateMediaTypesFilter,

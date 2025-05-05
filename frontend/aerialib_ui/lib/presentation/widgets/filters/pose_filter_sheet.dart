@@ -3,13 +3,13 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/presentation/widgets/filters/filter_multi_select.dart';
 
-class FlowFilters extends StatefulWidget {
+class PoseFiltersSheet extends StatefulWidget {
   final List<String> initialApparatus;
   final List<int> initialLevels;
   final ValueChanged<List<String>> onApparatusChanged;
   final ValueChanged<List<int>> onLevelsChanged;
 
-  const FlowFilters({
+  const PoseFiltersSheet({
     super.key,
     required this.initialApparatus,
     required this.initialLevels,
@@ -18,7 +18,7 @@ class FlowFilters extends StatefulWidget {
   });
 
   @override
-  State<FlowFilters> createState() => _FlowFiltersState();
+  State<PoseFiltersSheet> createState() => _PoseFiltersSheetState();
 
   /// Modal Bottom Sheet entry point
   static Future<void> showFilterSheet({
@@ -59,7 +59,7 @@ class FlowFilters extends StatefulWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    FlowFilters(
+                    PoseFiltersSheet(
                       initialApparatus: selectedApparatus,
                       initialLevels: selectedLevels,
                       onApparatusChanged: onApparatusChanged,
@@ -76,7 +76,7 @@ class FlowFilters extends StatefulWidget {
   }
 }
 
-class _FlowFiltersState extends State<FlowFilters> {
+class _PoseFiltersSheetState extends State<PoseFiltersSheet> {
   late List<String> _selectedApparatus;
   late List<int> _selectedLevels;
   bool _apparatusError = false;

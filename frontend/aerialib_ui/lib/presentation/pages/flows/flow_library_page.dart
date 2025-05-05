@@ -10,9 +10,9 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 import 'package:frontend/presentation/pages/flows/flow_poses_page.dart';
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
-import 'package:frontend/presentation/widgets/filters/flow_filter_screen.dart';
+import 'package:frontend/presentation/widgets/filters/flow_filter_sheet.dart';
 
-import 'package:frontend/presentation/widgets/filters/pose_filter_screen.dart';
+import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
@@ -133,7 +133,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                         icon: const Icon(Icons.filter_alt_outlined),
                         tooltip: 'Show filters',
                         onPressed: () {
-                          FlowFilters.showFilterSheet(
+                          FlowFiltersSheet.showFilterSheet(
                             context: context,
                             selectedApparatus: selectedApparatus,
                             selectedLevels: selectedLevels,

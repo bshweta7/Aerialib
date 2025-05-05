@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 
-import 'flow_details_screen.dart';
+import 'flow_details_sheet.dart';
 import 'flow_edit_page.dart';
 import 'flow_edit_poses_page.dart';
 

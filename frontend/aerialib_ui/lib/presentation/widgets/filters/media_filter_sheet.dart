@@ -3,30 +3,23 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/presentation/widgets/filters/filter_multi_select.dart';
 
-class PoseFilters extends StatefulWidget {
-  final List<String> initialApparatus;
-  final List<int> initialLevels;
-  final ValueChanged<List<String>> onApparatusChanged;
-  final ValueChanged<List<int>> onLevelsChanged;
+class MediaFiltersSheet extends StatefulWidget {
+  final List<String> initialMediaTypes;
+  final ValueChanged<List<String>> onMediaTypesChanged;
 
-  const PoseFilters({
+  const MediaFiltersSheet({
     super.key,
-    required this.initialApparatus,
-    required this.initialLevels,
-    required this.onApparatusChanged,
-    required this.onLevelsChanged,
+    required this.initialMediaTypes,
+    required this.onMediaTypesChanged,
   });
 
   @override
-  State<PoseFilters> createState() => _PoseFiltersState();
+  State<MediaFiltersSheet> createState() => _MediaFiltersSheetState();
 
-  /// Modal Bottom Sheet entry point
   static Future<void> showFilterSheet({
     required BuildContext context,
-    required List<String> selectedApparatus,
-    required List<int> selectedLevels,
-    required ValueChanged<List<String>> onApparatusChanged,
-    required ValueChanged<List<int>> onLevelsChanged,
+    required List<String> selectedMediaTypes,
+    required ValueChanged<List<String>> onMediaTypesChanged,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -59,11 +52,9 @@ class PoseFilters extends StatefulWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    PoseFilters(
-                      initialApparatus: selectedApparatus,
-                      initialLevels: selectedLevels,
-                      onApparatusChanged: onApparatusChanged,
-                      onLevelsChanged: onLevelsChanged,
+                    MediaFiltersSheet(
+                      initialMediaTypes: selectedMediaTypes,
+                      onMediaTypesChanged: onMediaTypesChanged,
                     ),
                   ],
                 ),
@@ -76,44 +67,30 @@ class PoseFilters extends StatefulWidget {
   }
 }
 
-class _PoseFiltersState extends State<PoseFilters> {
-  late List<String> _selectedApparatus;
-  late List<int> _selectedLevels;
-  bool _apparatusError = false;
-  bool _levelsError = false;
+class _MediaFiltersSheetState extends State<MediaFiltersSheet> {
+  late List<String> _selectedMediaTypes;
+  bool _mediaTypeError = false;
 
   @override
   void initState() {
     super.initState();
-    _selectedApparatus = List.from(widget.initialApparatus);
-    _selectedLevels = List.from(widget.initialLevels);
+    _selectedMediaTypes = List.from(widget.initialMediaTypes);
   }
 
   void _resetFilters() {
     setState(() {
-      _selectedApparatus = Constants.apparatusOptions;
-      _selectedLevels = Constants.levelOptions;
-      _apparatusError = false;
-      _levelsError = false;
+      _selectedMediaTypes = Constants.mediaTypeOptions;
+      _mediaTypeError = false;
     });
-    widget.onApparatusChanged(Constants.apparatusOptions);
-    widget.onLevelsChanged(Constants.levelOptions);
+    widget.onMediaTypesChanged(Constants.mediaTypeOptions);
   }
 
-  void _onApparatusSelectionChanged(List<String> selected) {
+  void _onMediaTypesSelectionChanged(List<String> selected) {
     setState(() {
-      _selectedApparatus = selected;
-      _apparatusError = selected.isEmpty;
+      _selectedMediaTypes = selected;
+      _mediaTypeError = selected.isEmpty;
     });
-    widget.onApparatusChanged(selected);
-  }
-
-  void _onLevelsSelectionChanged(List<int> selected) {
-    setState(() {
-      _selectedLevels = selected;
-      _levelsError = selected.isEmpty;
-    });
-    widget.onLevelsChanged(selected);
+    widget.onMediaTypesChanged(selected);
   }
 
   @override
@@ -155,66 +132,31 @@ class _PoseFiltersState extends State<PoseFilters> {
 
           const SizedBox(height: 12),
 
-          // Apparatus Filter
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Apparatus",
+                "Media Type",
                 style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 6),
               FilterMultiSelect<String>(
-                options: Constants.apparatusOptions,
-                initialValues: widget.initialApparatus,
-                getLabel: (String apparatus) => capitalizeFirstLetter(apparatus),
-                onSelectionChanged: _onApparatusSelectionChanged,
+                options: Constants.mediaTypeOptions,
+                initialValues: widget.initialMediaTypes,
+                getLabel: (String type) => capitalizeFirstLetter(type),
+                onSelectionChanged: _onMediaTypesSelectionChanged,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please select at least one apparatus';
+                    return 'Please select at least one media type';
                   }
                   return null;
                 },
               ),
-              if (_apparatusError)
+              if (_mediaTypeError)
                 const Padding(
                   padding: EdgeInsets.only(top: 4.0),
                   child: Text(
-                    'Please select at least one apparatus',
-                    style: TextStyle(color: Colors.red, fontSize: 12),
-                  ),
-                ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Level Filter
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Level",
-                style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 6),
-              FilterMultiSelect<int>(
-                options: Constants.levelOptions,
-                initialValues: widget.initialLevels,
-                getLabel: (int level) => 'Level $level',
-                onSelectionChanged: _onLevelsSelectionChanged,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please select at least one level';
-                  }
-                  return null;
-                },
-              ),
-              if (_levelsError)
-                const Padding(
-                  padding: EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    'Please select at least one level',
+                    'Please select at least one media type',
                     style: TextStyle(color: Colors.red, fontSize: 12),
                   ),
                 ),
