@@ -6,20 +6,20 @@ import 'package:frontend/presentation/widgets/media_display/formatted_cached_net
 import '../../cubit/poses/poses_cubit.dart';
 import 'pose_edit_page.dart';
 
-class PoseDetailsPage extends StatefulWidget {
+class PoseViewPage extends StatefulWidget {
   final PoseEntity pose;
 
-  const PoseDetailsPage({super.key, required this.pose});
+  const PoseViewPage({super.key, required this.pose});
 
   static MaterialPageRoute route(PoseEntity pose) => MaterialPageRoute(
-    builder: (context) => PoseDetailsPage(pose: pose,),
+    builder: (context) => PoseViewPage(pose: pose,),
   );
 
   @override
-  State<PoseDetailsPage> createState() => _PoseDetailsPageState();
+  State<PoseViewPage> createState() => _PoseViewPageState();
 }
 
-class _PoseDetailsPageState extends State<PoseDetailsPage> {
+class _PoseViewPageState extends State<PoseViewPage> {
   final formKey = GlobalKey<FormState>();
 
   @override

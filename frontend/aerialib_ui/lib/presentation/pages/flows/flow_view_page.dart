@@ -4,7 +4,7 @@ import 'package:frontend/domain/entities/media_icon_entity.dart';
 import 'package:frontend/presentation/pages/flows/flow_details_sheet.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_details_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
-import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
+import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/core/utils/conversions.dart';
 
@@ -22,7 +22,7 @@ class FlowViewPage extends StatelessWidget {
   void _navigateToPosePage(BuildContext context, MediaIconEntity mediaItem) {
     Navigator.push(
       context,
-      PoseDetailsPage.route(mediaItem.data),
+      PoseViewPage.route(mediaItem.data),
     );
   }
 
@@ -45,7 +45,7 @@ class FlowViewPage extends StatelessWidget {
                 context: context,
                 flow: flow,
                 onEdit: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context); // close bottom sheet
                   Navigator.push(context, FlowEditDetailsPage.route(flow));
                 },
               );
@@ -55,12 +55,16 @@ class FlowViewPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(context, FlowEditPosesPage.route(flow));
+          Navigator.push(
+              context,
+              FlowEditPosesPage.route(flow)
+          );
         },
-        icon: const Icon(Icons.add),
-        label: const Text('Add Poses'),
-        tooltip: 'Add poses to this flow',
+        icon: const Icon(Icons.edit),
+        label: const Text('Edit Poses'),
+        tooltip: 'Add, remove, or reorder poses in this flow',
       ),
+
       body: mediaItems.isEmpty
           ? const Center(child: Text('No poses in this flow yet.'))
           : SingleChildScrollView(

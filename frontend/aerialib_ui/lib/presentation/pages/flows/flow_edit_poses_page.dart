@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
+import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
+// import 'package:frontend/to_sort/pages/flows/flow_view_page.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
@@ -12,7 +14,7 @@ import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 
 import '../../cubit/users/auth_cubit.dart';
 import '../../widgets/media_display/media_list/list_card.dart';
-import '../poses/pose_details_page.dart';
+import '../poses/pose_view_page.dart';
 
 class FlowEditPosesPage extends StatefulWidget {
   final FlowEntity flow;
@@ -66,21 +68,25 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     });
   }
 
-  void _saveFlow() {
+  Future<void> _saveFlow() async {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    // Print poses
-    for (var pose in poses) {
-      print("[FlowEditPosesPage] Pose name: ${pose.pose.name}, Pose order: ${pose.poseOrder}");
-    }
+    final updatedFlow = widget.flow.copyWith(poses: poses);
 
     context.read<FlowsCubit>().updateFlowPoses(poses);
-
-    context.read<FlowsCubit>().saveFlowPoses(user.user.token);
+    await context.read<FlowsCubit>().saveFlowPoses(user.user.token);
+    await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Saving flow...')),
     );
+
+    // Save completed
+    Navigator.pop(context); // pop FlowPoseEdit → returns to FlowView
+    // Navigator.pop(context); // pop FlowView → back to FlowLibrary
+
+    // Then push FlowView again (fresh)
+    Navigator.push(context, FlowViewPage.route(updatedFlow));
   }
 
 
@@ -178,7 +184,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                           onTapFunction: () {
                             Navigator.push(
                               context,
-                              PoseDetailsPage.route(flowPose.pose),
+                              PoseViewPage.route(flowPose.pose),
                             );
                           },
                           trailing: ReorderableDragStartListener(

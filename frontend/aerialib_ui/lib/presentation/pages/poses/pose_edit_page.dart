@@ -4,7 +4,7 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
+import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 
 import '../../../core/utils/validators.dart';
@@ -96,7 +96,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
     Navigator.pop(context); // pop PoseDetails → back to PoseLibrary
 
     // Then push PoseDetails again (fresh)
-    Navigator.push(context, PoseDetailsPage.route(updatedPose));
+    Navigator.push(context, PoseViewPage.route(updatedPose));
 
   }
 

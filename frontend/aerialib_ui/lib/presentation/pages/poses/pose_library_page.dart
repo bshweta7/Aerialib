@@ -11,7 +11,7 @@ import 'package:frontend/domain/entities/media_icon_entity.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
-import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
+import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
 import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
 
 import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
@@ -111,7 +111,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   void _navigateToPosePage(MediaIconEntity mediaItem) {
     Navigator.push(
       context,
-      PoseDetailsPage.route(mediaItem.data),
+      PoseViewPage.route(mediaItem.data),
     );
   }
 
