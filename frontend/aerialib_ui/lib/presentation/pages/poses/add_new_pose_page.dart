@@ -95,42 +95,53 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            return Padding(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: formKey,
-                child: ListView(
-                  children: [
-                    _inputField("Pose Name", nameController, required: true),
-                    const SizedBox(height: 10),
-                    _dropdownField(
-                      label: "Apparatus",
-                      controller: apparatusController,
-                      options: const ['Lyra', 'Hammock'],
-                    ),
-                    const SizedBox(height: 10),
-                    _dropdownField(
-                      label: "Level",
-                      controller: levelController,
-                      options: const ['0', '1', '2', '3', '4'],
-                    ),
-                    const SizedBox(height: 10),
-                    _inputField("Description", descriptionController, maxLines: 2),
-                    const SizedBox(height: 10),
-                    _inputField("Teaching Cues", teachingCuesController, maxLines: 2),
-                    const SizedBox(height: 10),
-                    _inputField("Safety Cues", safetyCuesController, maxLines: 2),
-                    const SizedBox(height: 10),
-                    _inputField("Progressions", progressionsController, maxLines: 2),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: createNewPose,
-                      child: const Text(
-                        "SUBMIT",
-                        style: TextStyle(fontSize: 18),
+            return SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _inputField("Pose Name", nameController, required: true),
+                      const SizedBox(height: 10),
+                      _dropdownField(
+                        label: "Apparatus",
+                        controller: apparatusController,
+                        options: Constants.apparatusOptions,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: levelController,
+                        decoration: const InputDecoration(labelText: 'Level'),
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Level can’t be empty';
+                          }
+                          final parsed = double.tryParse(value);
+                          if (parsed == null) return 'Please enter a valid number';
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      _inputField("Description", descriptionController, maxLines: 2),
+                      const SizedBox(height: 10),
+                      _inputField("Teaching Cues", teachingCuesController, maxLines: 2),
+                      const SizedBox(height: 10),
+                      _inputField("Safety Cues", safetyCuesController, maxLines: 2),
+                      const SizedBox(height: 10),
+                      _inputField("Progressions", progressionsController, maxLines: 2),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: createNewPose,
+                        child: const Text(
+                          "Submit",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

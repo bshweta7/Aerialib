@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 
+import '../../../core/utils/validators.dart';
+
 class AddNewFlowPage extends StatefulWidget {
   static MaterialPageRoute route() => MaterialPageRoute(
     builder: (context) => const AddNewFlowPage(),
@@ -23,32 +25,30 @@ class AddNewFlowPage extends StatefulWidget {
 class _AddNewFlowPageState extends State<AddNewFlowPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController cuesController = TextEditingController();
+  TextEditingController teachingCuesController = TextEditingController();
+  TextEditingController safetyCuesController = TextEditingController();
+  TextEditingController progressionsController = TextEditingController();
   TextEditingController apparatusController = TextEditingController();
   TextEditingController levelController = TextEditingController();
-  // TextEditingController thumbnailURLController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
   void createNewFlow() async {
     if (formKey.currentState!.validate()) {
-      AuthLoggedIn user = context
-          .read<AuthCubit>()
-          .state as AuthLoggedIn;
-      int? level = int.tryParse(
-          levelController.text.trim()); // Parse level to int
+      AuthLoggedIn user = context.read<AuthCubit>().state as AuthLoggedIn;
+      double? level = double.tryParse(levelController.text.trim());
 
-      if (level != null) { // Check if level is a valid integer
+      if (level != null) {
         await context.read<FlowsCubit>().createNewFlow(
           name: nameController.text.trim(),
           apparatus: apparatusController.text.trim(),
           description: descriptionController.text.trim(),
-          // TODO add upload image portion on create new flow page
-          // TODO OR allow image selection
-          // TODO this should be default to exclamation point
+          teachingCues: teachingCuesController.text.trim(),
+          safetyCues: safetyCuesController.text.trim(),
+          progressions: progressionsController.text.trim(),
+          level: level,
           token: user.user.token,
           createdBy: user.user.id,
-          level: 1, // TODO use level Controller.
           thumbnailImageId: Constants.missingImageId,
           thumbnailImagePath: Constants.missingImagePath,
         );
@@ -60,7 +60,11 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
-    // TODO add other controllers here
+    teachingCuesController.dispose();
+    safetyCuesController.dispose();
+    progressionsController.dispose();
+    apparatusController.dispose();
+    levelController.dispose();
     super.dispose();
   }
 
@@ -68,7 +72,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text("Add New Flow"),
+            title: const Text("Create Flow Details"),
         ),
         body: BlocConsumer<FlowsCubit, FlowsState>(
           listener: (context, state) {
@@ -101,118 +105,92 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                 child: CircularProgressIndicator(),
               );
             }
-            return Padding(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: formKey,
-                child: Column( // TODO expanded widget here???
+            return SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                  key: formKey,
+                  child: Column( // TODO expanded widget here???
                     children: [
-                      // Name Textbox
+                      // Name
                       TextFormField(
                         controller: nameController,
-                        decoration: const InputDecoration(
-                          hintText: 'Flow Name',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Name cannot be empty";
-                          } else {
-                            return null;
-                          }
-                        },
+                        decoration: const InputDecoration(labelText: 'Flow Name'),
+                        validator: requiredFieldValidator,
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(height: 10),
 
-                      // Apparatus Dropdown
+                      // Apparatus
                       DropdownButtonFormField<String>(
                         value: apparatusController.text.isNotEmpty ? apparatusController.text : null,
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            apparatusController.text = newValue;
-                          }
-                        },
-                        items: <String>['Lyra', 'Hammock']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'Apparatus',
-                        ),
+                        onChanged: (value) => setState(() => apparatusController.text = value ?? ''),
+                        items: Constants.apparatusOptions
+                            .map((value) => DropdownMenuItem(value: value, child: Text(value)))
+                            .toList(),
+                        decoration: const InputDecoration(labelText: 'Apparatus'),
+                        validator: requiredFieldValidator,
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Level
+                      TextFormField(
+                        controller: levelController,
+                        decoration: const InputDecoration(labelText: 'Level'),
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select an apparatus';
+                          if (value == null || value.trim().isEmpty) {
+                            return 'This field cannot be empty';
                           }
+                          final parsed = double.tryParse(value);
+                          if (parsed == null) return 'Please enter a valid number';
                           return null;
                         },
                       ),
                       const SizedBox(height: 10),
 
-                      // Level Dropdown
-                      DropdownButtonFormField<int>(
-                        value: levelController.text.isNotEmpty ? int.tryParse(levelController.text) : null,
-                        onChanged: (int? newValue) {
-                          if (newValue != null) {
-                            levelController.text = newValue.toString();
-                          }
-                        },
-                        items: <int>[0, 1, 2, 3, 4,]
-                            .map<DropdownMenuItem<int>>((int value) {
-                          return DropdownMenuItem<int>(
-                            value: value,
-                            child: Text(value.toString()),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'Level',
-                        ),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select a level';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Description Textbox
+                      // Description
                       TextFormField(
                         controller: descriptionController,
-                        decoration: const InputDecoration(
-                          hintText: 'Description',
-                        ),
+                        decoration: const InputDecoration(labelText: 'Description'),
                         maxLines: 2,
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(height: 10),
 
-                      // Cues Textbox
+                      // Teaching Cues
                       TextFormField(
-                        controller: cuesController,
-                        decoration: const InputDecoration(
-                          hintText: 'Cues',
-                        ),
-                        maxLines: 3,
+                        controller: teachingCuesController,
+                        decoration: const InputDecoration(labelText: 'Teaching Cues'),
+                        maxLines: 2,
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(height: 10),
 
+                      // Safety Cues
+                      TextFormField(
+                        controller: safetyCuesController,
+                        decoration: const InputDecoration(labelText: 'Safety Cues'),
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 10),
 
-                      const SizedBox(height: 10,),
+                      // Progressions
+                      TextFormField(
+                        controller: progressionsController,
+                        decoration: const InputDecoration(labelText: 'Progressions'),
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Submit Button
                       ElevatedButton(
-                          onPressed: createNewFlow,
-                          // TODO change formatting to make clear that this is page one and add poses on next page
-                          child: const Text(
-                              "Add Poses",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.normal
-                              )
-                          )
+                        onPressed: createNewFlow,
+                        child: const Text(
+                        "Add Poses",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
                       ),
-                    ]
-                ),
+                    ],
+                  ),
+                )
               ),
             );
           },

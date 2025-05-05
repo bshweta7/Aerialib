@@ -7,6 +7,8 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 
+import '../../../core/utils/validators.dart';
+
 class PoseEditDetailsPage extends StatefulWidget {
   final PoseEntity pose;
 
@@ -60,9 +62,9 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
 
 
   Future<void> _handleUpdatePose() async {
-    final user = context
-        .read<AuthCubit>()
-        .state as AuthLoggedIn;
+    if (!formKey.currentState!.validate()) return;
+
+    final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
     final updatedPose = PoseEntity(
       id: widget.pose.id,
@@ -120,6 +122,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
               TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
+                validator: requiredFieldValidator,
               ),
 
               const SizedBox(height: 10),
@@ -136,6 +139,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
                 decoration: const InputDecoration(labelText: 'Apparatus'),
+                validator: requiredFieldValidator,
               ),
 
               const SizedBox(height: 10),
@@ -148,6 +152,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                     level = double.tryParse(value) ?? level;
                   });
                 },
+                validator: requiredFieldValidator,
               ),
 
               const SizedBox(height: 10),

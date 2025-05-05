@@ -6,6 +6,7 @@ import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 
 import '../../../core/constants/constants.dart';
+import '../../../core/utils/validators.dart';
 import 'flow_poses_page.dart';
 
 class FlowEditDetailsPage extends StatefulWidget {
@@ -102,12 +103,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                 TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(labelText: 'Flow Name'),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'This field cannot be empty';
-                    }
-                    return null;
-                  },
+                  validator: requiredFieldValidator,
                 ),
                 const SizedBox(height: 10),
 
@@ -125,12 +121,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                       selectedApparatus = value;
                     });
                   },
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'This field cannot be empty';
-                    }
-                    return null;
-                  },
+                  validator: requiredFieldValidator,
                 ),
 
                 const SizedBox(height: 10),
@@ -143,12 +134,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                       level = double.tryParse(value) ?? level;
                     });
                   },
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'This field cannot be empty';
-                    }
-                    return null;
-                  },
+                  validator: requiredFieldValidator,
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
