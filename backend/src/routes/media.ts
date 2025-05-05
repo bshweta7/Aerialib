@@ -84,4 +84,49 @@ mediaRouter.delete("/", auth, async (req: AuthRequest, res) => {
     }
 });
 
+mediaRouter.post("/sync", auth, async (req: AuthRequest, res) => {
+    try {
+        const mediaList = req.body;
+        const filteredMedia = [];
+
+        // Log received fields for verification
+        for (const media of mediaList) {
+            console.log('[MediaRouter] Received mediaPath:', media.media_path);
+        }
+
+        // Clean and transform incoming media objects
+        for (let m of mediaList) {
+            m = {
+                id: m.id,
+                mediaPath: m.media_path,
+                mediaType: m.media_type,
+                fileSize: m.file_size,
+                name: m.name,
+                description: m.description,
+                apparatus: m.apparatus,
+                uploadedBy: req.user,
+                uploadedAt: new Date(m.uploaded_at),
+            };
+            filteredMedia.push(m);
+        }
+
+        // Optional debug output
+        filteredMedia.forEach((media, i) => {
+            console.log(`[MediaRouter] Media ${i + 1}:`, media);
+        });
+
+        const pushedMedia = await db
+            .insert(mediaTable)
+            .values(filteredMedia)
+            .onConflictDoNothing()
+            .returning();
+
+        res.status(201).json(pushedMedia);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e });
+    }
+});
+
+
 export default mediaRouter;

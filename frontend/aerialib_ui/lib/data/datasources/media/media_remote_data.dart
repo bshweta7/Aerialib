@@ -90,18 +90,32 @@ class MediaRemoteDataSource {
     return jsonList.map((e) => MediaModel.fromMap(e)).toList();
   }
 
+  /// Sync local media entries to the remote data source
   Future<bool> syncMedia({
     required String token,
     required List<MediaModel> mediaList,
   }) async {
-    final List<Map<String, dynamic>> mediaListInMap = mediaList.map((media) => media.toMap()).toList();
+    final List<Map<String, dynamic>> mediaListInMap = mediaList.map((media) {
+      final map = media.toMap();
+      map.remove('is_synced');
+      return map;
+    }).toList();
+
+    print('[MediaRemoteDataSource] Sync payload:');
+    for (final map in mediaListInMap) {
+      print(map.keys);
+    }
+
     print(mediaListInMap);
+
     final response = await httpService.post(
       path: "/media/sync",
       token: token,
       body: mediaListInMap,
     );
-    print(response);
+
+    print('[MediaRemoteDataSource] Status Code: ${response.statusCode}');
+    print('[MediaRemoteDataSource] Response: ${response.body}');
 
     return response.statusCode == 201;
   }

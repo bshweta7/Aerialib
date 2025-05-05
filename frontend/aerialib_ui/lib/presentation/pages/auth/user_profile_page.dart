@@ -5,6 +5,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/auth/login_page.dart';
 
 import '../../cubit/flows/flows_cubit.dart';
+import '../../cubit/media/media_cubit.dart';
 
 class UserProfilePage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -100,13 +101,26 @@ class _UserProfilePage extends State<UserProfilePage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                      context.read<MediaCubit>().syncMedia(user.user.token);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Media sync triggered.")),
+                      );
+                    },
+                    icon: const Icon(Icons.sync),
+                    label: const Text("Sync Media Now"),
+                  ),
+
+                  const SizedBox(height: 30),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final user = context.read<AuthCubit>().state as AuthLoggedIn;
                       context.read<FlowsCubit>().syncFlowPoses(user.user.token);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Flow Poses sync triggered.")),
                       );
                     },
                     icon: const Icon(Icons.sync),
-                    label: const Text("Sync Flow POSES Now"),
+                    label: const Text("Sync Flow Poses Now"),
                   ),
 
                   const SizedBox(height: 30),

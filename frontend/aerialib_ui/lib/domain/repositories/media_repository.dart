@@ -88,12 +88,12 @@ class MediaRepository {
       return;
     }
 
-    print("Retrieved unsynced medias from local");
+    print("[MediaRepository] Retrieved unsynced medias from local");
     final success = await remoteDataSource.syncMedia(
       token: token,
       mediaList: unsynced,
     );
-    print("Synced medias to remote");
+    print("[MediaRepository] Synced media to remote");
 
     if (success) {
       for (final media in unsynced) {

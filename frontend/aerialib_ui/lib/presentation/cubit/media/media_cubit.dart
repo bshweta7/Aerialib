@@ -24,6 +24,7 @@ part 'media_state.dart';
 
 class MediaCubit extends Cubit<MediaState>{
   final MediaRepository _mediaRepository;
+  bool _isSyncing = false;
 
   MediaCubit(this._mediaRepository) : super(const MediaInitial());
 
@@ -84,26 +85,27 @@ class MediaCubit extends Cubit<MediaState>{
   }
 
   /// Sync medias (sync unsynced local medias with remote)
-  Future<void> syncMedias(String token) async {
-    Connectivity().onConnectivityChanged.listen((data) async {
-      if (data.contains(ConnectivityResult.wifi) || data.contains(ConnectivityResult.ethernet)) { // TODO add other options, possibly move to connectivity_service.dart
-        print("Wifi available.");
-        try {
-          print("Syncing local to remote");
-          await _mediaRepository.syncLocalToRemote(token);
+  Future<void> syncMedia(String token) async {
+    if (_isSyncing) return;
+    _isSyncing = true;
 
-          print("Syncing remote to local");
-          await _mediaRepository.syncRemoteToLocal(token);
+    print("[MediaCubit] Starting one-shot sync of flow poses...");
 
-        } catch (e) {
-          print("Sync error: $e");
-          // Optional: emit a sync error state if needed
-          emit(MediaError("Sync error: $e"));
-        }
-      } else {
-        print("No wifi available");
-      }
-    });
+    try {
+      await _mediaRepository.syncLocalToRemote(token);
+      print('[MediaCubit] Synced local to remote.');
+
+      await _mediaRepository.syncRemoteToLocal(token);
+      print('[MediaCubit] Synced remote to local.');
+
+      // final updatedFlows = await _flowPoseRepository.getAllFlowPoses();
+      // emit(GetFlowsSuccess(updatedFlows));
+    } catch (e) {
+      print('[MediaCubit] Sync error: $e');
+      emit(MediaError('[MediaCubit] Sync error: $e'));
+    } finally {
+      _isSyncing = false;
+    }
   }
 }
 
