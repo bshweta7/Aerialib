@@ -58,6 +58,20 @@ class FlowPoseRemoteDataSource {
     return jsonList.map((e) => FlowPoseModel.fromMap(e)).toList();
   }
 
+  /// Delete all the flow poses for a given flowId
+  Future<void> deleteAllFlowPosesInFlow(String flowId, String token) async {
+    final response = await httpService.delete(
+      path: "/flow_poses/delete_all/$flowId",
+      token: token,
+    );
+
+    if (response.statusCode == 200) {
+      print("[FlowPoseRemoteDataSource] Deleted all flow poses for $flowId");
+    } else {
+      throw Exception("Failed to delete remote flow poses for $flowId");
+    }
+  }
+
   /// Sync local flow poses to remote
   Future<bool> syncFlowPoses({
     required String token,

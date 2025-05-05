@@ -93,6 +93,17 @@ flowPoseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
     }
 });
 
+flowPoseRouter.delete("/delete_all/:flowId", auth, async (req: AuthRequest, res) => {
+    try {
+        const flowId = req.params.flowId;
+        await db.delete(flowPosesTable).where(eq(flowPosesTable.flowId, flowId));
+        res.status(200).json({ message: "Deleted all flow poses for flowId: " + flowId });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to delete flow poses" });
+    }
+});
+
 
 // TODO Enable sync
 // flowRouter.post("/sync", auth, async (req: AuthRequest, res) => {

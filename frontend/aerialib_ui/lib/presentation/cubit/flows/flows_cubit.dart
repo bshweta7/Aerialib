@@ -246,6 +246,7 @@ class FlowsCubit extends Cubit<FlowsState> {
 
       print("[FlowPoseRepository] Syncing to remote data source...");
       await _flowPoseRepository.syncLocalToRemote(token);
+      print("[FlowPoseRepository] Synced to remote successfully.");
 
       // print("[FlowsCubit] Updating flow poses in flow...");
       // await _flowPoseRepository.replaceFlowPosesInFlow(

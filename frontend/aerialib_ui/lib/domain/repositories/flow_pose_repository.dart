@@ -148,22 +148,36 @@ class FlowPoseRepository {
   /// Send unsynced local flow poses to remote, and mark them as synced
   Future<void> syncLocalToRemote(String token) async {
     final List<FlowPoseModel> unsynced = await localDataSource.getUnsyncedFlowPoses();
-    if (unsynced.isEmpty) {
-      return;
-    }
+    if (unsynced.isEmpty) return;
 
     print("[FlowPoseRepository] Retrieved unsynced flow poses from local");
-    final success = await remoteDataSource.syncFlowPoses(
-      token: token,
-      flowPoses: unsynced,
-    );
-    print("[FlowPoseRepository] Synced flow poses to remote");
 
-    if (success) {
-      for (final flow in unsynced) {
-        await localDataSource.setSyncedStatus(flow.id, 1);
+    final Map<String, List<FlowPoseModel>> grouped = {};
+    for (final pose in unsynced) {
+      grouped.putIfAbsent(pose.flowId, () => []).add(pose);
+    }
+
+    for (final entry in grouped.entries) {
+      final flowId = entry.key;
+      final poses = entry.value;
+
+      print("[FlowPoseRepository] Syncing flow poses for flowId: $flowId");
+
+      await remoteDataSource.deleteAllFlowPosesInFlow(flowId, token);
+
+      final success = await remoteDataSource.syncFlowPoses(
+        token: token,
+        flowPoses: poses,
+      );
+
+      if (success) {
+        for (final pose in poses) {
+          await localDataSource.setSyncedStatus(pose.id, 1);
+        }
+        print("[FlowPoseRepository] Synced and marked poses for flow $flowId");
+      } else {
+        print("[FlowPoseRepository] Failed to sync poses for flow $flowId");
       }
-      print("[FlowPoseRepository] Updated flow poses synced status to synced");
     }
   }
 

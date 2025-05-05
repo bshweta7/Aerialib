@@ -31,6 +31,19 @@ class HttpService {
     return res;
   }
 
+  Future<http.Response> delete({
+    required String path,
+    required String token,
+  }) async {
+    final res = await http.delete(
+      Uri.parse("${Constants.backendUrl}$path"),
+      headers: _headers(token),
+    );
+
+    _checkForError(res);
+    return res;
+  }
+
   /// Allows for POST requests that don't require a token (e.g. Login and Signup)
   Future<http.Response> postInit({
     required String path,
