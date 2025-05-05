@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
-import 'package:frontend/to_sort/pages/home/test_page.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
@@ -137,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height:30),
 
                     const Text(
-                      "Dashboard is under development",
+                      "More Features Coming Soon... 🙂",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -145,21 +144,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-
-                    // TEST PAGE Navigation
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, TestPage.route());
-                        },
-                        child: const Text(
-                            "TEST PAGE",
-                            style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            )
-                        )
-                    ),
-                    SizedBox(height: 10,),
 
                     // TODO add these to github tickets
                     //  Expanded(
