@@ -237,10 +237,10 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                           onTapFunction: () {
                             Navigator.push(context, PoseViewPage.route(flowPose.pose));
                           },
-                          trailing: ReorderableDelayedDragStartListener(
-                            index: poses.indexOf(flowPose),
-                            child: const Icon(Icons.drag_indicator),
-                          ),
+                          // trailing: ReorderableDelayedDragStartListener(
+                          //   index: poses.indexOf(flowPose),
+                          //   child: const Icon(Icons.drag_indicator),
+                          // ),
                         ),
                       );
                     }).toList(),

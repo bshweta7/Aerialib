@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 
@@ -72,12 +73,12 @@ class _PoseViewPageState extends State<PoseViewPage> {
                   minHeight: 20,
                 ),
                 width: double.infinity,
-                child: FormattedCachedNetworkImage(pose.primaryMediaPath),
+                child: FormattedCachedNetworkImage("/${pose.primaryMediaPath}"),
               ),
             ),
             const SizedBox(height: 20),
 
-            _infoRow("Apparatus:", pose.apparatus),
+            _infoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
             _infoRow("Level:", "Level ${pose.level}"),
             const Divider(),
             _infoRow("Description:", pose.description),

@@ -185,7 +185,10 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                         onPressed: createNewFlow,
                         child: const Text(
                         "Add Poses",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(
+                            // color: Colors.white,
+                            // fontSize: 18
+                        ),
                         ),
                       ),
                     ],

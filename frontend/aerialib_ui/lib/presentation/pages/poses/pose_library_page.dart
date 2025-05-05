@@ -163,7 +163,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               // Filtering
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
-                selectedApparatus.contains(elem.apparatus) &&
+                selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase()) &&
                     selectedLevels.contains(elem.level.floor()),
               ).toList();
 

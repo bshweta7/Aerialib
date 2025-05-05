@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/auth/login_page.dart';
 
@@ -38,7 +39,7 @@ class _UserProfilePage extends State<UserProfilePage> {
           if (state is AuthLoggedIn) {
             final user = state.user; // Assuming `user` has name, email, etc.
 
-            return Padding(
+            return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,6 +98,19 @@ class _UserProfilePage extends State<UserProfilePage> {
                   ),
 
                   // TODO move this to an advanced settings section
+                  const SizedBox(height: 30),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                      context.read<PosesCubit>().syncPoses(user.user.token);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Poses sync triggered.")),
+                      );
+                    },
+                    icon: const Icon(Icons.sync),
+                    label: const Text("Sync Poses Now"),
+                  ),
+
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
                     onPressed: () {
