@@ -176,17 +176,30 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                 Expanded(
                   child: Stack(
                     children: [
-                      SingleChildScrollView(
-                        controller: _scrollController,
-                        child: Column(
-                          children: [
-                            MediaList(
-                              mediaItems: mediaIcons,
-                              onMediaTap: _navigateToFlowPage,
+                      if (mediaIcons.isEmpty)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: Text(
+                              "No flows, try changing the filters or adding one!",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black38),
                             ),
-                          ],
+                          ),
+                        )
+                      else
+                        SingleChildScrollView(
+                          controller: _scrollController,
+                          child: Column(
+                            children: [
+                              MediaList(
+                                mediaItems: mediaIcons,
+                                onMediaTap: _navigateToFlowPage,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                       ScrollToTopButton(scrollController: _scrollController),
                     ],
                   ),

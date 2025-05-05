@@ -245,18 +245,31 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                   Expanded(
                     child: Stack(
                       children: [
-                        SingleChildScrollView(
-                          controller: _scrollController,
-                          child: Column(
-                            children: [
-                              // List poses
-                              MediaList(
-                                mediaItems: filteredMediaIcons,
-                                onMediaTap: _navigateToPosePage,
+                        if (filteredMediaIcons.isEmpty)
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 40),
+                              child: Text(
+                                "No poses, try changing the filters",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black38),
                               ),
-                            ],
+                            ),
                           )
-                        ),
+                        else
+                          SingleChildScrollView(
+                            controller: _scrollController,
+                            child: Column(
+                              children: [
+                                // List poses
+                                MediaList(
+                                  mediaItems: filteredMediaIcons,
+                                  onMediaTap: _navigateToPosePage,
+                                ),
+                              ],
+                            )
+                          ),
 
                         // Scroll to top floating button
                         ScrollToTopButton(scrollController: _scrollController), // Add the button
