@@ -5,6 +5,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 
+import '../../../core/constants/constants.dart';
 import 'flow_poses_page.dart';
 
 class FlowEditDetailsPage extends StatefulWidget {
@@ -22,13 +23,13 @@ class FlowEditDetailsPage extends StatefulWidget {
 
 class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
   final formKey = GlobalKey<FormState>();
+  late String? selectedApparatus;
 
   late TextEditingController nameController;
   late TextEditingController descriptionController;
   late TextEditingController teachingCuesController;
   late TextEditingController safetyCuesController;
   late TextEditingController progressionsController;
-  late TextEditingController apparatusController;
   late double level;
 
   @override
@@ -39,8 +40,9 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     teachingCuesController = TextEditingController(text: widget.flow.teachingCues);
     safetyCuesController = TextEditingController(text: widget.flow.safetyCues);
     progressionsController = TextEditingController(text: widget.flow.progressions);
-    apparatusController = TextEditingController(text: widget.flow.apparatus);
     level = widget.flow.level ?? 0;
+    selectedApparatus = widget.flow.apparatus.isNotEmpty ? widget.flow.apparatus : null;
+
   }
 
   @override
@@ -50,11 +52,12 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     teachingCuesController.dispose();
     safetyCuesController.dispose();
     progressionsController.dispose();
-    apparatusController.dispose();
     super.dispose();
   }
 
   Future<void> _handleUpdateFlow() async {
+    if (!formKey.currentState!.validate()) return;
+
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
     final updatedFlow = widget.flow.copyWith(
@@ -63,7 +66,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
       teachingCues: teachingCuesController.text.trim(),
       safetyCues: safetyCuesController.text.trim(),
       progressions: progressionsController.text.trim(),
-      apparatus: apparatusController.text.trim(),
+      apparatus: selectedApparatus ?? '',
       level: level,
       updatedBy: user.user.id,
       updatedAt: DateTime.now(),
@@ -77,10 +80,11 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
     await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
-    Navigator.pop(context); // Pop FlowEditDetails
-    Navigator.pop(context); // Pop FlowDetails
-    Navigator.push(context, FlowPosesPage.route(updatedFlow)); // Push refreshed
+    Navigator.pop(context); // Pop Edit
+    Navigator.pop(context); // Pop Details
+    Navigator.push(context, FlowPosesPage.route(updatedFlow)); // Push fresh
   }
+
 
 
   @override
@@ -98,14 +102,37 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                 TextFormField(
                   controller: nameController,
                   decoration: const InputDecoration(labelText: 'Flow Name'),
-                  validator: (value) =>
-                  value == null || value.trim().isEmpty ? "Required" : null,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'This field cannot be empty';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 10),
-                TextFormField(
-                  controller: apparatusController,
+
+                DropdownButtonFormField<String>(
+                  value: selectedApparatus,
                   decoration: const InputDecoration(labelText: 'Apparatus'),
+                  items: Constants.apparatusOptions
+                      .map((apparatus) => DropdownMenuItem(
+                    value: apparatus,
+                    child: Text(apparatus),
+                  ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedApparatus = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'This field cannot be empty';
+                    }
+                    return null;
+                  },
                 ),
+
                 const SizedBox(height: 10),
                 TextFormField(
                   initialValue: level.toString(),
@@ -115,6 +142,12 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                     setState(() {
                       level = double.tryParse(value) ?? level;
                     });
+                  },
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'This field cannot be empty';
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 10),
