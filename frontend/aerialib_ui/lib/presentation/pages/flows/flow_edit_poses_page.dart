@@ -76,7 +76,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
     context.read<FlowsCubit>().updateFlowPoses(poses);
 
-    context.read<FlowsCubit>().saveFlow(user.user.token);
+    context.read<FlowsCubit>().saveFlowPoses(user.user.token);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Saving flow...')),

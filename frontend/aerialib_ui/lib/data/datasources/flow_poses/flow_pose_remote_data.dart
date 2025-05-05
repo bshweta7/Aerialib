@@ -69,10 +69,10 @@ class FlowPoseRemoteDataSource {
       return map;
     }).toList();
 
-    print('[FlowPoseRemoteDataSource] Sync payload:');
-    for (final map in flowPoseListInMap) {
-      print(map.keys);
-    }
+    // print('[FlowPoseRemoteDataSource] Sync payload:');
+    // for (final map in flowPoseListInMap) {
+    //   print(map.keys);
+    // }
 
     print(flowPoseListInMap);
 

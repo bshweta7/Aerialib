@@ -184,6 +184,11 @@ class FlowPoseRepository {
     required List<FlowPoseEntity> newPoses,
     required String token,
   }) async {
+
+    for (final p in newPoses) {
+      print('[Saving FlowPose] id=${p.id}, flowId=${p.flowId}, poseId=${p.pose.id}, poseOrder=${p.poseOrder}');
+    }
+
     print("[FlowPoseRepository] Deleting all flow poses in flow $flowId");
     await deleteAllFlowPosesInFlow(flowId);
 

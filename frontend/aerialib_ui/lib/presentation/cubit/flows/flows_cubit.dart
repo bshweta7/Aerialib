@@ -186,14 +186,30 @@ class FlowsCubit extends Cubit<FlowsState> {
   void updateFlowPoses(List<FlowPoseEntity> newPoses) {
     if (state is! EditFlowState) return;
     final currentState = state as EditFlowState;
+
+    // 🔍 Print BEFORE
+    print("[FlowsCubit] Existing poses in flow BEFORE update:");
+    for (final p in currentState.flow.poses) {
+      print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
+    }
+
     final updatedFlow = currentState.flow.copyWith(poses: newPoses);
+
+
+    // 🔍 Print AFTER
+    print("[FlowsCubit] Poses to update TO:");
+    for (final p in newPoses) {
+      print("✅ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
+    }
+
     print("[FlowsCubit] Updated flow with new poses");
 
     emit(currentState.copyWith(flow: updatedFlow));
   }
 
-  /// Save the flow and its poses (local + remote)
-  Future<void> saveFlow(String token) async {
+  /// Save the flows poses (local + remote)
+  Future<void> saveFlowPoses(String token) async {
+    print("[FlowCubit] State is $state");
     if (state is! EditFlowState) return;
     final currentState = state as EditFlowState;
 

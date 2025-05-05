@@ -53,7 +53,6 @@ class FlowError extends FlowsState {
   List<Object?> get props => [message];
 }
 
-/// State for when editing a single flow (for add/reorder poses, etc.)
 class EditFlowState extends FlowsState {
   final FlowEntity flow;
   final bool isSaving;
