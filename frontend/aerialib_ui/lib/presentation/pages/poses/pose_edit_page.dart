@@ -41,8 +41,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
     teachingCuesController =
         TextEditingController(text: widget.pose.teachingCues);
     safetyCuesController = TextEditingController(text: widget.pose.safetyCues);
-    progressionsController =
-        TextEditingController(text: widget.pose.progressions);
+    progressionsController = TextEditingController(text: widget.pose.progressions);
 
     apparatus = widget.pose.apparatus;
     level = widget.pose.level;
@@ -102,7 +101,16 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Update Pose')),
+      appBar: AppBar(
+        title: const Text('Update Pose'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _handleUpdatePose,
+            tooltip: 'Save changes',
+          )
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -160,6 +168,13 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
               TextFormField(
                 controller: safetyCuesController,
                 decoration: const InputDecoration(labelText: 'Safety Cues'),
+                maxLines: 2,
+              ),
+
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: safetyCuesController,
+                decoration: const InputDecoration(labelText: 'Progressions'),
                 maxLines: 2,
               ),
 

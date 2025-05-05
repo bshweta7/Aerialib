@@ -127,11 +127,10 @@ class PoseRepository {
       updatedPose: poseModel,
       token: token,
     );
-    print("[PoseRepository] Remote update successful");
 
     print("[PoseRepository] Updating pose locally...");
-    await localDataSource.updatePose(updatedModel);
-    print("[PoseRepository] Local update successful");
+    final syncedModel = updatedModel.copyWith(isSynced: 1);
+    await localDataSource.updatePose(syncedModel);
   }
 
   /// Delete locally

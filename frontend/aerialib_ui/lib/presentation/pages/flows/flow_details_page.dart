@@ -65,3 +65,94 @@ class FlowDetailsPage extends StatelessWidget {
     );
   }
 }
+
+
+
+/*
+import 'package:flutter/material.dart';
+import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
+
+class FlowDetailsPage extends StatelessWidget {
+  final FlowEntity flow;
+
+  const FlowDetailsPage({super.key, required this.flow});
+
+  static MaterialPageRoute route(FlowEntity flow) => MaterialPageRoute(
+    builder: (context) => FlowDetailsPage(flow: flow),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(flow.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              // TODO: Navigate to edit page when it's implemented
+            },
+            tooltip: 'Edit this flow',
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _infoRow("Apparatus:", flow.apparatus),
+            _infoRow("Level:", "Level ${flow.level}"),
+            const Divider(),
+            _infoRow("Description:", flow.description),
+            _infoRow("Teaching Cues:", flow.teachingCues),
+            _infoRow("Safety Cues:", flow.safetyCues),
+            _infoRow("Progressions:", flow.progressions),
+            // TODO
+            // _infoRow("Category:", flow.category),
+            // _infoRow("Difficulty:", flow.difficulty),
+            // _infoRow("Description:", flow.description),
+            // _infoRow("Notes:", flow.notes),
+            // _infoRow("Created By:", flow.creatorName),
+            // _infoRow("Created On:", flow.createdAt != null ? _formatDate(flow.createdAt!) : null),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "$label ",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Expanded(
+            child: Text(
+              value?.isNotEmpty == true ? value! : 'None',
+              style: TextStyle(
+                fontStyle: value?.isNotEmpty == true
+                    ? FontStyle.normal
+                    : FontStyle.italic,
+                color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return "${date.month}/${date.day}/${date.year}";
+  }
+}
+
+ */

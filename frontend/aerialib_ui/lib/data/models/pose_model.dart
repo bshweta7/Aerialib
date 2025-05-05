@@ -83,4 +83,42 @@ class PoseModel {
       PoseModel.fromMap(json.decode(source));
 
   String toJson() => json.encode(toMap());
+
+  PoseModel copyWith({
+    String? id,
+    String? name,
+    String? primaryMediaId,
+    String? primaryMediaPath,
+    String? apparatus,
+    double? level,
+    String? description,
+    String? teachingCues,
+    String? safetyCues,
+    String? progressions,
+    String? createdBy,
+    String? updatedBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? isSynced,
+  }) {
+    return PoseModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      primaryMediaId: primaryMediaId ?? this.primaryMediaId,
+      primaryMediaPath: primaryMediaPath ?? this.primaryMediaPath,
+      apparatus: apparatus ?? this.apparatus,
+      level: level ?? this.level,
+      description: description ?? this.description,
+      teachingCues: teachingCues ?? this.teachingCues,
+      safetyCues: safetyCues ?? this.safetyCues,
+      progressions: progressions ?? this.progressions,
+      createdBy: createdBy ?? this.createdBy,
+      updatedBy: updatedBy ?? this.updatedBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isSynced: isSynced ?? this.isSynced,
+    );
+  }
+
+
 }

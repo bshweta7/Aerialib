@@ -125,9 +125,9 @@ class PoseRemoteDataSource {
       token: token,
       body: updatedPose.toMap(), // or explicit map
     );
-    print("____________________");
-
-    print("Backend response body: ${response.body}");
+    // print("____________________");
+    //
+    // print("Backend response body: ${response.body}");
 
     if (response.statusCode != 200) {
       print("[PoseRemoteDataSource] Failed to update pose:");

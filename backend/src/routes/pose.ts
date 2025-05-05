@@ -131,6 +131,7 @@ poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
     const pushedPoses = await db
       .insert(posesTable)
       .values(filteredPoses)
+      .onConflictDoNothing() // TODO verify if this can works
       .returning();
 
     res.status(201).json(pushedPoses);

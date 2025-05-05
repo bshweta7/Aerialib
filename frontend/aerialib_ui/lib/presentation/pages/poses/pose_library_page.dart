@@ -164,7 +164,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
                 selectedApparatus.contains(elem.apparatus) &&
-                    selectedLevels.contains(elem.level),
+                    selectedLevels.contains(elem.level.floor()),
               ).toList();
 
               List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
