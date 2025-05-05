@@ -56,7 +56,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     super.dispose();
   }
 
-  Future<void> _handleUpdateFlow() async {
+  Future<void> _saveFlow() async {
     if (!formKey.currentState!.validate()) return;
 
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
@@ -91,7 +91,26 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Update Flow')),
+      appBar: AppBar(
+        title: const Text('Update Flow'),
+        actions: [
+          BlocBuilder<FlowsCubit, FlowsState>(
+            builder: (context, state) {
+              if (state is EditFlowState && state.isSaving) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                );
+              }
+              // print(state);
+              return IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: _saveFlow,
+              );
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -162,7 +181,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _handleUpdateFlow,
+                  onPressed: _saveFlow,
                   child: const Text('Update Flow'),
                 ),
               ],

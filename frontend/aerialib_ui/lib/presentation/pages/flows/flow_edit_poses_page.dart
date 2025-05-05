@@ -172,6 +172,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                 // TODO light bulb on right side of each one that opens the list of poses you can transition to from the current pose (icon only shows up if there are known transitions). if clicked it drops down and creates a horizontal sliding list of images and names.
                 Expanded(
                   child: ReorderableListView(
+                    padding: EdgeInsets.only(bottom: 80.0),
                     children: poses.map((flowPose) {
                       return ReorderableDragStartListener(
                         key: ValueKey(flowPose.id),
@@ -209,52 +210,28 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                     },
                   ),
                 ),
-                const SizedBox(height: 10,),
-
-                // BlocBuilder<FlowsCubit, FlowsState>(
-                //   builder: (context, state) {
-                //     if (state is EditFlowState && state.isSaving) {
-                //       return const Padding(
-                //         padding: EdgeInsets.symmetric(horizontal: 16.0),
-                //         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                //       );
-                //     }
-                //     ElevatedButton(
-                //         onPressed: _saveFlow,// () {
-                //           // _saveFlow;
-                //           // Navigator.push(
-                //           //   context,
-                //           //   MaterialPageRoute(
-                //           //     // builder: (context) => FlowEditPage(flow: state.flow),
-                //           //     builder: (context) => const FlowLibraryPage(),
-                //           //   ),
-                //           //   // FlowEditPage(flow: state.flow).route(),
-                //           //   //     (_) => false
-                //           //   // TODO should this go to flow specific FlowViewPage instead?
-                //           // );
-                //         // },
-                //         // TODO change formatting to make clear that this is page one and add poses on next page
-                //         child: const Text(
-                //             "Save Changes",
-                //             style: TextStyle(
-                //                 color: Colors.white,
-                //                 fontSize: 18,
-                //                 fontWeight: FontWeight.normal
-                //             )
-                //         )
-                //     );
-                //   },
-                // ),
+                const SizedBox(height: 10), // for FAB padding
 
 
               ],
             );
           }
-
           return const SizedBox(); // fallback
         },
       ),
-    )
-    );
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: SizedBox(
+          width: double.infinity, // Full width of the screen
+          child: FloatingActionButton.extended(
+            onPressed: _saveFlow,
+            icon: const Icon(Icons.save),
+            label: const Text('Save Changes'),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    ),
+  );
   }
 }
