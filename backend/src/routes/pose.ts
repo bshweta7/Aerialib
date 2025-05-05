@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
-import {mediaTable, NewPose, posesTable} from "../db/schema";
+import {mediaTable, NewFlow, NewPose, posesTable} from "../db/schema";
 import { db } from "../db";
 import { eq, sql } from "drizzle-orm";
 import mediaRouter from "./media";
@@ -146,7 +146,22 @@ poseRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
   try {
     const poseId = req.params.id; // Get the pose ID from the URL
     req.body = { ...req.body, uid: req.user };
-    const updatedPose: NewPose = req.body;
+
+    const updatedPose: NewPose = {
+      name: req.body.name,
+      primaryMediaId: req.body.primaryMediaId ?? req.body.primary_media_id,
+      apparatus: req.body.apparatus,
+      level: req.body.level,
+      description: req.body.description,
+      teachingCues: req.body.teachingCues ?? req.body.teaching_cues,
+      safetyCues: req.body.safetyCues ?? req.body.safety_cues,
+      progressions: req.body.progressions,
+      updatedBy: req.user,
+      updatedAt: new Date(),
+      createdBy: req.body.createdBy ?? req.body.created_by,
+      createdAt: new Date(req.body.createdAt ?? req.body.created_at),
+    };
+
     console.log("Updating Pose:", updatedPose);
 
     const [pose] = await db

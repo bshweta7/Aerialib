@@ -146,7 +146,24 @@ flowRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
     try {
         const flowId = req.params.id; // Get the flow ID from the URL
         req.body = { ...req.body, uid: req.user };
-        const updatedFlow: NewFlow = req.body;
+
+        const updatedFlow: NewFlow = {
+            name: req.body.name,
+            thumbnailImageId: req.body.thumbnailImageId ?? req.body.thumbnail_image_id,
+            apparatus: req.body.apparatus,
+            level: req.body.level,
+            description: req.body.description,
+            teachingCues: req.body.teachingCues ?? req.body.teaching_cues,
+            safetyCues: req.body.safetyCues ?? req.body.safety_cues,
+            progressions: req.body.progressions,
+            updatedBy: req.user,
+            updatedAt: new Date(),
+            createdBy: req.body.createdBy ?? req.body.created_by,
+            createdAt: new Date(req.body.createdAt ?? req.body.created_at),
+        };
+
+
+
         console.log("Updating Flow:", updatedFlow);
 
         const [flow] = await db
