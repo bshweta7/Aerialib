@@ -63,8 +63,18 @@ class FlowPoseRemoteDataSource {
     required String token,
     required List<FlowPoseModel> flowPoses,
   }) async {
-    final List<Map<String, dynamic>> flowPoseListInMap =
-    flowPoses.map((fp) => fp.toMap()).toList();
+    final flowPoseListInMap = flowPoses.map((pose) {
+      final map = pose.toMap();
+      map.remove('is_synced');
+      return map;
+    }).toList();
+
+    print('[FlowPoseRemoteDataSource] Sync payload:');
+    for (final map in flowPoseListInMap) {
+      print(map.keys);
+    }
+
+    print(flowPoseListInMap);
 
     final response = await httpService.post(
       path: "/flow_poses/sync",
@@ -72,7 +82,16 @@ class FlowPoseRemoteDataSource {
       body: flowPoseListInMap,
     );
 
-    return response.statusCode == 201;
+    print('Status Code: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+
+    if (response.statusCode == 201) {
+      print('[FlowPoseRemoteDataSource] Sync successful');
+      return true;
+    } else {
+      print('[FlowPoseRemoteDataSource] Sync failed');
+      return false;
+    }
   }
 
   /// Update a flow pose remotely

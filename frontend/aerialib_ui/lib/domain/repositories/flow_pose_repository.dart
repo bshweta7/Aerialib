@@ -77,7 +77,7 @@ class FlowPoseRepository {
 
 
   /// Fetch all flow poses from local DB
-  Future<List<FlowPoseEntity>> getLocalFlowPoses() async {
+  Future<List<FlowPoseEntity>> getAllFlowPoses() async {
     print("Fetching Flow Pose Models from Local Database");
     final flowPoseModels = await localDataSource.getFlowPoses();
 
@@ -182,9 +182,16 @@ class FlowPoseRepository {
   Future<void> replaceFlowPosesInFlow({
     required String flowId,
     required List<FlowPoseEntity> newPoses,
+    required String token,
   }) async {
+    print("[FlowPoseRepository] Deleting all flow poses in flow $flowId");
     await deleteAllFlowPosesInFlow(flowId);
+
+    print("[FlowPoseRepository] Inserting updated poses into flow...");
     await insertFlowPoses(newPoses);
+
+    print("[FlowPoseRepository] Syncing to remote data source...");
+    await syncLocalToRemote(token);
   }
 
 

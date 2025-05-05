@@ -46,18 +46,18 @@ class FlowRepository {
       );
       await localDataSource.insertFlow(flowModel);
 
-      return FlowMapper.modelToEntityMetaDataOnly(flowModel);
+      return FlowMapper.modelToEntityDetailsOnly(flowModel);
     } catch (e) {
       rethrow;
     }
   }
 
   /// Fetch all flows from local DB - initialize poses as []
-  Future<List<FlowEntity>> getAllFlows() async {
+  Future<List<FlowEntity>> getAllFlowDetails() async {
     final flowModels = await localDataSource.getFlows();
 
     return flowModels.map((model) {
-      return FlowMapper.modelToEntityMetaDataOnly(model);
+      return FlowMapper.modelToEntityDetailsOnly(model);
     }).toList();
   }
 

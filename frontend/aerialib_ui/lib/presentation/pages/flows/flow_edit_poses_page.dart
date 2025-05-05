@@ -33,14 +33,6 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
   late List<FlowPoseEntity> poses;
   String _searchQuery = '';
   final TextEditingController _textController = TextEditingController();
-  List<String> items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
-
-  void _addItem(String newItem) {
-    setState(() {
-      items.add(newItem);
-    });
-    _textController.clear();
-  }
 
 
   @override
@@ -52,8 +44,6 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
       context.read<FlowsCubit>().startEditingFlow(widget.flow);
     });
 
-    // // Fetch all poses for search suggestions
-    // context.read<FlowsCubit>().fetchAllAvailablePoses();
   }
 
   void _updateSearchQuery(String query) {
@@ -81,15 +71,12 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
     // Print poses
     for (var pose in poses) {
-      print("Pose name: ${pose.pose.name}, Pose order: ${pose.poseOrder}");
+      print("[FlowEditPosesPage] Pose name: ${pose.pose.name}, Pose order: ${pose.poseOrder}");
     }
 
     context.read<FlowsCubit>().updateFlowPoses(poses);
-    print("UPDATED");
 
     context.read<FlowsCubit>().saveFlow(user.user.token);
-
-    print("Saved Poses");
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Saving flow...')),

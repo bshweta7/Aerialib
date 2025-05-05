@@ -95,6 +95,8 @@ class FlowRemoteDataSource {
       print(map.keys);
     }
 
+    print(flowListInMap);
+
     final response = await httpService.post(
       path: "/flows/sync",
       token: token,

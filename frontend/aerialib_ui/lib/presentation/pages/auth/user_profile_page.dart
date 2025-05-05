@@ -95,12 +95,25 @@ class _UserProfilePage extends State<UserProfilePage> {
                     ),
                   ),
 
-                  const SizedBox(height: 30),
                   // TODO move this to an advanced settings section
+                  const SizedBox(height: 30),
                   ElevatedButton.icon(
                     onPressed: () {
                       final user = context.read<AuthCubit>().state as AuthLoggedIn;
-                      context.read<FlowsCubit>().syncFlows(user.user.token);
+                      context.read<FlowsCubit>().syncFlowPoses(user.user.token);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Flow Poses sync triggered.")),
+                      );
+                    },
+                    icon: const Icon(Icons.sync),
+                    label: const Text("Sync Flow POSES Now"),
+                  ),
+
+                  const SizedBox(height: 30),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                      context.read<FlowsCubit>().syncFlowDetails(user.user.token);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Flow sync triggered.")),
                       );
@@ -108,7 +121,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                     icon: const Icon(Icons.sync),
                     label: const Text("Sync Flows Now"),
                   ),
-
+                  
                 ],
               ),
             );

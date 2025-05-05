@@ -7,7 +7,7 @@ import 'flow_pose_mapper.dart';
 
 class FlowMapper {
   /// Converts a FlowModel to a FlowEntity with empty poses.
-  static FlowEntity modelToEntityMetaDataOnly(FlowModel flowModel) {
+  static FlowEntity modelToEntityDetailsOnly(FlowModel flowModel) {
     return FlowEntity(
       id: flowModel.id,
       name: flowModel.name,

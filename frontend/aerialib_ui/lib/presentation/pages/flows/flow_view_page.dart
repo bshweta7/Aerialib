@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 
 import 'flow_details_sheet.dart';
-import 'flow_edit_page.dart';
+import 'flow_edit_details_page.dart';
 import 'flow_edit_poses_page.dart';
 
-class FlowPosesPage extends StatelessWidget {
+class FlowViewPage extends StatelessWidget {
   final FlowEntity flow;
 
-  const FlowPosesPage({Key? key, required this.flow}) : super(key: key);
+  const FlowViewPage({super.key, required this.flow});
 
   static MaterialPageRoute route(FlowEntity flow) {
     return MaterialPageRoute(
-      builder: (context) => FlowPosesPage(flow: flow),
+      builder: (context) => FlowViewPage(flow: flow),
     );
   }
 
@@ -38,6 +38,14 @@ class FlowPosesPage extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(context, FlowEditPosesPage.route(flow));
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('Add Poses'),
+        tooltip: 'Add poses to this flow',
+      ),
       body: flow.poses.isEmpty
           ? const Center(child: Text('No poses in this flow yet.'))
           : ListView.builder(
@@ -46,25 +54,21 @@ class FlowPosesPage extends StatelessWidget {
           final flowPose = flow.poses[index];
           final pose = flowPose.pose;
 
-
-          // TODO REPLACE THIS WITH REAL LIST CARD WIDGET!!!
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(
               leading: Image.network(
                 pose.primaryMediaPath.isNotEmpty
                     ? pose.primaryMediaPath
-                    : 'https://via.placeholder.com/100', // fallback image
+                    : 'https://via.placeholder.com/100',
                 width: 60,
                 height: 60,
                 fit: BoxFit.cover,
               ),
               title: Text(pose.name),
-              subtitle: Text(
-                  'Level ${pose.level} | ${pose.apparatus}'), // You can customize this
+              subtitle: Text('Level ${pose.level} | ${pose.apparatus}'),
               onTap: () {
-                // TODO: Optionally navigate to Pose Details Page
-                print('Tapped on pose: ${pose.name}');
+                // Optional: Navigate to pose details
               },
             ),
           );

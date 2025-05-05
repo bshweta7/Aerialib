@@ -52,6 +52,48 @@ flowPoseRouter.delete("/", auth, async (req: AuthRequest, res) => {
     }
 })
 
+
+flowPoseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
+    try {
+        const flowPosesList = req.body;
+        const filteredFlowPoses: NewFlowPose[] = [];
+
+        flowPosesList.forEach((flowPose: { pose_id: any; }) => {
+            console.log('[FlowPoseRouter] Received pose_id:', flowPose.pose_id);
+        });
+
+        for (let t of flowPosesList) {
+            const cleaned = {
+                id: t.id,
+                flowId: t.flow_id,
+                poseId: t.pose_id,
+                poseOrder: t.pose_order,
+                // TODO Add transition ID
+                // created_by: t.created_by ?? req.user,
+                // updated_by: req.user,
+                // created_at: new Date(t.created_at),
+                // updated_at: new Date(t.updated_at),
+            };
+
+            filteredFlowPoses.push(cleaned);
+        }
+
+        console.log("[FlowPoseRouter] Syncing", filteredFlowPoses.length, "flow poses");
+
+        const pushedFlowPoses = await db
+            .insert(flowPosesTable)
+            .values(filteredFlowPoses)
+            .onConflictDoNothing() // Prevent duplicate inserts on retry
+            .returning();
+
+        res.status(201).json(pushedFlowPoses);
+    } catch (e) {
+        console.error("[FlowPoseRouter] Sync error:", e);
+        res.status(500).json({ error: e });
+    }
+});
+
+
 // TODO Enable sync
 // flowRouter.post("/sync", auth, async (req: AuthRequest, res) => {
 //   try {

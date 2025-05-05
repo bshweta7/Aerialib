@@ -7,7 +7,7 @@ import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/utils/validators.dart';
-import 'flow_poses_page.dart';
+import 'flow_view_page.dart';
 
 class FlowEditDetailsPage extends StatefulWidget {
   final FlowEntity flow;
@@ -74,7 +74,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
       isSynced: 0,
     );
 
-    await context.read<FlowsCubit>().updateFlowInfo(
+    await context.read<FlowsCubit>().saveFlowDetails(
       updatedFlow: updatedFlow,
       token: user.user.token,
     );
@@ -83,7 +83,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
     Navigator.pop(context); // Pop Edit
     Navigator.pop(context); // Pop Details
-    Navigator.push(context, FlowPosesPage.route(updatedFlow)); // Push fresh
+    Navigator.push(context, FlowViewPage.route(updatedFlow)); // Push fresh
   }
 
 
