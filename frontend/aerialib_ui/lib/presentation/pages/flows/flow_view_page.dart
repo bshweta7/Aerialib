@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
-
-import 'flow_details_sheet.dart';
-import 'flow_edit_details_page.dart';
-import 'flow_edit_poses_page.dart';
+import 'package:frontend/domain/entities/media_icon_entity.dart';
+import 'package:frontend/presentation/pages/flows/flow_details_sheet.dart';
+import 'package:frontend/presentation/pages/flows/flow_edit_details_page.dart';
+import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
+import 'package:frontend/presentation/pages/poses/pose_details_page.dart';
+import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
+import 'package:frontend/core/utils/conversions.dart';
 
 class FlowViewPage extends StatelessWidget {
   final FlowEntity flow;
@@ -16,8 +19,20 @@ class FlowViewPage extends StatelessWidget {
     );
   }
 
+  void _navigateToPosePage(BuildContext context, MediaIconEntity mediaItem) {
+    Navigator.push(
+      context,
+      PoseDetailsPage.route(mediaItem.data),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("[FlowViewPage] ${flow.poses}");
+    print("[FlowViewPage] ${flow.name}");
+
+    final mediaItems = posesToMediaIcons(flow.poses.map((fp) => fp.pose).toList());
+
     return Scaffold(
       appBar: AppBar(
         title: Text(flow.name),
@@ -30,7 +45,7 @@ class FlowViewPage extends StatelessWidget {
                 context: context,
                 flow: flow,
                 onEdit: () {
-                  Navigator.pop(context); // Close bottom sheet first
+                  Navigator.pop(context);
                   Navigator.push(context, FlowEditDetailsPage.route(flow));
                 },
               );
@@ -46,33 +61,16 @@ class FlowViewPage extends StatelessWidget {
         label: const Text('Add Poses'),
         tooltip: 'Add poses to this flow',
       ),
-      body: flow.poses.isEmpty
+      body: mediaItems.isEmpty
           ? const Center(child: Text('No poses in this flow yet.'))
-          : ListView.builder(
-        itemCount: flow.poses.length,
-        itemBuilder: (context, index) {
-          final flowPose = flow.poses[index];
-          final pose = flowPose.pose;
-
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ListTile(
-              leading: Image.network(
-                pose.primaryMediaPath.isNotEmpty
-                    ? pose.primaryMediaPath
-                    : 'https://via.placeholder.com/100',
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-              ),
-              title: Text(pose.name),
-              subtitle: Text('Level ${pose.level} | ${pose.apparatus}'),
-              onTap: () {
-                // Optional: Navigate to pose details
-              },
-            ),
-          );
-        },
+          : SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: MediaList(
+            mediaItems: mediaItems,
+            onMediaTap: (item) => _navigateToPosePage(context, item),
+          ),
+        ),
       ),
     );
   }

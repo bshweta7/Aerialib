@@ -24,12 +24,27 @@ class FlowsCubit extends Cubit<FlowsState> {
   Future<void> getAllFlows({required String token}) async {
     try {
       emit(const FlowLoading());
+
+      // Step 1: Get flow headers (no poses)
       List<FlowEntity> flows = await _flowRepository.getAllFlowDetails();
-      if (flows.isEmpty) {
-        await _flowRepository.syncRemoteToLocal(token);
-        flows = await _flowRepository.getAllFlowDetails();
+
+      // Step 2: Get all flow poses
+      List<FlowPoseEntity> allFlowPoses = await _flowPoseRepository.getAllFlowPoses();
+
+      // Step 3: Group poses by flowId
+      final Map<String, List<FlowPoseEntity>> posesByFlowId = {};
+      for (final pose in allFlowPoses) {
+        posesByFlowId.putIfAbsent(pose.flowId, () => []).add(pose);
       }
-      emit(GetFlowsSuccess(flows));
+
+      // Step 4: Attach poses to flows
+      final List<FlowEntity> enrichedFlows = flows.map((flow) {
+        return flow.copyWith(
+          poses: posesByFlowId[flow.id] ?? [], // empty if no poses
+        );
+      }).toList();
+
+      emit(GetFlowsSuccess(enrichedFlows));
     } catch (e) {
       print("Error fetching flows: $e");
       emit(FlowError(e.toString()));
@@ -241,7 +256,11 @@ class FlowsCubit extends Cubit<FlowsState> {
       emit(currentState.copyWith(isSaving: false, saveSuccess: true));
     } catch (e) {
       print("[FlowsCubit] Error saving flow: $e");
-      emit(currentState.copyWith(isSaving: false, errorMessage: e.toString()));
+      emit(currentState.copyWith(
+        isSaving: false,
+        errorMessage: e.toString(),
+        flow: currentState.flow,
+      ));
     }
   }
 }
