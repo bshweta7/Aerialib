@@ -20,11 +20,11 @@ class FlowPoseModel {
   factory FlowPoseModel.fromMap(Map<String, dynamic> map) {
     return FlowPoseModel(
       id: map['id'] ?? '',
-      flowId: map['flow_id'] ?? '',
-      poseId: map['pose_id'] ?? '',
-      poseOrder: map['pose_order'] ?? -1,
-      transitionId: map['transition_id'], // no default
-      isSynced: map['is_synced'] ?? 0,
+      flowId: map['flow_id'] ?? map['flowId'] ?? '',
+      poseId: map['pose_id'] ?? map['poseId'] ?? '',
+      poseOrder: map['pose_order'] ?? map['poseOrder'] ?? -1,
+      transitionId: map['transition_id'] ?? map['transitionId'],
+      isSynced: map['is_synced'] ?? map['isSynced'] ?? 0,
     );
   }
 

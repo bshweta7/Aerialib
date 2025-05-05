@@ -178,26 +178,26 @@ class FlowPoseRepository {
   }
 
 
-  /// Update flow poses for a given flow
-  Future<void> replaceFlowPosesInFlow({
-    required String flowId,
-    required List<FlowPoseEntity> newPoses,
-    required String token,
-  }) async {
-
-    for (final p in newPoses) {
-      print('[Saving FlowPose] id=${p.id}, flowId=${p.flowId}, poseId=${p.pose.id}, poseOrder=${p.poseOrder}');
-    }
-
-    print("[FlowPoseRepository] Deleting all flow poses in flow $flowId");
-    await deleteAllFlowPosesInFlow(flowId);
-
-    print("[FlowPoseRepository] Inserting updated poses into flow...");
-    await insertFlowPoses(newPoses);
-
-    print("[FlowPoseRepository] Syncing to remote data source...");
-    await syncLocalToRemote(token);
-  }
+  // /// Update flow poses for a given flow
+  // Future<void> replaceFlowPosesInFlow({
+  //   required String flowId,
+  //   required List<FlowPoseEntity> newPoses,
+  //   required String token,
+  // }) async {
+  //
+  //   for (final p in newPoses) {
+  //     print('[FlowPoseRepository] id=${p.id}, flowId=${p.flowId}, poseId=${p.pose.id}, poseOrder=${p.poseOrder}');
+  //   }
+  //
+  //   print("[FlowPoseRepository] Deleting all flow poses in flow $flowId");
+  //   await deleteAllFlowPosesInFlow(flowId);
+  //
+  //   print("[FlowPoseRepository] Inserting updated poses into flow...");
+  //   await insertFlowPoses(newPoses);
+  //
+  //   // print("[FlowPoseRepository] Syncing to remote data source...");
+  //   // await syncLocalToRemote(token);
+  // }
 
 
   /// Fetch all poses from local DB

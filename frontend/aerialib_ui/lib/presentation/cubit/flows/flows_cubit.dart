@@ -188,19 +188,21 @@ class FlowsCubit extends Cubit<FlowsState> {
     final currentState = state as EditFlowState;
 
     // 🔍 Print BEFORE
-    print("[FlowsCubit] Existing poses in flow BEFORE update:");
-    for (final p in currentState.flow.poses) {
-      print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
-    }
+    // print("[FlowsCubit] Existing poses in flow BEFORE update:");
+    // print(currentState.flow);
+    // for (final p in currentState.flow.poses) {
+    //   print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
+    // }
 
     final updatedFlow = currentState.flow.copyWith(poses: newPoses);
 
 
     // 🔍 Print AFTER
-    print("[FlowsCubit] Poses to update TO:");
-    for (final p in newPoses) {
-      print("✅ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
-    }
+    // print("[FlowsCubit] Poses to update TO:");
+    // print(currentState.flow);
+    // for (final p in currentState.flow.poses) {
+    //   print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
+    // }
 
     print("[FlowsCubit] Updated flow with new poses");
 
@@ -209,7 +211,7 @@ class FlowsCubit extends Cubit<FlowsState> {
 
   /// Save the flows poses (local + remote)
   Future<void> saveFlowPoses(String token) async {
-    print("[FlowCubit] State is $state");
+    // print("[FlowCubit] State is $state");
     if (state is! EditFlowState) return;
     final currentState = state as EditFlowState;
 
@@ -221,12 +223,21 @@ class FlowsCubit extends Cubit<FlowsState> {
       //   updatedFlow: currentState.flow,
       //   token: token,
       // );
-      print("[FlowsCubit] Updating flow poses in flow...");
-      await _flowPoseRepository.replaceFlowPosesInFlow(
-        flowId: currentState.flow.id,
-        newPoses: currentState.flow.poses,
-        token: token,
-      );
+      print("[FlowsCubit] Deleting all flow poses in flow ${currentState.flow.id}");
+      await _flowPoseRepository.deleteAllFlowPosesInFlow(currentState.flow.id);
+
+      print("[FlowsCubit] Inserting updated poses into flow...");
+      await _flowPoseRepository.insertFlowPoses(currentState.flow.poses);
+
+      print("[FlowPoseRepository] Syncing to remote data source...");
+      await _flowPoseRepository.syncLocalToRemote(token);
+
+      // print("[FlowsCubit] Updating flow poses in flow...");
+      // await _flowPoseRepository.replaceFlowPosesInFlow(
+      //   flowId: currentState.flow.id,
+      //   newPoses: currentState.flow.poses,
+      //   token: token,
+      // );
       emit(currentState.copyWith(isSaving: false, saveSuccess: true));
     } catch (e) {
       print("[FlowsCubit] Error saving flow: $e");
