@@ -34,6 +34,7 @@ class FlowEditPosesPage extends StatefulWidget {
 class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
   late List<FlowPoseEntity> poses;
   String _searchQuery = '';
+  bool _showSwipeHint = true;
   final TextEditingController _textController = TextEditingController();
 
 
@@ -167,35 +168,81 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                if (_showSwipeHint)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    child: Row(
+                      children: [
+                        Icon(Icons.swipe, size: 20, color: Colors.grey),
+                        SizedBox(width: 8),
+                        Text(
+                          'Swipe left to remove a pose',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                // const SizedBox(height: 10),
 
                 // TODO light bulb on right side of each one that opens the list of poses you can transition to from the current pose (icon only shows up if there are known transitions). if clicked it drops down and creates a horizontal sliding list of images and names.
                 Expanded(
                   child: ReorderableListView(
-                    padding: EdgeInsets.only(bottom: 80.0),
+                    padding: const EdgeInsets.only(bottom: 75), // To avoid FAB overlap
                     children: poses.map((flowPose) {
-                      return ReorderableDragStartListener(
+                      return Dismissible(
                         key: ValueKey(flowPose.id),
-                        index: poses.indexOf(flowPose),
+                        direction: DismissDirection.startToEnd,
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        onDismissed: (direction) {
+                          final removedPose = flowPose;
+                          final removedIndex = poses.indexWhere((p) => p.id == removedPose.id);
+
+                          setState(() {
+                            poses.removeAt(removedIndex);
+                            _showSwipeHint = false; // 👈 hide hint
+                            for (int i = 0; i < poses.length; i++) {
+                              poses[i] = poses[i].copyWith(poseOrder: i);
+                            }
+                          });
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${removedPose.pose.name} removed'),
+                              action: SnackBarAction(
+                                label: 'Undo',
+                                onPressed: () {
+                                  setState(() {
+                                    poses.insert(removedIndex, removedPose);
+                                    for (int i = 0; i < poses.length; i++) {
+                                      poses[i] = poses[i].copyWith(poseOrder: i);
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          );
+                        },
+
+
                         child: ListCard(
-                          key: ValueKey(flowPose.id),
                           title: flowPose.pose.name,
                           subtitle: 'Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}',
-                          imageUrl: flowPose.pose.primaryMediaPath ?? '', // fallback if needed
+                          imageUrl: flowPose.pose.primaryMediaPath ?? '',
                           onTapFunction: () {
-                            Navigator.push(
-                              context,
-                              PoseViewPage.route(flowPose.pose),
-                            );
+                            Navigator.push(context, PoseViewPage.route(flowPose.pose));
                           },
-                          trailing: ReorderableDragStartListener(
+                          trailing: ReorderableDelayedDragStartListener(
                             index: poses.indexOf(flowPose),
-                            child: const Icon(Icons.drag_indicator), // TODO is Icons.drag_handle better?
+                            child: const Icon(Icons.drag_indicator),
                           ),
-                        )
-
+                        ),
                       );
-
                     }).toList(),
                     onReorder: (oldIndex, newIndex) {
                       setState(() {
@@ -203,12 +250,15 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                         final item = poses.removeAt(oldIndex);
                         poses.insert(newIndex, item);
 
+                        _showSwipeHint = false; // 👈 hide hint
+
                         for (int i = 0; i < poses.length; i++) {
                           poses[i] = poses[i].copyWith(poseOrder: i);
                         }
                       });
                     },
-                  ),
+                  )
+
                 ),
                 const SizedBox(height: 10), // for FAB padding
 
