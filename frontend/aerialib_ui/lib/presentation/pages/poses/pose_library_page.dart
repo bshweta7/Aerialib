@@ -257,17 +257,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             ),
                           )
                         else
-                          SingleChildScrollView(
-                            controller: _scrollController,
-                            child: Column(
-                              children: [
-                                // List poses
-                                MediaList(
-                                  mediaItems: filteredMediaIcons,
-                                  onMediaTap: _navigateToPosePage,
-                                ),
-                              ],
-                            )
+                          MediaList(
+                            mediaItems: filteredMediaIcons,
+                            onMediaTap: _navigateToPosePage,
+                            scrollController: _scrollController,
                           ),
 
                         // Scroll to top floating button

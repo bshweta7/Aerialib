@@ -7,22 +7,24 @@ typedef NavigateToMediaPage = void Function(MediaIconEntity mediaItem); // Defin
 class MediaList extends StatelessWidget {
   final List<MediaIconEntity> mediaItems;
   final NavigateToMediaPage onMediaTap;
+  final ScrollController? scrollController; // TODO make this required? since itll be used everywhere anyways...
 
-  const MediaList({super.key, required this.mediaItems, required this.onMediaTap});
+  const MediaList({
+    super.key,
+    required this.mediaItems,
+    required this.onMediaTap,
+    this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
+      controller: scrollController,
       itemCount: mediaItems.length,
-      // TODO if itemCount = 0, say "Oops, no poses found. Try changing your filters!"
       itemBuilder: (context, index) {
         final mediaItem = mediaItems[index];
         return GestureDetector(
-          onTap: () {
-            onMediaTap(mediaItem);
-          },
+          onTap: () => onMediaTap(mediaItem),
           child: ListCard(
             imageUrl: mediaItem.imageUrl,
             title: mediaItem.title,
@@ -30,6 +32,7 @@ class MediaList extends StatelessWidget {
           ),
         );
       },
+      cacheExtent: 600.0, // preload a bit offscreen
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
@@ -125,7 +126,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                         value: apparatusController.text.isNotEmpty ? apparatusController.text : null,
                         onChanged: (value) => setState(() => apparatusController.text = value ?? ''),
                         items: Constants.apparatusOptions
-                            .map((value) => DropdownMenuItem(value: value, child: Text(value)))
+                            .map((value) => DropdownMenuItem(value: value, child: Text(capitalizeFirstLetter(value))))
                             .toList(),
                         decoration: const InputDecoration(labelText: 'Apparatus'),
                         validator: requiredFieldValidator,
