@@ -17,7 +17,6 @@ class Constants {
   // Options
   // TODO make separate pages for warm up/cool down (dont include warm up/cooldown/ conditioning in poses, make it separate).
   static List<String> apparatusOptions = ["lyra", "hammock", "unspecified"]; //, "Conditioning", "Warm Up", "Cool Down"];
-  static List<String> apparatusOptionsCaps = ["Lyra", "Hammock", "Unspecified"]; //, "Conditioning", "Warm Up", "Cool Down"];
   static List<int> levelOptions = [0, 1, 2, 3];
   static List<String> shareOptions = ["default", "my images", "shared with me"];
   static List<String> mediaTypeOptions = ["image", "video"];

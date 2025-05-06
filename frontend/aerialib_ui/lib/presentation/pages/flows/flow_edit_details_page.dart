@@ -27,6 +27,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
   late String? selectedApparatus;
 
   late TextEditingController nameController;
+  late TextEditingController apparatusController;
   late TextEditingController descriptionController;
   late TextEditingController teachingCuesController;
   late TextEditingController safetyCuesController;
@@ -41,9 +42,8 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     teachingCuesController = TextEditingController(text: widget.flow.teachingCues);
     safetyCuesController = TextEditingController(text: widget.flow.safetyCues);
     progressionsController = TextEditingController(text: widget.flow.progressions);
+    apparatusController = TextEditingController(text: widget.flow.apparatus.toLowerCase());
     level = widget.flow.level ?? 0;
-    selectedApparatus = widget.flow.apparatus.isNotEmpty ? widget.flow.apparatus : null;
-
   }
 
   @override
@@ -53,6 +53,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     teachingCuesController.dispose();
     safetyCuesController.dispose();
     progressionsController.dispose();
+    apparatusController.dispose(); // ✅ added
     super.dispose();
   }
 
@@ -67,7 +68,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
       teachingCues: teachingCuesController.text.trim(),
       safetyCues: safetyCuesController.text.trim(),
       progressions: progressionsController.text.trim(),
-      apparatus: selectedApparatus ?? '',
+      apparatus: apparatusController.text.trim(),
       level: level,
       updatedBy: user.user.id,
       updatedAt: DateTime.now(),
@@ -126,21 +127,10 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                 ),
                 const SizedBox(height: 10),
 
-                DropdownButtonFormField<String>(
-                  value: selectedApparatus,
-                  decoration: const InputDecoration(labelText: 'Apparatus'),
-                  items: Constants.apparatusOptions
-                      .map((apparatus) => DropdownMenuItem(
-                    value: apparatus,
-                    child: Text(apparatus),
-                  ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedApparatus = value;
-                    });
-                  },
-                  validator: requiredFieldValidator,
+                _dropdownField(
+                  label: "Apparatus",
+                  controller: apparatusController,
+                  options: Constants.apparatusOptions,
                 ),
 
                 const SizedBox(height: 10),
@@ -189,6 +179,31 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _dropdownField({
+    required String label,
+    required TextEditingController controller,
+    required List<String> options,
+  }) {
+    return DropdownButtonFormField<String>(
+      value: controller.text.isNotEmpty ? controller.text : null,
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          controller.text = newValue;
+        }
+      },
+      items: options.map((lowerValue) {
+        final displayLabel = lowerValue[0].toUpperCase() + lowerValue.substring(1);
+        return DropdownMenuItem(
+          value: lowerValue, // lowercase value stored in controller
+          child: Text(displayLabel),
+        );
+      }).toList(),
+      decoration: InputDecoration(labelText: label),
+      validator: (value) =>
+      value == null || value.isEmpty ? 'Please select $label' : null,
     );
   }
 }

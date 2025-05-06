@@ -24,7 +24,7 @@ List<MediaIconEntity> flowsToMediaIcons(List<FlowEntity> flows) {
     return MediaIconEntity(
       imageUrl: "/${flow.thumbnailImagePath}",
       title: flow.name,
-      subtitle: flow.apparatus, //TODO
+      subtitle: capitalizeFirstLetter(flow.apparatus), //TODO
       type: MediaType.flow, // You may want to add this enum if you haven't already
       data: flow,
     );

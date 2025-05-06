@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/core/utils/conversions.dart';
+
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/media_icon_entity.dart';
 
@@ -10,9 +12,8 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
-import 'package:frontend/presentation/widgets/filters/flow_filter_sheet.dart';
 
-import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
+import 'package:frontend/presentation/widgets/filters/flow_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
@@ -99,18 +100,22 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
           }
 
           if (state is GetFlowsSuccess) {
-            final List<FlowEntity> filteredFlows = state.flows.where((flow) {
-              return selectedApparatus.contains(flow.apparatus) &&
-                  selectedLevels.contains(flow.level);
-            }).toList();
+            // Filtering
+            List<FlowEntity> filteredFlows = state.flows.where(
+                  (elem) =>
+              selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase()) &&
+                  selectedLevels.contains(elem.level.floor()),
+            ).toList();
 
-            final List<MediaIconEntity> mediaIcons = filteredFlows.map((flow) => MediaIconEntity(
-              imageUrl: flow.thumbnailImagePath,
-              title: flow.name,
-              subtitle: "Level ${flow.level} | ${flow.apparatus}",
-              type: MediaType.flow,
-              data: flow,
-            )).toList();
+            final List<MediaIconEntity> mediaIcons = flowsToMediaIcons(filteredFlows);
+
+            // final List<MediaIconEntity> mediaIcons = filteredFlows.map((flow) => MediaIconEntity(
+            //   imageUrl: flow.thumbnailImagePath,
+            //   title: flow.name,
+            //   subtitle: "Level ${flow.level} | ${flow.apparatus}",
+            //   type: MediaType.flow,
+            //   data: flow,
+            // )).toList();
 
             final List<FlowEntity> sortedFlows = List.from(state.flows)
               ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
