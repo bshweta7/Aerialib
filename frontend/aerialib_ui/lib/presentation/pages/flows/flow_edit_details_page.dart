@@ -43,7 +43,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     safetyCuesController = TextEditingController(text: widget.flow.safetyCues);
     progressionsController = TextEditingController(text: widget.flow.progressions);
     apparatusController = TextEditingController(text: widget.flow.apparatus.toLowerCase());
-    level = widget.flow.level ?? 0;
+    level = widget.flow.level;
   }
 
   @override

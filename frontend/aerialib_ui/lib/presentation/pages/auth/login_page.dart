@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/auth/signup_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
+import 'package:frontend/presentation/widgets/password_field.dart';
 
 // TODO allow tab to go from username textbox to password textbox
 // TODO arrows don't work in textboxes?
@@ -110,21 +111,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
 
                   const SizedBox(height: 15,),
-                  TextFormField(
+                  PasswordField(
                     controller: passwordController,
-                    decoration: const InputDecoration(
-                      hintText: 'Password',
-                    ),
-                    validator: (value) {
-                      if(value == null ||
-                          value.trim().isEmpty) {
-                        return "Password field cannot be empty!";
-                      }
-                      if(value.trim().length <= 6) {
-                        return "Password must be at least 7 characters!"; // TODO add special character
-                      }
-                      return null;
-                    },
+                    label: "Password",
                   ),
 
                   const SizedBox(height: 20),

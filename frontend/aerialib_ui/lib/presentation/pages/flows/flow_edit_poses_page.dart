@@ -233,7 +233,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                         child: ListCard(
                           title: flowPose.pose.name,
                           subtitle: 'Level ${flowPose.pose.level} | ${flowPose.pose.apparatus}',
-                          imageUrl: flowPose.pose.primaryMediaPath ?? '',
+                          imageUrl: '/${flowPose.pose.primaryMediaPath}',
                           onTapFunction: () {
                             Navigator.push(context, PoseViewPage.route(flowPose.pose));
                           },

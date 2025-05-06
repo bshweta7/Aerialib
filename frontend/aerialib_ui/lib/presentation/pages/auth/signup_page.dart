@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/auth/login_page.dart';
+import 'package:frontend/presentation/widgets/password_field.dart';
 
 
 class SignupPage extends StatefulWidget {
@@ -115,21 +116,9 @@ class _SignupPageState extends State<SignupPage> {
                   ),
 
                   const SizedBox(height: 15,),
-                  TextFormField(
+                  PasswordField(
                     controller: passwordController,
-                    decoration: const InputDecoration(
-                      hintText: 'Password',
-                    ),
-                    validator: (value) {
-                      if(value == null ||
-                          value.trim().isEmpty) {
-                        return "Password field cannot be empty!";
-                      }
-                      if(value.trim().length <= 6) {
-                        return "Password must be at least 7 characters!"; // TODO add special character
-                      }
-                      return null;
-                    },
+                    label: "Password",
                   ),
 
                   const SizedBox(height: 20),
