@@ -13,6 +13,8 @@ import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
 
 import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 
+import '../../../core/constants/constants.dart';
+
 
 class HomePage extends StatefulWidget {
   static MaterialPageRoute route() =>
@@ -155,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: CachedNetworkImage(
-                        imageUrl: "http://localhost:8000/media/data/default/under_construction_gpt.png",
+                        imageUrl: "${Constants.backendUrl}/media/data/default/under_construction_gpt.png",
                         width: 250,
                         height: 250,
                         fit: BoxFit.contain,

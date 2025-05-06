@@ -1,16 +1,17 @@
-import 'dart:ui';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 // TODO separate into separate constants.dart file
 
 class Constants {
   // Urls
   // static String backendUrl = "http://10.20.29.99:8000";
-  static String backendUrl = "http://localhost:8000";
+  // static String backendUrl = "http://localhost:8000";
   // static String backendUrl = "https://aerialib.com/api";
-  /*static String backendUrl =
+  static String backendUrl =
     kReleaseMode ? "https://aerialib.com/api"
       : (Platform.isAndroid || Platform.isIOS)
-        ? "http://10.20.30.203:8000" : "http://localhost:8000";*/
+        ? "http://10.20.30.203:8000" : "http://localhost:8000";
   static String mediaUrlPrefix = "$backendUrl/media/data";
 
   // Options

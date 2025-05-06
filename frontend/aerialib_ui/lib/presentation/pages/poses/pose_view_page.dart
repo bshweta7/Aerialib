@@ -40,7 +40,10 @@ class _PoseViewPageState extends State<PoseViewPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(pose.name),
+        title: Text(
+          "Pose Details",
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
@@ -60,6 +63,19 @@ class _PoseViewPageState extends State<PoseViewPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            Center(
+              child: Text(
+                pose.name,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                )
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
             // Updated: image in a rounded Card
             Card(
               elevation: 4,
