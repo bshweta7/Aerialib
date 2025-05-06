@@ -177,11 +177,16 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
           controller.text = newValue;
         }
       },
-      items: options.map((value) {
-        return DropdownMenuItem(value: value, child: Text(value));
+      items: options.map((lowerValue) {
+        final displayLabel = lowerValue[0].toUpperCase() + lowerValue.substring(1);
+        return DropdownMenuItem(
+          value: lowerValue, // lowercase value stored in controller
+          child: Text(displayLabel),
+        );
       }).toList(),
       decoration: InputDecoration(labelText: label),
-      validator: (value) => value == null || value.isEmpty ? 'Please select $label' : null,
+      validator: (value) =>
+      value == null || value.isEmpty ? 'Please select $label' : null,
     );
   }
 }

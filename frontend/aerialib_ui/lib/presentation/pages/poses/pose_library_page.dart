@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,7 +42,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   // Filtering
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
-  bool _showFilters = false;
+  final bool _showFilters = false;
 
   // Search Bar
   String _searchQuery = '';
