@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:frontend/core/constants/constants.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FormattedCachedNetworkImage extends StatelessWidget {
-  // Creates tappable media icon
-  const FormattedCachedNetworkImage(
-      this.mediaUrl,
-      {super.key}
-      );
+  const FormattedCachedNetworkImage(this.mediaUrl, {super.key});
 
   final String mediaUrl;
 
@@ -17,29 +14,30 @@ class FormattedCachedNetworkImage extends StatelessWidget {
     print('[FormattedCachedNetworkImage] Loading URL: $fullUrl');
 
     return CachedNetworkImage(
-      // TODO see below code for authenticated images (permissions):
-      // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
-      // imageUrl: poses.thumbnailURL + (code.isEmpty ? "" : "?code=" + code), (// TODO if adding code back in...
-        imageUrl: Constants.mediaUrlPrefix + mediaUrl,
-        progressIndicatorBuilder: (context, url, downloadProgress) =>
-            SizedBox(
-                width: 32,
-                height: 32,
-                child: CircularProgressIndicator(
-                    value: downloadProgress.progress
-                )
+      imageUrl: fullUrl,
+      placeholderFadeInDuration: const Duration(milliseconds: 300),
+      fadeInDuration: const Duration(milliseconds: 300),
+      placeholder: (context, url) => Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.white,
+        ),
+      ),
+
+      errorWidget: (context, url, error) => const Icon(Icons.error),
+      imageBuilder: (context, imageProvider) {
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover, // better for square thumbnails
             ),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
-        imageBuilder: (context, imageProvider) {
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-          );
-        }
+          ),
+        );
+      },
     );
   }
 }
