@@ -1,12 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
+import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
+
+import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -78,7 +83,7 @@ class _HomePageState extends State<HomePage> {
             if (state is GetPosesSuccess) {
               // final poses = state.poses.toList();
 
-              return Padding(
+              return SingleChildScrollView(
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
@@ -136,14 +141,33 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height:30),
 
                     const Text(
-                      "More Features Coming Soon... 🙂",
+                      "More Features \nComing Soon... \n🙂",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 24,
+                        // color: Colors.black,
+                        fontSize: 18,
                       ),
                       textAlign: TextAlign.center,
                     ),
+
+                    const SizedBox(height: 20),
+
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: CachedNetworkImage(
+                        imageUrl: "http://localhost:8000/media/data/default/under_construction_gpt.png",
+                        width: 250,
+                        height: 250,
+                        fit: BoxFit.contain,
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.error, size: 50, color: Colors.red),
+                      ),
+                    ),
+
+
+                    // const FormattedCachedNetworkImage(
+                    //   "/default/under_construction_gpt.png",
+                    // ),
 
                     // TODO add these to github tickets
                     //  Expanded(

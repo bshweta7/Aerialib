@@ -13,6 +13,9 @@ class FormattedCachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fullUrl = Constants.mediaUrlPrefix + mediaUrl;
+    print('[FormattedCachedNetworkImage] Loading URL: $fullUrl');
+
     return CachedNetworkImage(
       // TODO see below code for authenticated images (permissions):
       // httpHeaders: { HttpHeaders.authorizationHeader: 'Bearer ' + jwt },
