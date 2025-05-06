@@ -32,7 +32,7 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
   String _searchQuery = ''; // To store the current search query
   final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
   List<String> selectedApparatus = Constants.apparatusOptions;
-  List<String> selectedShareStatus = Constants.shareOptions; // TODO
+  List<String> selectedShareStatus = Constants.shareStatusOptions; // TODO
   bool _isContainerVisible = false; // Initially hidden
   final ScrollController _myScrollController = ScrollController();
   bool _areOptionsVisible = false; // Track visibility
@@ -184,7 +184,7 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                               onPressed: () {
                                 // TODO implement reset filters
                                 selectedApparatus = Constants.apparatusOptions;
-                                selectedShareStatus = Constants.shareOptions;
+                                selectedShareStatus = Constants.shareStatusOptions;
                               },
                               child: const Icon(CupertinoIcons.refresh),
                             ),

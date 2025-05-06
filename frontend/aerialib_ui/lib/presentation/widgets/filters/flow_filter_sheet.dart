@@ -6,15 +6,19 @@ import 'package:frontend/presentation/widgets/filters/filter_multi_select.dart';
 class FlowFiltersSheet extends StatefulWidget {
   final List<String> initialApparatus;
   final List<int> initialLevels;
+  final List<String> initialShareStatus;
   final ValueChanged<List<String>> onApparatusChanged;
   final ValueChanged<List<int>> onLevelsChanged;
+  final ValueChanged<List<String>> onShareStatusChanged;
 
   const FlowFiltersSheet({
     super.key,
     required this.initialApparatus,
     required this.initialLevels,
+    required this.initialShareStatus,
     required this.onApparatusChanged,
     required this.onLevelsChanged,
+    required this.onShareStatusChanged,
   });
 
   @override
@@ -25,8 +29,10 @@ class FlowFiltersSheet extends StatefulWidget {
     required BuildContext context,
     required List<String> selectedApparatus,
     required List<int> selectedLevels,
+    required List<String> selectedShareStatus,
     required ValueChanged<List<String>> onApparatusChanged,
     required ValueChanged<List<int>> onLevelsChanged,
+    required ValueChanged<List<String>> onShareStatusChanged,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -62,8 +68,10 @@ class FlowFiltersSheet extends StatefulWidget {
                     FlowFiltersSheet(
                       initialApparatus: selectedApparatus,
                       initialLevels: selectedLevels,
+                      initialShareStatus: selectedShareStatus,
                       onApparatusChanged: onApparatusChanged,
                       onLevelsChanged: onLevelsChanged,
+                      onShareStatusChanged: onShareStatusChanged,
                     ),
                   ],
                 ),
@@ -79,6 +87,7 @@ class FlowFiltersSheet extends StatefulWidget {
 class _FlowFiltersSheetState extends State<FlowFiltersSheet> {
   late List<String> _selectedApparatus;
   late List<int> _selectedLevels;
+  // TODO add share status here...
   bool _apparatusError = false;
   bool _levelsError = false;
 

@@ -34,6 +34,8 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
+  List<String> selectedShareStatus = Constants.shareStatusOptions;
+
   String _searchQuery = '';
 
   @override
@@ -61,6 +63,12 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
     });
   }
 
+  void _updateShareStatusFilter(List<String> newShareStatuses) {
+    setState(() {
+      selectedShareStatus = newShareStatuses;
+    });
+  }
+  
   void _updateSearchQuery(String newQuery) {
     setState(() {
       _searchQuery = newQuery;
@@ -106,6 +114,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
               selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase()) &&
                   selectedLevels.contains(elem.level.floor()),
             ).toList();
+            // TODO filter share status here too? might need to add a column in flows local db after creating the shareTable remotely (join remotely and then send).
 
             final List<MediaIconEntity> mediaIcons = flowsToMediaIcons(filteredFlows);
 
@@ -142,8 +151,10 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                             context: context,
                             selectedApparatus: selectedApparatus,
                             selectedLevels: selectedLevels,
+                            selectedShareStatus: selectedShareStatus,
                             onApparatusChanged: _updateApparatusFilter,
                             onLevelsChanged: _updateLevelsFilter,
+                            onShareStatusChanged: _updateShareStatusFilter,
                           );
                         },
                       ),
@@ -153,6 +164,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
                 if (selectedApparatus.length < Constants.apparatusOptions.length ||
                     selectedLevels.length < Constants.levelOptions.length)
+                  // TODO add share status here
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
                     child: Row(
@@ -194,16 +206,10 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                           ),
                         )
                       else
-                        SingleChildScrollView(
-                          controller: _scrollController,
-                          child: Column(
-                            children: [
-                              MediaList(
-                                mediaItems: mediaIcons,
-                                onMediaTap: _navigateToFlowPage,
-                              ),
-                            ],
-                          ),
+                        MediaList(
+                          mediaItems: mediaIcons,
+                          onMediaTap: _navigateToFlowPage,
+                          scrollController: _scrollController,
                         ),
                       ScrollToTopButton(scrollController: _scrollController),
                     ],
