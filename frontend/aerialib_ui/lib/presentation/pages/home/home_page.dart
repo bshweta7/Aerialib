@@ -165,6 +165,8 @@ class _HomePageState extends State<HomePage> {
                         errorWidget: (context, url, error) => const Icon(Icons.error, size: 50, color: Colors.red),
                       ),
                     ),
+                    
+                    // FormattedCachedNetworkImage("${Constants.backendUrl}/media/data/default/under_construction_gpt.png",)
 
 
                     // const FormattedCachedNetworkImage(

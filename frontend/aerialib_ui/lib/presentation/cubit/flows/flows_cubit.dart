@@ -101,7 +101,7 @@ class FlowsCubit extends Cubit<FlowsState> {
 
 
   /// Create a new flow (metadata only)
-  Future<void> createNewFlow({
+  Future<FlowsState> createNewFlow({
     required String name,
     required String description,
     String? teachingCues,
@@ -131,12 +131,17 @@ class FlowsCubit extends Cubit<FlowsState> {
         token: token,
       );
 
-      emit(AddNewFlowSuccess(flow));
+      final successState = AddNewFlowSuccess(flow);
+      emit(successState);
+      return successState;
     } catch (e) {
       print("Error creating flow: $e");
-      emit(FlowError(e.toString()));
+      final errorState = FlowError(e.toString());
+      emit(errorState);
+      return errorState;
     }
   }
+
 
   /// Start editing an existing flow (initialize EditFlowState)
   Future<void> startEditingFlow(FlowEntity flow) async {

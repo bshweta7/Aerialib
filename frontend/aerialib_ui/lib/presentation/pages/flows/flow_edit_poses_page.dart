@@ -81,6 +81,8 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Saving flow...')),
     );
+    print("[SaveFlow] Navigating to FlowViewPage with ${updatedFlow.poses.length} poses");
+    await Future.delayed(const Duration(milliseconds: 200));
 
     // Save completed
     Navigator.pop(context); // pop FlowPoseEdit → returns to FlowView
