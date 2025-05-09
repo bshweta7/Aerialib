@@ -28,7 +28,7 @@ class _UserProfilePage extends State<UserProfilePage> {
         title: const Text("Profile"),
         actions: [
           IconButton(
-            icon: const Icon(CupertinoIcons.pencil),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               // TODO: Navigate to EditProfilePage
               // Navigator.push(context, EditProfilePage.route());

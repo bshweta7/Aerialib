@@ -89,21 +89,26 @@ class _FlowViewPageState extends State<FlowViewPage> {
                     ),
                     child: Column(
                       children: [
-                        Center(
-                          child: Text(
-                              flow.name,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              )
+                        // Center(
+                        //   child: Text(
+                        //       flow.name,
+                        //       style: const TextStyle(
+                        //         fontSize: 24,
+                        //         fontWeight: FontWeight.bold,
+                        //       )
+                        //   ),
+                        // ),
+
+                        // const SizedBox(height: 10),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.8, // or any height that fits your design
+                          child: MediaList(
+                            mediaItems: mediaItems,
+                            onMediaTap: (item) => _navigateToPosePage(context, item),
                           ),
                         ),
-
                         const SizedBox(height: 10),
-                        MediaList(
-                          mediaItems: mediaItems,
-                          onMediaTap: (item) => _navigateToPosePage(context, item),
-                        ),
+
                       ],
                     ),
                   ),

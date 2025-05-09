@@ -209,7 +209,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                           child: Padding(
                             padding: EdgeInsets.only(top: 40),
                             child: Text( // TODO move this to Media List?
-                              "No flows, try changing the filters or adding one!",
+                              "No flows, try changing the filters!",
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black38),

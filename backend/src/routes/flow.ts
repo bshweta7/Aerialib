@@ -10,21 +10,34 @@ const flowRouter = Router();
 
 flowRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
-        //create new flow in db
+        const t = req.body;
 
-        req.body = { ...req.body, uid: req.user };
-        const NewFlow: NewFlow = req.body;
-        console.log(NewFlow);
+        const newFlow: NewFlow = {
+            name: t.name,
+            thumbnailImageId: t.thumbnail_image_id,
+            apparatus: t.apparatus,
+            level: t.level,
+            description: t.description,
+            teachingCues: t.teaching_cues,
+            safetyCues: t.safety_cues,
+            progressions: t.progressions,
+            createdBy: t.created_by ?? req.user, // fallback to authenticated user
+            updatedBy: req.user,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
 
-        const [flow] = await db.insert(flowsTable).values(NewFlow).returning();
+        console.log("[FlowRouter] Inserting new flow:", newFlow);
+
+        const [flow] = await db.insert(flowsTable).values(newFlow).returning();
 
         res.status(201).json(flow);
-
     } catch (e) {
-        console.log(e)
-        res.status(500).json({ error: e })
+        console.error("[FlowRouter] Error inserting flow:", e);
+        res.status(500).json({ error: e });
     }
-})
+});
+
 
 flowRouter.get("/", auth, async (req: AuthRequest, res) => {
   try {
