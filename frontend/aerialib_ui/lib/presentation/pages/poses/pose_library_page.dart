@@ -125,15 +125,15 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Poses"),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(context, AddNewPosePage.route());
-              },
-              tooltip: 'Add a new pose',
-            ),
-          ]
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(Icons.add),
+          //     onPressed: () {
+          //       Navigator.push(context, AddNewPosePage.route());
+          //     },
+          //     tooltip: 'Add a new pose',
+          //   ),
+          // ]
           // TODO three dots to show page view options and add new pose button
           // actions: [
           //   IconButton(

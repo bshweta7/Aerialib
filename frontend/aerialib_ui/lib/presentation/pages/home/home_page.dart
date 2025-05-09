@@ -59,19 +59,19 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 10,),
 
             // Media Library Navigation
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MediaGalleryPage.route());
-                },
-                child: const Text(
-                    "Media Gallery",
-                    style: TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )
-                )
-            ),
-            const SizedBox(height: 10,),
+            // ElevatedButton(
+            //     onPressed: () {
+            //       Navigator.push(context, MediaGalleryPage.route());
+            //     },
+            //     child: const Text(
+            //         "Media Gallery",
+            //         style: TextStyle(
+            //           // fontWeight: FontWeight.bold,
+            //           fontSize: 20,
+            //         )
+            //     )
+            // ),
+            // const SizedBox(height: 10,),
 
             // Flow Library Navigation
             ElevatedButton(
@@ -115,30 +115,30 @@ class HomePage extends StatelessWidget {
             ),
             // FormattedCachedNetworkImage("${Constants.backendUrl}/media/data/default/under_construction_gpt.png",)
 
-            const SizedBox(height: 20),
-            const Text(
-              "Upcoming Features:",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                // color: Colors.black,
-                fontSize: 18,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const Text("Transitions library: See how to transition from one pose to another"),
-            const Text("Conditioning/Stretching library: See all conditioning and warm-up/cool-downs"),
-            const Text("Upgraded flow creation page: Suggest next pose based on transition library"),
-            const Text("Upgraded flow creation page: Attach poses in a flow to lyrics in a song"),
-            const Text("Flow sharing: Share flows with students or instructors"),
-            const Text("Media gallery: Upload all of your aerial photos/videos and add tags to stay organized and make photos easy to find"),
-            const Text("Pose history: Shows your progression over time for any pose using your media gallery"),
-            const Text("Session Tracker: Keep track of which poses/flows you did each session"),
-            const Text("Goal Tracker: Set goals and monitor your progress towards them"),
-            const Text("Student Pages: Instructors can see student's level, recent attendance, and personal goals"),
-            const Text("Classes: Instructors select all students in a class and flows will automatically be added to their profile"),
-            const Text("Instructor flow creation page: Enter students in the class to see students' goals listed clearly and get suggested poses based on students goals"),
-            const Text("Media sharing: Share media with all the students in the class or with people who are tagged in it"),
+            // const SizedBox(height: 20),
+            // const Text(
+            //   "Upcoming Features:",
+            //   style: TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     // color: Colors.black,
+            //     fontSize: 18,
+            //   ),
+            //   textAlign: TextAlign.center,
+            // ),
+            //
+            // const Text("Transitions library: See how to transition from one pose to another"),
+            // const Text("Conditioning/Stretching library: See all conditioning and warm-up/cool-downs"),
+            // const Text("Upgraded flow creation page: Suggest next pose based on transition library"),
+            // const Text("Upgraded flow creation page: Attach poses in a flow to lyrics in a song"),
+            // const Text("Flow sharing: Share flows with students or instructors"),
+            // const Text("Media gallery: Upload all of your aerial photos/videos and add tags to stay organized and make photos easy to find"),
+            // const Text("Pose history: Shows your progression over time for any pose using your media gallery"),
+            // const Text("Session Tracker: Keep track of which poses/flows you did each session"),
+            // const Text("Goal Tracker: Set goals and monitor your progress towards them"),
+            // const Text("Student Pages: Instructors can see student's level, recent attendance, and personal goals"),
+            // const Text("Classes: Instructors select all students in a class and flows will automatically be added to their profile"),
+            // const Text("Instructor flow creation page: Enter students in the class to see students' goals listed clearly and get suggested poses based on students goals"),
+            // const Text("Media sharing: Share media with all the students in the class or with people who are tagged in it"),
           ],
         ),
       ),

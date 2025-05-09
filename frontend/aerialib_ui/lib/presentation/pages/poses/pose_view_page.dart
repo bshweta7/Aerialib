@@ -44,18 +44,18 @@ class _PoseViewPageState extends State<PoseViewPage> {
           "Pose Details",
           overflow: TextOverflow.ellipsis,
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  PoseEditDetailsPage.route(widget.pose)
-              );
-            },
-            tooltip: 'Edit this pose',
-          ),
-          ] // TODO ADD EDITING
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.edit),
+        //     onPressed: () {
+        //       Navigator.push(
+        //           context,
+        //           PoseEditDetailsPage.route(widget.pose)
+        //       );
+        //     },
+        //     tooltip: 'Edit this pose',
+        //   ),
+        //   ] // TODO ADD EDITING
       ),
         // TODO Ask about ordering of items on page, ensure consistency across add, edit, and details pages
       body: SingleChildScrollView(
