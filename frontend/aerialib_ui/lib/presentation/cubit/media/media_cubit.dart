@@ -85,7 +85,7 @@ class MediaCubit extends Cubit<MediaState>{
   }
 
   /// Sync medias (sync unsynced local medias with remote)
-  Future<void> syncMedia(String token) async {
+  Future<void> syncMedia({required String token}) async {
     if (_isSyncing) return;
     _isSyncing = true;
 

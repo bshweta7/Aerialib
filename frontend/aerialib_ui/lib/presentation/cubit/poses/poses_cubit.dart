@@ -66,7 +66,7 @@ class PosesCubit extends Cubit<PosesState> {
   }
 
   /// Run a one-time sync of poses when network is available (sync the unsynced local poses with remote)
-  Future<void> syncPoses(String token) async {
+  Future<void> syncPoses({required String token}) async {
     if (_isSyncing) return;
     _isSyncing = true;
 

@@ -41,7 +41,13 @@ class _MediaGalleryPageState extends State<MediaGalleryPage> {
   @override
   void initState() {
     super.initState();
+    _initSync();
+  }
+
+  Future<void> _initSync() async {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
+    await context.read<MediaCubit>().syncMedia(token: user.user.token);
+    if (!mounted) return;
     context.read<MediaCubit>().getAllMedia(token: user.user.token);
   }
 
