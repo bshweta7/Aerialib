@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:frontend/core/constants/constants.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
@@ -11,9 +14,6 @@ import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
 
-import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
-
-import '../../../core/constants/constants.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                           )
                         )
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
 
                     // Media Library Navigation
                     ElevatedButton(
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                             )
                         )
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
 
                     // Flow Library Navigation
                     ElevatedButton(
@@ -138,16 +138,16 @@ class _HomePageState extends State<HomePage> {
                             )
                         )
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
 
                     const SizedBox(height:30),
 
                     const Text(
-                      "More Features \nComing Soon... \n🙂",
+                      "More Features \nComing Soon... 🙂",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         // color: Colors.black,
-                        fontSize: 18,
+                        fontSize: 24,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -165,47 +165,33 @@ class _HomePageState extends State<HomePage> {
                         errorWidget: (context, url, error) => const Icon(Icons.error, size: 50, color: Colors.red),
                       ),
                     ),
-                    
                     // FormattedCachedNetworkImage("${Constants.backendUrl}/media/data/default/under_construction_gpt.png",)
 
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Upcoming Features:",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        // color: Colors.black,
+                        fontSize: 18,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
 
-                    // const FormattedCachedNetworkImage(
-                    //   "/default/under_construction_gpt.png",
-                    // ),
+                    const Text("Transitions library: See how to transition from one pose to another"),
+                    const Text("Conditioning/Stretching library: See all conditioning and warm-up/cool-downs"),
+                    const Text("Upgraded flow creation page: Suggest next pose based on transition library"),
+                    const Text("Upgraded flow creation page: Attach poses in a flow to lyrics in a song"),
+                    const Text("Flow sharing: Share flows with students or instructors"),
+                    const Text("Media gallery: Upload all of your aerial photos/videos and add tags to stay organized and make photos easy to find"),
+                    const Text("Pose history: Shows your progression over time for any pose using your media gallery"),
+                    const Text("Session Tracker: Keep track of which poses/flows you did each session"),
+                    const Text("Goal Tracker: Set goals and monitor your progress towards them"),
+                    const Text("Student Pages: Instructors can see student's level, recent attendance, and personal goals"),
+                    const Text("Classes: Instructors select all students in a class and flows will automatically be added to their profile"),
+                    const Text("Instructor flow creation page: Enter students in the class to see students' goals listed clearly and get suggested poses based on students goals"),
+                    const Text("Media sharing: Share media with all the students in the class or with people who are tagged in it"),
 
-                    // TODO add these to github tickets
-                    //  Expanded(
-                    //   child: Text(
-                    //     "Upcoming Features\n"
-                    //         "Flow Library (stores your flows)\n"
-                    //         "Share flows with other instructors\n"
-                    //         "Journal to keep a record of what flow you teach on which day (session) to which students\n"
-                    //         "Student profile pages (with level and past attendance and *personal goals*)\n"
-                    //         "Conditioning library\n"
-                    //         "Customized flow creation page - enter students and their goals pop up (potentially with suggested poses and conditioning to help)\n"
-                    //         "Upload your own images/videos and tag them by pose\n"
-                    //         "Share images/videos you upload with people who are tagged in it"
-                    //     ,
-                    //     style: TextStyle(
-                    //       // fontWeight: FontWeight.bold,
-                    //       color: Colors.purple.shade900,
-                    //       fontSize: 20,
-                    //     ),
-                    //     textAlign: TextAlign.center,
-                    //   ),
-                    // ),
-
-
-                    // TODO implement Media Library with Uploads
-                    // TODO filter media by default (uploadedBy admin account) vs user's own uploads vs. shared with user but uploaded by someone else.
-                    // TODO filter by type (img vs video)
-                    // Media Library Navigation
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       Navigator.push(context, MediaLibraryPage.route());
-                    //     },
-                    //     child: Text("GO TO MEDIA LIBRARY")
-                    // ),
                   ],
                 ),
               );
