@@ -220,6 +220,7 @@ class _MyAppState extends State<MyApp> {
               // Start sync listener
               _connectivityService.startLiveSync(
                 posesCubit: context.read<PosesCubit>(),
+                flowsCubit: context.read<FlowsCubit>(),
                 token: state.token,
               );
               return const HomePage();

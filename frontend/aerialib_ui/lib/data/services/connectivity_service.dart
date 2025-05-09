@@ -26,15 +26,15 @@ class ConnectivityService {
 
   void startLiveSync({
     required PosesCubit posesCubit,
-    // required FlowsCubit flowsCubit,
+    required FlowsCubit flowsCubit,
     required String token,
   }) {
     _subscription = Connectivity().onConnectivityChanged.listen((resultList) async {
       if (_isConnected(resultList)) {
         print('[ConnectivityService] Connected, triggering sync...');
-        await posesCubit.syncPoses(token);
+        await posesCubit.syncPoses(token: token);
+        await flowsCubit.syncFlows(token: token);
         // TODO add other syncs
-        //  await flowsCubit.syncFlows(token);
       } else {
         print('[ConnectivityService] Offline');
       }
