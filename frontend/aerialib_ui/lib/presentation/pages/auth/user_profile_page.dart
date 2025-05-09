@@ -26,15 +26,15 @@ class _UserProfilePage extends State<UserProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              // TODO: Navigate to EditProfilePage
-              // Navigator.push(context, EditProfilePage.route());
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.edit),
+        //     onPressed: () {
+        //       // TODO: Navigate to EditProfilePage
+        //       // Navigator.push(context, EditProfilePage.route());
+        //     },
+        //   ),
+        // ],
       ),
       body: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
@@ -99,59 +99,59 @@ class _UserProfilePage extends State<UserProfilePage> {
                     ),
                   ),
 
-                  // TODO move this to an advanced settings section
-                  const SizedBox(height: 30),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      final user = context.read<AuthCubit>().state as AuthLoggedIn;
-                      context.read<PosesCubit>().syncPoses(token: user.user.token);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Poses sync triggered.")),
-                      );
-                    },
-                    icon: const Icon(Icons.sync),
-                    label: const Text("Sync Poses Now"),
-                  ),
-                  // TODO - Consider caching the last sync time in shared prefs (via sp_service.dart maybe?)
-
-                  const SizedBox(height: 30),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      final user = context.read<AuthCubit>().state as AuthLoggedIn;
-                      context.read<MediaCubit>().syncMedia(token: user.user.token);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Media sync triggered.")),
-                      );
-                    },
-                    icon: const Icon(Icons.sync),
-                    label: const Text("Sync Media Now"),
-                  ),
-
-                  const SizedBox(height: 30),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      final user = context.read<AuthCubit>().state as AuthLoggedIn;
-                      context.read<FlowsCubit>().syncFlowPoses(token: user.user.token);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Flow Poses sync triggered.")),
-                      );
-                    },
-                    icon: const Icon(Icons.sync),
-                    label: const Text("Sync Flow Poses Now"),
-                  ),
-
-                  const SizedBox(height: 30),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      final user = context.read<AuthCubit>().state as AuthLoggedIn;
-                      context.read<FlowsCubit>().syncFlowDetails(token: user.user.token);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Flow sync triggered.")),
-                      );
-                    },
-                    icon: const Icon(Icons.sync),
-                    label: const Text("Sync Flows Now"),
-                  ),
+                  // // TODO move this to an advanced settings section
+                  // const SizedBox(height: 30),
+                  // ElevatedButton.icon(
+                  //   onPressed: () {
+                  //     final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                  //     context.read<PosesCubit>().syncPoses(token: user.user.token);
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       const SnackBar(content: Text("Poses sync triggered.")),
+                  //     );
+                  //   },
+                  //   icon: const Icon(Icons.sync),
+                  //   label: const Text("Sync Poses Now"),
+                  // ),
+                  // // TODO - Consider caching the last sync time in shared prefs (via sp_service.dart maybe?)
+                  //
+                  // const SizedBox(height: 30),
+                  // ElevatedButton.icon(
+                  //   onPressed: () {
+                  //     final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                  //     context.read<MediaCubit>().syncMedia(token: user.user.token);
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       const SnackBar(content: Text("Media sync triggered.")),
+                  //     );
+                  //   },
+                  //   icon: const Icon(Icons.sync),
+                  //   label: const Text("Sync Media Now"),
+                  // ),
+                  //
+                  // const SizedBox(height: 30),
+                  // ElevatedButton.icon(
+                  //   onPressed: () {
+                  //     final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                  //     context.read<FlowsCubit>().syncFlowPoses(token: user.user.token);
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       const SnackBar(content: Text("Flow Poses sync triggered.")),
+                  //     );
+                  //   },
+                  //   icon: const Icon(Icons.sync),
+                  //   label: const Text("Sync Flow Poses Now"),
+                  // ),
+                  //
+                  // const SizedBox(height: 30),
+                  // ElevatedButton.icon(
+                  //   onPressed: () {
+                  //     final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                  //     context.read<FlowsCubit>().syncFlowDetails(token: user.user.token);
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       const SnackBar(content: Text("Flow sync triggered.")),
+                  //     );
+                  //   },
+                  //   icon: const Icon(Icons.sync),
+                  //   label: const Text("Sync Flows Now"),
+                  // ),
                   
                 ],
               ),
