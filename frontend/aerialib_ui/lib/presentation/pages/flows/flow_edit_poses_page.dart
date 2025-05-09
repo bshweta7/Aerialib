@@ -42,7 +42,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
   void initState() {
     super.initState();
     poses = List.from(widget.flow.poses);
-
+// TODO sync here!!
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FlowsCubit>().startEditingFlow(widget.flow);
     });

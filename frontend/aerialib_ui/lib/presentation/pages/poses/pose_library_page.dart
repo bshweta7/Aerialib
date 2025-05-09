@@ -40,9 +40,9 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   // final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
 
   // Filtering
+  final bool _showFilters = false;
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
-  final bool _showFilters = false;
 
   // Search Bar
   String _searchQuery = '';
@@ -165,6 +165,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             }
 
             if (state is GetPosesSuccess) {
+
               // Filtering
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
@@ -201,9 +202,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                         // Filter Icon Button
                         IconButton(
                           icon: const Icon(Icons.filter_alt_outlined),
-                          tooltip: _showFilters
-                              ? 'Hide filters'
-                              : 'Show filters',
+                          tooltip: 'Show filters',
                           onPressed: () {
                             PoseFiltersSheet.showFilterSheet(
                               context: context,

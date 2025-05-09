@@ -44,7 +44,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
   }
 
   Future<void> _onAddFlowPressed() async {
-    if (!formKey.currentState!.validate()) return;
+    // if (!formKey.currentState!.validate()) return;
 
     final authState = context.read<AuthCubit>().state;
     if (authState is! AuthLoggedIn) return;

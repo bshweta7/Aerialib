@@ -32,10 +32,13 @@ class FlowLibraryPage extends StatefulWidget {
 class _FlowLibraryPageState extends State<FlowLibraryPage> {
   final ScrollController _scrollController = ScrollController();
 
+  // Filtering
+  final bool _showFilters = false;
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
   List<String> selectedShareStatus = Constants.shareStatusOptions;
 
+  // Search Bar
   String _searchQuery = '';
 
   @override
@@ -76,9 +79,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   }
   
   void _updateSearchQuery(String newQuery) {
-    setState(() {
-      _searchQuery = newQuery;
-    });
+    setState(() {_searchQuery = newQuery;});
   }
 
   void _navigateToFlowPage(MediaIconEntity mediaItem) {
@@ -114,6 +115,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
           }
 
           if (state is GetFlowsSuccess) {
+
             // Filtering
             List<FlowEntity> filteredFlows = state.flows.where(
                   (elem) =>
@@ -124,23 +126,21 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
             final List<MediaIconEntity> mediaIcons = flowsToMediaIcons(filteredFlows);
 
-            // final List<MediaIconEntity> mediaIcons = filteredFlows.map((flow) => MediaIconEntity(
-            //   imageUrl: flow.thumbnailImagePath,
-            //   title: flow.name,
-            //   subtitle: "Level ${flow.level} | ${flow.apparatus}",
-            //   type: MediaType.flow,
-            //   data: flow,
-            // )).toList();
-
+            // Search suggestion list
             final List<FlowEntity> sortedFlows = List.from(state.flows)
               ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
+            // TODO - add sort by
+
             return Column(
               children: [
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                   child: Row(
                     children: [
+
+                      // Search Bar
                       Expanded(
                         child: FlowSearchBarWidget(
                           hintText: 'Search Flows',
@@ -148,7 +148,10 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                           suggestionList: sortedFlows,
                         ),
                       ),
+
                       const SizedBox(width: 10),
+
+                      // Filter Icon Button
                       IconButton(
                         icon: const Icon(Icons.filter_alt_outlined),
                         tooltip: 'Show filters',
@@ -168,6 +171,8 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                   ),
                 ),
 
+                // TODO move this part to a separate widget or to the flowFilterSheet page
+                // Show active filters if any filters selected
                 if (selectedApparatus.length < Constants.apparatusOptions.length ||
                     selectedLevels.length < Constants.levelOptions.length)
                   // TODO add share status here
@@ -203,7 +208,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                         const Center(
                           child: Padding(
                             padding: EdgeInsets.only(top: 40),
-                            child: Text(
+                            child: Text( // TODO move this to Media List?
                               "No flows, try changing the filters or adding one!",
                               style: TextStyle(
                                   fontSize: 16,

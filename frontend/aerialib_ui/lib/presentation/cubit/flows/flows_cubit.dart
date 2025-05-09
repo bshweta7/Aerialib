@@ -108,7 +108,7 @@ class FlowsCubit extends Cubit<FlowsState> {
   /// Create a new flow (metadata only)
   Future<FlowsState> createNewFlow({
     required String name,
-    required String description,
+    String? description,
     String? teachingCues,
     String? safetyCues,
     String? progressions,
@@ -135,6 +135,8 @@ class FlowsCubit extends Cubit<FlowsState> {
         createdBy: createdBy,
         token: token,
       );
+
+      print("[FlowsCubit] Created Flow ");
 
       final successState = AddNewFlowSuccess(flow);
       emit(successState);

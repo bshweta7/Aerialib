@@ -31,6 +31,7 @@ class FlowRepository {
     required String token,
   }) async {
     try {
+      print("[FlowRepository] Creating flow in remote db... ");
       final flowModel = await remoteDataSource.createFlow(
         name: name,
         description: description,
@@ -44,10 +45,14 @@ class FlowRepository {
         createdBy: createdBy,
         token: token,
       );
+      print("[FlowRepository] Done, adding to local db... ");
       await localDataSource.insertFlow(flowModel);
+
+      print("[FlowRepository] Done, returning flow entity ... ");
 
       return FlowMapper.modelToEntityDetailsOnly(flowModel);
     } catch (e) {
+      print("[FlowRepository] Failed to create remotely... ");
       rethrow;
     }
   }
