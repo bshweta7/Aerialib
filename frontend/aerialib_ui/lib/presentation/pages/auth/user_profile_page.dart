@@ -112,6 +112,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                     icon: const Icon(Icons.sync),
                     label: const Text("Sync Poses Now"),
                   ),
+                  // TODO - Consider caching the last sync time in shared prefs (via sp_service.dart maybe?)
 
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
