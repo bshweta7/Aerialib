@@ -131,7 +131,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       final user = context.read<AuthCubit>().state as AuthLoggedIn;
-                      context.read<FlowsCubit>().syncFlowPoses(user.user.token);
+                      context.read<FlowsCubit>().syncFlowPoses(token: user.user.token);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Flow Poses sync triggered.")),
                       );
@@ -144,7 +144,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       final user = context.read<AuthCubit>().state as AuthLoggedIn;
-                      context.read<FlowsCubit>().syncFlowDetails(user.user.token);
+                      context.read<FlowsCubit>().syncFlowDetails(token: user.user.token);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Flow sync triggered.")),
                       );

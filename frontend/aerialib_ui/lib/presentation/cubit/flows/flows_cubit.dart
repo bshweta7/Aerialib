@@ -52,7 +52,7 @@ class FlowsCubit extends Cubit<FlowsState> {
   }
 
   /// Run a one-time sync of flows when network is available (sync the unsynced local flows with remote)
-  Future<void> syncFlowDetails(String token) async {
+  Future<void> syncFlowDetails({required String token}) async {
     if (_isSyncing) return;
     _isSyncing = true;
 
@@ -76,7 +76,7 @@ class FlowsCubit extends Cubit<FlowsState> {
   }
 
   /// Run a one-time sync of flows when network is available (sync the unsynced local flows with remote)
-  Future<void> syncFlowPoses(String token) async {
+  Future<void> syncFlowPoses({required String token}) async {
     if (_isSyncing) return;
     _isSyncing = true;
 
@@ -99,6 +99,11 @@ class FlowsCubit extends Cubit<FlowsState> {
     }
   }
 
+  Future<void> syncFlows({required String token}) async {
+    await syncFlowDetails(token: token);
+    await syncFlowPoses(token: token);
+    print("[FlowsCubit] Flows sync complete.");
+  }
 
   /// Create a new flow (metadata only)
   Future<FlowsState> createNewFlow({
@@ -230,7 +235,7 @@ class FlowsCubit extends Cubit<FlowsState> {
   }
 
   /// Save the flows poses (local + remote)
-  Future<void> saveFlowPoses(String token) async {
+  Future<void> saveFlowPoses({required String token}) async {
     // print("[FlowCubit] State is $state");
     if (state is! EditFlowState) return;
     final currentState = state as EditFlowState;

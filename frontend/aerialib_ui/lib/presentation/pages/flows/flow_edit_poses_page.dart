@@ -75,7 +75,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     final updatedFlow = widget.flow.copyWith(poses: poses);
 
     context.read<FlowsCubit>().updateFlowPoses(poses);
-    await context.read<FlowsCubit>().saveFlowPoses(user.user.token);
+    await context.read<FlowsCubit>().saveFlowPoses(token: user.user.token);
     await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
     ScaffoldMessenger.of(context).showSnackBar(

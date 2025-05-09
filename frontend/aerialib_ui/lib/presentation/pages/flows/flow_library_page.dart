@@ -41,7 +41,13 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   @override
   void initState() {
     super.initState();
+    _initSync();
+  }
+
+  Future<void> _initSync() async {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
+    await context.read<FlowsCubit>().syncFlows(token: user.user.token);
+    if (!mounted) return;
     context.read<FlowsCubit>().getAllFlows(token: user.user.token);
   }
 
