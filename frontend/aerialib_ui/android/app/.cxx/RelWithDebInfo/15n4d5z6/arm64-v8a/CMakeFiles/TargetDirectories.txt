@@ -1,0 +1,2 @@
+/home/shweta/Documents/Development/Aerialib/frontend/aerialib_ui/android/app/.cxx/RelWithDebInfo/15n4d5z6/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/shweta/Documents/Development/Aerialib/frontend/aerialib_ui/android/app/.cxx/RelWithDebInfo/15n4d5z6/arm64-v8a/CMakeFiles/rebuild_cache.dir
