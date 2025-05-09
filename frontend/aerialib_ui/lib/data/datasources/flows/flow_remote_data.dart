@@ -28,11 +28,11 @@ class FlowRemoteDataSource {
       'thumbnail_image_id': thumbnailImageId,
       'apparatus': apparatus,
       'level': level,
-      'created_by': createdBy,
       if (description != null) 'description': description,
       if (teachingCues != null) 'teaching_cues': teachingCues,
       if (safetyCues != null) 'safety_cues': safetyCues,
       if (progressions != null) 'progressions': progressions,
+      'created_by': createdBy,
     };
 
     try {
@@ -42,8 +42,11 @@ class FlowRemoteDataSource {
         body: body,
       );
 
+      print("[RemoteDataSource] Flow created remotely: ${response.body}");
       return FlowModel.fromJson(response.body);
     } catch (e) {
+      print("[RemoteDataSource] Failed to create flow remotely: $e");
+      print("[RemoteDataSource] Creating local fallback unsynced flow instead.");
       // Fallback: construct a local unsynced FlowModel
       return FlowModel(
         id: const Uuid().v6(),
