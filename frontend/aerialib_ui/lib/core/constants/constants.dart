@@ -27,4 +27,11 @@ class Constants {
   static String missingImagePath = "default/missing_image.jpg";
   // TODO move missing image to assets?
 
+  static const List<String> defaultFlowThumbnails = [
+    'default/flow_placeholders/peach.png',
+    'default/flow_placeholders/yellow.png',
+    'default/flow_placeholders/mint.png',
+    'default/flow_placeholders/lavender.png',
+  ];
+
 }
