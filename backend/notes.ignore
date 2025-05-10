@@ -19,6 +19,16 @@ run "npx drizzle-kit push" from src folder when you want to add a new database s
 
 
 
+SERVER STUFF:
+locally:
+docker compose exec -it db /bin/pg_dump -U postgres -d aerialib -Fc -f /db_backups/db_$(date +%Y%m%d_%H%M%S).dump --> make the dump file
+put the dump file in db_backups (use sudo because its a docker mount)
+git pull to the server
+docker exec -it db_container psql -U postgres -c "DROP DATABASE IF EXISTS aerialib;" --> drops old table
+docker exec -it db_container psql -U postgres -c "CREATE DATABASE aerialib;" --> create new table
+docker exec -it db_container pg_restore -U postgres -d aerialib /db_backups/db_20250509_204029.dump --> restore with pg_restore
+docker exec -it db_container psql -U postgres -d aerialib -c "\dt" --> lists tables
+
 
 
 ls db_backups/
