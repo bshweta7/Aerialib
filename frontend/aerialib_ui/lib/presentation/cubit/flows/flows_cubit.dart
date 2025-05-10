@@ -236,6 +236,21 @@ class FlowsCubit extends Cubit<FlowsState> {
     emit(currentState.copyWith(flow: updatedFlow));
   }
 
+  Future<void> clearLocalFlows() async {
+    try {
+      final allFlows = await _flowRepository.getAllFlowDetails();
+
+      for (final flow in allFlows) {
+        await _flowRepository.deleteFlow(flow.id);
+      }
+
+      emit(const FlowInitial());
+    } catch (e) {
+      print("[FlowsCubit] Error clearing local flows: $e");
+      emit(FlowError("Failed to clear local flows: $e"));
+    }
+  }
+
   /// Save the flows poses (local + remote)
   Future<void> saveFlowPoses({required String token}) async {
     // print("[FlowCubit] State is $state");
