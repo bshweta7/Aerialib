@@ -8,6 +8,8 @@ import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
 
+import 'feedback_form.dart';
+
 
 
 class HomePage extends StatelessWidget {
@@ -91,7 +93,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height:30),
 
             const Text(
-              "More Features \nComing Soon... 🙂",
+              "More Features Coming Soon... 🙂",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 // color: Colors.black,
@@ -99,7 +101,6 @@ class HomePage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-
             const SizedBox(height: 20),
 
             ClipRRect(
@@ -113,6 +114,36 @@ class HomePage extends StatelessWidget {
                 errorWidget: (context, url, error) => const Icon(Icons.error, size: 50, color: Colors.red),
               ),
             ),
+
+            const SizedBox(height: 10,),
+
+            const Text(
+              "Have an idea or found a bug? We'd love to hear from you!",
+              style: TextStyle(
+                // fontWeight: FontWeight.bold,
+                // color: Colors.black,
+                fontSize: 18,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10,),
+
+            // Feedback Form Navigation
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, SubmitFeedbackPage.route());
+                },
+                child: const Text(
+                    "Submit Feedback",
+                    style: TextStyle(
+                      fontSize: 20,
+                    )
+                )
+            ),
+            const SizedBox(height: 10,),
+
+
+
             // FormattedCachedNetworkImage("${Constants.backendUrl}/media/data/default/under_construction_gpt.png",)
 
             // const SizedBox(height: 20),

@@ -6,9 +6,11 @@ import poseRouter from "./routes/pose";
 import mediaRouter from "./routes/media";
 import flowRouter from "./routes/flow";
 import flowPoseRouter from "./routes/flow_poses";
+import feedbackRouter from "./routes/feedback";
 
 // Load values from .env file
 import 'dotenv/config'
+
 
 const app = express(); // TODO should this be let instead of const
 
@@ -25,6 +27,7 @@ app.use("/auth", authRouter);
 app.use("/media", mediaRouter);
 app.use("/flows", flowRouter);
 app.use("/flow_poses", flowPoseRouter); // TODO consistent routes - pose, flow, flow_pose/ (not poses)
+app.use("/feedback", feedbackRouter);
 
 // create rest api
 app.get("/", (req, res) => {

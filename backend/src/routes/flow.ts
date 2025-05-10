@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
 
-import { NewFlow, flowsTable, flowPosesTable, posesTable, mediaTable } from "../db/schema";
+import { NewFlow, flowsTable } from "../db/schema";
 import { db } from "../db";
 import { eq, sql } from "drizzle-orm";
 

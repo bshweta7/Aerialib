@@ -144,6 +144,37 @@ export type FlowPose = typeof flowPosesTable.$inferSelect;
 export type NewFlowPose = typeof flowPosesTable.$inferInsert;
 
 
+/* FEEDBACK */
+export const feedbackTable = pgTable("feedback", {
+    id: uuid("id").primaryKey().defaultRandom(),
+
+    type: text("type").notNull(), // e.g., 'bug', 'feature', 'other'
+    message: text("message").notNull(),
+    email: text("email"), // Optional contact
+
+    userId: uuid("user_id").references(() => usersTable.id, {
+        onDelete: "set null",
+    }),
+
+    createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type Feedback = typeof feedbackTable.$inferSelect;
+export type NewFeedback = typeof feedbackTable.$inferInsert;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* TODO other tables:
 
 RELATED TO USERS
