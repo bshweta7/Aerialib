@@ -40,16 +40,18 @@ flowRouter.post("/", auth, async (req: AuthRequest, res) => {
 
 
 flowRouter.get("/", auth, async (req: AuthRequest, res) => {
-  try {
-      const query = sql`
-          SELECT
-              flows.*,
-              media.media_path AS thumbnail_image_path
-          FROM
-              flows
-                  JOIN
-              media ON flows.thumbnail_image_id = media.id;
-      `;
+    try {
+        const query = sql`
+            SELECT
+                flows.*,
+                media.media_path AS thumbnail_image_path
+            FROM
+                flows
+                    JOIN
+                media ON flows.thumbnail_image_id = media.id
+            WHERE
+                flows.created_by = ${req.user};
+        `;
 
       // Execute the raw SQL query using db.execute()
       const result = await db.execute(query);
@@ -59,10 +61,11 @@ flowRouter.get("/", auth, async (req: AuthRequest, res) => {
 
       res.json(allFlows);
 
-      } catch (e) {
-          res.status(500).json({ error: e })
-      }
-})
+    } catch (e) {
+        console.error("[FlowRouter] Error getting flows:", e);
+        res.status(500).json({ error: e });
+    }
+});
 
 flowRouter.delete("/", auth, async (req: AuthRequest, res) => {
     try {
@@ -74,7 +77,7 @@ flowRouter.delete("/", auth, async (req: AuthRequest, res) => {
     } catch (e) {
         res.status(500).json({ error: e })
     }
-})
+});
 
 // TODO enable sync
 // flowRouter.post("/sync", auth, async (req: AuthRequest, res) => {
