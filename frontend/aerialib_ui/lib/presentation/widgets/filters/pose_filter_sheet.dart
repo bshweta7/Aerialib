@@ -201,7 +201,11 @@ class _PoseFiltersSheetState extends State<PoseFiltersSheet> {
               FilterMultiSelect<int>(
                 options: Constants.levelOptions,
                 initialValues: widget.initialLevels,
-                getLabel: (int level) => 'Level $level',
+                getLabel: (int level) {
+                  if (level == 0) return 'Intro';
+                  if (level == -1) return 'Other';
+                  return 'Level $level';
+                },
                 onSelectionChanged: _onLevelsSelectionChanged,
                 validator: (value) {
                   if (value == null || value.isEmpty) {

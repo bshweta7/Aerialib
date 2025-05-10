@@ -120,7 +120,8 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
             List<FlowEntity> filteredFlows = state.flows.where(
                   (elem) =>
               selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase()) &&
-                  selectedLevels.contains(elem.level.floor()),
+                  selectedLevels.contains(elem.level.floor()) ||
+                  (selectedLevels.contains(-1) && !Constants.levelOptions.contains(elem.level.floor())),
             ).toList();
             // TODO filter share status here too? might need to add a column in flows local db after creating the shareTable remotely (join remotely and then send).
 
