@@ -41,6 +41,8 @@ flowRouter.post("/", auth, async (req: AuthRequest, res) => {
 
 flowRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
+        console.log("[FlowRouter] Authenticated user:", req.user);
+
         const query = sql`
             SELECT
                 flows.*,

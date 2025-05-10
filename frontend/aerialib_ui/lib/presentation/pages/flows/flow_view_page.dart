@@ -99,6 +99,7 @@ class _FlowViewPageState extends State<FlowViewPage> {
                         //   ),
                         // ),
 
+                        // TODO make edit button take whole space unless the scroll to top button appears
                         // const SizedBox(height: 10),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.8, // or any height that fits your design

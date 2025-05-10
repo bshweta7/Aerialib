@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
-// import 'package:frontend/to_sort/pages/flows/flow_view_page.dart';
 import 'package:uuid/uuid.dart';
+import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/flow_pose_entity.dart';
@@ -112,24 +111,15 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
       },
       child: Scaffold(
       appBar: AppBar(
-        title: const Text('Add & Edit Poses'),
-        actions: [
-          BlocBuilder<FlowsCubit, FlowsState>(
-            builder: (context, state) {
-              if (state is EditFlowState && state.isSaving) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                );
-              }
-              // print(state);
-              return IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: _saveFlow,
-              );
-            },
-          ),
-        ],
+        title: const Text('Edit Poses'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.help_outline),
+              tooltip: 'How to use this page',
+              onPressed: () => FlowHelpDialog.show(context),
+            ),
+          ],
+
       ),
       body: BlocBuilder<FlowsCubit, FlowsState>(
         builder: (context, state) {
@@ -170,21 +160,26 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                   ),
                 ),
 
-                if (_showSwipeHint)
+                if (poses.isEmpty)
+                  const SizedBox(height: 30),
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                     child: Row(
                       children: [
-                        Icon(Icons.swipe, size: 20, color: Colors.grey),
+                        Icon(Icons.info_outline, size: 20, color: Colors.grey),
                         SizedBox(width: 8),
-                        Text(
-                          'Swipe left to remove a pose',
-                          style: TextStyle(color: Colors.grey),
+                        Expanded(
+                          child: Text(
+                            'Add poses using the search bar. \n'
+                                'Tap the icon in the top right for help.',
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ),
                       ],
                     ),
                   ),
 
+// TODO add filter or better add flow mechanism
                 // const SizedBox(height: 10),
 
                 // TODO light bulb on right side of each one that opens the list of poses you can transition to from the current pose (icon only shows up if there are known transitions). if clicked it drops down and creates a horizontal sliding list of images and names.
