@@ -8,6 +8,7 @@ import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/core/utils/conversions.dart';
 
+import '../../../core/constants/constants.dart';
 import '../../widgets/functional_buttons/scroll_to_top.dart';
 
 class FlowViewPage extends StatefulWidget {
@@ -27,11 +28,30 @@ class FlowViewPage extends StatefulWidget {
 
 class _FlowViewPageState extends State<FlowViewPage> {
   final ScrollController _scrollController = ScrollController();
+  bool _isVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset >= Constants.visibleScrollThreshold && !_isVisible) {
+      setState(() {
+        _isVisible = true;
+      });
+    } else if (_scrollController.offset < Constants.visibleScrollThreshold && _isVisible) {
+      setState(() {
+        _isVisible = false;
+      });
+    }
   }
 
   void _navigateToPosePage(BuildContext context, MediaIconEntity mediaItem) {
@@ -78,77 +98,102 @@ class _FlowViewPageState extends State<FlowViewPage> {
 
       body: Stack(
         children: [
-          mediaItems.isEmpty
-              ? const Center(child: Text('No poses in this flow yet.'))
-              : SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10.0,
-                      bottom: 400.0, // 💡 Add enough space so FABs don’t float up
-                    ),
-                    child: Column(
-                      children: [
-                        // Center(
-                        //   child: Text(
-                        //       flow.name,
-                        //       style: const TextStyle(
-                        //         fontSize: 24,
-                        //         fontWeight: FontWeight.bold,
-                        //       )
-                        //   ),
-                        // ),
-
-                        // TODO make edit button take whole space unless the scroll to top button appears
-                        // const SizedBox(height: 10),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.8, // or any height that fits your design
-                          child: MediaList(
-                            mediaItems: mediaItems,
-                            onMediaTap: (item) => _navigateToPosePage(context, item),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-
-                      ],
-                    ),
-                  ),
+          if (mediaItems.isEmpty)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 40),
+                child: Text( // TODO move this to Media List?
+                  "No poses in this flow, try adding some by clicking edit!",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black38),
                 ),
+              ),
+            )
+          else
+            MediaList(
+              mediaItems: mediaItems,
+              onMediaTap: (item) => _navigateToPosePage(context, item),
+              scrollController: _scrollController,
+            ),
 
-          ScrollToTopButton(scrollController: _scrollController), // Add the button
-
-          // Edit button (bottom left)
           Positioned(
             bottom: 20,
             left: 20,
-            child: FloatingActionButton.extended(
-              heroTag: 'editFAB',
-              tooltip: 'Edit Poses in Flow',
-              onPressed: () {
-                Navigator.push(context, FlowEditPosesPage.route(flow));
-              },
-              icon: const Icon(Icons.edit),
-              label: const Text("Edit"),
-            )
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: FloatingActionButton.extended(
+                    heroTag: 'editFAB',
+                    tooltip: 'Edit poses in this flow',
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Edit Poses'),
+                    onPressed: () {
+                      Navigator.push(context, FlowEditPosesPage.route(flow));
+                    },
+                  ),
+                ),
 
+                if (_isVisible) const SizedBox(width: 12),
+
+                if (_isVisible)
+                  FloatingActionButton(
+                    heroTag: 'scrollTopFAB',
+                    tooltip: 'Scroll to top',
+                    onPressed: () {
+                      _scrollController.animateTo(
+                        0,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: const Icon(Icons.keyboard_arrow_up),
+                  ),
+              ],
+            ),
           ),
 
-          // Edit button (bottom left)
-          // Positioned(
-          //   bottom: 20,
-          //   left: 20,
-          //   child: FloatingActionButton(
-          //     heroTag: 'editFAB',
-          //     tooltip: 'Add, remove, or reorder poses in this flow',
-          //     child: const Icon(Icons.edit),
-          //     onPressed: () {
-          //       Navigator.push(context, FlowEditPosesPage.route(flow));
-          //     },
+
+          // if(!_isVisible)
+          //   Positioned(
+          //     bottom: 20,
+          //     left: 20,
+          //     child: SizedBox(
+          //       width: double.infinity,
+          //       child: FloatingActionButton.extended(
+          //         heroTag: 'editFAB',
+          //         tooltip: 'Add, remove, or reorder poses in this flow',
+          //         icon: const Icon(Icons.edit),
+          //         label: const Text('Edit Poses'),
+          //         onPressed: () {
+          //           Navigator.push(context, FlowEditPosesPage.route(flow));
+          //         },
+          //       ),
+          //     ),
           //   ),
-          // ),
+
 
         ],
       ),
+    // floatingActionButton: Padding(
+    //   padding: const EdgeInsets.symmetric(horizontal: 15.0),
+    //   child: SizedBox(
+    //     width: double.infinity, // Full width of the screen
+    //     child: FloatingActionButton.extended(
+    //       heroTag: 'editFAB',
+    //       tooltip: 'Edit Poses in Flow',
+    //       onPressed: () {
+    //         Navigator.push(context, FlowEditPosesPage.route(flow));
+    //       },
+    //       icon: const Icon(Icons.edit),
+    //       label: const Text("Edit"),
+    //     )
+    //   ),
+    // ),
+    // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
     );
   }
 }

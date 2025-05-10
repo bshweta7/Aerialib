@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../../core/constants/constants.dart';
+
 class ScrollToTopButton extends StatefulWidget {
   final ScrollController scrollController;
   final double visibleThreshold;
@@ -11,7 +13,7 @@ class ScrollToTopButton extends StatefulWidget {
   const ScrollToTopButton({
     super.key,
     required this.scrollController,
-    this.visibleThreshold = 150.0, // Show button after scrolling this much
+    this.visibleThreshold = Constants.visibleScrollThreshold, // Show button after scrolling this much
     this.bottomOffset = 20.0,
     this.rightOffset = 20.0,
     this.heroTag = 'scrollTopFAB',

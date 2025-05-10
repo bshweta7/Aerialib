@@ -34,4 +34,5 @@ class Constants {
     'default/flow_placeholders/lavender.png',
   ];
 
+  static const double visibleScrollThreshold = 150.0;
 }
