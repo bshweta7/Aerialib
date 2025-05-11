@@ -16,7 +16,9 @@ class LandingPage extends StatelessWidget {
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFf8fafc), Color(0xFFe2e8f0)],
+            colors: [
+              Color(0xFFEDE7F6),
+              Color(0xFFBAAEC8)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -55,33 +57,33 @@ class LandingPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(context, LoginPage.route());
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3b82f6),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      textStyle: const TextStyle(fontSize: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    // style: ElevatedButton.styleFrom(
+                    //   backgroundColor: const Color(0xFF3b82f6),
+                    //   padding: const EdgeInsets.symmetric(vertical: 16),
+                    //   textStyle: const TextStyle(fontSize: 18),
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(12),
+                    //   ),
+                    // ),
                     child: const Text('Log In'),
                   ),
                 ),
                 SizedBox(
                   width: 160,
                   height: 40,
-                  child: OutlinedButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(context, SignupPage.route());
                     },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF3b82f6),
-                      side: const BorderSide(color: Color(0xFF3b82f6), width: 2),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      textStyle: const TextStyle(fontSize: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    // style: OutlinedButton.styleFrom(
+                    //   foregroundColor: const Color(0xFF3b82f6),
+                    //   side: const BorderSide(color: Color(0xFF3b82f6), width: 2),
+                    //   padding: const EdgeInsets.symmetric(vertical: 16),
+                    //   textStyle: const TextStyle(fontSize: 18),
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(12),
+                    //   ),
+                    // ),
                     child: const Text('Sign Up'),
                   ),
                 ),
@@ -90,7 +92,7 @@ class LandingPage extends StatelessWidget {
             const Spacer(),
             const Text(
               "© 2025 Aerialib. All rights reserved.",
-              style: TextStyle(color: Color(0xFF94a3b8)),
+              style: TextStyle(color: Color(0xffffffff)),
             ),
           ],
         ),
