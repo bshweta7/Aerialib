@@ -236,7 +236,7 @@ class _MyAppState extends State<MyApp> {
 
             } else {
               // Default fallback for unauthenticated
-              return kIsWeb ? const WebLandingPage() : const LoginPage();
+              return kIsWeb ? const LoginPage() : const LoginPage();
             }
 
             // } else if (kIsWeb) {

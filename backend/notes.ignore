@@ -38,3 +38,11 @@ docker exec -it db_container psql -U postgres -d aerialib -c "\dt" --> lists tab
 ls db_backups/
 
 docker compose exec -it db /bin/bash -c "pg_restore -U postgres -d aerialib /db_backups/db_20250321_194023.dump"
+
+
+
+
+
+OTHER STUFF
+ps aux | grep pacman --> check other pacman processes
+processes are stored in lock file, can clear lock file with this command
