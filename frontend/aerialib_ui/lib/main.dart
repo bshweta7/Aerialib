@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/presentation/pages/home/landing_page.dart';
 
 import 'package:window_manager/window_manager.dart';
 
@@ -232,7 +233,7 @@ class _MyAppState extends State<MyApp> {
               _connectivityService.stopLiveSync(); // Stop listening on logout
               // Optionally clear any other state, go to login screen, etc.
               // TODO return other cubits to initial state as well
-              return const LoginPage();
+              return kIsWeb ? const LandingPage() : const LoginPage();
 
             } else if (state is AuthLoading) {
               print("[Main] State is loading");
@@ -242,7 +243,7 @@ class _MyAppState extends State<MyApp> {
             } else {
               // Default fallback for unauthenticated
               print("[Main] State is $state");
-              return kIsWeb ? const LoginPage() : const LoginPage();
+              return kIsWeb ? const LandingPage() : const LoginPage();
             }
 
             // } else if (kIsWeb) {
