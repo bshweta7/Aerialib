@@ -8,6 +8,7 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/media_icon_entity.dart';
 
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
@@ -49,6 +50,8 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
   Future<void> _initSync() async {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
+    await context.read<PosesCubit>().syncPoses(token: user.user.token);
+    if (!mounted) return;
     await context.read<FlowsCubit>().syncFlows(token: user.user.token);
     if (!mounted) return;
     context.read<FlowsCubit>().getAllFlows(token: user.user.token);
