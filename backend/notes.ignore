@@ -1,4 +1,4 @@
-run docker: docker compose -f docker-compose.dev.yaml up --build
+docker compose -f docker-compose.dev.yaml up --build  --> run docker
 
 npm install {package} --> (in terminal) to install new package
 may need to run "docker compose exec -it backend npm install" in terminal to make it work in docker. 

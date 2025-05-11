@@ -1,20 +1,30 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:io';
 
 import 'package:frontend/data/schema/database_schema.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+
 String _getDatabaseFileName() {
   if (kIsWeb) return 'aerialib_web.db';
-  if (Platform.isAndroid || Platform.isIOS) return 'aerialib.db';
-  if (Platform.isMacOS) return 'aerialib_macos.db';
-  if (Platform.isLinux) return 'aerialib_linux.db';
-  if (Platform.isWindows) return 'aerialib_windows.db';
-  return 'aerialib.db'; // Fallback
+
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+    case TargetPlatform.iOS:
+      return 'aerialib.db';
+    case TargetPlatform.macOS:
+      return 'aerialib_macos.db';
+    case TargetPlatform.linux:
+      return 'aerialib_linux.db';
+    case TargetPlatform.windows:
+      return 'aerialib_windows.db';
+    default:
+      return 'aerialib.db'; // Fallback
+  }
 }
 
 class DatabaseService {
@@ -27,50 +37,90 @@ class DatabaseService {
   }
 
   static Future<Database> _initDb() async {
-    // Use FFI only on desktop platforms
-    if (!kIsWeb && (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
+    if (kIsWeb) {
+      databaseFactory = databaseFactoryFfiWeb;
+    } else {
+      switch (defaultTargetPlatform) {
+        case TargetPlatform.macOS:
+        case TargetPlatform.linux:
+        case TargetPlatform.windows:
+          sqfliteFfiInit();
+          databaseFactory = databaseFactoryFfi;
+          break;
+        default:
+          break;
+      }
     }
 
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, _getDatabaseFileName());
-    print('[DatabaseService] DB path: $path');
 
-    return await databaseFactory.openDatabase(
-      path,
-      options: OpenDatabaseOptions(
-        version: 2,
-        onCreate: (db, version) async {
-          await db.execute(createPoseTable);
-          await db.execute(createFlowTable);
-          await db.execute(createFlowPoseTable);
-          await db.execute(createMediaTable);
-          await db.execute(createUserTable);
-        },
-        onUpgrade: (db, oldVersion, newVersion) async {
-          // Poses
-          await db.execute(dropPoseTable); // Use drop command from schema
-          await db.execute(createPoseTable); // Use create command from schema
+    final path = kIsWeb ? 'aerialib_web.db' : join(await getDatabasesPath(), _getDatabaseFileName());
+    print('[DatabaseService] Opening DB at path: $path');
 
-          // Flows
-          await db.execute(dropFlowTable);
-          await db.execute(createFlowTable);
+    try {
+      final db = await databaseFactory.openDatabase(
+        path,
+        options: OpenDatabaseOptions(
+          version: 3,
+            onCreate: (db, version) async {
+              print('[DatabaseService] onCreate started');
 
-          // Flow Poses
-          await db.execute(dropFlowPoseTable); // Use drop command from schema
-          await db.execute(createFlowPoseTable); // Use create command from schema
+              try {
+                print('[DatabaseService] Creating pose table...');
+                await db.execute(createPoseTable);
 
-          // Media
-          await db.execute(dropMediaTable); // Use drop command from schema
-          await db.execute(createMediaTable); // Use create command from schema
+                print('[DatabaseService] Creating flow table...');
+                await db.execute(createFlowTable);
 
-          // Users
-          await db.execute(dropUserTable); // Use drop command from schema
-          await db.execute(createUserTable); // Use create command from schema
+                print('[DatabaseService] Creating flow_pose table...');
+                await db.execute(createFlowPoseTable);
 
-        },
-      ),
-    );
+                print('[DatabaseService] Creating media table...');
+                await db.execute(createMediaTable);
+
+                print('[DatabaseService] Creating user table...');
+                await db.execute(createUserTable);
+
+                print('[DatabaseService] All tables created successfully');
+              } catch (e, st) {
+                print('[DatabaseService] ERROR in onCreate: $e');
+                print(st);
+                rethrow;
+              }
+            },
+            onUpgrade: (db, oldVersion, newVersion) async {
+            // Poses
+            print('[DatabaseService] Dropping Pose table...');
+
+            await db.execute(dropPoseTable); // Use drop command from schema
+            print('[DatabaseService] Creating Pose table...');
+            await db.execute(createPoseTable); // Use create command from schema
+
+            // Flows
+            await db.execute(dropFlowTable);
+            await db.execute(createFlowTable);
+
+            // Flow Poses
+            await db.execute(dropFlowPoseTable); // Use drop command from schema
+            await db.execute(createFlowPoseTable); // Use create command from schema
+
+            // Media
+            await db.execute(dropMediaTable); // Use drop command from schema
+            await db.execute(createMediaTable); // Use create command from schema
+
+            // Users
+            await db.execute(dropUserTable); // Use drop command from schema
+            await db.execute(createUserTable); // Use create command from schema
+
+          },
+        ),
+      ).timeout(const Duration(seconds: 15));
+
+      print('[DatabaseService] DB opened successfully');
+      return db;
+    } catch (e, st) {
+      print('[DatabaseService] Failed to open DB: $e');
+      print(st);
+      rethrow;
+    }
   }
 }

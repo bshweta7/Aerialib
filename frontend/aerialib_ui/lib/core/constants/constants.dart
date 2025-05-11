@@ -1,18 +1,42 @@
-import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 // TODO separate into separate constants.dart file
 
 class Constants {
-  // Urls
-  // static String backendUrl = "http://10.20.29.99:8000";
-  // static String backendUrl = "http://localhost:8000";
-  // static String backendUrl = "https://aerialib.com/api";
-  static String backendUrl =
-    kReleaseMode ? "https://aerialib.com/api"
-      : (Platform.isAndroid || Platform.isIOS)
-        ? "http://10.20.30.203:8000" : "http://localhost:8000";
-  static String mediaUrlPrefix = "$backendUrl/media/data";
+
+  // Determine backend URL based on environment and platform
+  static final String backendUrl = _getBackendUrl();
+  static final String mediaUrlPrefix = "$backendUrl/media/data";
+
+  static String _getBackendUrl() {
+    if (kReleaseMode) {
+      return "https://aerialib.com/api";
+    }
+
+    if (kIsWeb) {
+      return "http://localhost:8000";
+    }
+
+    // Use defaultTargetPlatform for non-web
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+        return "http://10.20.30.203:8000";
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.macOS:
+      case TargetPlatform.windows:
+      case TargetPlatform.linux:
+      default:
+        return "http://localhost:8000";
+    }
+  }
+
+  // static String backendUrl =
+  //   kReleaseMode ? "https://aerialib.com/api"
+  //     : (Platform.isAndroid || Platform.isIOS)
+  //       ? "http://10.20.30.203:8000" : "http://localhost:8000";
+  // static String mediaUrlPrefix = "$backendUrl/media/data";
 
   // Options
   // TODO make separate pages for warm up/cool down (dont include warm up/cooldown/ conditioning in poses, make it separate).

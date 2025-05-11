@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,16 +33,15 @@ import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/pages/auth/login_page.dart';
 
-import 'package:frontend/to_sort/pages/home/web_landing_page.dart';
-
+import 'core/constants/constants.dart';
 
 Future<void> main() async {
-  if (Platform.isLinux ) {
-    // Set default window size for linux
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.linux) {
     await windowManager.ensureInitialized();
 
-    WindowOptions windowOptions = const WindowOptions(
+    const windowOptions = WindowOptions(
       size: Size(300, 600),
       center: true,
       title: 'Aerialib Linux',
@@ -111,6 +108,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _connectivityService = ConnectivityService();
+    print("[Main] InitState ran");
   }
 
   @override
@@ -121,6 +119,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    print("[Main] Build ran");
     return MaterialApp(
       title: 'Aerialib',
       theme: ThemeData(
@@ -215,8 +214,11 @@ class _MyAppState extends State<MyApp> {
 
       home: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
+            print("[Main] Entered bloc builder");
+            print("[Main] BackendUrl: ${Constants.backendUrl}");
 
             if (state is AuthLoggedIn) {
+              print("[Main] State is logged in");
               // Start sync listener
               _connectivityService.startLiveSync(
                 posesCubit: context.read<PosesCubit>(),
@@ -226,16 +228,20 @@ class _MyAppState extends State<MyApp> {
               return const HomePage();
 
             } else if (state is AuthLoggedOut) {
+              print("[Main] State is logged out");
               _connectivityService.stopLiveSync(); // Stop listening on logout
               // Optionally clear any other state, go to login screen, etc.
               // TODO return other cubits to initial state as well
               return const LoginPage();
 
             } else if (state is AuthLoading) {
+              print("[Main] State is loading");
+              // return const LoginPage();
               return const Center(child: CircularProgressIndicator());
 
             } else {
               // Default fallback for unauthenticated
+              print("[Main] State is $state");
               return kIsWeb ? const LoginPage() : const LoginPage();
             }
 

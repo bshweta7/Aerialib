@@ -20,15 +20,27 @@ class UserLocalDataSource {
 
   /// Retrieves the currently logged-in user from the local database (if any). Returns null if no user is found.
   Future<UserModel?> getUser() async {
-    final db = await database;
-    final result = await db.query(tableName, limit: 1);
+    print('[UserLocalData] getUser() started');
+    final db = await DatabaseService.database;
+    print('[UserLocalData] Got DB instance');
 
-    if (result.isNotEmpty) {
-      return UserModel.fromMap(result.first);
-    } else {
+    try {
+      final result = await db.query('user');
+      print('[UserLocalData] DB query result: $result');
+
+      if (result.isEmpty) {
+        print('[UserLocalData] No user found in local DB');
+        return null;
+      }
+
+      return UserModel.fromMap(result.first); // Replace with your real logic
+    } catch (e, st) {
+      print('[UserLocalData] ERROR: $e');
+      print(st);
       return null;
     }
   }
+
 
   /// Clears all user data from the local database.
   // TODO instead of clearing it altogether, it could be like facebook (login as Shweta - not you? click here) OR show multiple user icons for studios that have multiple instructors

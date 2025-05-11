@@ -14,18 +14,23 @@ class AuthCubit extends Cubit<AuthState> {
 
   void getUserData() async {
     try {
-      emit(const AuthLoading());
-      final userEntity = await _userRepository.getUser();
+      emit(AuthLoading());
+      final user = await _userRepository.getUser();
 
-      if (userEntity != null) {
-        emit(AuthLoggedIn(userEntity));
+      if (user == null) {
+        print('[AuthCubit] No user found, logging out');
+        emit(AuthLoggedOut());
       } else {
-        emit(const AuthInitial());
+        print('[AuthCubit] User found, logging in');
+        emit(AuthLoggedIn(user));
       }
-    } catch (e) {
-      emit(AuthError(e.toString()));
+    } catch (e, st) {
+      print('[AuthCubit] getUserFromLocal error: $e');
+      print(st);
+      emit(AuthLoggedOut());
     }
   }
+
 
   void signUp({
     required String username,

@@ -20,6 +20,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('[HomePage] Building HomePage UI');
+
     return Scaffold(
       appBar: AppBar(
           title: const Text("My Dashboard"),
