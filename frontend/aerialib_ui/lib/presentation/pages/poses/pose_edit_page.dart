@@ -7,6 +7,7 @@ import 'package:frontend/core/utils/validators.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class PoseEditDetailsPage extends StatefulWidget {
@@ -104,7 +105,8 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 2,
       appBar: AppBar(
         title: const Text('Update Pose'),
         actions: [

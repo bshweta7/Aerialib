@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class AddNewPosePage extends StatefulWidget {
@@ -67,7 +68,8 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
+        currentIndex: 2,
         appBar: AppBar(title: const Text("Add New Pose")),
         body: BlocConsumer<PosesCubit, PosesState>(
           listener: (context, state) {

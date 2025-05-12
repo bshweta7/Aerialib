@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class PoseViewPage extends StatefulWidget {
@@ -31,7 +32,8 @@ class _PoseViewPageState extends State<PoseViewPage> {
     //
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 2,
       appBar: AppBar(
         title: Text(
           "Pose Details",

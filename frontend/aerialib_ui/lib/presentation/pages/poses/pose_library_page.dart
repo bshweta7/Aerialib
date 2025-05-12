@@ -15,6 +15,7 @@ import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class PoseLibraryPage extends StatefulWidget {
@@ -119,7 +120,8 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
+        currentIndex: 2,
         appBar: AppBar(
           title: const Text("Poses"),
           // actions: [
