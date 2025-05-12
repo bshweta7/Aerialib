@@ -69,7 +69,7 @@ flowRouter.get("/", auth, async (req: AuthRequest, res) => {
     }
 });
 
-flowRouter.delete("/", auth, async (req: AuthRequest, res) => {
+flowRouter.delete("/:flowId", auth, async (req: AuthRequest, res) => {
     try {
         const { flowId }: { flowId: string } = req.body;
         await db.delete(flowsTable).where(eq(flowsTable.id, flowId));

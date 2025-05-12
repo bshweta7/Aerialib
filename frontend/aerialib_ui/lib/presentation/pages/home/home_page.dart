@@ -110,8 +110,8 @@ class HomePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               child: CachedNetworkImage(
                 imageUrl: "${Constants.backendUrl}/media/data/default/under_construction_gpt.png",
-                width: 250,
-                height: 250,
+                width: 300,
+                height: 300,
                 fit: BoxFit.contain,
                 placeholder: (context, url) => const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => const Icon(Icons.error, size: 50, color: Colors.red),
@@ -135,7 +135,7 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
                 onPressed: () {
                   print("PRESSED");
-                  context.goNamed('feedback');
+                  context.pushNamed('feedback');
                 },
                 child: const Text(
                     "Submit Feedback",

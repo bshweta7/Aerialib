@@ -241,13 +241,25 @@ class FlowsCubit extends Cubit<FlowsState> {
       final allFlows = await _flowRepository.getAllFlowDetails();
 
       for (final flow in allFlows) {
-        await _flowRepository.deleteFlow(flow.id);
+        await _flowRepository.deleteFlowLocally(flow.id);
       }
 
       emit(const FlowInitial());
     } catch (e) {
       print("[FlowsCubit] Error clearing local flows: $e");
       emit(FlowError("Failed to clear local flows: $e"));
+    }
+  }
+
+  Future<void> deleteFlow({
+    required String flowId,
+    required String token
+  }) async {
+    try {
+      await _flowRepository.deleteFlow(flowId, token);
+    } catch (e) {
+      print("[FlowsCubit] Error deleting flow: $e");
+      emit(FlowError("Failed to delete flow: $e"));
     }
   }
 

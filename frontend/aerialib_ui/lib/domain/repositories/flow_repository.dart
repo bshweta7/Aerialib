@@ -123,7 +123,13 @@ class FlowRepository {
   }
 
   /// Delete locally
-  Future<void> deleteFlow(String id) async {
+  Future<void> deleteFlowLocally(String id) async {
     await localDataSource.deleteFlow(id);
+  }
+
+  /// Delete locally and remote
+  Future<void> deleteFlow(String id, token) async {
+    await localDataSource.deleteFlow(id);
+    await remoteDataSource.deleteFlowById(id, token);
   }
 }

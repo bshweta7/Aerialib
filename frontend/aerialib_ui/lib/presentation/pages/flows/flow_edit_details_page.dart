@@ -51,7 +51,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     teachingCuesController.dispose();
     safetyCuesController.dispose();
     progressionsController.dispose();
-    apparatusController.dispose(); // ✅ added
+    apparatusController.dispose();
     super.dispose();
   }
 
@@ -80,8 +80,6 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
     await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
-    // Navigator.pop(context); // Pop Edit
-    // Navigator.pop(context); // Pop Details
     context.goNamed(
       'flow-view',
       pathParameters: {
@@ -89,7 +87,6 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
       },
       extra: updatedFlow,
     );
-    // Navigator.push(context, FlowViewPage.route(updatedFlow)); // Push fresh
   }
 
 
@@ -100,23 +97,19 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
       currentIndex: 1,
       appBar: AppBar(
         title: const Text('Update Flow'),
-        actions: [
-          BlocBuilder<FlowsCubit, FlowsState>(
-            builder: (context, state) {
-              if (state is EditFlowState && state.isSaving) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                );
-              }
-              // print(state);
-              return IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: _saveFlow,
-              );
-            },
-          ),
-        ],
+        // actions: [
+        //   PopupMenuButton<String>(
+        //     onSelected: (value) {
+        //       if (value == 'delete') _confirmDeleteFlow();
+        //     },
+        //     itemBuilder: (context) => [
+        //       const PopupMenuItem(
+        //         value: 'delete',
+        //         child: Text('Delete Flow'),
+        //       ),
+        //     ],
+        //   ),
+        // ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -213,3 +206,5 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     );
   }
 }
+
+

@@ -134,4 +134,18 @@ class FlowRemoteDataSource {
     final json = jsonDecode(response.body);
     return FlowModel.fromMap(json);
   }
+
+  /// Delete all the flow poses for a given flowId
+  Future<void> deleteFlowById(String flowId, String token) async {
+    final response = await httpService.delete(
+      path: "/flows/$flowId",
+      token: token,
+    );
+
+    if (response.statusCode == 200) {
+      print("[FlowRemoteDataSource] Deleted flow with flow ID $flowId");
+    } else {
+      throw Exception("Failed to delete remote flow with ID $flowId");
+    }
+  }
 }

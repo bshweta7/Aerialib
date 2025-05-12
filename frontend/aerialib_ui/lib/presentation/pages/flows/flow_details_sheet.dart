@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../cubit/flows/flows_cubit.dart';
 
 
 class FlowDetailsSheet extends StatelessWidget {
@@ -47,6 +51,33 @@ class FlowDetailsSheet extends StatelessWidget {
       },
     );
   }
+
+  Future<void> _confirmDeleteFlow(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Flow?"),
+        content: const Text("This action cannot be undone."),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => context.goNamed('flow-library'),
+              child: const Text("Delete")
+          ),
+        ],
+      ),
+    );
+
+    // if (confirmed == true) {
+    //   await context.read<FlowsCubit>().deleteFlow(flow.id, token);
+    //
+    //   Navigator.pop(context); // Close bottom sheet after deletion
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text("Flow deleted")),
+    //   );
+    // }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +148,21 @@ class FlowDetailsSheet extends StatelessWidget {
               label: const Text("Edit Flow Details"),
             ),
           ),
+
+        const SizedBox(height: 16),
+
+        Center(
+          child: ElevatedButton.icon(
+            onPressed: () => _confirmDeleteFlow(context),
+            icon: const Icon(Icons.delete),
+            label: const Text("Delete This Flow"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade300,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ),
+
       ],
     );
   }
