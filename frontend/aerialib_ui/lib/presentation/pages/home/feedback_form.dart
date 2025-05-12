@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/data/services/http_service.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class SubmitFeedbackPage extends StatefulWidget {
@@ -65,7 +66,8 @@ class _SubmitFeedbackPageState extends State<SubmitFeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 0,
       appBar: AppBar(title: const Text("Submit Feedback")),
       body: SafeArea(
         child: Padding(

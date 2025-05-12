@@ -22,7 +22,7 @@ GoRouter createRouter(AuthCubit authCubit) {
   authCubit.stream.listen((_) => authNotifier.notify());
 
   return GoRouter(
-    navigatorKey: navigatorKey,
+    // navigatorKey: navigatorKey,
     initialLocation: '/',
     refreshListenable: authNotifier,
     routes: [

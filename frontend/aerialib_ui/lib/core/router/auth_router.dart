@@ -17,7 +17,7 @@ List<GoRoute> authRoutes = [
     builder: (context, state) => const SignupPage(),
   ),
   GoRoute(
-    path: '/profile/:username', // Updated path with username parameter
+    path: '/profile', // TODO add username in profile ----> Updated path with username parameter
     name: 'user-profile',
     builder: (context, state) => const UserProfilePage(),
   ),

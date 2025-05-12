@@ -97,6 +97,17 @@ ThemeData getLightTheme() {
       // ),
     ),
 
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color(0xFFF5F3FB), // soft lavender background
+      selectedItemColor: Color(0xFF3A2E58), // deep plum for selected item
+      unselectedItemColor: Color(0xFFB39DDB), // lavender for unselected
+      selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+      unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
+      type: BottomNavigationBarType.fixed,
+      elevation: 8,
+    ),
+
+
   );
   // TODO add dark mode. reference: https://api.flutter.dev/flutter/material/SearchBar-class.html
 }
@@ -144,6 +155,15 @@ ThemeData getDarkTheme() {
         borderRadius: BorderRadius.circular(10),
       ),
     ),
+
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color(0xFF2A2140),
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Color(0xFFB39DDB),
+      selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+      unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
+    ),
+
   );
 }
 

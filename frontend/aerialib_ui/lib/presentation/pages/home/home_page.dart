@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -22,7 +23,8 @@ class HomePage extends StatelessWidget {
       currentUsername = authState.user.username;
     }
 
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 0,
       appBar: AppBar(
           title: const Text("My Dashboard"),
           actions: [

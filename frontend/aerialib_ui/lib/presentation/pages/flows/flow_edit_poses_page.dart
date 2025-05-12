@@ -72,7 +72,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Saving flow...')),
     );
-    print("[SaveFlow] Navigating to FlowViewPage with \${updatedFlow.poses.length} poses");
+    print("[SaveFlow] Navigating to FlowViewPage with ${updatedFlow.poses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
 
     // TODO fix navigation stack - currently pressing back button causes it to crash.
@@ -94,11 +94,10 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Flow saved successfully!')),
           );
-          context.pop(); // TODO do i need this?
         }
         if (state is EditFlowState && state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error saving flow: \${state.errorMessage}')),
+            SnackBar(content: Text('Error saving flow: ${state.errorMessage}')),
           );
         }
       },
@@ -147,7 +146,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
                   if (poses.isEmpty)
                     const Center(
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                         child: Row(
                           children: [
@@ -210,7 +209,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('\${removedPose.pose.name} removed'),
+                                  content: Text('${removedPose.pose.name} removed'),
                                   action: SnackBarAction(
                                     label: 'Undo',
                                     onPressed: () {
