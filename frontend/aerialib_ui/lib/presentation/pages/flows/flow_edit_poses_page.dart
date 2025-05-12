@@ -231,7 +231,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                               subtitle: 'Level ${flowPose.pose.level} | ${capitalizeFirstLetter(flowPose.pose.apparatus)}',
                               imageUrl: '/${flowPose.pose.primaryMediaPath}',
                               onTapFunction: () {
-                                context.goNamed(
+                                context.pushNamed( // TODO URL doesn't update
                                   'pose-view',
                                   pathParameters: {
                                     'poseId': flowPose.pose.id,

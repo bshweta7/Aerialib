@@ -109,10 +109,10 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   // Navigation
   void _navigateToPosePage(MediaIconEntity mediaItem) {
-    context.goNamed(
+    context.pushNamed(
       'pose-view',
       pathParameters: {
-        'poseId': mediaItem.data.id,
+        'poseId': mediaItem.data.id, // TODO pushNamed doesnt update url - may need to switch back to goNamed?
       },
       extra: mediaItem.data,
     );

@@ -50,7 +50,7 @@ class _FlowViewPageState extends State<FlowViewPage> {
   }
 
   void _navigateToPosePage(BuildContext context, MediaIconEntity mediaItem) {
-    context.goNamed(
+    context.pushNamed( // TODO URL doesnt update
       'pose-view',
       pathParameters: {
         'poseId': mediaItem.data.id,
@@ -86,7 +86,7 @@ class _FlowViewPageState extends State<FlowViewPage> {
                 context: context,
                 flow: flow,
                 onEdit: () {
-                  context.goNamed(
+                  context.pushNamed( // TODO URL doesnt update
                     'flow-edit-details',
                     pathParameters: {
                       'flowId': flow.id,
@@ -135,7 +135,7 @@ class _FlowViewPageState extends State<FlowViewPage> {
                     icon: const Icon(Icons.edit),
                     label: const Text('Edit Poses'),
                     onPressed: () {
-                      context.goNamed(
+                      context.pushNamed( // TODO URL doesnt update
                         'flow-edit-poses',
                         pathParameters: {
                           'flowId': flow.id,

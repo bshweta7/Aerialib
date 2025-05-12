@@ -81,8 +81,8 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Pose added successfully")),
               );
-              context.goNamed('home'); // TODO test this...
-              // TODO should this go to pose specific page instead?
+              context.goNamed('pose-library');
+              // TODO should this go to pose specific page instead? add pushNamed here?
             }
           },
           builder: (context, state) {

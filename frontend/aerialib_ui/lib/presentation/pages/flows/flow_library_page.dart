@@ -82,7 +82,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   }
 
   void _navigateToFlowPage(MediaIconEntity mediaItem) {
-    context.goNamed(
+    context.pushNamed( // TODO URL doesnt update
       'flow-view',
       pathParameters: {
         'flowId': mediaItem.data.id,
@@ -106,7 +106,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => context.goNamed('add-new-flow'),
+            onPressed: () => context.pushNamed('add-new-flow'), // TODO URL doesnt update
             tooltip: 'Add a new flow',
           ),
         ],

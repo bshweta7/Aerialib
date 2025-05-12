@@ -77,7 +77,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Saved flow information")),
       );
-      context.goNamed(
+      context.pushNamed( // TODO URL doesn't update
         'flow-edit-poses',
         pathParameters: {
           'flowId': state.flow.id,
