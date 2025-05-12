@@ -22,9 +22,6 @@ import 'package:go_router/go_router.dart';
 
 
 class FlowLibraryPage extends StatefulWidget {
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (context) => const FlowLibraryPage());
-
   const FlowLibraryPage({super.key});
 
   @override
