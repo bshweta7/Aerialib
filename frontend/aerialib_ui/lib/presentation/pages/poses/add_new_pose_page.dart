@@ -4,6 +4,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,12 +83,8 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Pose added successfully")),
               );
-              Navigator.pushAndRemoveUntil(
-                context,
-                HomePage.route(),
-                    (_) => false,
-                    // TODO should this go to pose specific page instead?
-              );
+              context.goNamed('home'); // TODO test this...
+              // TODO should this go to pose specific page instead?
             }
           },
           builder: (context, state) {

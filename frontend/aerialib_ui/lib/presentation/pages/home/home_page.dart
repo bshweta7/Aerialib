@@ -16,9 +16,6 @@ import 'feedback_form.dart';
 
 
 class HomePage extends StatelessWidget {
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (context) => const HomePage());
-
   const HomePage({super.key});
 
   @override
@@ -146,7 +143,8 @@ class HomePage extends StatelessWidget {
             // Feedback Form Navigation
             ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, SubmitFeedbackPage.route());
+                  print("PRESSED");
+                  context.goNamed('feedback');
                 },
                 child: const Text(
                     "Submit Feedback",

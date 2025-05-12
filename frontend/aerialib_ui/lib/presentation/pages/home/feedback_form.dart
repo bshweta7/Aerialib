@@ -7,9 +7,6 @@ import '../../../data/services/http_service.dart';
 class SubmitFeedbackPage extends StatefulWidget {
   const SubmitFeedbackPage({super.key});
 
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (context) => const SubmitFeedbackPage());
-
   @override
   State<SubmitFeedbackPage> createState() => _SubmitFeedbackPageState();
 }
@@ -28,6 +25,7 @@ class _SubmitFeedbackPageState extends State<SubmitFeedbackPage> {
 
     final token = authState.user.token;
     final body = {
+      // TODO add user column if it doesnt exist yet
       "type": _selectedType,
       "message": _messageController.text.trim(),
       "email": _emailController.text.trim(),

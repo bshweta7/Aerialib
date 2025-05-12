@@ -103,7 +103,6 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     // Then push FlowView again (fresh)
     // Navigator.push(context, FlowViewPage.route(updatedFlow));
 
-    Navigator.pushReplacement(context, HomePage.route());
     Navigator.push(context, FlowLibraryPage.route());
     Navigator.push(context, FlowViewPage.route(updatedFlow));
   }

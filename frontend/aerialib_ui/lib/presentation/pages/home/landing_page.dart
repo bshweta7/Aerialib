@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/presentation/pages/auth/login_page.dart';
-import 'package:frontend/presentation/pages/auth/signup_page.dart';
 import 'package:go_router/go_router.dart';
 
 class LandingPage extends StatelessWidget {
