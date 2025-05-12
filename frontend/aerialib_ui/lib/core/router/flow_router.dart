@@ -1,10 +1,10 @@
+import 'package:go_router/go_router.dart';
+import 'package:frontend/domain/entities/flow_entity.dart';
+
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_details_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
-import 'package:go_router/go_router.dart';
-
-import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
 
 
@@ -29,7 +29,6 @@ List<GoRoute> flowRoutes = [
     path: '/flows/view/:flowId',
     name: 'flow-view',
     builder: (context, state) {
-      final flowId = state.pathParameters['flowId']!;
       // final flowName = state.pathParameters['flowName']!;
       // final userName = state.pathParameters['userName']!;
       final flow = state.extra as FlowEntity;
@@ -42,7 +41,6 @@ List<GoRoute> flowRoutes = [
     path: '/flows/details/edit/:flowId',
     name: 'flow-edit-details',
     builder: (context, state) {
-      final flowId = state.pathParameters['flowId']!;
       final flow = state.extra as FlowEntity;
       return FlowEditDetailsPage(flow: flow);
     },
@@ -53,25 +51,8 @@ List<GoRoute> flowRoutes = [
     path: '/flows/poses/edit/:flowId',
     name: 'flow-edit-poses',
     builder: (context, state) {
-      final flowId = state.pathParameters['flowId']!;
       final flow = state.extra as FlowEntity;
       return FlowEditPosesPage(flow: flow);
     },
   ),
-
-  // GoRoute(
-  //   path: '/',
-  //   name: 'landing',
-  //   builder: (context, state) => const LandingPage(),
-  // ),
-  // GoRoute(
-  //   path: '/',
-  //   name: 'landing',
-  //   builder: (context, state) => const LandingPage(),
-  // ),
-  // GoRoute(
-  //   path: '/',
-  //   name: 'landing',
-  //   builder: (context, state) => const LandingPage(),
-  // ),
 ];

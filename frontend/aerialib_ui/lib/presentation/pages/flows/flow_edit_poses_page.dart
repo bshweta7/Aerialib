@@ -78,28 +78,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     print("[SaveFlow] Navigating to FlowViewPage with \${updatedFlow.poses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
 
-    // Navigator.popUntil(context, ModalRoute.withName('/flowView'));
-    // Navigator.pushReplacement(
-    //   context,
-    //   FlowViewPage.route(updatedFlow),
-    // );
-
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Navigator.pop(context); // Pop the next page
-    //   Navigator.pop(context); // Pop the next page
-    //   // Navigator.push(context, FlowViewPage.route(updatedFlow)); // Push fresh one
-    // });
-
-    // Save completed
-    // Navigator.pop(context); // pop FlowPoseEdit → returns to FlowView
-    // Navigator.pop(context); // pop FlowView → back to FlowLibrary
-
-    // Then push FlowView again (fresh)
-    // Navigator.push(context, FlowViewPage.route(updatedFlow));
-
-    // Navigator.push(context, FlowLibraryPage.route());
-    // Navigator.push(context, FlowViewPage.route(updatedFlow));
+    // TODO fix navigation stack - currently pressing back button causes it to crash.
     context.goNamed(
       'flow-view',
       pathParameters: {
@@ -118,7 +97,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Flow saved successfully!')),
           );
-          Navigator.pop(context); // Optionally go back to previous screen
+          context.pop(); // TODO do i need this?
         }
         if (state is EditFlowState && state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
