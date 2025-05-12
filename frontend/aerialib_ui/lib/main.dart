@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:window_manager/window_manager.dart';
-
-import 'package:frontend/data/services/connectivity_service.dart';
 import 'package:frontend/data/services/http_service.dart';
 
 import 'package:frontend/data/datasources/poses/pose_local_data.dart';
@@ -29,11 +27,7 @@ import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 
-import 'package:frontend/presentation/pages/home/landing_page.dart';
-import 'package:frontend/presentation/pages/home/home_page.dart';
-import 'package:frontend/presentation/pages/auth/login_page.dart';
-
-import 'core/constants/constants.dart';
+import 'core/routes/root_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/routes/app_routes.dart';
 
@@ -104,20 +98,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final ConnectivityService _connectivityService;
-
-  @override
-  void initState() {
-    super.initState();
-    _connectivityService = ConnectivityService();
-    print("[Main] InitState ran");
-  }
-
-  @override
-  void dispose() {
-    _connectivityService.stopLiveSync();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,42 +107,8 @@ class _MyAppState extends State<MyApp> {
       theme: getLightTheme(),
       darkTheme: getDarkTheme(),
       themeMode: ThemeMode.system, // TODO add toggle - .light or .dark
-      home: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-            print("[Main] Entered bloc builder");
-            print("[Main] BackendUrl: ${Constants.backendUrl}");
-
-            if (state is AuthLoggedIn) {
-              print("[Main] State is logged in");
-              // Start sync listener
-              _connectivityService.startLiveSync(
-                posesCubit: context.read<PosesCubit>(),
-                flowsCubit: context.read<FlowsCubit>(),
-                token: state.token,
-              );
-              return const HomePage();
-
-            } else if (state is AuthLoggedOut) {
-              print("[Main] State is logged out");
-              _connectivityService.stopLiveSync(); // Stop listening on logout
-              // Optionally clear any other state, go to login screen, etc.
-              // TODO return other cubits to initial state as well
-              return kIsWeb ? const LandingPage() : const LoginPage();
-
-            } else if (state is AuthLoading) {
-              print("[Main] State is loading");
-              // return const LoginPage();
-              return const Center(child: CircularProgressIndicator());
-
-            } else {
-              // Default fallback for unauthenticated
-              print("[Main] State is $state");
-              return kIsWeb ? const LandingPage() : const LoginPage();
-            }
-
-              // TODO Mobile landing page
-          }
-      ),
+      onGenerateRoute: generateRoute,
+      home: const RootRouter(),
     );
   }
 }
