@@ -1,5 +1,6 @@
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_details_page.dart';
+import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -38,15 +39,23 @@ List<GoRoute> flowRoutes = [
 
   // Edit Flow Details Page
   GoRoute(
-    // TODO add ?isShared to url - flowName only if its private, and flowId if its public? not sure....
-    path: '/flows/edit-details/:flowId',
+    path: '/flows/details/edit/:flowId',
     name: 'flow-edit-details',
     builder: (context, state) {
       final flowId = state.pathParameters['flowId']!;
-      // final flowName = state.pathParameters['flowName']!;
-      // final userName = state.pathParameters['userName']!;
       final flow = state.extra as FlowEntity;
       return FlowEditDetailsPage(flow: flow);
+    },
+  ),
+
+  // Edit Flow Poses Page
+  GoRoute(
+    path: '/flows/poses/edit/:flowId',
+    name: 'flow-edit-poses',
+    builder: (context, state) {
+      final flowId = state.pathParameters['flowId']!;
+      final flow = state.extra as FlowEntity;
+      return FlowEditPosesPage(flow: flow);
     },
   ),
 

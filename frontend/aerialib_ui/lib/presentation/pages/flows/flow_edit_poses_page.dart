@@ -24,12 +24,6 @@ class FlowEditPosesPage extends StatefulWidget {
 
   const FlowEditPosesPage({super.key, required this.flow});
 
-  static MaterialPageRoute route(FlowEntity flow) {
-    return MaterialPageRoute(
-      builder: (context) => FlowEditPosesPage(flow: flow),
-    );
-  }
-
   @override
   State<FlowEditPosesPage> createState() => _FlowEditPosesPageState();
 }

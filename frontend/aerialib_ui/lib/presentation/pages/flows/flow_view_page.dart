@@ -83,7 +83,7 @@ class _FlowViewPageState extends State<FlowViewPage> {
                 flow: flow,
                 onEdit: () {
                   context.goNamed(
-                    'flow-view',
+                    'flow-edit-details',
                     pathParameters: {
                       'flowId': flow.id,
                     },
@@ -131,7 +131,13 @@ class _FlowViewPageState extends State<FlowViewPage> {
                     icon: const Icon(Icons.edit),
                     label: const Text('Edit Poses'),
                     onPressed: () {
-                      Navigator.push(context, FlowEditPosesPage.route(flow));
+                      context.goNamed(
+                        'flow-edit-poses',
+                        pathParameters: {
+                          'flowId': flow.id,
+                        },
+                        extra: flow,
+                      );
                     },
                   ),
                 ),

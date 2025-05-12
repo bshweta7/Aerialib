@@ -9,6 +9,7 @@ import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
+import 'package:go_router/go_router.dart';
 
 class AddNewFlowPage extends StatefulWidget {
   const AddNewFlowPage({super.key});
@@ -75,7 +76,14 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Saved flow information")),
       );
-      Navigator.push(context, FlowEditPosesPage.route(state.flow));
+      context.goNamed(
+        'flow-edit-poses',
+        pathParameters: {
+          'flowId': state.flow.id,
+        },
+        extra: state.flow,
+      );
+
     } else if (state is FlowError) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${state.message}")),
