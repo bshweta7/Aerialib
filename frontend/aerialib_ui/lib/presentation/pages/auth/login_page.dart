@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 // content: Text("Could not login"),
-                content: Text(state.error), //TODO update snackbar to show more specific error message
+                content: Text(state.error), //TODO update snack bar to show more specific error message
               ),
             );
             resetPage(); // TODO test this
@@ -125,9 +125,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
                   GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(SignupPage.route());
-                    },
+                    onTap: () => context.go('/signup'),
                     child: RichText(
                         text: TextSpan(
                             text: 'Don\'t have an account? ',

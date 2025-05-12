@@ -12,9 +12,6 @@ import 'package:go_router/go_router.dart';
 
 
 class UserProfilePage extends StatefulWidget {
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (context) => const UserProfilePage());
-
   const UserProfilePage({super.key});
 
   @override

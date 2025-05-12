@@ -68,9 +68,7 @@ class LandingPage extends StatelessWidget {
                   width: 160,
                   height: 40,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(context, SignupPage.route());
-                    },
+                    onPressed: () => context.go('/signup'),
                     // style: OutlinedButton.styleFrom(
                     //   foregroundColor: const Color(0xFF3b82f6),
                     //   side: const BorderSide(color: Color(0xFF3b82f6), width: 2),

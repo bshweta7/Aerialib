@@ -8,6 +8,8 @@ import 'package:frontend/presentation/pages/home/landing_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 
+import 'auth_router.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class AuthChangeNotifier extends ChangeNotifier {
@@ -30,11 +32,7 @@ GoRouter createRouter(AuthCubit authCubit) {
         name: 'landing',
         builder: (context, state) => const LandingPage(),
       ),
-      GoRoute(
-        path: '/login',
-        name: 'login',
-        builder: (context, state) => const LoginPage(),
-      ),
+      ...authRoutes,
       GoRoute(
         path: '/home',
         name: 'home',
@@ -50,30 +48,26 @@ GoRouter createRouter(AuthCubit authCubit) {
       ),
     ],
     redirect: (context, state) {
-      final authState = authCubit.state; // Use the passed AuthCubit
+      final authState = authCubit.state;
       final isLoggedIn = authState is AuthLoggedIn;
-      // final isLoggingIn = state.fullPath == '/login';
+      final isLoggingIn = state.fullPath == '/login';
 
-      // If not logged in and not trying to log in, stay on the landing page
-      if (!isLoggedIn && state.fullPath == '/') {
-        return '/';
-      }
-
-      // TODO may need to add something here to ensure that after logout, user doesnt click back button to go back to "logged in" state.
-      // // If not logged in and trying to access any other page, redirect to login
+      // // If not logged in and not trying to log in, redirect to login
       // if (!isLoggedIn && !isLoggingIn) {
-      //   return '/login';
+      //   return '/';
       // }
       //
-      // // If not logged in AND not currently trying to log in, redirect to login
-      // if (!isLoggedIn && !isLoggingIn) {
-      //   return '/login';
+      // // If not logged in and not trying to log in, redirect to login
+      // if (!isLoggedIn && isLoggingIn) {
+      //   return '/';
       // }
-
-      // If logged in AND trying to go to the login page, redirect to home
-      if (isLoggedIn) return '/home'; // TODO may need to verify this (see && state.fullPath='/' above).
-
-      return null;
+      //
+      // // If logged in and trying to go to the root or login page, redirect to home
+      // if (isLoggedIn && (state.fullPath == '/' || isLoggingIn)) {
+      //   return '/home';
+      // }
+      return null; // Allow navigation to other routes
     },
+    // TODO may need to add something here to ensure that after logout, user doesnt click back button to go back to "logged in" state.
   );
 }

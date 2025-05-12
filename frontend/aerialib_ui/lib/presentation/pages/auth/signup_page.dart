@@ -8,9 +8,6 @@ import 'package:go_router/go_router.dart';
 
 
 class SignupPage extends StatefulWidget {
-  static MaterialPageRoute route() => MaterialPageRoute(
-      builder: (context) => const SignupPage()
-  );
   const SignupPage({super.key});
 
   @override

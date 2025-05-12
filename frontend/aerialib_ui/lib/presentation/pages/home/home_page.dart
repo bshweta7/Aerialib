@@ -1,13 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../cubit/users/auth_cubit.dart';
 import 'feedback_form.dart';
 
 
@@ -22,13 +25,23 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     print('[HomePage] Building HomePage UI');
 
+    final authState = context.watch<AuthCubit>().state;
+    String currentUsername = "guest"; // Default username
+
+    if (authState is AuthLoggedIn) {
+      currentUsername = authState.user.username;
+    }
+
     return Scaffold(
       appBar: AppBar(
           title: const Text("My Dashboard"),
           actions: [
             IconButton(
                 onPressed: () {
-                  Navigator.push(context, UserProfilePage.route());
+                  context.goNamed(
+                      'user-profile',
+                      pathParameters: {'username': currentUsername}
+                  ); // Pass the username
                 },
                 tooltip: "Visit profile page",
                 icon: const Icon(CupertinoIcons.profile_circled,
