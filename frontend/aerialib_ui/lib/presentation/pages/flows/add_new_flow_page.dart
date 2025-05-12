@@ -9,6 +9,7 @@ import 'package:frontend/core/utils/formatters.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class AddNewFlowPage extends StatefulWidget {
@@ -93,7 +94,8 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 1,
       appBar: AppBar(title: const Text("Create Flow Details")),
       body: BlocBuilder<FlowsCubit, FlowsState>(
         builder: (context, state) {

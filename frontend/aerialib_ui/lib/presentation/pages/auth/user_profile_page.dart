@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class UserProfilePage extends StatefulWidget {
@@ -16,7 +17,8 @@ class UserProfilePage extends StatefulWidget {
 class _UserProfilePage extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 3,
       appBar: AppBar(
         title: const Text("Profile"),
         // actions: [

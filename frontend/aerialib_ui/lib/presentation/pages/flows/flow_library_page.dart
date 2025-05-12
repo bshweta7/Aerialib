@@ -16,6 +16,7 @@ import 'package:frontend/presentation/widgets/filters/flow_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class FlowLibraryPage extends StatefulWidget {
@@ -98,7 +99,8 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 1,
       appBar: AppBar(
         title: const Text("Flows"),
         actions: [

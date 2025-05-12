@@ -15,6 +15,8 @@ import 'package:frontend/presentation/widgets/media_display/media_list/list_card
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
 
+import '../../widgets/nav_bar.dart';
+
 
 class FlowEditPosesPage extends StatefulWidget {
   final FlowEntity flow;
@@ -69,9 +71,9 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     await context.read<FlowsCubit>().saveFlowPoses(token: user.user.token);
     await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Saving flow...')),
-    );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text('Saving flow...')),
+    // );
     print("[SaveFlow] Navigating to FlowViewPage with ${updatedFlow.poses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
 
@@ -264,6 +266,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        bottomNavigationBar: const NavBar(currentIndex: 1),
       ),
     );
   }

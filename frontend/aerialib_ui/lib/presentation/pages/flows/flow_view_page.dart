@@ -9,6 +9,7 @@ import 'package:frontend/domain/entities/media_icon_entity.dart';
 
 import 'package:frontend/presentation/pages/flows/flow_details_sheet.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class FlowViewPage extends StatefulWidget {
@@ -72,9 +73,10 @@ class _FlowViewPageState extends State<FlowViewPage> {
 
     final mediaItems = posesToMediaIcons(poses);
 
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 1,
       appBar: AppBar(
-        title: Text("Flow Details"),
+        title: Text(flow.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),

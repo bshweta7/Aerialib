@@ -114,7 +114,7 @@ class FlowDetailsSheet extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: onEdit,
               icon: const Icon(Icons.edit),
-              label: const Text("Edit Flow"),
+              label: const Text("Edit Flow Details"),
             ),
           ),
       ],

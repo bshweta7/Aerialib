@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/domain/entities/flow_entity.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
-import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/validators.dart';
+
+import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class FlowEditDetailsPage extends StatefulWidget {
@@ -95,7 +96,8 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
+      currentIndex: 1,
       appBar: AppBar(
         title: const Text('Update Flow'),
         actions: [
