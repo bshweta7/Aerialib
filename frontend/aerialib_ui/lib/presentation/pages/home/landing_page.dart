@@ -3,8 +3,8 @@ import 'package:frontend/presentation/pages/auth/login_page.dart';
 import 'package:frontend/presentation/pages/auth/signup_page.dart';
 
 class LandingPage extends StatelessWidget {
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (context) => const LandingPage());
+  // static MaterialPageRoute route() =>
+  //     MaterialPageRoute(builder: (context) => const LandingPage());
 
   const LandingPage({super.key});
 
