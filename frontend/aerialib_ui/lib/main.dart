@@ -27,9 +27,9 @@ import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 
-import 'core/routes/root_router.dart';
-import 'core/theme/app_theme.dart';
-import 'core/routes/app_routes.dart';
+import 'core/main/root_router.dart';
+import 'core/main/app_theme.dart';
+import 'core/main/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
