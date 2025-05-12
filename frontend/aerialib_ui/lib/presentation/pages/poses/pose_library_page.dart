@@ -17,6 +17,7 @@ import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
+import 'package:go_router/go_router.dart';
 
 
 class PoseLibraryPage extends StatefulWidget {
@@ -110,9 +111,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   // Navigation
   void _navigateToPosePage(MediaIconEntity mediaItem) {
-    Navigator.push(
-      context,
-      PoseViewPage.route(mediaItem.data),
+    context.goNamed(
+      'pose-view',
+      pathParameters: {
+        'poseId': mediaItem.data.id,
+      },
+      extra: mediaItem.data,
     );
   }
 

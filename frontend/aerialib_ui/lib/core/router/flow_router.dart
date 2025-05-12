@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:frontend/domain/entities/flow_entity.dart';
 
+import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_details_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';

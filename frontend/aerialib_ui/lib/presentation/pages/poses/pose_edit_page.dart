@@ -6,6 +6,7 @@ import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/utils/validators.dart';
 
@@ -13,10 +14,6 @@ class PoseEditDetailsPage extends StatefulWidget {
   final PoseEntity pose;
 
   const PoseEditDetailsPage({super.key, required this.pose});
-
-  static MaterialPageRoute route(PoseEntity pose) => MaterialPageRoute(
-    builder: (context) => PoseEditDetailsPage(pose: pose),
-  );
 
   @override
   State<PoseEditDetailsPage> createState() => _PoseEditDetailsPageState();
@@ -92,12 +89,18 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
     await context.read<PosesCubit>().getAllPoses(token: user.user.token);
 
     // Save completed
-    Navigator.pop(context); // pop PoseEdit → returns to PoseDetails
-    Navigator.pop(context); // pop PoseDetails → back to PoseLibrary
+    // TODO Verify and add back the context.pop stuff
+    // Navigator.pop(context); // pop PoseEdit → returns to PoseDetails
+    // Navigator.pop(context); // pop PoseDetails → back to PoseLibrary
 
     // Then push PoseDetails again (fresh)
-    Navigator.push(context, PoseViewPage.route(updatedPose));
-
+    context.goNamed(
+      'pose-view',
+      pathParameters: {
+        'poseId': updatedPose.id,
+      },
+      extra: updatedPose,
+    );
   }
 
   @override

@@ -12,10 +12,6 @@ class PoseViewPage extends StatefulWidget {
 
   const PoseViewPage({super.key, required this.pose});
 
-  static MaterialPageRoute route(PoseEntity pose) => MaterialPageRoute(
-    builder: (context) => PoseViewPage(pose: pose,),
-  );
-
   @override
   State<PoseViewPage> createState() => _PoseViewPageState();
 }

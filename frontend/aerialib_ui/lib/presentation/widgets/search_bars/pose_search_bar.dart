@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
+import 'package:go_router/go_router.dart';
 
 class PoseSearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
@@ -61,9 +62,12 @@ class _PoseSearchBarWidgetState extends State<PoseSearchBarWidget> {
               if (widget.onSuggestionTapped != null) {
                 widget.onSuggestionTapped!(pose);
               } else {
-                Navigator.push(
-                  context,
-                  PoseViewPage.route(pose),
+                context.goNamed(
+                  'pose-view',
+                  pathParameters: {
+                    'poseId': pose.id,
+                  },
+                  extra: pose,
                 );
               }
             }
