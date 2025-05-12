@@ -6,6 +6,7 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../cubit/flows/flows_cubit.dart';
+import '../../cubit/users/auth_cubit.dart';
 
 
 class FlowDetailsSheet extends StatelessWidget {
@@ -59,23 +60,37 @@ class FlowDetailsSheet extends StatelessWidget {
         title: const Text("Delete Flow?"),
         content: const Text("This action cannot be undone."),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancel")),
           TextButton(
-              onPressed: () => context.goNamed('flow-library'),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+              onPressed: () => {
+                Navigator.pop(context, true),
+                // context.goNamed('flow-library')
+              },
               child: const Text("Delete")
           ),
         ],
       ),
     );
 
-    // if (confirmed == true) {
-    //   await context.read<FlowsCubit>().deleteFlow(flow.id, token);
-    //
-    //   Navigator.pop(context); // Close bottom sheet after deletion
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text("Flow deleted")),
-    //   );
-    // }
+    if (confirmed == true) {
+      final authState = context.read<AuthCubit>().state;
+      if (authState is! AuthLoggedIn) return;
+      final token = authState.user.token;
+
+      await context.read<FlowsCubit>().deleteFlow(
+          flowId: flow.id,
+          token: token
+      );
+
+      await context.read<FlowsCubit>().getAllFlows(token: token);
+
+      Navigator.pop(context); // Close the bottom sheet
+      context.goNamed('flow-library'); // Redirect to Flow Library
+
+    }
   }
 
 

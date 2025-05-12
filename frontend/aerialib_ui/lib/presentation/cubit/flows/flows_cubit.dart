@@ -256,6 +256,7 @@ class FlowsCubit extends Cubit<FlowsState> {
     required String token
   }) async {
     try {
+      print("[FlowsCubit] Deleting flow...");
       await _flowRepository.deleteFlow(flowId, token);
     } catch (e) {
       print("[FlowsCubit] Error deleting flow: $e");
