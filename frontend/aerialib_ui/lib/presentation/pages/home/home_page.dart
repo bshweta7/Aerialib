@@ -59,9 +59,7 @@ class HomePage extends StatelessWidget {
 
             // Pose Library Navigation
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, PoseLibraryPage.route());
-                },
+                onPressed: () => context.goNamed('pose-library'),
                 child: const Text(
                   "Pose Library",
                   style: TextStyle(

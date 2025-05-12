@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/router/home_router.dart';
+import 'package:frontend/core/router/pose_router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
@@ -32,6 +33,7 @@ GoRouter createRouter(AuthCubit authCubit) {
       ...authRoutes,
       ...homeRoutes,
       ...flowRoutes,
+      ...poseRoutes,
     ],
     redirect: (context, state) {
       final authState = authCubit.state;

@@ -20,10 +20,6 @@ import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 
 
 class PoseLibraryPage extends StatefulWidget {
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(
-        builder: (context) => const PoseLibraryPage(),
-      );
   const PoseLibraryPage({super.key});
 
   @override

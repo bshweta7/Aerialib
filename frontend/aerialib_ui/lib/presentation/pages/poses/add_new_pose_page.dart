@@ -11,9 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/constants/constants.dart';
 
 class AddNewPosePage extends StatefulWidget {
-  static MaterialPageRoute route() => MaterialPageRoute(
-    builder: (context) => const AddNewPosePage(),
-  );
   const AddNewPosePage({super.key});
 
   @override

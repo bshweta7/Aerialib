@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart'; // TODO modify to take in the route so itll work for all.
+import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
+import 'package:go_router/go_router.dart'; // TODO modify to take in the route so itll work for all.
+
+// TODO See how flow handles this - why does this need to exist?
 
 class AddNewPoseButton extends StatelessWidget {
   const AddNewPoseButton({super.key});
@@ -10,9 +13,8 @@ class AddNewPoseButton extends StatelessWidget {
     return IconButton(
       tooltip: 'Add new pose',
       icon: const Icon(CupertinoIcons.add),
-      onPressed: () {
-        Navigator.push(context, AddNewPosePage.route());
-      },
+      onPressed: () => context.goNamed('add-new-pose'),
+
     );
   }
 }
