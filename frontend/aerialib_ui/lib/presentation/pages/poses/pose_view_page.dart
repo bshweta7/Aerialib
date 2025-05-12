@@ -35,7 +35,7 @@ class _PoseViewPageState extends State<PoseViewPage> {
     return MainScaffold(
       currentIndex: 2,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Pose Details",
           overflow: TextOverflow.ellipsis,
         ),
