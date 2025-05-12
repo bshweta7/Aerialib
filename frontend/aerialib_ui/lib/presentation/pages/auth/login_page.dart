@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/auth/signup_page.dart';
-import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/widgets/password_field.dart';
+import 'package:go_router/go_router.dart';
 
 // TODO allow tab to go from username textbox to password textbox
 // TODO arrows don't work in textboxes?
@@ -61,11 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             );
             resetPage(); // TODO test this
           } else if (state is AuthLoggedIn) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              HomePage.route(),
-                  (_) => false,
-            );
+            context.goNamed('home'); // Navigate to the 'home' named route defined in app_router.dart
           }
         },
         builder: (context, state) {

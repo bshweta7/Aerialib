@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/core/router/auth_router.dart'; // Import auth routes
+import 'package:frontend/presentation/pages/auth/login_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/pages/home/landing_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
-// Assuming PoseViewPage and PoseEntity are in these paths
-import 'package:frontend/domain/entities/pose_entity.dart';
-
-import '../../presentation/pages/poses/pose_view_page.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -31,10 +27,14 @@ GoRouter createRouter(AuthCubit authCubit) {
     routes: [
       GoRoute(
         path: '/',
-        name: 'landing', // Add a name for easier navigation
+        name: 'landing',
         builder: (context, state) => const LandingPage(),
       ),
-      ...authRoutes, // Include the authentication routes
+      GoRoute(
+        path: '/login',
+        name: 'login',
+        builder: (context, state) => const LoginPage(),
+      ),
       GoRoute(
         path: '/home',
         name: 'home',
@@ -48,23 +48,30 @@ GoRouter createRouter(AuthCubit authCubit) {
           return FlowViewPage(flow: flow);
         },
       ),
-      GoRoute(
-        path: '/pose/view/:poseId', // Define a path parameter for poseId
-        name: 'pose_view',
-        builder: (context, state) {
-          final poseId = state.pathParameters['poseId']!;
-          final pose = state.extra as PoseEntity;
-          return PoseViewPage(pose: pose);
-        },
-      ),
     ],
     redirect: (context, state) {
-      final authState = BlocProvider.of<AuthCubit>(context).state;
+      final authState = authCubit.state; // Use the passed AuthCubit
       final isLoggedIn = authState is AuthLoggedIn;
-      final isLoggingIn = state.fullPath == '/login';
+      // final isLoggingIn = state.fullPath == '/login';
 
-      if (!isLoggedIn && !isLoggingIn) return '/login';
-      if (isLoggedIn && isLoggingIn) return '/home';
+      // If not logged in and not trying to log in, stay on the landing page
+      if (!isLoggedIn && state.fullPath == '/') {
+        return '/';
+      }
+
+      // // If not logged in and trying to access any other page, redirect to login
+      // if (!isLoggedIn && !isLoggingIn) {
+      //   return '/login';
+      // }
+      //
+      // // If not logged in AND not currently trying to log in, redirect to login
+      // if (!isLoggedIn && !isLoggingIn) {
+      //   return '/login';
+      // }
+
+      // If logged in AND trying to go to the login page, redirect to home
+      if (isLoggedIn) return '/home'; // TODO may need to verify this (see && state.fullPath='/' above).
+
       return null;
     },
   );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/presentation/pages/auth/login_page.dart';
 import 'package:frontend/presentation/pages/auth/signup_page.dart';
+import 'package:go_router/go_router.dart';
 
 class LandingPage extends StatelessWidget {
   // static MaterialPageRoute route() =>
@@ -55,7 +56,7 @@ class LandingPage extends StatelessWidget {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, LoginPage.route());
+                      context.go('/login');
                     },
                     // style: ElevatedButton.styleFrom(
                     //   backgroundColor: const Color(0xFF3b82f6),

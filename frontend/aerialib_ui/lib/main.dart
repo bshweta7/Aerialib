@@ -126,41 +126,57 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     print("[Main] Build ran");
+    final authCubit = context.read<AuthCubit>(); // Get AuthCubit instance
 
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: createRouter(authCubit), // Use MaterialApp.router and pass authCubit
       title: 'Aerialib',
-      theme: getLightTheme(), // Use the getLightTheme() function
-      darkTheme: getDarkTheme(), // Use the getDarkTheme() function
-      themeMode: ThemeMode.system, // Keep your theme mode
-      home: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-            print("[Main] Entered bloc builder");
-            print("[Main] BackendUrl: ${Constants.backendUrl}");
-
-            if (state is AuthLoggedIn) {
-              print("[Main] State is logged in");
-              _connectivityService.startLiveSync(
-                posesCubit: context.read<PosesCubit>(),
-                flowsCubit: context.read<FlowsCubit>(),
-                token: state.token,
-              );
-              return const HomePage();
-            } else if (state is AuthLoggedOut) {
-              print("[Main] State is logged out");
-              _connectivityService.stopLiveSync();
-              return const LoginPage();
-            } else if (state is AuthLoading) {
-              print("[Main] State is loading");
-              return const Center(child: CircularProgressIndicator());
-            } else {
-              print("[Main] State is $state");
-              return kIsWeb ? const LoginPage() : const LoginPage();
-            }
-          },
-      ),
+      theme: getLightTheme(),
+      darkTheme: getDarkTheme(),
+      themeMode: ThemeMode.system,
+      // The home property is no longer used with MaterialApp.router
     );
   }
 }
+
+//     return MaterialApp(
+//       title: 'Aerialib',
+//       theme: getLightTheme(), // Use the getLightTheme() function
+//       darkTheme: getDarkTheme(), // Use the getDarkTheme() function
+//       themeMode: ThemeMode.system, // Keep your theme mode
+//       home: BlocBuilder<AuthCubit, AuthState>(
+//           builder: (context, state) {
+//             print("[Main] Entered bloc builder");
+//             print("[Main] BackendUrl: ${Constants.backendUrl}");
+//
+//             if (state is AuthLoggedIn) {
+//               print("[Main] State is logged in");
+//               _connectivityService.startLiveSync(
+//                 posesCubit: context.read<PosesCubit>(),
+//                 flowsCubit: context.read<FlowsCubit>(),
+//                 token: state.token,
+//               );
+//               return const HomePage();
+//             } else if (state is AuthLoggedOut) {
+//               print("[Main] State is logged out");
+//               _connectivityService.stopLiveSync();
+//               return const LoginPage();
+//             } else if (state is AuthLoading) {
+//               print("[Main] State is loading");
+//               return const Center(child: CircularProgressIndicator());
+//             } else {
+//               print("[Main] State is $state");
+//               return kIsWeb ? const LoginPage() : const LoginPage();
+//             }
+//           },
+//       ),
+//     );
+//   }
+// }
+
+
+
+
 
 
 
