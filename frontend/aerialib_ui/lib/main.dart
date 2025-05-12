@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/pages/home/landing_page.dart';
-
 import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/data/services/connectivity_service.dart';
@@ -31,10 +29,13 @@ import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 
+import 'package:frontend/presentation/pages/home/landing_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/pages/auth/login_page.dart';
 
 import 'core/constants/constants.dart';
+import 'core/theme/app_theme.dart';
+import 'core/routes/app_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -123,100 +124,9 @@ class _MyAppState extends State<MyApp> {
     print("[Main] Build ran");
     return MaterialApp(
       title: 'Aerialib',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFB39DDB), // Lavender
-          background: const Color(0xFFFFFDF8), // Soft off-white background
-        ).copyWith(
-          primary: const Color(0xFFB39DDB), // Lavender
-          secondary: const Color(0xFF80CBC4), // Muted Teal
-        ),
-        scaffoldBackgroundColor: const Color(0xFFE4E2ED),
-        fontFamily: "Cera Pro",
-        appBarTheme: const AppBarTheme(
-          backgroundColor: const Color(0xFF3A2E58), // plum text
-          foregroundColor: Colors.white,
-          titleTextStyle: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-          iconTheme: IconThemeData(color: Colors.white),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFE3DFF5), // softer lavender backgroundColor: const Color(0xFFB39DDB), // lavender
-            foregroundColor: const Color(0xFF3A2E58), // plum text
-            shadowColor: Colors.black12,
-            elevation: 1,
-            minimumSize: const Size(double.infinity, 50),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: const BorderSide(
-                color: const Color(0xFF3A2E58), // plum text color: Color(0xFF80CBC4), // muted teal border
-                width: 2,
-              ),
-
-            ),
-            textStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.4,
-              color: Color(0xFF3A2E58),
-            ),
-          ),
-        ),
-
-        inputDecorationTheme: InputDecorationTheme(
-          contentPadding: const EdgeInsets.all(20),
-          filled: true,
-          fillColor: Colors.white,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.grey.shade300,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color(0xFFB39DDB),
-              width: 2.5,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.red, width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          border: OutlineInputBorder(
-            borderSide: const BorderSide(width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-
-        searchBarTheme: SearchBarThemeData(
-          backgroundColor: MaterialStateProperty.all(const Color(0xFFF5F3FB)), // light lavender
-          // surfaceTintColor: Colors.transparent, // removes default Material3 overlay tint
-          // shadowColor: Colors.transparent,
-          hintStyle: MaterialStateProperty.all(
-            TextStyle(color: Colors.grey[600]),
-          ),
-          textStyle: MaterialStateProperty.all(
-            const TextStyle(color: Color(0xFF3A2E58)), // deep plum text
-          ),
-          // shape: MaterialStateProperty.all(
-          //   RoundedRectangleBorder(
-          //     borderRadius: BorderRadius.circular(30),
-          //     side: const BorderSide(color: Color(0xFFB39DDB), width: 1.5),
-          //   ),
-          // ),
-        ),
-
-      ),
-      // TODO add dark mode. reference: https://api.flutter.dev/flutter/material/SearchBar-class.html
-
+      theme: getLightTheme(),
+      darkTheme: getDarkTheme(),
+      themeMode: ThemeMode.system, // TODO add toggle - .light or .dark
       home: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             print("[Main] Entered bloc builder");
@@ -250,15 +160,7 @@ class _MyAppState extends State<MyApp> {
               return kIsWeb ? const LandingPage() : const LoginPage();
             }
 
-            // } else if (kIsWeb) {
-            //     // running on the web!
-            //     return const WebLandingPage();
-            //
-            // } else {
-            //   // TODO Mobile landing page
-            //   return const LoginPage();
-            //   // NOT running on the web! You can check for additional platforms here.
-            // }
+              // TODO Mobile landing page
           }
       ),
     );
