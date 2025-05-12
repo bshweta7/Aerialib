@@ -61,95 +61,51 @@ Future<void> main() async {
   }
 
   // Set up Repos
-
   final poseRepo = PoseRepository(
-
     localDataSource: PoseLocalDataSource(),
-
     remoteDataSource: PoseRemoteDataSource(httpService: HttpService()),
-
   );
-
-
 
   final userRepo = UserRepository(
-
     localDataSource: UserLocalDataSource(),
-
     remoteDataSource: UserRemoteDataSource(httpService: HttpService()),
-
   );
-
-
 
   final flowRepo = FlowRepository(
-
     localDataSource: FlowLocalDataSource(),
-
     remoteDataSource: FlowRemoteDataSource(httpService: HttpService()),
-
   );
-
-
 
   final flowPoseRepo = FlowPoseRepository(
-
     localDataSource: FlowPoseLocalDataSource(),
-
     remoteDataSource: FlowPoseRemoteDataSource(httpService: HttpService()),
-
     poseLocalDataSource: PoseLocalDataSource(),
-
     transitionLocalDataSource: TransitionLocalDataSource(),
-
   );
-
-
 
   final mediaRepo = MediaRepository(
-
     localDataSource: MediaLocalDataSource(),
-
     remoteDataSource: MediaRemoteDataSource(httpService: HttpService()),
-
   );
 
-
   // Run app
-
   runApp(MultiBlocProvider(
-
     providers: [
-
       BlocProvider(create: (_) => AuthCubit(userRepo)),
-
       BlocProvider(create: (_) => PosesCubit(poseRepo)),
-
       BlocProvider(create: (_) => MediaCubit(mediaRepo)),
-
       BlocProvider(create: (_) => FlowsCubit(flowRepo, flowPoseRepo)),
-
     ],
-
     child: const MyApp(),
-
   ));
-
 }
 
 class MyApp extends StatefulWidget {
-
   const MyApp({super.key});
 
-
-
   @override
-
   State<MyApp> createState() => _MyAppState();
-
 }
-
-
 
 class _MyAppState extends State<MyApp> {
   late final ConnectivityService _connectivityService;
