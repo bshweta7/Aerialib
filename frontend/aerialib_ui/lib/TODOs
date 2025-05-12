@@ -5,3 +5,4 @@ TODOS
 * nav after flow creation
 * poses need to sync on flow library
 * bulk add poses
+* ensure the user doesnt have a flow that has the same name

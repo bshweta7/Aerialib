@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/utils/formatters.dart';
+import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
+import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:uuid/uuid.dart';
 import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
 
@@ -81,11 +83,28 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     print("[SaveFlow] Navigating to FlowViewPage with \${updatedFlow.poses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
 
+    // Navigator.popUntil(context, ModalRoute.withName('/flowView'));
+    // Navigator.pushReplacement(
+    //   context,
+    //   FlowViewPage.route(updatedFlow),
+    // );
+
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Navigator.pop(context); // Pop the next page
+    //   Navigator.pop(context); // Pop the next page
+    //   // Navigator.push(context, FlowViewPage.route(updatedFlow)); // Push fresh one
+    // });
+
     // Save completed
-    Navigator.pop(context); // pop FlowPoseEdit → returns to FlowView
+    // Navigator.pop(context); // pop FlowPoseEdit → returns to FlowView
     // Navigator.pop(context); // pop FlowView → back to FlowLibrary
 
     // Then push FlowView again (fresh)
+    // Navigator.push(context, FlowViewPage.route(updatedFlow));
+
+    Navigator.pushReplacement(context, HomePage.route());
+    Navigator.push(context, FlowLibraryPage.route());
     Navigator.push(context, FlowViewPage.route(updatedFlow));
   }
 

@@ -137,7 +137,11 @@ class _MyAppState extends State<MyApp> {
         appBarTheme: const AppBarTheme(
           backgroundColor: const Color(0xFF3A2E58), // plum text
           foregroundColor: Colors.white,
-          titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
           iconTheme: IconThemeData(color: Colors.white),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(

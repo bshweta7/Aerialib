@@ -52,12 +52,12 @@ class _UserProfilePage extends State<UserProfilePage> {
                   // Avatar
                   CircleAvatar(
                     radius: 40,
-                    backgroundColor: Colors.purple.shade100,
+                    backgroundColor: const Color(0xFF73649D),
                     child: Text(
                       user.username.isNotEmpty ? user.username[0].toUpperCase() : "?",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30,
-                        color: Colors.purple.shade900,
+                        color: Color(0xFFE3DFF5),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
