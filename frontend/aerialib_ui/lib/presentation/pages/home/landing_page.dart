@@ -4,9 +4,6 @@ import 'package:frontend/presentation/pages/auth/signup_page.dart';
 import 'package:go_router/go_router.dart';
 
 class LandingPage extends StatelessWidget {
-  // static MaterialPageRoute route() =>
-  //     MaterialPageRoute(builder: (context) => const LandingPage());
-
   const LandingPage({super.key});
 
   @override
@@ -55,9 +52,7 @@ class LandingPage extends StatelessWidget {
                   width: 160,
                   height: 40,
                   child: ElevatedButton(
-                    onPressed: () {
-                      context.go('/login');
-                    },
+                    onPressed: () => context.go('/login'),
                     // style: ElevatedButton.styleFrom(
                     //   backgroundColor: const Color(0xFF3b82f6),
                     //   padding: const EdgeInsets.symmetric(vertical: 16),

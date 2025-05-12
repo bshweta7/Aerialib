@@ -11,9 +11,6 @@ import 'package:go_router/go_router.dart';
 // TODO weird error message if trying to login without connection to db
 
 class LoginPage extends StatefulWidget {
-  static MaterialPageRoute route() => MaterialPageRoute(
-      builder: (context) => const LoginPage()
-  );
   const LoginPage({super.key});
 
   @override

@@ -8,6 +8,7 @@ import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 
 import 'package:frontend/presentation/pages/auth/login_page.dart';
+import 'package:go_router/go_router.dart';
 
 
 class UserProfilePage extends StatefulWidget {
@@ -83,11 +84,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                       context.read<FlowsCubit>().clearLocalFlows();
                       // TODO verify if there are any unsaved ones
                       context.read<AuthCubit>().logout();
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        LoginPage.route(),
-                            (route) => false,
-                      );
+                      context.go('/login');
                     },
                     icon: const Icon(Icons.logout),
                     label: const Text(

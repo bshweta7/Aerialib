@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/auth/login_page.dart';
 import 'package:frontend/presentation/widgets/password_field.dart';
+import 'package:go_router/go_router.dart';
 
 
 class SignupPage extends StatefulWidget {
@@ -136,9 +137,7 @@ class _SignupPageState extends State<SignupPage> {
                   const SizedBox(height: 15),
 
                   GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(LoginPage.route());
-                    },
+                    onTap: () => context.go('/login'),
                     child: RichText(
                         text: TextSpan(
                             text: 'Already have an account? ',

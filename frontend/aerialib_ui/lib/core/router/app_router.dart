@@ -59,6 +59,7 @@ GoRouter createRouter(AuthCubit authCubit) {
         return '/';
       }
 
+      // TODO may need to add something here to ensure that after logout, user doesnt click back button to go back to "logged in" state.
       // // If not logged in and trying to access any other page, redirect to login
       // if (!isLoggedIn && !isLoggingIn) {
       //   return '/login';
