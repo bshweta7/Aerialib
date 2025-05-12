@@ -7,13 +7,17 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/validators.dart';
 import 'package:frontend/core/utils/formatters.dart';
 
+import 'package:frontend/domain/entities/flow_entity.dart';
+
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class AddNewFlowPage extends StatefulWidget {
-  const AddNewFlowPage({super.key});
+  final List<FlowEntity> usersExistingFlows;
+
+  const AddNewFlowPage({super.key, required this.usersExistingFlows});
 
   @override
   State<AddNewFlowPage> createState() => _AddNewFlowPageState();
@@ -50,6 +54,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
 
     final token = authState.user.token;
     final userId = authState.user.id;
+    final flowName = nameController.text.trim();
     final level = double.tryParse(levelController.text.trim());
 
     if (level == null) {
@@ -59,8 +64,23 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       return;
     }
 
+    // /// 🔍 Check for duplicate flow name (case-insensitive)
+    // final existingFlows = widget.usersExistingFlows;
+    //
+    // final nameTaken = existingFlows.any((f) =>
+    // f.name.trim().toLowerCase() == flowName.toLowerCase() &&
+    //     f.createdBy == userId);
+    //
+    // if (nameTaken) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text("You already have a flow with that name")), // TODO this should make the flow name turn red
+    //   );
+    //   return;
+    // }
+
+    /// 🚀 Proceed to create new flow
     final state = await context.read<FlowsCubit>().createNewFlow(
-      name: nameController.text.trim(),
+      name: flowName,
       apparatus: apparatusController.text.trim(),
       description: descriptionController.text.trim(),
       teachingCues: teachingCuesController.text.trim(),
@@ -114,8 +134,24 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                     TextFormField(
                       controller: nameController,
                       decoration: const InputDecoration(labelText: 'Flow Name'),
-                      validator: requiredFieldValidator,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'This field cannot be empty';
+                        }
+
+                        final flowName = value.trim().toLowerCase();
+                        
+                        final nameTaken = widget.usersExistingFlows.any((f) =>
+                          f.name.trim().toLowerCase() == flowName);
+
+                        if (nameTaken) {
+                          return 'You already have a flow with this name';
+                        }
+
+                        return null;
+                      },
                     ),
+
                     const SizedBox(height: 10),
 
                     // Apparatus

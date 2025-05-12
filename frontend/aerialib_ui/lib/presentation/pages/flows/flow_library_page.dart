@@ -28,6 +28,7 @@ class FlowLibraryPage extends StatefulWidget {
 
 class _FlowLibraryPageState extends State<FlowLibraryPage> {
   final ScrollController _scrollController = ScrollController();
+  List<FlowEntity> _allFlows = [];
 
   // Filtering
   final bool _showFilters = false;
@@ -82,19 +83,13 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   }
 
   void _navigateToFlowPage(MediaIconEntity mediaItem) {
-    context.pushNamed( // TODO URL doesnt update
+    context.pushNamed( // TODO URL doesn't update
       'flow-view',
       pathParameters: {
         'flowId': mediaItem.data.id,
       },
       extra: mediaItem.data, // Pass the entire FlowEntity as extra
     );
-
-
-    // Navigator.push(
-    //   context,
-    //   FlowViewPage.route(mediaItem.data),
-    // );
   }
 
   @override
@@ -106,7 +101,13 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => context.pushNamed('add-new-flow'), // TODO URL doesnt update
+            onPressed: () {
+              context.pushNamed(
+                'add-new-flow',
+                extra: _allFlows, // TODO will need to filter by flows only by this user (not all that are shared with the user)
+              );
+            },
+            // TODO URL doesn't update
             tooltip: 'Add a new flow',
           ),
         ],
@@ -122,6 +123,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
           }
 
           if (state is GetFlowsSuccess) {
+            _allFlows = state.flows;
 
             // Filtering
             List<FlowEntity> filteredFlows = state.flows.where(

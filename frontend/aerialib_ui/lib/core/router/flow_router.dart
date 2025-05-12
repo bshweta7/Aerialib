@@ -20,7 +20,10 @@ List<GoRoute> flowRoutes = [
   GoRoute(
     path: '/flows/new',
     name: 'add-new-flow',
-    builder: (context, state) => const AddNewFlowPage(),
+    builder: (context, state) {
+      final flows = state.extra as List<FlowEntity>; // TODO maybe change this to a list of strings instead of flowEntity
+      return AddNewFlowPage(usersExistingFlows: flows);
+    },
   ),
 
   // Flow View Page
