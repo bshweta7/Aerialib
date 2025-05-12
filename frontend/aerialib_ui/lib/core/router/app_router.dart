@@ -37,20 +37,20 @@ GoRouter createRouter(AuthCubit authCubit) {
       final isLoggedIn = authState is AuthLoggedIn;
       final isLoggingIn = state.fullPath == '/login';
 
-      // // If not logged in and not trying to log in, redirect to login
-      // if (!isLoggedIn && !isLoggingIn) {
-      //   return '/';
-      // }
-      //
-      // // If not logged in and not trying to log in, redirect to login
-      // if (!isLoggedIn && isLoggingIn) {
-      //   return '/';
-      // }
-      //
-      // // If logged in and trying to go to the root or login page, redirect to home
-      // if (isLoggedIn && (state.fullPath == '/' || isLoggingIn)) {
-      //   return '/home';
-      // }
+      // If not logged in and not trying to log in, redirect to login
+      if (!isLoggedIn && !isLoggingIn) {
+        return '/';
+      }
+
+      // If not logged in and not trying to log in, redirect to login
+      if (!isLoggedIn && isLoggingIn) {
+        return '/login';
+      }
+
+      // If logged in and trying to go to the root or login page, redirect to home
+      if (isLoggedIn && (state.fullPath == '/' || state.fullPath == '/login')) {
+        return '/home';
+      }
       return null; // Allow navigation to other routes
     },
     // TODO may need to add something here to ensure that after logout, user doesnt click back button to go back to "logged in" state.

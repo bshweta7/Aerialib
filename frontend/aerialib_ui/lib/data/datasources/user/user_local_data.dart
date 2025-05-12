@@ -25,7 +25,7 @@ class UserLocalDataSource {
     print('[UserLocalData] Got DB instance');
 
     try {
-      final result = await db.query('user');
+      final result = await db.query(tableName);
       print('[UserLocalData] DB query result: $result');
 
       if (result.isEmpty) {
