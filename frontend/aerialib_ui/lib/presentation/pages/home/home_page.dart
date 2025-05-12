@@ -1,18 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
-import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
-import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
-import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../cubit/users/auth_cubit.dart';
-import 'feedback_form.dart';
-
+import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 
 class HomePage extends StatelessWidget {

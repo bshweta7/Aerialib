@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/conversions.dart';
@@ -10,14 +11,10 @@ import 'package:frontend/domain/entities/media_icon_entity.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
-import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
-import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
-
 import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
-import 'package:go_router/go_router.dart';
 
 
 class PoseLibraryPage extends StatefulWidget {

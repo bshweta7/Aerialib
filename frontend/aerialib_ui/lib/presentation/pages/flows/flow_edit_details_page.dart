@@ -6,9 +6,9 @@ import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/constants/constants.dart';
-import '../../../core/utils/validators.dart';
-import 'flow_view_page.dart';
+import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/core/utils/validators.dart';
+
 
 class FlowEditDetailsPage extends StatefulWidget {
   final FlowEntity flow;

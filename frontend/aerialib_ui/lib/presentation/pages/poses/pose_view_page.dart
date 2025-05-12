@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
 
-import '../../cubit/poses/poses_cubit.dart';
-import 'pose_edit_page.dart';
 
 class PoseViewPage extends StatefulWidget {
   final PoseEntity pose;

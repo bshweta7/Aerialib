@@ -1,14 +1,13 @@
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
-import 'package:frontend/presentation/pages/home/home_page.dart';
-import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/constants/constants.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+
 
 class AddNewPosePage extends StatefulWidget {
   const AddNewPosePage({super.key});

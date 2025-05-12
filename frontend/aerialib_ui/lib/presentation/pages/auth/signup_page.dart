@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/pages/auth/login_page.dart';
 import 'package:frontend/presentation/widgets/password_field.dart';
-import 'package:go_router/go_router.dart';
 
 
 class SignupPage extends StatefulWidget {

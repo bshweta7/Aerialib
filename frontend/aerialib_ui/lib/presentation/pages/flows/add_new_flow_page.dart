@@ -1,6 +1,7 @@
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/core/utils/validators.dart';
@@ -8,8 +9,7 @@ import 'package:frontend/core/utils/formatters.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
-import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
-import 'package:go_router/go_router.dart';
+
 
 class AddNewFlowPage extends StatefulWidget {
   const AddNewFlowPage({super.key});

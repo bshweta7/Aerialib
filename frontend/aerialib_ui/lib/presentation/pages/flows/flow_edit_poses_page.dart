@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/core/utils/formatters.dart';
-import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
-import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
-import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
-import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
+
+import 'package:frontend/core/utils/formatters.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/widgets/media_display/media_list/list_card.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
+import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
 
-import '../../cubit/users/auth_cubit.dart';
-import '../../widgets/media_display/media_list/list_card.dart';
-import '../poses/pose_view_page.dart';
 
 class FlowEditPosesPage extends StatefulWidget {
   final FlowEntity flow;

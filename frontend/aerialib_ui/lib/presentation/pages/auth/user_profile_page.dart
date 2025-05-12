@@ -1,14 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
-import 'package:frontend/presentation/cubit/media/media_cubit.dart';
-
-import 'package:frontend/presentation/pages/auth/login_page.dart';
-import 'package:go_router/go_router.dart';
 
 
 class UserProfilePage extends StatefulWidget {

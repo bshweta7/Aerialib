@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:frontend/core/router/auth_router.dart';
 import 'package:frontend/core/router/home_router.dart';
 import 'package:frontend/core/router/pose_router.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/core/router/flow_router.dart';
+import 'package:frontend/core/router/media_router.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/pages/auth/login_page.dart';
-import 'package:frontend/presentation/pages/home/home_page.dart';
-import 'package:frontend/presentation/pages/home/landing_page.dart';
-import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
-import 'package:frontend/domain/entities/flow_entity.dart';
 
-import 'auth_router.dart';
-import 'flow_router.dart';
-import 'media_router.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

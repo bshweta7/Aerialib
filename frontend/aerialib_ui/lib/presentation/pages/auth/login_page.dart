@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/pages/auth/signup_page.dart';
-import 'package:frontend/presentation/widgets/password_field.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/widgets/password_field.dart';
+
 
 // TODO allow tab to go from username textbox to password textbox
 // TODO arrows don't work in textboxes?

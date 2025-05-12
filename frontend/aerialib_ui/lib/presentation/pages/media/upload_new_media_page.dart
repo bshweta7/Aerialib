@@ -1,14 +1,13 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
+import 'dart:io'; // TODO different media upload pages for mobile vs web??? dart:io doesnt work for web...
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+
 
 class UploadNewMediaPage extends StatefulWidget {
   const UploadNewMediaPage({super.key});

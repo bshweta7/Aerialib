@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:frontend/presentation/pages/media/media_gallery_page.dart';
 import 'package:frontend/presentation/pages/media/upload_new_media_page.dart';
 
+
 List<GoRoute> mediaRoutes = [
   // Media Gallery Page
   GoRoute(

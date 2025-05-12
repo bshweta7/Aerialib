@@ -4,6 +4,7 @@ import 'package:frontend/presentation/pages/auth/login_page.dart';
 import 'package:frontend/presentation/pages/auth/signup_page.dart';
 import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
 
+
 List<GoRoute> authRoutes = [
   GoRoute(
     path: '/login',

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:frontend/data/services/http_service.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
-import '../../../data/services/http_service.dart';
 
 class SubmitFeedbackPage extends StatefulWidget {
   const SubmitFeedbackPage({super.key});

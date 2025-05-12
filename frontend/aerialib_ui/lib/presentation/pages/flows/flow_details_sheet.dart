@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
+
 
 class FlowDetailsSheet extends StatelessWidget {
   final FlowEntity flow;
