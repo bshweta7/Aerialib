@@ -11,9 +11,6 @@ import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 class UploadNewMediaPage extends StatefulWidget {
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (context) => const UploadNewMediaPage());
-
   const UploadNewMediaPage({super.key});
 
   @override

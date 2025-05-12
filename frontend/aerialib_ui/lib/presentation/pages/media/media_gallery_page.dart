@@ -18,13 +18,12 @@ import 'package:frontend/presentation/pages/media/upload_new_media_page.dart';
 // import 'package:frontend/presentation/widgets/filters/media_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../widgets/filters/media_filter_sheet.dart';
 // import 'package:frontend/presentation/widgets/search_bars/media_search_bar.dart';
 
 class MediaGalleryPage extends StatefulWidget {
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (context) => const MediaGalleryPage());
   const MediaGalleryPage({super.key});
 
   @override
@@ -108,9 +107,7 @@ Advanced filters (inside an expandable section or modal):
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context, UploadNewMediaPage.route());
-            },
+            onPressed: () => context.goNamed('add-new-media'),
             tooltip: 'Add new media',
           ),
         ],
