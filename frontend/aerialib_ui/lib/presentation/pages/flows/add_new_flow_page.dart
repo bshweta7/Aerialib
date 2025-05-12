@@ -11,9 +11,6 @@ import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
 
 class AddNewFlowPage extends StatefulWidget {
-  static MaterialPageRoute route() => MaterialPageRoute(
-    builder: (context) => const AddNewFlowPage(),
-  );
   const AddNewFlowPage({super.key});
 
   @override

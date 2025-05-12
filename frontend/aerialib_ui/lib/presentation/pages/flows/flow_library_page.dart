@@ -18,6 +18,7 @@ import 'package:frontend/presentation/widgets/filters/flow_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
+import 'package:go_router/go_router.dart';
 
 
 class FlowLibraryPage extends StatefulWidget {
@@ -86,10 +87,19 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   }
 
   void _navigateToFlowPage(MediaIconEntity mediaItem) {
-    Navigator.push(
-      context,
-      FlowViewPage.route(mediaItem.data),
+    context.goNamed(
+      'flow-view',
+      pathParameters: {
+        'flowId': mediaItem.data.id,
+      },
+      extra: mediaItem.data, // Pass the entire FlowEntity as extra
     );
+
+
+    // Navigator.push(
+    //   context,
+    //   FlowViewPage.route(mediaItem.data),
+    // );
   }
 
   @override
@@ -100,9 +110,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context, AddNewFlowPage.route());
-            },
+            onPressed: () => context.goNamed('add-new-flow'),
             tooltip: 'Add a new flow',
           ),
         ],
@@ -133,7 +141,6 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
             // Search suggestion list
             final List<FlowEntity> sortedFlows = List.from(state.flows)
               ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-
             // TODO - add sort by
 
             return Column(
@@ -221,6 +228,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                           ),
                         )
                       else
+
                         MediaList(
                           mediaItems: mediaIcons,
                           onMediaTap: _navigateToFlowPage,

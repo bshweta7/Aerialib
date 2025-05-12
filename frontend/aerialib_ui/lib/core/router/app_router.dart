@@ -10,6 +10,7 @@ import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 
 import 'auth_router.dart';
+import 'flow_router.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -30,6 +31,7 @@ GoRouter createRouter(AuthCubit authCubit) {
     routes: [
       ...authRoutes,
       ...homeRoutes,
+      ...flowRoutes,
     ],
     redirect: (context, state) {
       final authState = authCubit.state;

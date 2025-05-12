@@ -16,12 +16,6 @@ class FlowViewPage extends StatefulWidget {
 
   const FlowViewPage({super.key, required this.flow});
 
-  static MaterialPageRoute route(FlowEntity flow) {
-    return MaterialPageRoute(
-      builder: (context) => FlowViewPage(flow: flow),
-    );
-  }
-
   @override
   State<FlowViewPage> createState() => _FlowViewPageState();
 }

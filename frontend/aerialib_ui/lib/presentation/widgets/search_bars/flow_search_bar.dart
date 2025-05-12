@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
+import 'package:go_router/go_router.dart';
 
 class FlowSearchBarWidget extends StatefulWidget {
   final Function(String) onSearchChanged;
@@ -61,10 +62,18 @@ class _FlowSearchBarWidgetState extends State<FlowSearchBarWidget> {
               setState(() {
                 controller.closeView(flow.name);
               });
-              Navigator.push(
-                context,
-                FlowViewPage.route(flow), // Navigate directly to FlowViewPage
+
+              context.goNamed(
+                'flow-view',
+                pathParameters: {
+                  'flowId': flow.id,
+                },
+                extra: flow,
               );
+              // Navigator.push(
+              //   context,
+              //   FlowViewPage.route(flow), // Navigate directly to FlowViewPage
+              // );
             },
           );
         });

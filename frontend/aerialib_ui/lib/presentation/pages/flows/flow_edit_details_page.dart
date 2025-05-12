@@ -4,6 +4,7 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/utils/validators.dart';
@@ -82,9 +83,16 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
     await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
-    Navigator.pop(context); // Pop Edit
-    Navigator.pop(context); // Pop Details
-    Navigator.push(context, FlowViewPage.route(updatedFlow)); // Push fresh
+    // Navigator.pop(context); // Pop Edit
+    // Navigator.pop(context); // Pop Details
+    context.goNamed(
+      'flow-view',
+      pathParameters: {
+        'flowId': updatedFlow.id,
+      },
+      extra: updatedFlow,
+    );
+    // Navigator.push(context, FlowViewPage.route(updatedFlow)); // Push fresh
   }
 
 

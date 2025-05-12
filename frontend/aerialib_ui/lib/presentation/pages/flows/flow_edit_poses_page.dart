@@ -4,6 +4,7 @@ import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
 
@@ -103,8 +104,16 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     // Then push FlowView again (fresh)
     // Navigator.push(context, FlowViewPage.route(updatedFlow));
 
-    Navigator.push(context, FlowLibraryPage.route());
-    Navigator.push(context, FlowViewPage.route(updatedFlow));
+    // Navigator.push(context, FlowLibraryPage.route());
+    // Navigator.push(context, FlowViewPage.route(updatedFlow));
+    context.goNamed(
+      'flow-view',
+      pathParameters: {
+        'flowId': updatedFlow.id,
+      },
+      extra: updatedFlow,
+    );
+
   }
 
   @override
