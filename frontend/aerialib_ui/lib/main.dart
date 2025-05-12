@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Aerialib',
       theme: getLightTheme(),
       darkTheme: getDarkTheme(),
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light, // TODO fix dark theme (especially flow details modal)
     );
   }
 }

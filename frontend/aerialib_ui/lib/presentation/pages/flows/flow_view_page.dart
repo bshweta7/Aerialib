@@ -7,6 +7,7 @@ import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/core/utils/conversions.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../widgets/functional_buttons/scroll_to_top.dart';
@@ -81,8 +82,13 @@ class _FlowViewPageState extends State<FlowViewPage> {
                 context: context,
                 flow: flow,
                 onEdit: () {
-                  Navigator.pop(context); // close bottom sheet
-                  Navigator.push(context, FlowEditDetailsPage.route(flow));
+                  context.goNamed(
+                    'flow-view',
+                    pathParameters: {
+                      'flowId': flow.id,
+                    },
+                    extra: flow,
+                  );
                 },
               );
             },

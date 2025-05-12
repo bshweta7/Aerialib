@@ -1,4 +1,5 @@
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
+import 'package:frontend/presentation/pages/flows/flow_edit_details_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,17 +8,21 @@ import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
 
 
 List<GoRoute> flowRoutes = [
+  // Flow Library Page
   GoRoute(
     path: '/flows',
     name: 'flow-library',
     builder: (context, state) => const FlowLibraryPage(),
   ),
+
+  // Add New Flow Page
   GoRoute(
     path: '/flows/new',
     name: 'add-new-flow',
     builder: (context, state) => const AddNewFlowPage(),
   ),
 
+  // Flow View Page
   GoRoute(
     // TODO add ?isShared to url - flowName only if its private, and flowId if its public? not sure....
     path: '/flows/view/:flowId',
@@ -28,6 +33,20 @@ List<GoRoute> flowRoutes = [
       // final userName = state.pathParameters['userName']!;
       final flow = state.extra as FlowEntity;
       return FlowViewPage(flow: flow);
+    },
+  ),
+
+  // Edit Flow Details Page
+  GoRoute(
+    // TODO add ?isShared to url - flowName only if its private, and flowId if its public? not sure....
+    path: '/flows/edit-details/:flowId',
+    name: 'flow-edit-details',
+    builder: (context, state) {
+      final flowId = state.pathParameters['flowId']!;
+      // final flowName = state.pathParameters['flowName']!;
+      // final userName = state.pathParameters['userName']!;
+      final flow = state.extra as FlowEntity;
+      return FlowEditDetailsPage(flow: flow);
     },
   ),
 

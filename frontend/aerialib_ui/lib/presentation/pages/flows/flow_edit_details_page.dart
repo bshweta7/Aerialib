@@ -15,10 +15,6 @@ class FlowEditDetailsPage extends StatefulWidget {
 
   const FlowEditDetailsPage({super.key, required this.flow});
 
-  static MaterialPageRoute route(FlowEntity flow) => MaterialPageRoute(
-    builder: (context) => FlowEditDetailsPage(flow: flow),
-  );
-
   @override
   State<FlowEditDetailsPage> createState() => _FlowEditDetailsPageState();
 }
