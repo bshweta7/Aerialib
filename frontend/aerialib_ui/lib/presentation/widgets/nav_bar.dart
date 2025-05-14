@@ -23,10 +23,16 @@ class NavBar extends StatelessWidget {
             context.goNamed('home');
             break;
           case 1:
-            context.goNamed('flow-library');
+            context.goNamed(
+              'flow-library',
+              queryParameters: {'from': 'home'},
+            );
             break;
           case 2:
-            context.goNamed('pose-library');
+            context.goNamed(
+              'pose-library',
+              queryParameters: {'from': 'home'}, // TODO make sure this is expected -- clear the stack vs. keep history
+            );
             break;
           case 3:
             context.goNamed('user-profile');

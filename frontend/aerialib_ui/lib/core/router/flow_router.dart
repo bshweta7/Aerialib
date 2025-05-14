@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
@@ -7,13 +9,23 @@ import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
 
+import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+
+import '../../presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
+
 
 List<GoRoute> flowRoutes = [
   // Flow Library Page
   GoRoute(
     path: '/flows',
     name: 'flow-library',
-    builder: (context, state) => const FlowLibraryPage(),
+    builder: (context, state) {
+      context.read<NavHistoryCubit>().push(
+          state.uri.queryParameters['from']
+      );
+      return const FlowLibraryPage();
+    },
   ),
 
   // Add New Flow Page
@@ -21,10 +33,30 @@ List<GoRoute> flowRoutes = [
     path: '/flows/new',
     name: 'add-new-flow',
     builder: (context, state) {
-      final flows = state.extra as List<FlowEntity>; // TODO maybe change this to a list of strings instead of flowEntity
-      return AddNewFlowPage(usersExistingFlows: flows);
+      // TODO all this can happen in the page itself, not here...
+      // TODO Flows initial should have all flows in its state
+      final flowsState = context.read<FlowsCubit>().state;
+      final authState = context.read<AuthCubit>().state;
+
+      print("[FlowRouter] Builder called...");
+      if (flowsState is GetFlowsSuccess && authState is AuthLoggedIn) {
+        final userId = authState.user.id;
+        final userExistingFlows = flowsState.flows
+            .where((flow) => flow.createdBy == userId)
+            .toList();
+
+        print("[FlowRouter] Existing flows by user acquired...");
+        return AddNewFlowPage(usersExistingFlows: userExistingFlows);
+      }
+
+      // Fallback or loading
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     },
   ),
+  // TODO maybe change this to a list of strings instead of flowEntity
+
 
   // Flow View Page
   GoRoute(
@@ -32,21 +64,26 @@ List<GoRoute> flowRoutes = [
     path: '/flows/view/:flowId',
     name: 'flow-view',
     builder: (context, state) {
-      // final flowName = state.pathParameters['flowName']!;
-      // final userName = state.pathParameters['userName']!;
-      final flow = state.extra as FlowEntity;
-      return FlowViewPage(flow: flow);
-    },
+      final flowId = state.pathParameters['flowId']!;
+      return FlowPageWrapper(
+        flowId: flowId,
+        builder: (flow) => FlowViewPage(flow: flow),
+      );
+    }
   ),
+
 
   // Edit Flow Details Page
   GoRoute(
     path: '/flows/details/edit/:flowId',
     name: 'flow-edit-details',
     builder: (context, state) {
-      final flow = state.extra as FlowEntity;
-      return FlowEditDetailsPage(flow: flow);
-    },
+      final flowId = state.pathParameters['flowId']!;
+      return FlowPageWrapper(
+        flowId: flowId,
+        builder: (flow) => FlowEditDetailsPage(flow: flow),
+      );
+    }
   ),
 
   // Edit Flow Poses Page
@@ -54,8 +91,47 @@ List<GoRoute> flowRoutes = [
     path: '/flows/poses/edit/:flowId',
     name: 'flow-edit-poses',
     builder: (context, state) {
-      final flow = state.extra as FlowEntity;
-      return FlowEditPosesPage(flow: flow);
+      final flowId = state.pathParameters['flowId']!;
+      print("[FlowRouter] Builder called...");
+      return FlowPageWrapper(
+        flowId: flowId,
+        builder: (flow) => FlowEditPosesPage(flow: flow),
+        expectedState: EditFlowState,
+      );
     },
   ),
 ];
+
+
+
+class FlowPageWrapper extends StatelessWidget {
+  final String flowId;
+  final Widget Function(FlowEntity flow) builder;
+  final expectedState;
+
+  const FlowPageWrapper({
+    super.key,
+    required this.flowId,
+    required this.builder,
+    this.expectedState = GetFlowsSuccess,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<FlowsCubit>().state;
+
+    print("[FlowRouter] State is $state");
+    if (state is! GetFlowsSuccess || state is! EditFlowState) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final flow = state.flows.firstWhere(
+          (f) => f.id == flowId,
+      orElse: () => throw Exception('Flow not found'),
+    );
+
+    return builder(flow);
+  }
+}

@@ -17,6 +17,7 @@ import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.d
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
+import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 
 
 class FlowLibraryPage extends StatefulWidget {
@@ -97,6 +98,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
     return MainScaffold(
       currentIndex: 1,
       appBar: AppBar(
+        leading: const SmartBackButton(),
         title: const Text("Flows"),
         actions: [
           IconButton(

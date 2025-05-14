@@ -82,7 +82,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                 const SnackBar(content: Text("Pose added successfully")),
               );
               context.goNamed('pose-library');
-              // TODO should this go to pose specific page instead? add pushNamed here?
+              // TODO update this to go back to pose-specific page instead, and make sure that add new pose page was not added to the nav stack
             }
           },
           builder: (context, state) {

@@ -107,7 +107,12 @@ class HomePage extends StatelessWidget {
 
             // Flow Library Navigation
             ElevatedButton(
-                onPressed: () => context.goNamed('flow-library'),
+                onPressed: () {
+                  context.goNamed(
+                    'flow-library',
+                    queryParameters: {'from': 'home'},
+                  );
+                },
                 child: const Text(
                     "Flow Library",
                     style: TextStyle(
