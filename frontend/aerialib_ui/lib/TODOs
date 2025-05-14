@@ -1,7 +1,11 @@
 TODOS
 
+* delete flow might not work
 * easy move between login and signup page
 * nav after flow creation
-* poses need to sync on flow library
 * bulk add poses
+
+
+
+DONE
 * ensure the user doesnt have a flow that has the same name

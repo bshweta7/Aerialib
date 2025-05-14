@@ -25,6 +25,7 @@ String capitalizeFirstLetter(String text) {
 }
 
 String formatNameFromPath(String path) {
+  // TODO capitalize Each Word (not just first one)
   // Replace - with spaces:
   String formattedName = path.replaceAll('-', ' ');
 
