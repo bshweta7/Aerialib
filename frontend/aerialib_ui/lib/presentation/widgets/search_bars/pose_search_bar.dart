@@ -8,6 +8,7 @@ class PoseSearchBarWidget extends StatefulWidget {
   final List<PoseEntity> suggestionList;
   final Function(PoseEntity)? onSuggestionTapped;
   final String? hintText;
+  final String fromPage;
 
   const PoseSearchBarWidget({
     super.key,
@@ -15,6 +16,7 @@ class PoseSearchBarWidget extends StatefulWidget {
     required this.suggestionList,
     this.onSuggestionTapped,
     this.hintText,
+    required this.fromPage,
   });
 
   @override
@@ -65,7 +67,7 @@ class _PoseSearchBarWidgetState extends State<PoseSearchBarWidget> {
                 context.goNamed(
                   'pose-view',
                   pathParameters: {'poseId': pose.id},
-                  queryParameters: {'from': 'pose-library'}, // TODO this needs to be passed into the widget so it works for multiple "from" sources
+                  queryParameters: {'from': widget.fromPage},
                 );
               }
             }

@@ -193,6 +193,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             hintText: 'Search Poses',
                             onSearchChanged: _updateSearchQuery,
                             suggestionList: sortedPoses,
+                            fromPage: 'pose-library',
                           ),
                         ),
 

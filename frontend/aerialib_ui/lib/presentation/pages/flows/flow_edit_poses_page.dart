@@ -143,6 +143,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                       suggestionList: availablePoses,
                       onSuggestionTapped: _addPoseToFlow,
                       hintText: 'Add new pose',
+                      fromPage: 'flow-edit-poses',
                     ),
                   ),
 
