@@ -8,7 +8,7 @@ class PoseSearchBarWidget extends StatefulWidget {
   final List<PoseEntity> suggestionList;
   final Function(PoseEntity)? onSuggestionTapped;
   final String? hintText;
-  final String fromPage;
+  final String? fromPage;
 
   const PoseSearchBarWidget({
     super.key,
@@ -16,7 +16,7 @@ class PoseSearchBarWidget extends StatefulWidget {
     required this.suggestionList,
     this.onSuggestionTapped,
     this.hintText,
-    required this.fromPage,
+    this.fromPage,
   });
 
   @override

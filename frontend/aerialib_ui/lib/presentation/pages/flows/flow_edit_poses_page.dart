@@ -141,7 +141,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                       suggestionList: availablePoses,
                       onSuggestionTapped: _addPoseToFlow,
                       hintText: 'Add new pose',
-                      fromPage: 'flow-edit-poses', // TODO may need to be null, or pop if needed? Otherwise, this isn't a problem if the search bar shows pop up modal - might need a second option to show the modal and not the full page?
+                      // fromPage: 'flow-edit-poses', // TODO may need to be null, or pop if needed? Otherwise, this isn't a problem if the search bar shows pop up modal - might need a second option to show the modal and not the full page?
                     ),
                   ),
 
