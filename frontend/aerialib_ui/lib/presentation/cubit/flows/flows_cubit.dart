@@ -71,7 +71,7 @@ class FlowsCubit extends Cubit<FlowsState> {
     try {
       emit(const FlowLoading());
 
-      // Step 1: Get flow headers (no poses)
+      // Step 1: Get flow details (no poses)
       List<FlowEntity> flows = await _flowRepository.getAllFlowDetails();
 
       // Step 2: Get all flow poses

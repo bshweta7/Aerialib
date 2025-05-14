@@ -71,13 +71,20 @@ flowRouter.get("/", auth, async (req: AuthRequest, res) => {
 
 flowRouter.delete("/:flowId", auth, async (req: AuthRequest, res) => {
     try {
-        const { flowId }: { flowId: string } = req.body;
-        await db.delete(flowsTable).where(eq(flowsTable.id, flowId));
+        const flowId = req.params.flowId; // Get the flow ID from the URL
+        console.log("[FlowRouter] Deleting flow with ID:", flowId);
+        let result = await db.delete(flowsTable).where(eq(flowsTable.id, flowId));
+        console.log("[FlowRouter] Result:", result);
 
-        res.json(true);
+        if (result.rowCount == 1) {
+            res.json(true);
+        } else {
+            res.status(500).json({ error: `[FlowRouter] Deletion count not equal to 1. Row count ${result.rowCount}` });
+        }
 
     } catch (e) {
-        res.status(500).json({ error: e })
+        console.error("[FlowRouter] Error getting flows:", e);
+        res.status(500).json({ error: e });
     }
 });
 

@@ -54,6 +54,7 @@ class FlowDetailsSheet extends StatelessWidget {
   }
 
   Future<void> _confirmDeleteFlow(BuildContext context) async {
+    print('[FlowDetailsSheet] Showed confirmation popup');
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -73,6 +74,7 @@ class FlowDetailsSheet extends StatelessWidget {
     );
 
     if (confirmed == true) {
+      print('[FlowDetailsSheet] Deleting flow...');
       final authState = context.read<AuthCubit>().state;
       if (authState is! AuthLoggedIn) return;
       final token = authState.user.token;
@@ -82,6 +84,7 @@ class FlowDetailsSheet extends StatelessWidget {
           token: token
       );
 
+      print('[FlowDetailsSheet] Re-fetching latest flow list');
       await context.read<FlowsCubit>().getAllFlows(token: token);
 
       Navigator.pop(context); // Close the bottom sheet
