@@ -74,7 +74,12 @@ class HomePage extends StatelessWidget {
 
             // Pose Library Navigation
             ElevatedButton(
-                onPressed: () => context.goNamed('pose-library'),
+                onPressed: () {
+                  context.goNamed(
+                    'pose-library',
+                    queryParameters: {'from': 'home'},
+                  );
+                },
                 child: const Text(
                   "Pose Library",
                   style: TextStyle(

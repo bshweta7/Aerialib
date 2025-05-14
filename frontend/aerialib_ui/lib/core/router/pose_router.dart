@@ -1,41 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/domain/entities/pose_entity.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
+
 import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_edit_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
 import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
 
 
+
 List<GoRoute> poseRoutes = [
-  // Pose Library Page
+  /// Pose Library Page
   GoRoute(
     path: '/poses',
     name: 'pose-library',
-    builder: (context, state) => const PoseLibraryPage(),
+    builder: (context, state) {
+      final from = state.uri.queryParameters['from'];
+      if (from != null) {
+        final navHistory = context.read<NavHistoryCubit>();
+        navHistory.push(from);
+      }
+
+      return const PoseLibraryPage();
+    },
   ),
 
-  // Add New Pose Page
+
+  /// Add New Pose Page
   GoRoute(
     path: '/poses/new',
     name: 'add-new-pose',
     builder: (context, state) => const AddNewPosePage(),
+    // TODO update this with smart button and nav History (see pose library)
   ),
 
-  // View Pose Page
+
+  /// View Pose Page
   GoRoute(
     path: '/poses/view/:poseId',
     name: 'pose-view',
     builder: (context, state) {
       final poseId = state.pathParameters['poseId']!;
+      final from = state.uri.queryParameters['from'];
+
       final posesState = context.read<PosesCubit>().state;
 
       if (posesState is GetPosesSuccess) {
         final pose = posesState.poses.firstWhere((p) => p.id == poseId);
-        return PoseViewPage(pose: pose);
+        return PoseViewPage(
+          pose: pose,
+          from: from,
+        );
       }
 
       // Fallback or loading
@@ -46,7 +65,8 @@ List<GoRoute> poseRoutes = [
     },
   ),
 
-  // Edit Pose Page
+
+  /// Edit Pose Page
   GoRoute(
     path: '/poses/edit/:poseId',
     name: 'pose-edit',
@@ -54,5 +74,6 @@ List<GoRoute> poseRoutes = [
       final pose = state.extra as PoseEntity;
       return PoseEditDetailsPage(pose:pose);
     },
+    // TODO update this with smart button and nav History (see pose library)
   ),
 ];

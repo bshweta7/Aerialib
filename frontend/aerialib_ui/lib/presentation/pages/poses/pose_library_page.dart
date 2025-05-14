@@ -16,6 +16,7 @@ import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.d
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
+import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 
 
 class PoseLibraryPage extends StatefulWidget {
@@ -111,9 +112,8 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   void _navigateToPosePage(MediaIconEntity mediaItem) {
     context.goNamed(
       'pose-view',
-      pathParameters: {
-        'poseId': mediaItem.data.id,
-      },
+      pathParameters: {'poseId': mediaItem.data.id},
+      queryParameters: {'from': 'pose-library'}, // TODO update
     );
   }
 
@@ -122,6 +122,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     return MainScaffold(
         currentIndex: 2,
         appBar: AppBar(
+          leading: const SmartBackButton(),
           title: const Text("Poses"),
           // actions: [
           //   IconButton(
