@@ -16,7 +16,7 @@ import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
 
 List<GoRoute> flowRoutes = [
-  // Flow Library Page
+  /// Flow Library Page
   GoRoute(
     path: '/flows',
     name: 'flow-library',
@@ -28,18 +28,21 @@ List<GoRoute> flowRoutes = [
     },
   ),
 
-  // Add New Flow Page
+
+  /// Add New Flow Page
   GoRoute(
     path: '/flows/new',
     name: 'add-new-flow',
     builder: (context, state) {
-        return const AddNewFlowPage();
+      context.read<NavHistoryCubit>().push(
+          state.uri.queryParameters['from']
+      );
+      return const AddNewFlowPage();
     },
   ),
-  // TODO maybe change this to a list of strings instead of flowEntity
 
 
-  // Flow View Page
+  /// Flow View Page
   GoRoute(
     // TODO add ?isShared to url - flowName only if its private, and flowId if its public? not sure....
     path: '/flows/view/:flowId',
@@ -54,7 +57,7 @@ List<GoRoute> flowRoutes = [
   ),
 
 
-  // Edit Flow Details Page
+  /// Edit Flow Details Page
   GoRoute(
     path: '/flows/details/edit/:flowId',
     name: 'flow-edit-details',
@@ -67,7 +70,8 @@ List<GoRoute> flowRoutes = [
     }
   ),
 
-  // Edit Flow Poses Page
+
+  /// Edit Flow Poses Page
   GoRoute(
     path: '/flows/poses/edit/:flowId',
     name: 'flow-edit-poses',

@@ -104,12 +104,11 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              context.pushNamed(
+              context.goNamed(
                 'add-new-flow',
-                extra: _allFlows, // TODO will need to filter by flows only by this user (not all that are shared with the user)
+                queryParameters: {'from': 'flow-library'},
               );
             },
-            // TODO URL doesn't update
             tooltip: 'Add a new flow',
           ),
         ],

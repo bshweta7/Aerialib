@@ -12,6 +12,7 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
+import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 
 
 class AddNewFlowPage extends StatefulWidget {
@@ -107,7 +108,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       );
     } else if (state is FlowError) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: \${state.message}")),
+        SnackBar(content: Text("Error: ${state.message}")),
       );
     }
   }
@@ -116,7 +117,10 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
   Widget build(BuildContext context) {
     return MainScaffold(
       currentIndex: 1,
-      appBar: AppBar(title: const Text("Create Flow Details")),
+      appBar: AppBar(
+          leading: const SmartBackButton(),
+          title: const Text("Create New Flow - Details")
+      ),
       body: BlocBuilder<FlowsCubit, FlowsState>(
         builder: (context, state) {
           if (state is FlowLoading) {
