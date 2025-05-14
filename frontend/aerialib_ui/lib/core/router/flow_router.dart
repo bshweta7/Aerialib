@@ -33,26 +33,7 @@ List<GoRoute> flowRoutes = [
     path: '/flows/new',
     name: 'add-new-flow',
     builder: (context, state) {
-      // TODO all this can happen in the page itself, not here...
-      // TODO Flows initial should have all flows in its state
-      final flowsState = context.read<FlowsCubit>().state;
-      final authState = context.read<AuthCubit>().state;
-
-      print("[FlowRouter] Builder called...");
-      if (flowsState is GetFlowsSuccess && authState is AuthLoggedIn) {
-        final userId = authState.user.id;
-        final userExistingFlows = flowsState.flows
-            .where((flow) => flow.createdBy == userId)
-            .toList();
-
-        print("[FlowRouter] Existing flows by user acquired...");
-        return AddNewFlowPage(usersExistingFlows: userExistingFlows);
-      }
-
-      // Fallback or loading
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+        return const AddNewFlowPage();
     },
   ),
   // TODO maybe change this to a list of strings instead of flowEntity

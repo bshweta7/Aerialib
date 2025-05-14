@@ -15,9 +15,7 @@ import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
 
 class AddNewFlowPage extends StatefulWidget {
-  final List<FlowEntity> usersExistingFlows;
-
-  const AddNewFlowPage({super.key, required this.usersExistingFlows});
+  const AddNewFlowPage({super.key});
 
   @override
   State<AddNewFlowPage> createState() => _AddNewFlowPageState();
@@ -33,6 +31,23 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
   final progressionsController = TextEditingController();
   final apparatusController = TextEditingController();
   final levelController = TextEditingController();
+
+  List<FlowEntity> userFlows = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    final authState = context.read<AuthCubit>().state;
+    final flowsState = context.read<FlowsCubit>().state;
+
+    if (authState is AuthLoggedIn && flowsState is GetFlowsSuccess) {
+      final userId = authState.user.id;
+      userFlows = flowsState.flows
+          .where((flow) => flow.createdBy == userId)
+          .toList();
+    }
+  }
 
   @override
   void dispose() {
@@ -64,21 +79,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       return;
     }
 
-    // /// 🔍 Check for duplicate flow name (case-insensitive)
-    // final existingFlows = widget.usersExistingFlows;
-    //
-    // final nameTaken = existingFlows.any((f) =>
-    // f.name.trim().toLowerCase() == flowName.toLowerCase() &&
-    //     f.createdBy == userId);
-    //
-    // if (nameTaken) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text("You already have a flow with that name")), // TODO this should make the flow name turn red
-    //   );
-    //   return;
-    // }
-
-    /// 🚀 Proceed to create new flow
+    /// Proceed to create new flow
     final state = await context.read<FlowsCubit>().createNewFlow(
       name: flowName,
       apparatus: apparatusController.text.trim(),
@@ -97,17 +98,16 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Saved flow information")),
       );
-      context.pushNamed( // TODO URL doesn't update
+      context.pushNamed(
         'flow-edit-poses',
         pathParameters: {
           'flowId': state.flow.id,
         },
         extra: state.flow,
       );
-
     } else if (state is FlowError) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${state.message}")),
+        SnackBar(content: Text("Error: \${state.message}")),
       );
     }
   }
@@ -130,7 +130,6 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                 key: formKey,
                 child: Column(
                   children: [
-                    // Name
                     TextFormField(
                       controller: nameController,
                       decoration: const InputDecoration(labelText: 'Flow Name'),
@@ -140,9 +139,8 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                         }
 
                         final flowName = value.trim().toLowerCase();
-                        
-                        final nameTaken = widget.usersExistingFlows.any((f) =>
-                          f.name.trim().toLowerCase() == flowName);
+                        final nameTaken = userFlows.any((f) =>
+                        f.name.trim().toLowerCase() == flowName);
 
                         if (nameTaken) {
                           return 'You already have a flow with this name';
@@ -151,10 +149,7 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                         return null;
                       },
                     ),
-
                     const SizedBox(height: 10),
-
-                    // Apparatus
                     DropdownButtonFormField<String>(
                       value: apparatusController.text.isNotEmpty
                           ? apparatusController.text
@@ -170,12 +165,11 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                       validator: requiredFieldValidator,
                     ),
                     const SizedBox(height: 10),
-
-                    // Level
                     TextFormField(
                       controller: levelController,
                       decoration: const InputDecoration(labelText: 'Level'),
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'This field cannot be empty';
@@ -187,35 +181,34 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
                       },
                     ),
                     const SizedBox(height: 10),
-
                     TextFormField(
                       controller: descriptionController,
-                      decoration: const InputDecoration(labelText: 'Description'),
+                      decoration:
+                      const InputDecoration(labelText: 'Description'),
                       maxLines: 2,
                     ),
                     const SizedBox(height: 10),
-
                     TextFormField(
                       controller: teachingCuesController,
-                      decoration: const InputDecoration(labelText: 'Teaching Cues'),
+                      decoration:
+                      const InputDecoration(labelText: 'Teaching Cues'),
                       maxLines: 2,
                     ),
                     const SizedBox(height: 10),
-
                     TextFormField(
                       controller: safetyCuesController,
-                      decoration: const InputDecoration(labelText: 'Safety Cues'),
+                      decoration:
+                      const InputDecoration(labelText: 'Safety Cues'),
                       maxLines: 2,
                     ),
                     const SizedBox(height: 10),
-
                     TextFormField(
                       controller: progressionsController,
-                      decoration: const InputDecoration(labelText: 'Progressions'),
+                      decoration:
+                      const InputDecoration(labelText: 'Progressions'),
                       maxLines: 2,
                     ),
                     const SizedBox(height: 20),
-
                     ElevatedButton(
                       onPressed: _onAddFlowPressed,
                       child: const Text("Add Poses"),
