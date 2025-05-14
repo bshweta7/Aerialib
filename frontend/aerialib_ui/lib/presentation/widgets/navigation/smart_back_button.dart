@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
+import '../../../core/utils/formatters.dart';
+
 class SmartBackButton extends StatelessWidget {
   final String? fallbackRouteName;
   final IconData? icon;
@@ -12,9 +14,9 @@ class SmartBackButton extends StatelessWidget {
 
   const SmartBackButton({
     super.key,
-    this.fallbackRouteName='home',
+    this.fallbackRouteName = 'home',
     this.icon = Icons.arrow_back,
-    this.color,
+    this.color = Colors.white,
   });
 
   @override
@@ -22,20 +24,24 @@ class SmartBackButton extends StatelessWidget {
     return BlocBuilder<NavHistoryCubit, List<String>>(
       builder: (context, history) {
         final canPop = history.isNotEmpty;
+        final previewRoute = canPop ? history.last : fallbackRouteName;
 
         return IconButton(
-          icon: Icon(icon, color: color ?? Theme.of(context).iconTheme.color),
-          tooltip: 'Go Back',
-          onPressed: canPop
-              ? () {
-            final routeName = context.read<NavHistoryCubit>().pop();
-            if (routeName != null) {
-              context.goNamed(routeName);
+            icon: Icon(icon, color: color ?? Theme.of(context).iconTheme.color),
+            tooltip: previewRoute != null
+                ? 'Back to ${formatNameFromPath(previewRoute)}'
+                : 'No previous route',
+            onPressed: canPop
+                ? () {
+              final routeName = context.read<NavHistoryCubit>().pop();
+              if (routeName != null) {
+                context.goNamed(routeName);
+              }
             }
-          }
-              : fallbackRouteName != null
-              ? () => context.goNamed(fallbackRouteName!)
-              : null,
+                : fallbackRouteName != null
+                ? () => context.goNamed(fallbackRouteName!)
+                : null,
+
         );
       },
     );

@@ -23,3 +23,10 @@ String capitalizeFirstLetter(String text) {
   return text[0].toUpperCase() +
       text.substring(1);
 }
+
+String formatNameFromPath(String path) {
+  // Replace - with spaces:
+  String formattedName = path.replaceAll('-', ' ');
+
+  return capitalizeFirstLetter(formattedName);
+}
