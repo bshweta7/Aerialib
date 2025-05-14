@@ -32,6 +32,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/media/media_cubit.dart';
+import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,6 +86,7 @@ Future<void> main() async {
       BlocProvider(create: (_) => PosesCubit(poseRepo)),
       BlocProvider(create: (_) => MediaCubit(mediaRepo)),
       BlocProvider(create: (_) => FlowsCubit(flowRepo, flowPoseRepo)),
+      BlocProvider(create: (_) => NavHistoryCubit()),
     ],
     child: const MyApp(),
   ));
