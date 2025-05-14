@@ -47,6 +47,26 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
 
+            const Text(
+              "📚 Welcome to Aerialib!",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+
+            const Text(
+              "Organize your aerial flows, explore new poses in the library, and build your own routines — all in one place.",
+              style: TextStyle(
+                // fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+
             // ElevatedButton(
             //     onPressed: _syncPoses,
             //     child: const Text("Sync Poses")
@@ -91,34 +111,8 @@ class HomePage extends StatelessWidget {
                     )
                 )
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(height: 30,),
 
-            const SizedBox(height:30),
-
-            const Text(
-              "More Features Coming Soon... 🙂",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                // color: Colors.black,
-                fontSize: 24,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: CachedNetworkImage(
-                imageUrl: "${Constants.backendUrl}/media/data/default/under_construction_gpt.png",
-                width: 300,
-                height: 300,
-                fit: BoxFit.contain,
-                placeholder: (context, url) => const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error, size: 50, color: Colors.red),
-              ),
-            ),
-
-            const SizedBox(height: 10,),
 
             const Text(
               "Have an idea or found a bug? We'd love to hear from you!",
@@ -145,6 +139,35 @@ class HomePage extends StatelessWidget {
                 )
             ),
             const SizedBox(height: 10,),
+
+            const SizedBox(height:30),
+
+            const Text(
+              "More Features Coming Soon... 🙂",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                // color: Colors.black,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: CachedNetworkImage(
+                imageUrl: "${Constants.backendUrl}/media/data/default/under_construction_gpt.png",
+                width: 300,
+                height: 300,
+                fit: BoxFit.contain,
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error, size: 50, color: Colors.red),
+              ),
+            ),
+
+            const SizedBox(height: 10,),
+
+
 
 
 
