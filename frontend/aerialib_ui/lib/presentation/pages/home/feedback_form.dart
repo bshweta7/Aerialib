@@ -5,6 +5,7 @@ import 'package:frontend/data/services/http_service.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
+// TODO move this page to user profile after beta release
 
 class SubmitFeedbackPage extends StatefulWidget {
   const SubmitFeedbackPage({super.key});
@@ -27,7 +28,6 @@ class _SubmitFeedbackPageState extends State<SubmitFeedbackPage> {
 
     final token = authState.user.token;
     final body = {
-      // TODO add user column if it doesnt exist yet
       "type": _selectedType,
       "message": _messageController.text.trim(),
       "email": _emailController.text.trim(),
@@ -106,7 +106,16 @@ class _SubmitFeedbackPageState extends State<SubmitFeedbackPage> {
                 ElevatedButton(
                   onPressed: _submitFeedback,
                   child: const Text("Submit Feedback"),
-                )
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "This is an early beta release, "
+                      "and your thoughts will help shape the future of the app. "
+                      "No suggestion is too small — feel free to share anything "
+                      "from the name, branding, or color scheme to feature ideas "
+                      "or bugs you’ve noticed.",
+                  style: TextStyle(fontSize: 16),
+                ),
               ],
             ),
           ),
