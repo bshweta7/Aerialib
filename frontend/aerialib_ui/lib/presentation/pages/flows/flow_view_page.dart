@@ -8,6 +8,8 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/media_icon_entity.dart';
 
 import 'package:frontend/presentation/pages/flows/flow_details_sheet.dart';
+import 'package:frontend/presentation/pages/poses/pose_view_sheet.dart';
+
 import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
@@ -51,12 +53,9 @@ class _FlowViewPageState extends State<FlowViewPage> {
   }
 
   void _navigateToPosePage(BuildContext context, MediaIconEntity mediaItem) {
-    context.goNamed(
-      'pose-view',
-      pathParameters: {'poseId': mediaItem.data.id},
-      queryParameters: {'from': 'flow-view'},
-      // TODO may need update if it also needs to pass flow ID to get back
-      // TODO should this actually show a bottom modal pop up instead of the full page?
+    PoseViewSheet.show(
+      context: context,
+      pose: mediaItem.data,
     );
   }
 

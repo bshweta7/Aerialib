@@ -11,6 +11,7 @@ import 'package:frontend/domain/entities/pose_entity.dart';
 
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/pages/poses/pose_view_sheet.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/list_card.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
@@ -228,15 +229,12 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                               title: flowPose.pose.name,
                               subtitle: 'Level ${flowPose.pose.level} | ${capitalizeFirstLetter(flowPose.pose.apparatus)}',
                               imageUrl: '/${flowPose.pose.primaryMediaPath}',
-                              // onTapFunction: () {
-                              //   context.goNamed(
-                              //     'pose-view',
-                              //     pathParameters: {'poseId': flowPose.pose.id},
-                              //     queryParameters: {'from': 'flow-edit-poses'},
-                              //     // TODO may need update if it also needs to pass flow ID to get back
-                              //     // TODO should this actually show a bottom modal pop up instead of the full page?
-                              //   );
-                              // },
+                              onTapFunction: () {
+                                PoseViewSheet.show(
+                                  context: context,
+                                  pose: flowPose.pose,
+                                );
+                              },
                             ),
                           ),
                         )
