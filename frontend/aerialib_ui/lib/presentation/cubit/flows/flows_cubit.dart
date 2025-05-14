@@ -101,23 +101,22 @@ class FlowsCubit extends Cubit<FlowsState> {
   Future<void> syncFlowDetails({required String token}) async {
     if (_isSyncing) return;
     _isSyncing = true;
-
-    print("[FlowsCubit] Starting one-shot sync of flow details...");
+    // print("[FlowsCubit] Starting one-shot sync of flow details...");
 
     try {
+      print('[FlowsCubit] Syncing flow details local to remote...');
       await _flowRepository.syncLocalToRemote(token);
-      print('[FlowsCubit] Synced local to remote.');
 
+      print('[FlowsCubit] Syncing flow details remote to local...');
       await _flowRepository.syncRemoteToLocal(token);
-      print('[FlowsCubit] Synced remote to local.');
 
-      final updatedFlows = await _flowRepository.getAllFlowDetails();
-      emit(GetFlowsSuccess(updatedFlows));
     } catch (e) {
-      print('[FlowsCubit] Sync error: $e');
-      emit(FlowError('[FlowsCubit] Sync error: $e'));
+      print('[FlowsCubit] Sync error for flow details: $e');
+      emit(FlowError('[FlowsCubit] Sync error for flow details: $e'));
+
     } finally {
       _isSyncing = false;
+
     }
   }
 
@@ -126,29 +125,31 @@ class FlowsCubit extends Cubit<FlowsState> {
     if (_isSyncing) return;
     _isSyncing = true;
 
-    print("[FlowsCubit] Starting one-shot sync of flow poses...");
-
     try {
+      print('[FlowsCubit] Syncing flow poses local to remote...');
       await _flowPoseRepository.syncLocalToRemote(token);
-      print('[FlowsCubit] Synced local to remote.');
 
+      print('[FlowsCubit] Syncing flow poses remote to local...');
       await _flowPoseRepository.syncRemoteToLocal(token);
-      print('[FlowsCubit] Synced remote to local.');
 
-      // final updatedFlows = await _flowPoseRepository.getAllFlowPoses();
-      // emit(GetFlowsSuccess(updatedFlows));
     } catch (e) {
-      print('[FlowsCubit] Sync error: $e');
-      emit(FlowError('[FlowsCubit] Sync error: $e'));
+      print('[FlowsCubit] Sync error for flow poses: $e');
+      emit(FlowError('[FlowsCubit] Sync error for flow poses: $e'));
+
     } finally {
       _isSyncing = false;
     }
   }
 
   Future<void> syncFlows({required String token}) async {
+    print("[FlowsCubit] Starting one-shot sync of flows...");
     await syncFlowDetails(token: token);
     await syncFlowPoses(token: token);
+
+    final updatedFlows = await _flowRepository.getAllFlowDetails();
     print("[FlowsCubit] Flows sync complete.");
+
+    emit(GetFlowsSuccess(updatedFlows));
   }
 
 

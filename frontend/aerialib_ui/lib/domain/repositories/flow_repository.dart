@@ -93,13 +93,16 @@ class FlowRepository {
       flows: unsynced,
     );
 
-    print("[FlowRepository] Synced flows to remote");
-
     if (success) {
       for (final flow in unsynced) {
         await localDataSource.setSyncedStatus(flow.id, 1);
       }
     }
+
+    print("[FlowRepository] Synced flows to remote");
+    print("[FlowRepository] Success $success");
+
+
   }
 
   /// Update a flow remotely and locally

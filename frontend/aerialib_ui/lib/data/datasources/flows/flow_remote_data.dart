@@ -93,12 +93,12 @@ class FlowRemoteDataSource {
       return map;
     }).toList();
 
-    print('[FlowRemoteDataSource] Sync payload:');
-    for (final map in flowListInMap) {
-      print(map.keys);
-    }
+    print('[FlowRemoteDataSource] Sync payload: $flowListInMap');
+    // for (final map in flowListInMap) {
+    //   print(map['name']);
+    // }
 
-    print(flowListInMap);
+    // print(flowListInMap);
 
     final response = await httpService.post(
       path: "/flows/sync",

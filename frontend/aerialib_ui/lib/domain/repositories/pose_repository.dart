@@ -66,14 +66,14 @@ class PoseRepository {
 
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllPoses() async {
-    print('[PosesRepository] Fetching PoseModels from local database');
+    print('[PosesRepository] Fetching PoseModels from local database... ');
 
     final poseModels = await localDataSource.getAllPoses();
-    print('[PosesRepository] Got ${poseModels.length} pose models');
 
-    print('[PosesRepository] Converting models to entities');
+    // print('[PosesRepository] Converting models to entities');
     final poseEntitiesList = PoseMapper.modelsToEntities(poseModels);
-    print('[PosesRepository] Conversion complete');
+    print('[PosesRepository] Got ${poseModels.length} pose entities');
+    // print('[PosesRepository] Conversion complete');
 
     return poseEntitiesList;
   }
@@ -83,7 +83,7 @@ class PoseRepository {
   /// Fetch all poses from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
     final poseModels = await remoteDataSource.fetchRemotePoses(token: token);
-    print(poseModels);
+    // print(poseModels);
     await localDataSource.insertPoses(poseModels);
   }
 

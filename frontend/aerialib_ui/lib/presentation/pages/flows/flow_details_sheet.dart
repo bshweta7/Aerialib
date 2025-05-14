@@ -65,14 +65,8 @@ class FlowDetailsSheet extends StatelessWidget {
             child: const Text("Cancel"),
           ),
           TextButton(
-              onPressed: () => {
-                context.goNamed(
-                  'flow-library',
-                  queryParameters: {'from': 'home'},
-                )
-                // TODO do i still need this ---> Navigator.pop(context, true),
-              },
-              child: const Text("Delete")
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Delete")
           ),
         ],
       ),
@@ -93,7 +87,8 @@ class FlowDetailsSheet extends StatelessWidget {
       Navigator.pop(context); // Close the bottom sheet
       context.goNamed(
         'flow-library',
-        queryParameters: {'from': 'home'}, // TODO should this be from the specific flow page?  THIS WHOLE PAGE NEEDS A LOT OF TESTING!!!
+        queryParameters: {'from': 'home'},
+        // TODO THIS WHOLE PAGE NEEDS A LOT OF TESTING!!!
       ); // Redirect to Flow Library
 
     }

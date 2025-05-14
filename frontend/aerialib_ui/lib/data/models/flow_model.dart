@@ -59,7 +59,7 @@ class FlowModel {
       createdAt: DateTime.parse(map['created_at'] ?? map['createdAt']),
       updatedAt: DateTime.parse(map['updated_at'] ?? map['updatedAt']),
 
-      isSynced: map['is_synced'] ?? map['isSynced'] ?? 0,
+      isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
     );
   }
 

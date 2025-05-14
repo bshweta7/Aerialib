@@ -76,7 +76,7 @@ class UserRepository {
   Future<UserEntity?> getUser() async {
     print("[UserRepository] Getting user from local...");
     final localUser = await localDataSource.getUser();
-    print("[UserRepository] Done, ${localUser}");
+    // print("[UserRepository] Done, ${localUser}");
 
     if (localUser != null) {
       return _userModelToEntity(localUser);

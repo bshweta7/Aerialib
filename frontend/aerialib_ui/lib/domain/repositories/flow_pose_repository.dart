@@ -78,10 +78,10 @@ class FlowPoseRepository {
 
   /// Fetch all flow poses from local DB
   Future<List<FlowPoseEntity>> getAllFlowPoses() async {
-    print("Fetching Flow Pose Models from Local Database");
+    print("[FlowPoseRepository] Fetching Flow Pose Models from Local Database");
     final flowPoseModels = await localDataSource.getFlowPoses();
 
-    print("Preparing corresponding Pose Models from Local Database");
+    print("[FlowPoseRepository] Preparing corresponding Pose Models from Local Database");
     final poseIds = flowPoseModels.map((fp) => fp.poseId).toSet().toList();
     final poseModels = await poseLocalDataSource.getPosesByIds(poseIds);
     final poseMap = {for (var pose in poseModels) pose.id: pose};

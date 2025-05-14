@@ -62,8 +62,8 @@ class FlowLocalDataSource {
     return [];
   }
 
-  // TODO rename below to updateSyncedStatus or something more descriptive
   Future<void> setSyncedStatus(String id, int newValue) async {
+    // print('[FlowLocalDataSource] Marking $id as synced ($newValue)');
     final db = await database;
     await db.update(
       tableName,
