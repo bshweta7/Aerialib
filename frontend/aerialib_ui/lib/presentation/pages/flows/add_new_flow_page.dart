@@ -99,16 +99,18 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Saved flow information")),
       );
-      context.pushNamed(
+
+      // Emit the EditFlowState before navigating
+      context.read<FlowsCubit>().startEditingFlow(state.flow);
+
+      context.goNamed(
         'flow-edit-poses',
-        pathParameters: {
-          'flowId': state.flow.id,
-        },
-        extra: state.flow,
+        pathParameters: {'flowId': state.flow.id,},
+        // queryParameters: {'from': 'add-new-flow'},
       );
     } else if (state is FlowError) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${state.message}")),
+        SnackBar(content: Text("Error: ${state.message}")), // TODO remove errors in snack bar
       );
     }
   }

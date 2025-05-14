@@ -79,6 +79,9 @@ List<GoRoute> flowRoutes = [
     path: '/flows/details/edit/:flowId',
     name: 'flow-edit-details',
     builder: (context, state) {
+      // Note: not updating to keep base as "flow-library" so
+      // flow view isnt base after redirecting back to flow view
+
       // Update Navigation History
       // context.read<NavHistoryCubit>().push(
       //     state.uri.queryParameters['from']
@@ -112,47 +115,68 @@ List<GoRoute> flowRoutes = [
     path: '/flows/poses/edit/:flowId',
     name: 'flow-edit-poses',
     builder: (context, state) {
+
       final flowId = state.pathParameters['flowId']!;
-      print("[FlowRouter] Builder called...");
-      return FlowPageWrapper(
-        flowId: flowId,
-        builder: (flow) => FlowEditPosesPage(flow: flow),
-        expectedState: EditFlowState,
-      );
-    },
-  ),
-];
+      final flowsState = context.read<FlowsCubit>().state;
 
+      if (flowsState is EditFlowState) {
+        final flow = flowsState.flow;
+        return FlowEditPosesPage(
+          flow: flow,
+        );
+      }
 
+      // TODO this is just for flow-view -> edit-poses. update flow view to emit edit state
+      if (flowsState is GetFlowsSuccess) {
+        final flow = flowsState.flows.firstWhere(
+              (f) => f.id == flowId,
+          orElse: () => throw Exception('Flow not found'),
+        );
 
-class FlowPageWrapper extends StatelessWidget {
-  final String flowId;
-  final Widget Function(FlowEntity flow) builder;
-  final expectedState;
+        return FlowEditPosesPage(
+          flow: flow,
+        );
+      }
 
-  const FlowPageWrapper({
-    super.key,
-    required this.flowId,
-    required this.builder,
-    this.expectedState = GetFlowsSuccess,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final state = context.watch<FlowsCubit>().state;
-
-    print("[FlowRouter] State is $state");
-    if (state is! GetFlowsSuccess || state is! EditFlowState) {
+      // Fallback or loading
+      print("[FlowRouter] Error loading, state is $flowsState");
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
+  ),
+];
 
-    final flow = state.flows.firstWhere(
-          (f) => f.id == flowId,
-      orElse: () => throw Exception('Flow not found'),
-    );
 
-    return builder(flow);
-  }
-}
+//
+// class FlowPageWrapper extends StatelessWidget {
+//   final String flowId;
+//   final Widget Function(FlowEntity flow) builder;
+//   final expectedState;
+//
+//   const FlowPageWrapper({
+//     super.key,
+//     required this.flowId,
+//     required this.builder,
+//     this.expectedState = GetFlowsSuccess,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final state = context.watch<FlowsCubit>().state;
+//
+//     print("[FlowRouter] State is $state");
+//     if (state is! GetFlowsSuccess || state is! EditFlowState) {
+//       return const Scaffold(
+//         body: Center(child: CircularProgressIndicator()),
+//       );
+//     }
+//
+//     final flow = state.flows.firstWhere(
+//           (f) => f.id == flowId,
+//       orElse: () => throw Exception('Flow not found'),
+//     );
+//
+//     return builder(flow);
+//   }
+// }

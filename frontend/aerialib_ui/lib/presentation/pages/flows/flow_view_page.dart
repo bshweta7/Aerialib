@@ -135,12 +135,10 @@ class _FlowViewPageState extends State<FlowViewPage> {
                     icon: const Icon(Icons.edit),
                     label: const Text('Edit Poses'),
                     onPressed: () {
-                      context.pushNamed( // TODO URL doesnt update
+                      context.goNamed(
                         'flow-edit-poses',
-                        pathParameters: {
-                          'flowId': flow.id,
-                        },
-                        extra: flow,
+                        pathParameters: {'flowId': flow.id,},
+                        queryParameters: {'from': 'flow-view'},
                       );
                     },
                   ),

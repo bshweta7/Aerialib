@@ -14,8 +14,8 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/list_card.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
-
-import '../../widgets/nav_bar.dart';
+import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+import 'package:frontend/presentation/widgets/navigation/nav_bar.dart';
 
 
 class FlowEditPosesPage extends StatefulWidget {
@@ -77,11 +77,10 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     print("[SaveFlow] Navigating to FlowViewPage with ${updatedFlow.poses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
 
-    // TODO TESTING nav stack - add popSource if needed for browser back behavior
     context.goNamed(
       'flow-view',
       pathParameters: {'flowId': updatedFlow.id},
-      queryParameters: {'from': 'flow-edit-poses'},
+      // queryParameters: {'from': 'flow-edit-poses'},
     );
   }
 
@@ -102,6 +101,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: const SmartBackButton(), // TODO before going back, UPDATE THE CUBIT STATE!
           title: const Text('Edit Poses'),
           actions: [
             IconButton(
@@ -140,7 +140,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                       suggestionList: availablePoses,
                       onSuggestionTapped: _addPoseToFlow,
                       hintText: 'Add new pose',
-                      fromPage: 'flow-edit-poses',
+                      fromPage: 'flow-edit-poses', // TODO may need to be null, or pop if needed? Otherwise, this isn't a problem if the search bar shows pop up modal - might need a second option to show the modal and not the full page?
                     ),
                   ),
 
@@ -228,15 +228,15 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                               title: flowPose.pose.name,
                               subtitle: 'Level ${flowPose.pose.level} | ${capitalizeFirstLetter(flowPose.pose.apparatus)}',
                               imageUrl: '/${flowPose.pose.primaryMediaPath}',
-                              onTapFunction: () {
-                                context.goNamed(
-                                  'pose-view',
-                                  pathParameters: {'poseId': flowPose.pose.id},
-                                  queryParameters: {'from': 'flow-edit-poses'},
-                                  // TODO may need update if it also needs to pass flow ID to get back
-                                  // TODO should this actually show a bottom modal pop up instead of the full page?
-                                );
-                              },
+                              // onTapFunction: () {
+                              //   context.goNamed(
+                              //     'pose-view',
+                              //     pathParameters: {'poseId': flowPose.pose.id},
+                              //     queryParameters: {'from': 'flow-edit-poses'},
+                              //     // TODO may need update if it also needs to pass flow ID to get back
+                              //     // TODO should this actually show a bottom modal pop up instead of the full page?
+                              //   );
+                              // },
                             ),
                           ),
                         )
