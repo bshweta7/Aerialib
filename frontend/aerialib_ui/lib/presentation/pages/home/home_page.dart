@@ -30,10 +30,7 @@ class HomePage extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  context.goNamed(
-                      'user-profile',
-                      pathParameters: {'username': currentUsername}
-                  ); // Pass the username
+                  context.goNamed('user-profile');
                 },
                 tooltip: "Visit profile page",
                 icon: const Icon(CupertinoIcons.profile_circled,

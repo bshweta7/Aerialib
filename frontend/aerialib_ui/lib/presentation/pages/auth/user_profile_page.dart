@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
-
+import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -20,6 +20,7 @@ class _UserProfilePage extends State<UserProfilePage> {
     return MainScaffold(
       currentIndex: 3,
       appBar: AppBar(
+        leading: const SmartBackButton(),
         title: const Text("Profile"),
         // actions: [
         //   IconButton(
