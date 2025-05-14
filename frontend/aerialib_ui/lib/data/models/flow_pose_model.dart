@@ -24,7 +24,7 @@ class FlowPoseModel {
       poseId: map['pose_id'] ?? map['poseId'] ?? '',
       poseOrder: map['pose_order'] ?? map['poseOrder'] ?? -1,
       transitionId: map['transition_id'] ?? map['transitionId'],
-      isSynced: map['is_synced'] ?? map['isSynced'] ?? 0,
+      isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
     );
   }
 

@@ -215,7 +215,12 @@ class FlowsCubit extends Cubit<FlowsState> {
 
   /// Sets flow.poses to the new set of poses
   void updateFlowPoses(List<FlowPoseEntity> newPoses) {
-    if (state is! EditFlowState) return;
+    print("[FlowsCubit] Updating flow poses... ");
+
+    if (state is! EditFlowState) {
+      print("[FlowsCubit] State is not EditFlowState, returning without update...");
+      return;
+    }
     final currentState = state as EditFlowState;
 
     // 🔍 Print BEFORE
@@ -235,8 +240,7 @@ class FlowsCubit extends Cubit<FlowsState> {
     //   print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
     // }
 
-    print("[FlowsCubit] Updated flow with new poses");
-
+    print("[FlowsCubit] Updated flow cubit with new poses.");
     emit(currentState.copyWith(flow: updatedFlow));
   }
 
@@ -274,7 +278,10 @@ class FlowsCubit extends Cubit<FlowsState> {
   /// Save the flows poses (local + remote)
   Future<void> saveFlowPoses({required String token}) async {
     // print("[FlowCubit] State is $state");
-    if (state is! EditFlowState) return;
+    if (state is! EditFlowState) {
+      print("[FlowsCubit] State is not EditFlowState, returning without update...");
+      return;
+    }
     final currentState = state as EditFlowState;
 
     emit(currentState.copyWith(isSaving: true));
@@ -285,7 +292,7 @@ class FlowsCubit extends Cubit<FlowsState> {
       //   updatedFlow: currentState.flow,
       //   token: token,
       // );
-      print("[FlowsCubit] Deleting all flow poses in flow ${currentState.flow.id}");
+      print("[FlowsCubit] Deleting all flow poses in flow ${currentState.flow.name}, ${currentState.flow.id}");
       await _flowPoseRepository.deleteAllFlowPosesInFlow(currentState.flow.id);
 
       print("[FlowsCubit] Inserting updated poses into flow...");
@@ -294,6 +301,9 @@ class FlowsCubit extends Cubit<FlowsState> {
       print("[FlowPoseRepository] Syncing to remote data source...");
       await _flowPoseRepository.syncLocalToRemote(token);
       print("[FlowPoseRepository] Synced to remote successfully.");
+
+
+
 
       // print("[FlowsCubit] Updating flow poses in flow...");
       // await _flowPoseRepository.replaceFlowPosesInFlow(
