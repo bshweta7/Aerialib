@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
 class SmartBackWrapper extends StatelessWidget {
@@ -18,14 +19,17 @@ class SmartBackWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: true,
-      onPopInvoked: (didPop) {
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        print("[SmartBackWrapper] Pop invoked: didPop=$didPop");
+
         if (didPop) return;
 
         final navHistory = context.read<NavHistoryCubit>();
         final last = navHistory.pop();
 
         if (last != null) {
+          print("[SmartBackWrapper] Popped to $last");
           context.goNamed(last);
         } else {
           context.goNamed(fallbackRoute);

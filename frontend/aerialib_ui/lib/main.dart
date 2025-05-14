@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/presentation/widgets/navigation/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:frontend/core/main/repository_providers.dart';
@@ -126,6 +127,12 @@ class _MyAppState extends State<MyApp> {
       theme: getLightTheme(),
       darkTheme: getDarkTheme(),
       themeMode: ThemeMode.light, // TODO fix dark theme (especially flow details modal)
+      builder: (context, child) {
+        return SmartBackWrapper(
+          fallbackRoute: 'home',
+          child: child ?? const SizedBox(),
+        );
+      },
     );
   }
 }
