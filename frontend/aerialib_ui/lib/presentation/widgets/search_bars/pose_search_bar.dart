@@ -64,9 +64,8 @@ class _PoseSearchBarWidgetState extends State<PoseSearchBarWidget> {
               } else {
                 context.goNamed(
                   'pose-view',
-                  pathParameters: {
-                    'poseId': pose.id,
-                  },
+                  pathParameters: {'poseId': pose.id},
+                  queryParameters: {'from': 'pose-library'}, // TODO this needs to be passed into the widget so it works for multiple "from" sources
                 );
               }
             }

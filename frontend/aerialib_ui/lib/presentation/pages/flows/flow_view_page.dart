@@ -50,11 +50,12 @@ class _FlowViewPageState extends State<FlowViewPage> {
   }
 
   void _navigateToPosePage(BuildContext context, MediaIconEntity mediaItem) {
-    context.goNamed( // TODO URL doesnt update
+    context.goNamed(
       'pose-view',
-      pathParameters: {
-        'poseId': mediaItem.data.id,
-      },
+      pathParameters: {'poseId': mediaItem.data.id},
+      queryParameters: {'from': 'flow-view'},
+      // TODO may need update if it also needs to pass flow ID to get back
+      // TODO should this actually show a bottom modal pop up instead of the full page?
     );
   }
 

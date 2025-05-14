@@ -113,7 +113,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     context.goNamed(
       'pose-view',
       pathParameters: {'poseId': mediaItem.data.id},
-      queryParameters: {'from': 'pose-library'}, // TODO update
+      queryParameters: {'from': 'pose-library'},
     );
   }
 

@@ -231,11 +231,12 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                               subtitle: 'Level ${flowPose.pose.level} | ${capitalizeFirstLetter(flowPose.pose.apparatus)}',
                               imageUrl: '/${flowPose.pose.primaryMediaPath}',
                               onTapFunction: () {
-                                context.goNamed( // TODO URL doesn't update
+                                context.goNamed(
                                   'pose-view',
-                                  pathParameters: {
-                                    'poseId': flowPose.pose.id,
-                                  },
+                                  pathParameters: {'poseId': flowPose.pose.id},
+                                  queryParameters: {'from': 'flow-edit-poses'},
+                                  // TODO may need update if it also needs to pass flow ID to get back
+                                  // TODO should this actually show a bottom modal pop up instead of the full page?
                                 );
                               },
                             ),

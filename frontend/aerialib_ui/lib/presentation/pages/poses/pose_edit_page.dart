@@ -96,9 +96,8 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
     // Then push PoseDetails again (fresh)
     context.goNamed(
       'pose-view',
-      pathParameters: {
-        'poseId': updatedPose.id,
-      },
+      pathParameters: {'poseId': updatedPose.id},
+      queryParameters: {'from': 'pose-edit'},
     );
   }
 

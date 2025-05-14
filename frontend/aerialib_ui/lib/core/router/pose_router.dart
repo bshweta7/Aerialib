@@ -19,12 +19,9 @@ List<GoRoute> poseRoutes = [
     path: '/poses',
     name: 'pose-library',
     builder: (context, state) {
-      final from = state.uri.queryParameters['from'];
-      if (from != null) {
-        final navHistory = context.read<NavHistoryCubit>();
-        navHistory.push(from);
-      }
-
+      context.read<NavHistoryCubit>().push(
+          state.uri.queryParameters['from']
+      );
       return const PoseLibraryPage();
     },
   ),
@@ -44,16 +41,19 @@ List<GoRoute> poseRoutes = [
     path: '/poses/view/:poseId',
     name: 'pose-view',
     builder: (context, state) {
-      final poseId = state.pathParameters['poseId']!;
-      final from = state.uri.queryParameters['from'];
+      // Update Navigation History
+      context.read<NavHistoryCubit>().push(
+          state.uri.queryParameters['from']
+      );
 
+      // Get pose entity from pose ID
+      final poseId = state.pathParameters['poseId']!;
       final posesState = context.read<PosesCubit>().state;
 
       if (posesState is GetPosesSuccess) {
         final pose = posesState.poses.firstWhere((p) => p.id == poseId);
         return PoseViewPage(
           pose: pose,
-          from: from,
         );
       }
 
