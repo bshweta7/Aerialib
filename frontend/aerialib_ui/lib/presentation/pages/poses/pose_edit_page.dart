@@ -99,7 +99,6 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
       pathParameters: {
         'poseId': updatedPose.id,
       },
-      extra: updatedPose,
     );
   }
 

@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/domain/entities/pose_entity.dart';
@@ -27,8 +30,19 @@ List<GoRoute> poseRoutes = [
     path: '/poses/view/:poseId',
     name: 'pose-view',
     builder: (context, state) {
-      final pose = state.extra as PoseEntity;
-      return PoseViewPage(pose:pose);
+      final poseId = state.pathParameters['poseId']!;
+      final posesState = context.read<PosesCubit>().state;
+
+      if (posesState is GetPosesSuccess) {
+        final pose = posesState.poses.firstWhere((p) => p.id == poseId);
+        return PoseViewPage(pose: pose);
+      }
+
+      // Fallback or loading
+      print(posesState);
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     },
   ),
 

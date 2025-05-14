@@ -67,7 +67,6 @@ class _PoseSearchBarWidgetState extends State<PoseSearchBarWidget> {
                   pathParameters: {
                     'poseId': pose.id,
                   },
-                  extra: pose,
                 );
               }
             }

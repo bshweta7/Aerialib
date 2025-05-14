@@ -50,12 +50,11 @@ class _FlowViewPageState extends State<FlowViewPage> {
   }
 
   void _navigateToPosePage(BuildContext context, MediaIconEntity mediaItem) {
-    context.pushNamed( // TODO URL doesnt update
+    context.goNamed( // TODO URL doesnt update
       'pose-view',
       pathParameters: {
         'poseId': mediaItem.data.id,
       },
-      extra: mediaItem.data,
     );
   }
 
