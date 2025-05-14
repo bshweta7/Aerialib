@@ -129,7 +129,8 @@ class FlowRepository {
 
   /// Delete locally and remote
   Future<void> deleteFlow(String id, token) async {
-    await localDataSource.deleteFlow(id);
     await remoteDataSource.deleteFlowById(id, token);
+    // TODO only delete locally if remote is success, otherwise say "try again later when you have internet connection"
+    await localDataSource.deleteFlow(id);
   }
 }

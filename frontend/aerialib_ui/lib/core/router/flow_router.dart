@@ -3,16 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
+
 import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_details_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
 import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
-
-import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
-
-import '../../presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
 
 List<GoRoute> flowRoutes = [
@@ -42,19 +40,38 @@ List<GoRoute> flowRoutes = [
   ),
 
 
-  /// Flow View Page
+  /// View Flow Page
   GoRoute(
-    // TODO add ?isShared to url - flowName only if its private, and flowId if its public? not sure....
     path: '/flows/view/:flowId',
     name: 'flow-view',
     builder: (context, state) {
-      final flowId = state.pathParameters['flowId']!;
-      return FlowPageWrapper(
-        flowId: flowId,
-        builder: (flow) => FlowViewPage(flow: flow),
+      // Update Navigation History
+      context.read<NavHistoryCubit>().push(
+        state.uri.queryParameters['from']
       );
-    }
+
+      final flowId = state.pathParameters['flowId']!;
+      final flowsState = context.read<FlowsCubit>().state;
+
+      if (flowsState is GetFlowsSuccess) {
+        final flow = flowsState.flows.firstWhere(
+          (f) => f.id == flowId,
+          orElse: () => throw Exception('Flow not found'),
+        );
+
+        return FlowViewPage(
+          flow: flow,
+        );
+      }
+
+      // Fallback or loading
+      print(flowsState);
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    },
   ),
+  // TODO add ?isShared to url - flowName only if its private, and flowId if its public? not sure....
 
 
   /// Edit Flow Details Page

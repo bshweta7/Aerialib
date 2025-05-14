@@ -11,6 +11,7 @@ class PosesCubit extends Cubit<PosesState> {
 
   PosesCubit(this._poseRepository) : super(const PoseInitial());
 
+  /// Crud ----------------------------
   /// Create a new pose
   Future<void> createNewPose({
     required String name,
@@ -49,6 +50,7 @@ class PosesCubit extends Cubit<PosesState> {
     }
   }
 
+  /// cRud ----------------------------
   /// Fetch all poses (from local storage or remote if needed)
   Future<void> getAllPoses({required String token}) async {
     try {
@@ -89,7 +91,7 @@ class PosesCubit extends Cubit<PosesState> {
     }
   }
 
-
+  /// crUd ----------------------------
   /// Update pose info (both local and remote)
   Future<void> updatePoseInfo({
     required PoseEntity updatedPose,
@@ -108,6 +110,7 @@ class PosesCubit extends Cubit<PosesState> {
     }
   }
 
+  /// cruD ----------------------------
   /// Delete a pose locally
   Future<void> deletePose(String poseId) async {
     try {

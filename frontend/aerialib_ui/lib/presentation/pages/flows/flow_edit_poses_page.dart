@@ -77,15 +77,12 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     print("[SaveFlow] Navigating to FlowViewPage with ${updatedFlow.poses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
 
-    // TODO fix navigation stack - currently pressing back button causes it to crash.
+    // TODO TESTING nav stack - add popSource if needed for browser back behavior
     context.goNamed(
       'flow-view',
-      pathParameters: {
-        'flowId': updatedFlow.id,
-      },
-      extra: updatedFlow,
+      pathParameters: {'flowId': updatedFlow.id},
+      queryParameters: {'from': 'flow-edit-poses'},
     );
-
   }
 
   @override

@@ -82,13 +82,10 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
     context.goNamed(
       'flow-view',
-      pathParameters: {
-        'flowId': updatedFlow.id,
-      },
-      extra: updatedFlow,
+      pathParameters: {'flowId': updatedFlow.id},
+      queryParameters: {'from': 'flow-edit-details'},
     );
   }
-
 
 
   @override

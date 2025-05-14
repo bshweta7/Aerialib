@@ -51,7 +51,11 @@ List<GoRoute> poseRoutes = [
       final posesState = context.read<PosesCubit>().state;
 
       if (posesState is GetPosesSuccess) {
-        final pose = posesState.poses.firstWhere((p) => p.id == poseId);
+        final pose = posesState.poses.firstWhere(
+          (p) => p.id == poseId,
+          orElse: () => throw Exception('Flow not found'),
+        );
+
         return PoseViewPage(
           pose: pose,
         );

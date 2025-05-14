@@ -84,12 +84,10 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   }
 
   void _navigateToFlowPage(MediaIconEntity mediaItem) {
-    context.pushNamed( // TODO URL doesn't update
+    context.goNamed(
       'flow-view',
-      pathParameters: {
-        'flowId': mediaItem.data.id,
-      },
-      extra: mediaItem.data, // Pass the entire FlowEntity as extra
+      pathParameters: {'flowId': mediaItem.data.id},
+      queryParameters: {'from': 'flow-library'},
     );
   }
 
