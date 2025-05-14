@@ -65,7 +65,7 @@ List<GoRoute> flowRoutes = [
       }
 
       // Fallback or loading
-      print(flowsState);
+      print("[FlowRouter] Error loading, state is $flowsState");
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -79,10 +79,29 @@ List<GoRoute> flowRoutes = [
     path: '/flows/details/edit/:flowId',
     name: 'flow-edit-details',
     builder: (context, state) {
+      // Update Navigation History
+      // context.read<NavHistoryCubit>().push(
+      //     state.uri.queryParameters['from']
+      // );
+
       final flowId = state.pathParameters['flowId']!;
-      return FlowPageWrapper(
-        flowId: flowId,
-        builder: (flow) => FlowEditDetailsPage(flow: flow),
+      final flowsState = context.read<FlowsCubit>().state;
+
+      if (flowsState is GetFlowsSuccess) {
+        final flow = flowsState.flows.firstWhere(
+              (f) => f.id == flowId,
+          orElse: () => throw Exception('Flow not found'),
+        );
+
+        return FlowEditDetailsPage(
+          flow: flow,
+        );
+      }
+
+      // Fallback or loading
+      print("[FlowRouter] Error loading, state is $flowsState");
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     }
   ),

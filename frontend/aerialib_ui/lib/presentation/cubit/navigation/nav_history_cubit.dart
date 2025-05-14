@@ -7,7 +7,7 @@ class NavHistoryCubit extends Cubit<List<String>> {
   /// Push a new route name onto the history stack (if not already last)
   void push(String? routeName) {
     if (routeName == null) {
-      print("[NavHistoryCubit] Route name was null.");
+      print("[NavHistoryCubit] Route name was null. History ${List<String>.from(state)}");
       return;
     }
     if (state.isEmpty || state.last != routeName) {

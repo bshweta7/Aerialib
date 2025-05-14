@@ -9,7 +9,7 @@ import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
-
+import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 
 class FlowEditDetailsPage extends StatefulWidget {
   final FlowEntity flow;
@@ -80,10 +80,10 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
 
     await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
-    context.goNamed(
+    context.replaceNamed(
       'flow-view',
       pathParameters: {'flowId': updatedFlow.id},
-      queryParameters: {'from': 'flow-edit-details'},
+      // queryParameters: {'from': 'flow-edit-details'},
     );
   }
 
@@ -93,6 +93,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     return MainScaffold(
       currentIndex: 1,
       appBar: AppBar(
+        leading: const SmartBackButton(),
         title: const Text('Update Flow'),
         // actions: [
         //   PopupMenuButton<String>(

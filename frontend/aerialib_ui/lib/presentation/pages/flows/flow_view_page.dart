@@ -88,12 +88,10 @@ class _FlowViewPageState extends State<FlowViewPage> {
                 context: context,
                 flow: flow,
                 onEdit: () {
-                  context.pushNamed( // TODO URL doesnt update
+                  context.goNamed(
                     'flow-edit-details',
-                    pathParameters: {
-                      'flowId': flow.id,
-                    },
-                    extra: flow,
+                    pathParameters: {'flowId': flow.id,},
+                    queryParameters: {'from': 'flow-view'},
                   );
                 },
               );
