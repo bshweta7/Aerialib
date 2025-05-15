@@ -53,7 +53,7 @@ class MediaCubit extends Cubit<MediaState>{
 
       emit(AddNewMediaSuccess(media));
     } catch (e) {
-      print("Error creating media: $e");
+      /////////print("Error creating media: $e");
       emit(MediaError(e.toString()));
     }
   }
@@ -62,24 +62,24 @@ class MediaCubit extends Cubit<MediaState>{
   /// Fetch all medias (from local storage or remote if needed)
   Future<void> getAllMedia({required String token}) async {
     try {
-      print("Fetching medias...");
+      /////////print("Fetching medias...");
       emit(const MediaLoading());
 
       List<MediaEntity> medias = await _mediaRepository.getLocalMedias();  // Fetch local medias
       if (medias.isEmpty) {
         // If no local medias, sync from remote and retry
-        print("[MediaCubit] No medias in local datasource, syncing from remote");
+        /////////print("[MediaCubit] No medias in local datasource, syncing from remote");
         await _mediaRepository.syncRemoteToLocal(token);
 
         medias = await _mediaRepository.getLocalMedias();
       }
 
-      print("[MediaCubit] Number of Medias Retrieved: ${medias.length}");
+      /////////print("[MediaCubit] Number of Medias Retrieved: ${medias.length}");
       emit(GetMediaSuccess(medias));
 
     } catch (e) {
-      print("[MediaCubit] Cubit GetAllMedia failed");
-      print(e.toString());
+      /////////print("[MediaCubit] Cubit GetAllMedia failed");
+      /////////print(e.toString());
       emit(MediaError(e.toString()));
     }
   }
@@ -89,19 +89,19 @@ class MediaCubit extends Cubit<MediaState>{
     if (_isSyncing) return;
     _isSyncing = true;
 
-    print("[MediaCubit] Starting one-shot sync of flow poses...");
+    /////////print("[MediaCubit] Starting one-shot sync of flow poses...");
 
     try {
       await _mediaRepository.syncLocalToRemote(token);
-      print('[MediaCubit] Synced local to remote.');
+      /////////print('[MediaCubit] Synced local to remote.');
 
       await _mediaRepository.syncRemoteToLocal(token);
-      print('[MediaCubit] Synced remote to local.');
+      /////////print('[MediaCubit] Synced remote to local.');
 
       // final updatedFlows = await _flowPoseRepository.getAllFlowPoses();
       // emit(GetFlowsSuccess(updatedFlows));
     } catch (e) {
-      print('[MediaCubit] Sync error: $e');
+      /////////print('[MediaCubit] Sync error: $e');
       emit(MediaError('[MediaCubit] Sync error: $e'));
     } finally {
       _isSyncing = false;

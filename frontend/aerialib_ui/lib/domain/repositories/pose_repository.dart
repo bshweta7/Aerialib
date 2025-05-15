@@ -29,7 +29,7 @@ class PoseRepository {
     required String createdBy,
   }) async {
     try {
-      print('[PoseRepository] Creating pose remotely...');
+      /////////print('[PoseRepository] Creating pose remotely...');
 
       // Step 1: Create pose on backend
       final poseModel = await remoteDataSource.createPose(
@@ -46,19 +46,19 @@ class PoseRepository {
         token: token,
       );
 
-      print('[PoseRepository] Remote pose created with ID: ${poseModel.id}');
+      /////////print('[PoseRepository] Remote pose created with ID: ${poseModel.id}');
 
       // Step 2: Insert into local DB
       await localDataSource.insertPose(poseModel);
-      print('[PoseRepository] Pose inserted into local database.');
+      /////////print('[PoseRepository] Pose inserted into local database.');
 
       // Step 3: Return mapped PoseEntity
       final entity = PoseMapper.modelToEntity(poseModel);
-      print('[PoseRepository] Mapped PoseModel to PoseEntity: ${entity.id}');
+      /////////print('[PoseRepository] Mapped PoseModel to PoseEntity: ${entity.id}');
       return entity;
 
     } catch (e) {
-      print('[PoseRepository] Error creating pose: $e');
+      /////////print('[PoseRepository] Error creating pose: $e');
       rethrow;
     }
   }
@@ -66,14 +66,14 @@ class PoseRepository {
 
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllPoses() async {
-    print('[PosesRepository] Fetching PoseModels from local database... ');
+    /////////print('[PosesRepository] Fetching PoseModels from local database... ');
 
     final poseModels = await localDataSource.getAllPoses();
 
-    // print('[PosesRepository] Converting models to entities');
+    // /////////print('[PosesRepository] Converting models to entities');
     final poseEntitiesList = PoseMapper.modelsToEntities(poseModels);
-    print('[PosesRepository] Got ${poseModels.length} pose entities');
-    // print('[PosesRepository] Conversion complete');
+    /////////print('[PosesRepository] Got ${poseModels.length} pose entities');
+    // /////////print('[PosesRepository] Conversion complete');
 
     return poseEntitiesList;
   }
@@ -83,7 +83,7 @@ class PoseRepository {
   /// Fetch all poses from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
     final poseModels = await remoteDataSource.fetchRemotePoses(token: token);
-    // print(poseModels);
+    // /////////print(poseModels);
     await localDataSource.insertPoses(poseModels);
   }
 
@@ -95,12 +95,12 @@ class PoseRepository {
       return;
     }
 
-    print("[PoseRepository] Retrieved unsynced poses from local");
+    /////////print("[PoseRepository] Retrieved unsynced poses from local");
     final success = await remoteDataSource.syncPoses(
       token: token,
       poses: unsynced,
     );
-    print("[PoseRepository] Synced poses to remote");
+    /////////print("[PoseRepository] Synced poses to remote");
 
     if (success) {
       for (final pose in unsynced) {
@@ -122,13 +122,13 @@ class PoseRepository {
   }) async {
     final poseModel = PoseMapper.entityToModel(updatedPose);
 
-    print("[PoseRepository] Updating pose remotely...");
+    /////////print("[PoseRepository] Updating pose remotely...");
     final updatedModel = await remoteDataSource.updatePose(
       updatedPose: poseModel,
       token: token,
     );
 
-    print("[PoseRepository] Updating pose locally...");
+    /////////print("[PoseRepository] Updating pose locally...");
     final syncedModel = updatedModel.copyWith(isSynced: 1);
     await localDataSource.updatePose(syncedModel);
   }

@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 content: Text(state.error), //TODO update snack bar to show more specific error message
               ),
             );
-            resetPage(); // TODO test this
+            resetPage();
           } else if (state is AuthLoggedIn) {
             context.goNamed('home'); // Navigate to the 'home' named route defined in app_router.dart
           }

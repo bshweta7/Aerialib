@@ -77,7 +77,7 @@ class TransitionCubit extends Cubit<TransitionState> {
         await _transitionRepository.syncLocalToRemote(token);
         await _transitionRepository.syncRemoteToLocal(token);
       } else {
-        print("No connection for sync");
+        /////////print("No connection for sync");
       }
     } catch (e) {
       emit(TransitionError("Sync failed: $e"));

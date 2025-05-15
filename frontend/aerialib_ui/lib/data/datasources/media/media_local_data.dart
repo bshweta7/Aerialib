@@ -46,13 +46,13 @@ class MediaLocalDataSource {
   /// Get list of media models that are primary images for poses
   Future<List<MediaModel>> getPoseMedia() async {
     final db = await database;
-    print("Entered getPoseMedia");
+    /////////print("Entered getPoseMedia");
     final result = await db.query(
       tableName,
       where: 'primary_media = ?',
       whereArgs: ['pose'],
     );
-    print("Got Result");
+    /////////print("Got Result");
 
     if (result.isNotEmpty) {
       return result.map((elem) => MediaModel.fromMap(elem)).toList();

@@ -54,7 +54,7 @@ class DatabaseService {
 
 
     final path = kIsWeb ? 'aerialib_web.db' : join(await getDatabasesPath(), _getDatabaseFileName());
-    print('[DatabaseService] Opening DB at path: $path');
+    /////////print('[DatabaseService] Opening DB at path: $path');
 
     try {
       final db = await databaseFactory.openDatabase(
@@ -62,37 +62,37 @@ class DatabaseService {
         options: OpenDatabaseOptions(
           version: 3,
             onCreate: (db, version) async {
-              print('[DatabaseService] onCreate started');
+              /////////print('[DatabaseService] onCreate started');
 
               try {
-                print('[DatabaseService] Creating pose table...');
+                /////////print('[DatabaseService] Creating pose table...');
                 await db.execute(createPoseTable);
 
-                print('[DatabaseService] Creating flow table...');
+                /////////print('[DatabaseService] Creating flow table...');
                 await db.execute(createFlowTable);
 
-                print('[DatabaseService] Creating flow_pose table...');
+                /////////print('[DatabaseService] Creating flow_pose table...');
                 await db.execute(createFlowPoseTable);
 
-                print('[DatabaseService] Creating media table...');
+                /////////print('[DatabaseService] Creating media table...');
                 await db.execute(createMediaTable);
 
-                print('[DatabaseService] Creating user table...');
+                /////////print('[DatabaseService] Creating user table...');
                 await db.execute(createUserTable);
 
-                print('[DatabaseService] All tables created successfully');
+                /////////print('[DatabaseService] All tables created successfully');
               } catch (e, st) {
-                print('[DatabaseService] ERROR in onCreate: $e');
-                print(st);
+                /////////print('[DatabaseService] ERROR in onCreate: $e');
+                /////////print(st);
                 rethrow;
               }
             },
             onUpgrade: (db, oldVersion, newVersion) async {
             // Poses
-            print('[DatabaseService] Dropping Pose table...');
+            /////////print('[DatabaseService] Dropping Pose table...');
 
             await db.execute(dropPoseTable); // Use drop command from schema
-            print('[DatabaseService] Creating Pose table...');
+            /////////print('[DatabaseService] Creating Pose table...');
             await db.execute(createPoseTable); // Use create command from schema
 
             // Flows
@@ -115,11 +115,11 @@ class DatabaseService {
         ),
       ).timeout(const Duration(seconds: 15));
 
-      print('[DatabaseService] DB opened successfully');
+      /////////print('[DatabaseService] DB opened successfully');
       return db;
     } catch (e, st) {
-      print('[DatabaseService] Failed to open DB: $e');
-      print(st);
+      /////////print('[DatabaseService] Failed to open DB: $e');
+      /////////print(st);
       rethrow;
     }
   }

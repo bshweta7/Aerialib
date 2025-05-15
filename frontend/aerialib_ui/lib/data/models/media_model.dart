@@ -46,8 +46,8 @@ class MediaModel {
         isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
       );
     } catch (e, stack) {
-      debugPrint("Failed to map media: $map");
-      debugPrint("Error: $e\nStack: $stack");
+      //debug/////////print("Failed to map media: $map");
+      //debug/////////print("Error: $e\nStack: $stack");
       rethrow;
     }
   }

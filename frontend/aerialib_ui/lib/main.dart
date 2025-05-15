@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _connectivityService = ConnectivityService();
-    // print("[Main] InitState ran");
+    // /////////print("[Main] InitState ran");
   }
 
   @override
@@ -118,7 +118,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // print("[Main] Build ran");
+    // /////////print("[Main] Build ran");
     final authCubit = context.read<AuthCubit>(); // Get AuthCubit instance
 
     return MaterialApp.router(

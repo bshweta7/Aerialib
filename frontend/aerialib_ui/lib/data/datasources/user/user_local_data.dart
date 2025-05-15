@@ -20,21 +20,21 @@ class UserLocalDataSource {
 
   /// Retrieves the currently logged-in user from the local database (if any). Returns null if no user is found.
   Future<UserModel?> getUser() async {
-    print('[UserLocalData] Checking for local database existence...');
+    /////////print('[UserLocalData] Checking for local database existence...');
     final db = await DatabaseService.database;
 
     try {
       final result = await db.query(tableName);
-      print('[UserLocalData] User found, username: ${result.first["username"]}');
+      /////////print('[UserLocalData] User found, username: ${result.first["username"]}');
 
       if (result.isEmpty) {
-        print('[UserLocalData] No user found in local DB');
+        /////////print('[UserLocalData] No user found in local DB');
         return null;
       }
 
       return UserModel.fromMap(result.first); // Replace with your real logic
     } catch (e, st) {
-      print('[UserLocalData] Error getting user: $e, $st');
+      /////////print('[UserLocalData] Error getting user: $e, $st');
       return null;
     }
   }

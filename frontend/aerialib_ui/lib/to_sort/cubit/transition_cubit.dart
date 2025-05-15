@@ -43,7 +43,7 @@ class TransitionCubit extends Cubit<TransitionState>{
 
       emit(AddNewTransitionSuccess(transitionModel));
     } catch (e) {
-      print(e.toString());
+      /////////print(e.toString());
       emit(TransitionError(e.toString()));
     }
   }
@@ -57,7 +57,7 @@ class TransitionCubit extends Cubit<TransitionState>{
       emit(GetTransitionListSuccess(transitionList));
 
     } catch (e) {
-      print(e.toString());
+      /////////print(e.toString());
       emit(TransitionError(e.toString()));
     }
   }
@@ -65,7 +65,7 @@ class TransitionCubit extends Cubit<TransitionState>{
   Future<void> syncTransition(String token) async {
     // get all unsynced transition from our sqlite db
     final unsyncedTransition = await transitionLocalRepository.getUnsyncedTransition();
-    print(unsyncedTransition);
+    /////////print(unsyncedTransition);
     if (unsyncedTransition.isEmpty) {
       return;
     }
@@ -76,7 +76,7 @@ class TransitionCubit extends Cubit<TransitionState>{
     );
     // change the transition rows that were added to the db from 0 to 1
     if (isSynced) {
-      print("Unsynced transition have been synced");
+      /////////print("Unsynced transition have been synced");
       for (final transition in unsyncedTransition) {
         transitionLocalRepository.updateSyncedStatus(transition.id, 1);
       }

@@ -66,7 +66,7 @@ class FlowPoseRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      print("[FlowPoseRemoteDataSource] Deleted all flow poses for $flowId");
+      /////////print("[FlowPoseRemoteDataSource] Deleted all flow poses for $flowId");
     } else {
       throw Exception("Failed to delete remote flow poses for $flowId");
     }
@@ -83,12 +83,12 @@ class FlowPoseRemoteDataSource {
       return map;
     }).toList();
 
-    // print('[FlowPoseRemoteDataSource] Sync payload:');
+    // /////////print('[FlowPoseRemoteDataSource] Sync payload:');
     // for (final map in flowPoseListInMap) {
-    //   print(map.keys);
+    //   /////////print(map.keys);
     // }
 
-    print(flowPoseListInMap);
+    /////////print(flowPoseListInMap);
 
     final response = await httpService.post(
       path: "/flow_poses/sync",
@@ -96,14 +96,14 @@ class FlowPoseRemoteDataSource {
       body: flowPoseListInMap,
     );
 
-    print('Status Code: ${response.statusCode}');
-    print('Response Body: ${response.body}');
+    /////////print('Status Code: ${response.statusCode}');
+    /////////print('Response Body: ${response.body}');
 
     if (response.statusCode == 201) {
-      print('[FlowPoseRemoteDataSource] Sync successful');
+      /////////print('[FlowPoseRemoteDataSource] Sync successful');
       return true;
     } else {
-      print('[FlowPoseRemoteDataSource] Sync failed');
+      /////////print('[FlowPoseRemoteDataSource] Sync failed');
       return false;
     }
   }

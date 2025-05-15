@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('[HomePage] Building HomePage UI');
+    /////////print('[HomePage] Building HomePage UI');
 
     final authState = context.watch<AuthCubit>().state;
     String currentUsername = "guest"; // Default username
@@ -136,7 +136,7 @@ class HomePage extends StatelessWidget {
             // Feedback Form Navigation
             ElevatedButton(
                 onPressed: () {
-                  print("PRESSED");
+                  /////////print("PRESSED");
                   context.pushNamed('feedback');
                 },
                 child: const Text(

@@ -65,7 +65,7 @@ List<GoRoute> flowRoutes = [
       }
 
       // Fallback or loading
-      print("[FlowRouter] Error loading, state is $flowsState");
+      /////////print("[FlowRouter] Error loading, state is $flowsState");
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -102,7 +102,7 @@ List<GoRoute> flowRoutes = [
       }
 
       // Fallback or loading
-      print("[FlowRouter] Error loading, state is $flowsState");
+      /////////print("[FlowRouter] Error loading, state is $flowsState");
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -139,7 +139,7 @@ List<GoRoute> flowRoutes = [
       }
 
       // Fallback or loading
-      print("[FlowRouter] Error loading, state is $flowsState");
+      /////////print("[FlowRouter] Error loading, state is $flowsState");
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -165,7 +165,7 @@ List<GoRoute> flowRoutes = [
 //   Widget build(BuildContext context) {
 //     final state = context.watch<FlowsCubit>().state;
 //
-//     print("[FlowRouter] State is $state");
+//     /////////print("[FlowRouter] State is $state");
 //     if (state is! GetFlowsSuccess || state is! EditFlowState) {
 //       return const Scaffold(
 //         body: Center(child: CircularProgressIndicator()),

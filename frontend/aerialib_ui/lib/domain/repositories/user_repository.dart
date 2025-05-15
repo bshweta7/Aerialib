@@ -74,9 +74,9 @@ class UserRepository {
 
   /// Retrieves the currently logged-in user's data. Tries the local data source first, then falls back to the remote.
   Future<UserEntity?> getUser() async {
-    print("[UserRepository] Getting user from local...");
+    /////////print("[UserRepository] Getting user from local...");
     final localUser = await localDataSource.getUser();
-    // print("[UserRepository] Done, ${localUser}");
+    // /////////print("[UserRepository] Done, ${localUser}");
 
     if (localUser != null) {
       return _userModelToEntity(localUser);

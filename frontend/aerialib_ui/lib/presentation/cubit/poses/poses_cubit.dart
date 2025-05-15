@@ -45,7 +45,7 @@ class PosesCubit extends Cubit<PosesState> {
 
       emit(AddNewPoseSuccess(pose));
     } catch (e) {
-      print("Error creating pose: $e");
+      /////////print("Error creating pose: $e");
       emit(PoseError(e.toString()));
     }
   }
@@ -54,15 +54,15 @@ class PosesCubit extends Cubit<PosesState> {
   /// Fetch all poses (from local storage or remote if needed)
   Future<void> getAllPoses({required String token}) async {
     try {
-      print('[PosesCubit] Fetching poses...');
+      /////////print('[PosesCubit] Fetching poses...');
       emit(const PoseLoading());
 
       List<PoseEntity> poses = await _poseRepository.getAllPoses();  // Fetch local poses
-      print('[PosesCubit] Number of Poses Retrieved: ${poses.length}');
+      /////////print('[PosesCubit] Number of Poses Retrieved: ${poses.length}');
       emit(GetPosesSuccess(poses));
 
     } catch (e) {
-      print('[PosesCubit] GetAllPoses failed: $e');
+      /////////print('[PosesCubit] GetAllPoses failed: $e');
       emit(PoseError(e.toString()));
     }
   }
@@ -72,19 +72,19 @@ class PosesCubit extends Cubit<PosesState> {
     if (_isSyncing) return;
     _isSyncing = true;
 
-    print("[PosesCubit] Starting one-shot sync...");
+    /////////print("[PosesCubit] Starting one-shot sync...");
 
     try {
       await _poseRepository.syncLocalToRemote(token);
-      print('[PosesCubit] Synced local to remote.');
+      /////////print('[PosesCubit] Synced local to remote.');
 
       await _poseRepository.syncRemoteToLocal(token);
-      print('[PosesCubit] Synced remote to local.');
+      /////////print('[PosesCubit] Synced remote to local.');
 
       final updatedPoses = await _poseRepository.getAllPoses();
       emit(GetPosesSuccess(updatedPoses));
     } catch (e) {
-      print('[PosesCubit] Sync error: $e');
+      /////////print('[PosesCubit] Sync error: $e');
       emit(PoseError('[PosesCubit] Sync error: $e'));
     } finally {
       _isSyncing = false;
@@ -105,7 +105,7 @@ class PosesCubit extends Cubit<PosesState> {
       );
       emit(UpdatePoseSuccess(updatedPose));
     } catch (e) {
-      print(e.toString());
+      /////////print(e.toString());
       emit(PoseError(e.toString()));
     }
   }
@@ -118,7 +118,7 @@ class PosesCubit extends Cubit<PosesState> {
       await _poseRepository.deletePose(poseId);
       emit(DeletePoseSuccess(poseId));
     } catch (e) {
-      print('[PosesCubit] Deleting error: $e');
+      /////////print('[PosesCubit] Deleting error: $e');
       emit(PoseError('[PosesCubit] Deleting error: $e'));
     }
   }

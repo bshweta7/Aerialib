@@ -78,10 +78,10 @@ class FlowPoseRepository {
 
   /// Fetch all flow poses from local DB
   Future<List<FlowPoseEntity>> getAllFlowPoses() async {
-    print("[FlowPoseRepository] Fetching Flow Pose Models from Local Database");
+    /////////print("[FlowPoseRepository] Fetching Flow Pose Models from Local Database");
     final flowPoseModels = await localDataSource.getFlowPoses();
 
-    print("[FlowPoseRepository] Preparing corresponding Pose Models from Local Database");
+    /////////print("[FlowPoseRepository] Preparing corresponding Pose Models from Local Database");
     final poseIds = flowPoseModels.map((fp) => fp.poseId).toSet().toList();
     final poseModels = await poseLocalDataSource.getPosesByIds(poseIds);
     final poseMap = {for (var pose in poseModels) pose.id: pose};
@@ -95,7 +95,7 @@ class FlowPoseRepository {
     final transitionModels = await transitionLocalDataSource.getTransitionsByIds(transitionIds);
     final transitionMap = {for (var t in transitionModels) t.id: t};
 
-    print("[FlowPoseRepository] Converting to Flow Pose Models to Entities");
+    /////////print("[FlowPoseRepository] Converting to Flow Pose Models to Entities");
     return flowPoseModels.map((flowPose) {
       final poseModel = poseMap[flowPose.poseId];
       if (poseModel == null) {
@@ -120,7 +120,7 @@ class FlowPoseRepository {
 //   for (final flowPose in flowPoseModels) {
 //   final poseModel = poseMap[flowPose.poseId];
 //   if (poseModel == null) {
-//   print('⚠️ Warning: PoseModel not found for poseId ${flowPose.poseId}. Skipping.');
+//   /////////print('⚠️ Warning: PoseModel not found for poseId ${flowPose.poseId}. Skipping.');
 //   continue; // skip this one
 //   }
 //   flowPoseEntities.add(
@@ -150,7 +150,7 @@ class FlowPoseRepository {
     final List<FlowPoseModel> unsynced = await localDataSource.getUnsyncedFlowPoses();
     if (unsynced.isEmpty) return;
 
-    print("[FlowPoseRepository] Retrieved unsynced flow poses from local");
+    /////////print("[FlowPoseRepository] Retrieved unsynced flow poses from local");
 
     final Map<String, List<FlowPoseModel>> grouped = {};
     for (final pose in unsynced) {
@@ -161,7 +161,7 @@ class FlowPoseRepository {
       final flowId = entry.key;
       final poses = entry.value;
 
-      print("[FlowPoseRepository] Syncing flow poses for flowId: $flowId");
+      /////////print("[FlowPoseRepository] Syncing flow poses for flowId: $flowId");
 
       await remoteDataSource.deleteAllFlowPosesInFlow(flowId, token);
 
@@ -174,9 +174,9 @@ class FlowPoseRepository {
         for (final pose in poses) {
           await localDataSource.setSyncedStatus(pose.id, 1);
         }
-        print("[FlowPoseRepository] Synced and marked poses for flow $flowId");
+        /////////print("[FlowPoseRepository] Synced and marked poses for flow $flowId");
       } else {
-        print("[FlowPoseRepository] Failed to sync poses for flow $flowId");
+        /////////print("[FlowPoseRepository] Failed to sync poses for flow $flowId");
       }
     }
   }
@@ -200,23 +200,23 @@ class FlowPoseRepository {
   // }) async {
   //
   //   for (final p in newPoses) {
-  //     print('[FlowPoseRepository] id=${p.id}, flowId=${p.flowId}, poseId=${p.pose.id}, poseOrder=${p.poseOrder}');
+  //     /////////print('[FlowPoseRepository] id=${p.id}, flowId=${p.flowId}, poseId=${p.pose.id}, poseOrder=${p.poseOrder}');
   //   }
   //
-  //   print("[FlowPoseRepository] Deleting all flow poses in flow $flowId");
+  //   /////////print("[FlowPoseRepository] Deleting all flow poses in flow $flowId");
   //   await deleteAllFlowPosesInFlow(flowId);
   //
-  //   print("[FlowPoseRepository] Inserting updated poses into flow...");
+  //   /////////print("[FlowPoseRepository] Inserting updated poses into flow...");
   //   await insertFlowPoses(newPoses);
   //
-  //   // print("[FlowPoseRepository] Syncing to remote data source...");
+  //   // /////////print("[FlowPoseRepository] Syncing to remote data source...");
   //   // await syncLocalToRemote(token);
   // }
 
 
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllLocalPoses() async {
-    print("[FlowPoseRepository] Fetching PoseModels for Flow Cubit");
+    /////////print("[FlowPoseRepository] Fetching PoseModels for Flow Cubit");
     final poseModels = await poseLocalDataSource.getAllPoses();
 
     return PoseMapper.modelsToEntities(poseModels);

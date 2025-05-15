@@ -46,11 +46,11 @@
 //
 //     Connectivity().onConnectivityChanged.listen((data) async {
 //       if (data.contains(ConnectivityResult.wifi)) {
-//         print("Wifi Available");
+//         /////////print("Wifi Available");
 //         await context.read<TransitionCubit>().syncTransition(user.user.token);
 //
 //       } else {
-//         print("No wifi available");
+//         /////////print("No wifi available");
 //       }
 //     });
 //   }
@@ -116,7 +116,7 @@
 //             }
 //
 //             if (state is TransitionError) {
-//               print("Error: State is Transition Error");
+//               /////////print("Error: State is Transition Error");
 //               return Center(
 //                 child: Column(
 //                   children: [
