@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
 
             const Text(
-              "Organize your aerial flows, explore new poses in the library, and build your own routines — all in one place.",
+              "Organize your aerial flows, explore new poses from Joanne's pose flashcard library, and keep track of your favorite poses for Hoopla — all in one place.",
               style: TextStyle(
                 // fontWeight: FontWeight.bold,
                 fontSize: 18,

@@ -14,7 +14,7 @@ ThemeData getLightTheme() {
     scaffoldBackgroundColor: const Color(0xFFE4E2ED),
     fontFamily: "Cera Pro",
     appBarTheme: const AppBarTheme(
-      backgroundColor: const Color(0xFF3A2E58), // plum text
+      backgroundColor: const Color(0xFF3A2E58), // plum text // TODO use theme colors constants file
       foregroundColor: Colors.white,
       titleTextStyle: TextStyle(
         fontSize: 20,

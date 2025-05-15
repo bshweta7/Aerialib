@@ -4,3 +4,6 @@ IOS: flutter build ios --release
 
 UNIT TESTING
 flutter test lib/test/cubit/poses_cubit_test.dart
+
+Favicon Builder:
+https://realfavicongenerator.net/your-favicon-is-ready
