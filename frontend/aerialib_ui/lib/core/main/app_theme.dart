@@ -14,10 +14,11 @@ ThemeData getLightTheme() {
     scaffoldBackgroundColor: const Color(0xFFE4E2ED),
     fontFamily: "Cera Pro",
     appBarTheme: const AppBarTheme(
+      centerTitle: true,
       backgroundColor: const Color(0xFF3A2E58), // plum text // TODO use theme colors constants file
       foregroundColor: Colors.white,
       titleTextStyle: TextStyle(
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
@@ -123,6 +124,7 @@ ThemeData getDarkTheme() {
     fontFamily: "Cera Pro",
     scaffoldBackgroundColor: const Color(0xFF1E1B2E),
     appBarTheme: const AppBarTheme(
+      centerTitle: true,
       backgroundColor: Color(0xFF2A2140),
       foregroundColor: Colors.white,
     ),
