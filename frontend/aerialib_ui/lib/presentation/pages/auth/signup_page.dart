@@ -36,6 +36,10 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
+  void resetPage() {
+    context.read<AuthCubit>().reInitialize();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,12 +62,14 @@ class _SignupPageState extends State<SignupPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
               );
-            } else if (state is AuthSignUp) {
+              resetPage();
+            } else if (state is AuthLoggedIn) { // TODO eventually, emit a different state authSignedUp so that it will go to the tutorial on how to use it.
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text("Account created! Login now!"),
+                  content: Text("Account created! Welcome!"),
                 ),
               );
+              context.goNamed('home');
             }
           },
           builder: (context, state) {
