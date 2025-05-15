@@ -205,10 +205,10 @@ packages:
     dependency: transitive
     description:
       name: dev_build
-      sha256: "87abaa4f6cfd50320b229e29a7ef5532d86bc804f3124328c7e9db238ba45b33"
+      sha256: de3c7b99d47f90c053dc331b8a950041426ecbe58dea21f961bb1f751ea98bb8
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2+8"
+    version: "1.1.2+9"
   diff_match_patch:
     dependency: transitive
     description:
