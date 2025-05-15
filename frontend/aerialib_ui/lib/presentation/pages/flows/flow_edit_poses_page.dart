@@ -18,6 +18,9 @@ import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
 import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 import 'package:frontend/presentation/widgets/navigation/nav_bar.dart';
 
+import '../../../core/constants/constants.dart';
+import '../../widgets/filters/pose_filter_sheet.dart';
+
 
 class FlowEditPosesPage extends StatefulWidget {
   final FlowEntity flow;
@@ -34,6 +37,11 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
   bool _showSwipeHint = true;
   final TextEditingController _textController = TextEditingController();
 
+  // Filtering
+  final bool _showFilters = false;
+  List<String> selectedApparatus = Constants.apparatusOptions;
+  List<int> selectedLevels = Constants.levelOptions;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +52,21 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     });
   }
 
+
+  // Filtering
+  void _updateApparatusFilter(List<String> newApparatus) {
+    setState(() {
+      selectedApparatus = newApparatus;
+    });
+  }
+
+  void _updateLevelsFilter(List<int> newLevels) {
+    setState(() {
+      selectedLevels = newLevels;
+    });
+  }
+
+  // Search Bar
   void _updateSearchQuery(String query) {
     setState(() {
       _searchQuery = query;
@@ -104,7 +127,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: const SmartBackButton(), // TODO before going back, UPDATE THE CUBIT STATE!
+          // leading: const SmartBackButton(), // TODO before going back, UPDATE THE CUBIT STATE!
           title: const Text('Edit Poses'),
           actions: [
             IconButton(
@@ -129,23 +152,99 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
               if (availablePoses.isEmpty) {
                 return const Center(child: CircularProgressIndicator());
-              }
+              } // TODO thats not right....
+
+              // Filtering
+              List<PoseEntity> filteredPoses = state.availablePoses.where(
+                    (elem) =>
+                selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase()) &&
+                    selectedLevels.contains(elem.level.floor()),
+              ).toList();
+
+              // Search suggestion list
+              final List<PoseEntity> sortedFilteredPoses = List<PoseEntity>.from(filteredPoses)
+                ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+              // TODO - decide if search list should only show filtered poses or all poses
+
 
               return Column(
                 children: [
                   // TODO allow multiselect from pose library
 
-                  /// Search Bar
+                  // /// Search Bar
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                  //   child: PoseSearchBarWidget(
+                  //     onSearchChanged: _updateSearchQuery,
+                  //     suggestionList: availablePoses,
+                  //     onSuggestionTapped: _addPoseToFlow,
+                  //     hintText: 'Add new pose',
+                  //     // fromPage: 'flow-edit-poses', // TODO may need to be null, or pop if needed? Otherwise, this isn't a problem if the search bar shows pop up modal - might need a second option to show the modal and not the full page?
+                  //   ),
+                  // ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                    child: PoseSearchBarWidget(
-                      onSearchChanged: _updateSearchQuery,
-                      suggestionList: availablePoses,
-                      onSuggestionTapped: _addPoseToFlow,
-                      hintText: 'Add new pose',
-                      // fromPage: 'flow-edit-poses', // TODO may need to be null, or pop if needed? Otherwise, this isn't a problem if the search bar shows pop up modal - might need a second option to show the modal and not the full page?
+                    child: Row(
+                      children: [
+
+                        // Search Bar
+                        Expanded(
+                          child: PoseSearchBarWidget(
+                            onSearchChanged: _updateSearchQuery,
+                            suggestionList: sortedFilteredPoses,
+                            onSuggestionTapped: _addPoseToFlow,
+                            hintText: 'Add new pose',
+                          ),
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        // Filter Icon Button
+                        IconButton(
+                          icon: const Icon(Icons.filter_alt_outlined),
+                          tooltip: 'Show filters',
+                          onPressed: () {
+                            PoseFiltersSheet.showFilterSheet(
+                              context: context,
+                              selectedApparatus: selectedApparatus,
+                              selectedLevels: selectedLevels,
+                              onApparatusChanged: _updateApparatusFilter,
+                              onLevelsChanged: _updateLevelsFilter,
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
+
+                  /// Active filters
+                  if (selectedApparatus.length < Constants.apparatusOptions.length ||
+                      selectedLevels.length < Constants.levelOptions.length)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Tooltip(
+                            message: '${selectedApparatus.length} Apparatus, ${selectedLevels.length} Levels',
+                            child: Text(
+                              'Filters: ${selectedApparatus.length + selectedLevels.length} Active',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedApparatus = Constants.apparatusOptions;
+                                selectedLevels = Constants.levelOptions;
+                              });
+                            },
+                            child: const Text('Clear All'),
+                          )
+                        ],
+                      ),
+                    ),
 
                   if (poses.isEmpty)
                     const Center(
