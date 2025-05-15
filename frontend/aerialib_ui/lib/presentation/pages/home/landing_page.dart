@@ -51,7 +51,7 @@ class LandingPage extends StatelessWidget {
                   width: 160,
                   height: 40,
                   child: ElevatedButton(
-                    onPressed: () => context.go('/login'),
+                    onPressed: () => context.goNamed('login'),
                     // style: ElevatedButton.styleFrom(
                     //   backgroundColor: const Color(0xFF3b82f6),
                     //   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -67,7 +67,7 @@ class LandingPage extends StatelessWidget {
                   width: 160,
                   height: 40,
                   child: ElevatedButton(
-                    onPressed: () => context.go('/signup'),
+                    onPressed: () => context.goNamed('signup'),
                     // style: OutlinedButton.styleFrom(
                     //   foregroundColor: const Color(0xFF3b82f6),
                     //   side: const BorderSide(color: Color(0xFF3b82f6), width: 2),
@@ -85,7 +85,7 @@ class LandingPage extends StatelessWidget {
             const Spacer(),
             const Text(
               "© 2025 Aerialib. All rights reserved.",
-              style: TextStyle(color: Color(0xffffffff)),
+              style: TextStyle(color: Color(0xFF1e293b)),
             ),
           ],
         ),

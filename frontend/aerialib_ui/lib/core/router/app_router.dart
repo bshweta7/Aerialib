@@ -38,14 +38,14 @@ GoRouter createRouter(AuthCubit authCubit) {
       final isLoggingIn = state.fullPath == '/login';
 
       // If not logged in and not trying to log in, redirect to login
-      if (!isLoggedIn && !isLoggingIn) {
-        return '/';
-      }
+      // if (!isLoggedIn && !isLoggingIn) {
+      //   return '/';
+      // }
 
-      // If not logged in and not trying to log in, redirect to login
-      if (!isLoggedIn && isLoggingIn) {
-        return '/login';
-      }
+      // // If not logged in and not trying to log in, redirect to login
+      // if (!isLoggedIn && isLoggingIn) {
+      //   return '/login';
+      // }
 
       // If logged in and trying to go to the root or login page, redirect to home
       if (isLoggedIn && (state.fullPath == '/' || state.fullPath == '/login')) {

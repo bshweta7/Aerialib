@@ -5,12 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/widgets/password_field.dart';
 
-
-// TODO allow tab to go from username textbox to password textbox
-// TODO arrows don't work in textboxes?
-
-// TODO weird error message if trying to login without connection to db
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -27,13 +21,11 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     usernameController.dispose();
     passwordController.dispose();
-    // formKey.currentState.validate()
     super.dispose();
   }
 
   void logInUser() {
     if (formKey.currentState!.validate()) {
-      // store the user data and call nodeJS express
       context.read<AuthCubit>().login(
         username: usernameController.text.trim(),
         password: passwordController.text.trim(),
@@ -42,110 +34,155 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void resetPage() {
-    // reset to Auth initial
     context.read<AuthCubit>().reInitialize();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if(state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                // content: Text("Could not login"),
-                content: Text(state.error), //TODO update snack bar to show more specific error message
-              ),
-            );
-            resetPage();
-          } else if (state is AuthLoggedIn) {
-            context.goNamed('home'); // Navigate to the 'home' named route defined in app_router.dart
-          }
-        },
-        builder: (context, state) {
-          if(state is AuthLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFEDE7F6),
+              Color(0xFFBAAEC8),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+              resetPage();
+            } else if (state is AuthLoggedIn) {
+              context.goNamed('home');
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          return Padding(
-            padding: const EdgeInsets.all(20.0),
+            return Center(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "Welcome Back",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1e293b),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        "Log in to continue",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xFF334155),
+                        ),
+                      ),
+                      const SizedBox(height: 32),
 
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize:50,
-                        fontWeight: FontWeight.bold,
-                      )
-                  ),
-                  const SizedBox(height: 30,),
+                      // Username field
+                      TextFormField(
+                        controller: usernameController,
+                        decoration: const InputDecoration(
+                          hintText: 'Username',
+                          border: OutlineInputBorder(),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Username field cannot be empty!";
+                          }
+                          return null;
+                        },
+                      ),
 
-                  TextFormField(
-                    controller: usernameController,
-                    decoration: const InputDecoration(
-                      hintText: 'Username',
-                    ),
-                    validator: (value) {
-                      if(value == null ||
-                          value.trim().isEmpty) {
-                        return "Username field cannot be empty!";
-                      }
-                      // TODO function to check if username is valid
-                      // if(!value.trim().contains("@")) {
-                      //   return "Email is invalid!"; //TODO use real regex
-                      // }
-                      return null;
-                    },
-                  ),
+                      const SizedBox(height: 16),
 
-                  const SizedBox(height: 15,),
-                  PasswordField(
-                    controller: passwordController,
-                    label: "Password",
-                  ),
+                      // Password field
+                      PasswordField(
+                        controller: passwordController,
+                        label: "Password",
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: logInUser,
+                          child: const Text(
+                            'LOG IN',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
 
-                  const SizedBox(height: 20),
-
-                  ElevatedButton(
-                      onPressed: logInUser,
-                      child: const Text(
-                          'LOGIN',
-                          style: TextStyle(
-                            fontSize: 16,
-                          )
-                      )
-                  ),
-
-                  const SizedBox(height: 15),
-
-
-                  GestureDetector(
-                    onTap: () => context.go('/signup'),
-                    child: RichText(
-                        text: TextSpan(
-                            text: 'Don\'t have an account? ',
-                            style: Theme.of(context).textTheme.titleMedium,
-                            children: const [
-                              TextSpan(text:'Sign Up',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  )
+                      // More prominent Sign Up prompt
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Don't have an account? ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xFF334155),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => context.goNamed('signup'),
+                            child: const Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1e293b),
+                                decoration: TextDecoration.underline,
                               ),
-                            ]
-                        )
-                    ),
-                  )
-                ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 50),
+
+                      // Back button
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton.icon(
+                          onPressed: () => context.go('/'),
+                          icon: const Icon(Icons.arrow_back, color: Color(0xFF1e293b)),
+                          label: const Text(
+                            "Back to Landing Page",
+                            style: TextStyle(color: Color(0xFF1e293b)),
+                          ),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Color(0xFF1e293b), // for consistency on hover/tap
+                          ),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
