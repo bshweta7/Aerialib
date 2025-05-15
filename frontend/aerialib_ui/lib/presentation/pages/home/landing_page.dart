@@ -80,6 +80,20 @@ class LandingPage extends StatelessWidget {
                     child: const Text('Sign Up'),
                   ),
                 ),
+
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () => context.pushNamed('install'),
+                  child: const Text(
+                    "How to Add Aerialib to Your Home Screen",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF1e293b),
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+
               ],
             ),
             const Spacer(),

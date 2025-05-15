@@ -4,6 +4,8 @@ import 'package:frontend/presentation/pages/home/landing_page.dart';
 import 'package:frontend/presentation/pages/home/opinion_page.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../presentation/pages/home/install_page.dart';
+
 
 List<GoRoute> homeRoutes = [
   GoRoute(
@@ -26,4 +28,10 @@ List<GoRoute> homeRoutes = [
     name: 'opinion-poll',
     builder: (context, state) => const LogoPollPage(),
   ),
+  GoRoute(
+    path: '/install',
+    name: 'install',
+    builder: (context, state) => const InstallPage(),
+  ),
+
 ];
