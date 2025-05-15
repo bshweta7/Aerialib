@@ -120,7 +120,8 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 30,),
 
-
+            const Divider(),
+            const SizedBox(height: 15,),
             const Text(
               "Have an idea or found a bug? We'd love to hear from you!",
               style: TextStyle(
@@ -140,6 +141,20 @@ class HomePage extends StatelessWidget {
                 },
                 child: const Text(
                     "Submit Feedback",
+                    style: TextStyle(
+                      fontSize: 20,
+                    )
+                )
+            ),
+            const SizedBox(height: 10,),
+
+            // Opinion Poll Navigation
+            ElevatedButton(
+                onPressed: () {
+                  context.pushNamed('opinion-poll');
+                },
+                child: const Text(
+                    "Vote Now",
                     style: TextStyle(
                       fontSize: 20,
                     )

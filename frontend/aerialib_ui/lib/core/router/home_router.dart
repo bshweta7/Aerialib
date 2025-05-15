@@ -1,6 +1,7 @@
 import 'package:frontend/presentation/pages/home/feedback_form.dart';
 import 'package:frontend/presentation/pages/home/home_page.dart';
 import 'package:frontend/presentation/pages/home/landing_page.dart';
+import 'package:frontend/presentation/pages/home/opinion_page.dart';
 import 'package:go_router/go_router.dart';
 
 
@@ -19,5 +20,10 @@ List<GoRoute> homeRoutes = [
     path: '/feedback',
     name: 'feedback',
     builder: (context, state) => const SubmitFeedbackPage(),
+  ),
+  GoRoute(
+    path: '/poll',
+    name: 'opinion-poll',
+    builder: (context, state) => const LogoPollPage(),
   ),
 ];
