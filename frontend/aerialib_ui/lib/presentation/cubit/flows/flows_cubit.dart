@@ -52,13 +52,13 @@ class FlowsCubit extends Cubit<FlowsState> {
         token: token,
       );
 
-      /////////print("[FlowsCubit] Created Flow ");
+      print("[FlowsCubit] Created Flow ");
 
       final successState = AddNewFlowSuccess(flow);
       emit(successState);
       return successState;
     } catch (e) {
-      /////////print("Error creating flow: $e");
+      print("Error creating flow: $e");
       final errorState = FlowError(e.toString());
       emit(errorState);
       return errorState;
@@ -92,7 +92,7 @@ class FlowsCubit extends Cubit<FlowsState> {
 
       emit(GetFlowsSuccess(enrichedFlows));
     } catch (e) {
-      /////////print("Error fetching flows: $e");
+      print("Error fetching flows: $e");
       emit(FlowError(e.toString()));
     }
   }
@@ -101,17 +101,17 @@ class FlowsCubit extends Cubit<FlowsState> {
   Future<void> syncFlowDetails({required String token}) async {
     if (_isSyncing) return;
     _isSyncing = true;
-    // /////////print("[FlowsCubit] Starting one-shot sync of flow details...");
+    // print("[FlowsCubit] Starting one-shot sync of flow details...");
 
     try {
-      /////////print('[FlowsCubit] Syncing flow details local to remote...');
+      print('[FlowsCubit] Syncing flow details local to remote...');
       await _flowRepository.syncLocalToRemote(token);
 
-      /////////print('[FlowsCubit] Syncing flow details remote to local...');
+      print('[FlowsCubit] Syncing flow details remote to local...');
       await _flowRepository.syncRemoteToLocal(token);
 
     } catch (e) {
-      /////////print('[FlowsCubit] Sync error for flow details: $e');
+      print('[FlowsCubit] Sync error for flow details: $e');
       emit(FlowError('[FlowsCubit] Sync error for flow details: $e'));
 
     } finally {
@@ -126,14 +126,14 @@ class FlowsCubit extends Cubit<FlowsState> {
     _isSyncing = true;
 
     try {
-      /////////print('[FlowsCubit] Syncing flow poses local to remote...');
+      print('[FlowsCubit] Syncing flow poses local to remote...');
       await _flowPoseRepository.syncLocalToRemote(token);
 
-      /////////print('[FlowsCubit] Syncing flow poses remote to local...');
+      print('[FlowsCubit] Syncing flow poses remote to local...');
       await _flowPoseRepository.syncRemoteToLocal(token);
 
     } catch (e) {
-      /////////print('[FlowsCubit] Sync error for flow poses: $e');
+      print('[FlowsCubit] Sync error for flow poses: $e');
       emit(FlowError('[FlowsCubit] Sync error for flow poses: $e'));
 
     } finally {
@@ -142,12 +142,12 @@ class FlowsCubit extends Cubit<FlowsState> {
   }
 
   Future<void> syncFlows({required String token}) async {
-    /////////print("[FlowsCubit] Starting one-shot sync of flows...");
+    print("[FlowsCubit] Starting one-shot sync of flows...");
     await syncFlowDetails(token: token);
     await syncFlowPoses(token: token);
 
     final updatedFlows = await _flowRepository.getAllFlowDetails();
-    /////////print("[FlowsCubit] Flows sync complete.");
+    print("[FlowsCubit] Flows sync complete.");
 
     emit(GetFlowsSuccess(updatedFlows));
   }
@@ -160,18 +160,18 @@ class FlowsCubit extends Cubit<FlowsState> {
       emit(EditFlowState(flow: flow));
 
       // Then fetch available poses
-      /////////print("Fetching all available poses...");
+      print("Fetching all available poses...");
       final poses = await _flowPoseRepository.getAllLocalPoses();
 
       final currentState = state;
-      /////////print("Emitting new EditFlowState with ${poses.length} available poses");
+      print("Emitting new EditFlowState with ${poses.length} available poses");
 
       if (currentState is EditFlowState) {
         emit(currentState.copyWith(availablePoses: poses));
       }
 
     } catch (e) {
-      /////////print("Error initializing editing flow: $e");
+      print("Error initializing editing flow: $e");
       emit(FlowError(e.toString()));
     }
   }
@@ -208,39 +208,39 @@ class FlowsCubit extends Cubit<FlowsState> {
       );
       emit(UpdateFlowSuccess(updatedFlow));
     } catch (e) {
-      /////////print(e.toString());
+      print(e.toString());
       emit(FlowError(e.toString()));
     }
   }
 
   /// Sets flow.poses to the new set of poses
   void updateFlowPoses(List<FlowPoseEntity> newPoses) {
-    /////////print("[FlowsCubit] Updating flow poses... ");
+    print("[FlowsCubit] Updating flow poses... ");
 
     if (state is! EditFlowState) {
-      /////////print("[FlowsCubit] State is not EditFlowState, returning without update...");
+      print("[FlowsCubit] State is not EditFlowState, returning without update...");
       return;
     }
     final currentState = state as EditFlowState;
 
-    // 🔍 /////////print BEFORE
-    // /////////print("[FlowsCubit] Existing poses in flow BEFORE update:");
-    // /////////print(currentState.flow);
+    // 🔍 print BEFORE
+    // print("[FlowsCubit] Existing poses in flow BEFORE update:");
+    // print(currentState.flow);
     // for (final p in currentState.flow.poses) {
-    //   /////////print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
+    //   print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
     // }
 
     final updatedFlow = currentState.flow.copyWith(poses: newPoses);
 
 
-    // 🔍 /////////print AFTER
-    // /////////print("[FlowsCubit] Poses to update TO:");
-    // /////////print(currentState.flow);
+    // 🔍 print AFTER
+    // print("[FlowsCubit] Poses to update TO:");
+    // print(currentState.flow);
     // for (final p in currentState.flow.poses) {
-    //   /////////print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
+    //   print("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
     // }
 
-    /////////print("[FlowsCubit] Updated flow cubit with new poses.");
+    print("[FlowsCubit] Updated flow cubit with new poses.");
     emit(currentState.copyWith(flow: updatedFlow));
   }
 
@@ -256,7 +256,7 @@ class FlowsCubit extends Cubit<FlowsState> {
 
       emit(const FlowInitial());
     } catch (e) {
-      /////////print("[FlowsCubit] Error clearing local flows: $e");
+      print("[FlowsCubit] Error clearing local flows: $e");
       emit(FlowError("Failed to clear local flows: $e"));
     }
   }
@@ -267,19 +267,19 @@ class FlowsCubit extends Cubit<FlowsState> {
     required String token
   }) async {
     try {
-      /////////print("[FlowsCubit] Deleting flow...");
+      print("[FlowsCubit] Deleting flow...");
       await _flowRepository.deleteFlow(flowId, token);
     } catch (e) {
-      /////////print("[FlowsCubit] Error deleting flow: $e");
+      print("[FlowsCubit] Error deleting flow: $e");
       emit(FlowError("Failed to delete flow: $e"));
     }
   }
 
   /// Save the flows poses (local + remote)
   Future<void> saveFlowPoses({required String token}) async {
-    // /////////print("[FlowCubit] State is $state");
+    // print("[FlowCubit] State is $state");
     if (state is! EditFlowState) {
-      /////////print("[FlowsCubit] State is not EditFlowState, returning without update...");
+      print("[FlowsCubit] State is not EditFlowState, returning without update...");
       return;
     }
     final currentState = state as EditFlowState;
@@ -287,25 +287,25 @@ class FlowsCubit extends Cubit<FlowsState> {
     emit(currentState.copyWith(isSaving: true));
 
     try {
-      // /////////print("[FlowsCubit] Updating flow details...");
+      // print("[FlowsCubit] Updating flow details...");
       // await _flowRepository.updateFlow(
       //   updatedFlow: currentState.flow,
       //   token: token,
       // );
-      /////////print("[FlowsCubit] Deleting all flow poses in flow ${currentState.flow.name}, ${currentState.flow.id}");
+      print("[FlowsCubit] Deleting all flow poses in flow ${currentState.flow.name}, ${currentState.flow.id}");
       await _flowPoseRepository.deleteAllFlowPosesInFlow(currentState.flow.id);
 
-      /////////print("[FlowsCubit] Inserting updated poses into flow...");
+      print("[FlowsCubit] Inserting updated poses into flow...");
       await _flowPoseRepository.insertFlowPoses(currentState.flow.poses);
 
-      /////////print("[FlowPoseRepository] Syncing to remote data source...");
+      print("[FlowPoseRepository] Syncing to remote data source...");
       await _flowPoseRepository.syncLocalToRemote(token);
-      /////////print("[FlowPoseRepository] Synced to remote successfully.");
+      print("[FlowPoseRepository] Synced to remote successfully.");
 
 
 
 
-      // /////////print("[FlowsCubit] Updating flow poses in flow...");
+      // print("[FlowsCubit] Updating flow poses in flow...");
       // await _flowPoseRepository.replaceFlowPosesInFlow(
       //   flowId: currentState.flow.id,
       //   newPoses: currentState.flow.poses,
@@ -313,7 +313,7 @@ class FlowsCubit extends Cubit<FlowsState> {
       // );
       emit(currentState.copyWith(isSaving: false, saveSuccess: true));
     } catch (e) {
-      /////////print("[FlowsCubit] Error saving flow: $e");
+      print("[FlowsCubit] Error saving flow: $e");
       emit(currentState.copyWith(
         isSaving: false,
         errorMessage: e.toString(),

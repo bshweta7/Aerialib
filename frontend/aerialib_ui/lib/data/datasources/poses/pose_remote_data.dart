@@ -88,13 +88,13 @@ class PoseRemoteDataSource {
       final map = pose.toMap();
       map.remove('is_synced');
       map.remove('primary_media_path');
-      /////////print("MEDIA: ${pose.primaryMediaId}");
+      print("MEDIA: ${pose.primaryMediaId}");
       return map;
     }).toList();
 
-    /////////print('[PoseRemoteDataSource] Sync payload:');
+    print('[PoseRemoteDataSource] Sync payload:');
     for (final map in poseListInMap) {
-      /////////print(map.keys);
+      print(map.keys);
     }
 
     final response = await httpService.post(
@@ -103,14 +103,14 @@ class PoseRemoteDataSource {
       body: poseListInMap,
     );
 
-    // /////////print('[PoseRemoteDataSource] Sync response status: ${response.statusCode}');
-    // /////////print('[PoseRemoteDataSource] Sync response body: ${response.body}');
+    // print('[PoseRemoteDataSource] Sync response status: ${response.statusCode}');
+    // print('[PoseRemoteDataSource] Sync response body: ${response.body}');
 
     if (response.statusCode == 201) {
-      /////////print('[PoseRemoteDataSource] Sync successful');
+      print('[PoseRemoteDataSource] Sync successful');
       return true;
     } else {
-      /////////print('[PoseRemoteDataSource] Sync failed');
+      print('[PoseRemoteDataSource] Sync failed');
       return false;
     }
   }
@@ -125,14 +125,14 @@ class PoseRemoteDataSource {
       token: token,
       body: updatedPose.toMap(), // or explicit map
     );
-    // /////////print("____________________");
+    // print("____________________");
     //
-    // /////////print("Backend response body: ${response.body}");
+    // print("Backend response body: ${response.body}");
 
     if (response.statusCode != 200) {
-      /////////print("[PoseRemoteDataSource] Failed to update pose:");
-      /////////print("[PoseRemoteDataSource] Status: ${response.statusCode}");
-      /////////print("[PoseRemoteDataSource] Body: ${response.body}");
+      print("[PoseRemoteDataSource] Failed to update pose:");
+      print("[PoseRemoteDataSource] Status: ${response.statusCode}");
+      print("[PoseRemoteDataSource] Body: ${response.body}");
       throw Exception("[PoseRemoteDataSource] Failed to update pose remotely");
     }
 

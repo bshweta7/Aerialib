@@ -14,9 +14,9 @@ int calculateNewGridSize(
 
   int gridSizeMax = (windowSize.width / windowSizeFactor).ceil();
   if (kDebugMode) {
-    /////////print("Window Size: $windowSize");
-    /////////print("Width: ${windowSize.width}");
-    /////////print("Grid Size Max: $gridSizeMax");
+    print("Window Size: $windowSize");
+    print("Width: ${windowSize.width}");
+    print("Grid Size Max: $gridSizeMax");
   }
 
   // Set the grid size to the maximum on first startup

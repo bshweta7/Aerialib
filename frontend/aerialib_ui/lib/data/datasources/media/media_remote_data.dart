@@ -64,24 +64,24 @@ class MediaRemoteDataSource {
   Future<List<MediaModel>> fetchRemoteMediaList({ // TODO refactored from getMediaList
     required String token,
   }) async {
-    /////////print("[MediaRemoteDataSource] Sending GET request... ");
+    print("[MediaRemoteDataSource] Sending GET request... ");
     final response = await httpService.get(
       path: "/media",
       token: token,
     );
 
-    /////////print("[MediaRemoteDataSource] Mapping response to MediaModel... ");
+    print("[MediaRemoteDataSource] Mapping response to MediaModel... ");
     final List<dynamic> jsonList = jsonDecode(response.body);
 
     for (var e in jsonList) {
       try {
-        /////////print("Mapping: $e");
+        print("Mapping: $e");
         final media = MediaModel.fromMap(e);
-        // Optionally /////////print media to confirm success
+        // Optionally print media to confirm success
       } catch (error, stack) {
-        /////////print("Failed to map media: $e");
-        /////////print("Error: $error");
-        /////////print("Stack: $stack");
+        print("Failed to map media: $e");
+        print("Error: $error");
+        print("Stack: $stack");
         rethrow; // Optional: or return a fallback
       }
     }
@@ -101,12 +101,12 @@ class MediaRemoteDataSource {
       return map;
     }).toList();
 
-    /////////print('[MediaRemoteDataSource] Sync payload:');
+    print('[MediaRemoteDataSource] Sync payload:');
     for (final map in mediaListInMap) {
-      /////////print(map.keys);
+      print(map.keys);
     }
 
-    /////////print(mediaListInMap);
+    print(mediaListInMap);
 
     final response = await httpService.post(
       path: "/media/sync",
@@ -114,8 +114,8 @@ class MediaRemoteDataSource {
       body: mediaListInMap,
     );
 
-    /////////print('[MediaRemoteDataSource] Status Code: ${response.statusCode}');
-    /////////print('[MediaRemoteDataSource] Response: ${response.body}');
+    print('[MediaRemoteDataSource] Status Code: ${response.statusCode}');
+    print('[MediaRemoteDataSource] Response: ${response.body}');
 
     return response.statusCode == 201;
   }

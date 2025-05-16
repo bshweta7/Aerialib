@@ -63,9 +63,9 @@ class MediaRepository {
 
   /// Fetch all medias from local DB
   Future<List<MediaEntity>> getLocalMedias() async {
-    /////////print("Fetching MediaModels from Local Database");
+    print("Fetching MediaModels from Local Database");
     final mediaModels = await localDataSource.getMediaList();
-    /////////print("Converting to Media Models to Entities");
+    print("Converting to Media Models to Entities");
     return MediaMapper.modelsToEntities(mediaModels);
   }
 
@@ -73,10 +73,10 @@ class MediaRepository {
 
   /// Fetch all medias from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
-    /////////print("[MediaRepository] Fetching from remote data source");
+    print("[MediaRepository] Fetching from remote data source");
     final mediaModels = await remoteDataSource.fetchRemoteMediaList(token: token);
 
-    /////////print("[MediaRepository] Inserting data into local data source");
+    print("[MediaRepository] Inserting data into local data source");
     await localDataSource.insertMediaList(mediaModels);
   }
 
@@ -88,12 +88,12 @@ class MediaRepository {
       return;
     }
 
-    /////////print("[MediaRepository] Retrieved unsynced medias from local");
+    print("[MediaRepository] Retrieved unsynced medias from local");
     final success = await remoteDataSource.syncMedia(
       token: token,
       mediaList: unsynced,
     );
-    /////////print("[MediaRepository] Synced media to remote");
+    print("[MediaRepository] Synced media to remote");
 
     if (success) {
       for (final media in unsynced) {

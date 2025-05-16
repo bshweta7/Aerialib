@@ -31,18 +31,18 @@ class ConnectivityService {
   }) {
     _subscription = Connectivity().onConnectivityChanged.listen((resultList) async {
       if (_isConnected(resultList)) {
-        /////////print('[ConnectivityService] Connected, triggering sync...');
+        print('[ConnectivityService] Connected, triggering sync...');
         await posesCubit.syncPoses(token: token);
         await flowsCubit.syncFlows(token: token);
         // TODO add other syncs
       } else {
-        /////////print('[ConnectivityService] Offline');
+        print('[ConnectivityService] Offline');
       }
     });
   }
 
   void stopLiveSync() {
-    /////////print("[ConnectivityService] Stopping Live Sync");
+    print("[ConnectivityService] Stopping Live Sync");
     _subscription?.cancel();
   }
 }

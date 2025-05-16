@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /////////print('[HomePage] Building HomePage UI');
+    print('[HomePage] Building HomePage UI');
 
     final authState = context.watch<AuthCubit>().state;
     String currentUsername = "guest"; // Default username
@@ -136,7 +136,7 @@ class HomePage extends StatelessWidget {
             // Feedback Form Navigation
             ElevatedButton(
                 onPressed: () {
-                  /////////print("PRESSED");
+                  print("PRESSED");
                   context.pushNamed('feedback');
                 },
                 child: const Text(
@@ -148,19 +148,19 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 10,),
 
-            // Opinion Poll Navigation
-            ElevatedButton(
-                onPressed: () {
-                  context.pushNamed('opinion-poll');
-                },
-                child: const Text(
-                    "Vote Now",
-                    style: TextStyle(
-                      fontSize: 20,
-                    )
-                )
-            ),
-            const SizedBox(height: 10,),
+            // // Opinion Poll Navigation
+            // ElevatedButton(
+            //     onPressed: () {
+            //       context.pushNamed('opinion-poll');
+            //     },
+            //     child: const Text(
+            //         "Vote Now",
+            //         style: TextStyle(
+            //           fontSize: 20,
+            //         )
+            //     )
+            // ),
+            // const SizedBox(height: 10,),
 
             const SizedBox(height:30),
 

@@ -21,7 +21,7 @@ class SmartBackWrapper extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        /////////print("[SmartBackWrapper] Pop invoked: didPop=$didPop");
+        print("[SmartBackWrapper] Pop invoked: didPop=$didPop");
 
         if (didPop) return;
 
@@ -29,7 +29,7 @@ class SmartBackWrapper extends StatelessWidget {
         final last = navHistory.pop();
 
         if (last != null) {
-          /////////print("[SmartBackWrapper] Popped to $last");
+          print("[SmartBackWrapper] Popped to $last");
           context.goNamed(last);
         } else {
           context.goNamed(fallbackRoute);

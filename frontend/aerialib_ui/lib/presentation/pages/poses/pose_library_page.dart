@@ -87,7 +87,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   // Search Bar
   void _updateSearchQuery(String newQuery) {
-    /////////print(newQuery);
+    print(newQuery);
     setState(() {
       _searchQuery = newQuery;
     });

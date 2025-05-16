@@ -62,14 +62,14 @@ class _FlowViewPageState extends State<FlowViewPage> {
   @override
   Widget build(BuildContext context) {
     final flow = widget.flow;
-    /////////print("[FlowViewPage] Flow ID: ${flow.id}, Name: ${flow.name}");
-    /////////print("[FlowViewPage] Thumbnail: ${flow.thumbnailImagePath}");
-    /////////print("[FlowViewPage] Pose count: ${flow.poses.length}");
+    print("[FlowViewPage] Flow ID: ${flow.id}, Name: ${flow.name}");
+    print("[FlowViewPage] Thumbnail: ${flow.thumbnailImagePath}");
+    print("[FlowViewPage] Pose count: ${flow.poses.length}");
 
     final poses = (flow.poses ?? []).map((fp) => fp.pose).toList();
 
-    /////////print("[FlowViewPage] Pose names: ${poses.map((p) => p.name).toList()}");
-    /////////print("[FlowViewPage] Pose image paths: ${poses.map((p) => p.primaryMediaPath).toList()}");
+    print("[FlowViewPage] Pose names: ${poses.map((p) => p.name).toList()}");
+    print("[FlowViewPage] Pose image paths: ${poses.map((p) => p.primaryMediaPath).toList()}");
 
     final mediaItems = posesToMediaIcons(poses);
 

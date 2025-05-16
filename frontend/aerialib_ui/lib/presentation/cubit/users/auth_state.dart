@@ -15,9 +15,9 @@ final class AuthLoading extends AuthState {
   const AuthLoading();
 }
 
-final class AuthSignUp extends AuthState {
-  const AuthSignUp();
-}
+// final class AuthSignUp extends AuthState {
+//   const AuthSignUp();
+// }
 
 final class AuthLoggedIn extends AuthState {
   final UserEntity user;

@@ -18,15 +18,15 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await _userRepository.getUser();
 
       if (user == null) {
-        /////////print('[AuthCubit] No user found, logging out');
+        print('[AuthCubit] No user found, logging out');
         emit(AuthLoggedOut());
       } else {
-        /////////print('[AuthCubit] User found, logging in');
+        print('[AuthCubit] User found, logging in');
         emit(AuthLoggedIn(user));
       }
     } catch (e, st) {
-      /////////print('[AuthCubit] getUserFromLocal error: $e');
-      /////////print(st);
+      print('[AuthCubit] getUserFromLocal error: $e');
+      print(st);
       emit(AuthLoggedOut());
     }
   }

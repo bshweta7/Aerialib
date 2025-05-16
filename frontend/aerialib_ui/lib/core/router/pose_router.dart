@@ -62,7 +62,7 @@ List<GoRoute> poseRoutes = [
       }
 
       // Fallback or loading
-      /////////print(posesState);
+      print(posesState);
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
