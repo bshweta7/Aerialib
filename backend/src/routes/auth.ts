@@ -85,6 +85,46 @@ authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Respons
 });
 // TODO also include a "forgot password" button to send an email with updated token
 
+// check existing users
+authRouter.post("/check", async (req: Request<{}, {}, SignUpBody>, res: Response) => {
+    try {
+        // get request body
+        const { username, email } = req.body;
+
+        // initialize response
+        const taken = {
+            email: true,
+            username: true,
+        };
+
+        // check if the username is taken
+        const [usernameExists] = await db
+            .select()
+            .from(usersTable)
+            .where(eq(usersTable.username, username));
+
+        if (!usernameExists) {
+            taken.username = false;
+        }
+
+        // check if email is taken
+        const [emailExists] = await db
+            .select()
+            .from(usersTable)
+            .where(eq(usersTable.email, email));
+
+        if (!emailExists) {
+            taken.email = false;
+        }
+
+        res.status(201).json(taken);
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({ error: e })
+    }
+});
+
 
 // login route
 authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response) => {

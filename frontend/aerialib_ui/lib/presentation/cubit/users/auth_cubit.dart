@@ -31,6 +31,21 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<Map<String, bool>> checkIfTaken({
+    required String username,
+    required String email,
+  }) async {
+    try {
+      final result = await _userRepository.checkTaken(
+        username: username,
+        email: email,
+      );
+
+      return result;
+    } catch (e) {
+      throw Exception("Unable to check availability");
+    }
+  }
 
   void signUp({
     required String username,
@@ -44,10 +59,6 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
       );
-      // final userEntity = await _userRepository.login(
-      //   username: username,
-      //   password: password,
-      // );
       emit(AuthLoggedIn(userEntity));
     } catch (e) {
       emit(AuthError(e.toString()));

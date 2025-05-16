@@ -60,6 +60,21 @@ class UserRepository {
     return _userModelToEntity(userModel);
   }
 
+  /// Checks if the username and email are taken
+  Future<Map<String, bool>> checkTaken({
+    required String username,
+    required String email,
+  }) async {
+    // TODO get existing users, check emails and usernames HERE before sending to backend
+    final takenStatus = await remoteDataSource.checkTaken(
+      username: username,
+      email: email,
+    );
+
+    return takenStatus;
+  }
+
+
   /// Logs in an existing user via the remote data source and saves the user locally upon success.
   Future<UserEntity> login({
     required String username,

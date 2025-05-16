@@ -13,6 +13,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  bool isUsernameTaken = false;
+  bool isEmailTaken = false;
+
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -26,15 +29,59 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  void signUpUser() {
-    if (formKey.currentState!.validate()) {
-      context.read<AuthCubit>().signUp(
-        username: usernameController.text.trim(),
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+  void signUpUser() async {
+    // Clear previous "taken" flags before re-checking
+    setState(() {
+      isUsernameTaken = false;
+      isEmailTaken = false;
+    });
+
+    final isFormValid = formKey.currentState!.validate();
+
+    if (!isFormValid) return;
+
+    final username = usernameController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    // Step 1: Check availability from backend
+    try {
+      final checkResult = await context.read<AuthCubit>().checkIfTaken(
+        username: username,
+        email: email,
       );
+
+      final usernameTaken = checkResult['username'] ?? false;
+      final emailTaken = checkResult['email'] ?? false;
+
+      setState(() {
+        isUsernameTaken = usernameTaken;
+        isEmailTaken = emailTaken;
+      });
+
+      if (usernameTaken || emailTaken) {
+        // Re-run validation to trigger red error messages
+        formKey.currentState!.validate();
+        return;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to check availability: $e"),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
     }
+
+    // Step 2: Proceed with signup
+    context.read<AuthCubit>().signUp(
+      username: username,
+      email: email,
+      password: password,
+    );
   }
+
 
   void resetPage() {
     context.read<AuthCubit>().reInitialize();
@@ -114,6 +161,9 @@ class _SignupPageState extends State<SignupPage> {
                           if (value == null || value.trim().isEmpty) {
                             return "Username field cannot be empty!";
                           }
+                          if (isUsernameTaken) {
+                            return "Username is already taken!";
+                          }
                           return null;
                         },
                       ),
@@ -134,6 +184,9 @@ class _SignupPageState extends State<SignupPage> {
                           }
                           if (!value.contains('@')) {
                             return "Email is invalid!";
+                          }
+                          if (isEmailTaken) {
+                            return "Email is already taken!";
                           }
                           return null;
                         },

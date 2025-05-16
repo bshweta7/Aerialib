@@ -35,6 +35,36 @@ class UserRemoteDataSource {
     return UserModel.fromJson(response.body);
   }
 
+  /// Check if username and email are taken
+  Future<Map<String, bool>> checkTaken({
+    required String username,
+    required String email,
+  }) async {
+
+    final body = {
+      'username': username,
+      'email': email,
+    };
+
+    final response = await httpService.postInit(
+      path: '/auth/check',
+      body: body,
+    );
+
+    if (response.statusCode != 201) {
+      throw jsonDecode(response.body)['error'];
+    }
+
+    print(response.body);
+
+    final decoded = jsonDecode(response.body);
+    return {
+      'email': decoded['email'] as bool,
+      'username': decoded['username'] as bool,
+    };
+  }
+
+
   /// Login user
   // TODO : add last logged in time
   Future<UserModel> login({
