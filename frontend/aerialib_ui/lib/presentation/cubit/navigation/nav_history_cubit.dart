@@ -1,4 +1,5 @@
 // lib/presentation/cubit/navigation/nav_history_cubit.dart
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NavHistoryCubit extends Cubit<List<String>> {
@@ -7,13 +8,13 @@ class NavHistoryCubit extends Cubit<List<String>> {
   /// Push a new route name onto the history stack (if not already last)
   void push(String? routeName) {
     if (routeName == null) {
-      print("[NavHistoryCubit] Route name was null. History ${List<String>.from(state)}");
+      log("[NavHistoryCubit] Route name was null. History ${List<String>.from(state)}");
       return;
     }
     if (state.isEmpty || state.last != routeName) {
       final newState = List<String>.from(state);
       newState.add(routeName);
-      print("[NavHistoryCubit] History $newState");
+      log("[NavHistoryCubit] History $newState");
       emit(newState);
     }
   }

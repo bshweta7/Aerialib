@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -62,7 +63,7 @@ List<GoRoute> poseRoutes = [
       }
 
       // Fallback or loading
-      print(posesState);
+      log('[PoseRouter] $posesState');
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );

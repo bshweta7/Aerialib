@@ -63,7 +63,7 @@ class FlowLocalDataSource {
   }
 
   Future<void> setSyncedStatus(String id, int newValue) async {
-    // print('[FlowLocalDataSource] Marking $id as synced ($newValue)');
+    // log('[FlowLocalDataSource] Marking $id as synced ($newValue)');
     final db = await database;
     await db.update(
       tableName,

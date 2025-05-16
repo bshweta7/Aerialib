@@ -1,6 +1,8 @@
-import 'package:frontend/data/models/user_model.dart';
+import 'dart:developer';
+
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import '../../services/local_database_service.dart';
+import 'package:frontend/data/models/user_model.dart';
+import 'package:frontend/data/services/local_database_service.dart';
 
 
 class UserLocalDataSource {
@@ -20,21 +22,21 @@ class UserLocalDataSource {
 
   /// Retrieves the currently logged-in user from the local database (if any). Returns null if no user is found.
   Future<UserModel?> getUser() async {
-    print('[UserLocalData] Checking for local database existence...');
+    log('[UserLocalData] Checking for local database existence...');
     final db = await DatabaseService.database;
 
     try {
       final result = await db.query(tableName);
-      print('[UserLocalData] User found, username: ${result.first["username"]}');
+      log('[UserLocalData] User found, username: ${result.first["username"]}');
 
       if (result.isEmpty) {
-        print('[UserLocalData] No user found in local DB');
+        log('[UserLocalData] No user found in local DB');
         return null;
       }
 
       return UserModel.fromMap(result.first); // Replace with your real logic
     } catch (e, st) {
-      print('[UserLocalData] Error getting user: $e, $st');
+      log('[UserLocalData] Error getting user: $e, $st');
       return null;
     }
   }

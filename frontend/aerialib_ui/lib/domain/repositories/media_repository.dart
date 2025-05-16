@@ -1,11 +1,14 @@
+import 'dart:io';
+import 'dart:developer';
+import 'package:mime/mime.dart';
+
+import 'package:frontend/domain/mappers/media_mapper.dart';
+import 'package:frontend/domain/entities/media_entity.dart';
+
 import 'package:frontend/data/datasources/media/media_local_data.dart';
 import 'package:frontend/data/datasources/media/media_remote_data.dart';
 import 'package:frontend/data/models/media_model.dart';
-import 'package:frontend/domain/entities/media_entity.dart';
 
-import '../mappers/media_mapper.dart';
-import 'dart:io';
-import 'package:mime/mime.dart';
 
 class MediaRepository {
   final MediaLocalDataSource localDataSource;
@@ -63,9 +66,9 @@ class MediaRepository {
 
   /// Fetch all medias from local DB
   Future<List<MediaEntity>> getLocalMedias() async {
-    print("Fetching MediaModels from Local Database");
+    log("Fetching MediaModels from Local Database");
     final mediaModels = await localDataSource.getMediaList();
-    print("Converting to Media Models to Entities");
+    log("Converting to Media Models to Entities");
     return MediaMapper.modelsToEntities(mediaModels);
   }
 
@@ -73,10 +76,10 @@ class MediaRepository {
 
   /// Fetch all medias from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
-    print("[MediaRepository] Fetching from remote data source");
+    log("[MediaRepository] Fetching from remote data source");
     final mediaModels = await remoteDataSource.fetchRemoteMediaList(token: token);
 
-    print("[MediaRepository] Inserting data into local data source");
+    log("[MediaRepository] Inserting data into local data source");
     await localDataSource.insertMediaList(mediaModels);
   }
 
@@ -88,12 +91,12 @@ class MediaRepository {
       return;
     }
 
-    print("[MediaRepository] Retrieved unsynced medias from local");
+    log("[MediaRepository] Retrieved unsynced medias from local");
     final success = await remoteDataSource.syncMedia(
       token: token,
       mediaList: unsynced,
     );
-    print("[MediaRepository] Synced media to remote");
+    log("[MediaRepository] Synced media to remote");
 
     if (success) {
       for (final media in unsynced) {

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:async';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
@@ -64,24 +65,24 @@ class MediaRemoteDataSource {
   Future<List<MediaModel>> fetchRemoteMediaList({ // TODO refactored from getMediaList
     required String token,
   }) async {
-    print("[MediaRemoteDataSource] Sending GET request... ");
+    log("[MediaRemoteDataSource] Sending GET request... ");
     final response = await httpService.get(
       path: "/media",
       token: token,
     );
 
-    print("[MediaRemoteDataSource] Mapping response to MediaModel... ");
+    log("[MediaRemoteDataSource] Mapping response to MediaModel... ");
     final List<dynamic> jsonList = jsonDecode(response.body);
 
     for (var e in jsonList) {
       try {
-        print("Mapping: $e");
+        log("Mapping: $e");
         final media = MediaModel.fromMap(e);
-        // Optionally print media to confirm success
+        // Optionally log media to confirm success
       } catch (error, stack) {
-        print("Failed to map media: $e");
-        print("Error: $error");
-        print("Stack: $stack");
+        log("Failed to map media: $e");
+        log("Error: $error");
+        log("Stack: $stack");
         rethrow; // Optional: or return a fallback
       }
     }
@@ -101,12 +102,12 @@ class MediaRemoteDataSource {
       return map;
     }).toList();
 
-    print('[MediaRemoteDataSource] Sync payload:');
+    log('[MediaRemoteDataSource] Sync payload:');
     for (final map in mediaListInMap) {
-      print(map.keys);
+      log('[MediaRemoteDataSource] ${map.keys}');
     }
 
-    print(mediaListInMap);
+    log('[MediaRemoteDataSource] $mediaListInMap');
 
     final response = await httpService.post(
       path: "/media/sync",
@@ -114,8 +115,8 @@ class MediaRemoteDataSource {
       body: mediaListInMap,
     );
 
-    print('[MediaRemoteDataSource] Status Code: ${response.statusCode}');
-    print('[MediaRemoteDataSource] Response: ${response.body}');
+    log('[MediaRemoteDataSource] Status Code: ${response.statusCode}');
+    log('[MediaRemoteDataSource] Response: ${response.body}');
 
     return response.statusCode == 201;
   }

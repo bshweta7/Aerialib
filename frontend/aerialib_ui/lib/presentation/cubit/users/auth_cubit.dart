@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+
 import 'package:frontend/domain/repositories/user_repository.dart';
 import 'package:frontend/domain/entities/user_entity.dart';
-import 'package:equatable/equatable.dart';
 
 part 'auth_state.dart';
 
@@ -18,15 +20,14 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await _userRepository.getUser();
 
       if (user == null) {
-        print('[AuthCubit] No user found, logging out');
+        log('[AuthCubit] No user found, logging out');
         emit(AuthLoggedOut());
       } else {
-        print('[AuthCubit] User found, logging in');
+        log('[AuthCubit] User found, logging in');
         emit(AuthLoggedIn(user));
       }
     } catch (e, st) {
-      print('[AuthCubit] getUserFromLocal error: $e');
-      print(st);
+      log('[AuthCubit] getUserFromLocal error: $e, $st');
       emit(AuthLoggedOut());
     }
   }

@@ -1,7 +1,9 @@
+import 'dart:developer';
+
+import 'package:frontend/domain/entities/user_entity.dart';
 import 'package:frontend/data/datasources/user/user_local_data.dart';
 import 'package:frontend/data/datasources/user/user_remote_data.dart';
 import 'package:frontend/data/models/user_model.dart';
-import 'package:frontend/domain/entities/user_entity.dart';
 
 class UserRepository {
   final UserLocalDataSource localDataSource;
@@ -90,9 +92,9 @@ class UserRepository {
 
   /// Retrieves the currently logged-in user's data. Tries the local data source first, then falls back to the remote.
   Future<UserEntity?> getUser() async {
-    print("[UserRepository] Getting user from local...");
+    log("[UserRepository] Getting user from local...");
     final localUser = await localDataSource.getUser();
-    // print("[UserRepository] Done, ${localUser}");
+    // log("[UserRepository] Done, ${localUser}");
 
     if (localUser != null) {
       return _userModelToEntity(localUser);

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -62,14 +63,14 @@ class _FlowViewPageState extends State<FlowViewPage> {
   @override
   Widget build(BuildContext context) {
     final flow = widget.flow;
-    print("[FlowViewPage] Flow ID: ${flow.id}, Name: ${flow.name}");
-    print("[FlowViewPage] Thumbnail: ${flow.thumbnailImagePath}");
-    print("[FlowViewPage] Pose count: ${flow.poses.length}");
+    log("[FlowViewPage] Flow ID: ${flow.id}, Name: ${flow.name}");
+    log("[FlowViewPage] Thumbnail: ${flow.thumbnailImagePath}");
+    log("[FlowViewPage] Pose count: ${flow.poses.length}");
 
     final poses = (flow.poses ?? []).map((fp) => fp.pose).toList();
 
-    print("[FlowViewPage] Pose names: ${poses.map((p) => p.name).toList()}");
-    print("[FlowViewPage] Pose image paths: ${poses.map((p) => p.primaryMediaPath).toList()}");
+    log("[FlowViewPage] Pose names: ${poses.map((p) => p.name).toList()}");
+    log("[FlowViewPage] Pose image paths: ${poses.map((p) => p.primaryMediaPath).toList()}");
 
     final mediaItems = posesToMediaIcons(poses);
 

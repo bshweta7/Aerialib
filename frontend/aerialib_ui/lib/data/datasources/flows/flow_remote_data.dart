@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:uuid/uuid.dart';
 import 'package:frontend/data/models/flow_model.dart';
 import 'package:frontend/data/services/http_service.dart';
-import 'package:uuid/uuid.dart';
 
 class FlowRemoteDataSource {
   final HttpService httpService;
@@ -42,11 +43,11 @@ class FlowRemoteDataSource {
         body: body,
       );
 
-      print("[RemoteDataSource] Flow created remotely: ${response.body}");
+      log("[RemoteDataSource] Flow created remotely: ${response.body}");
       return FlowModel.fromJson(response.body);
     } catch (e) {
-      print("[RemoteDataSource] Failed to create flow remotely: $e");
-      print("[RemoteDataSource] Creating local fallback unsynced flow instead.");
+      log("[RemoteDataSource] Failed to create flow remotely: $e");
+      log("[RemoteDataSource] Creating local fallback unsynced flow instead.");
       // Fallback: construct a local unsynced FlowModel
       return FlowModel(
         id: const Uuid().v6(),
@@ -93,12 +94,12 @@ class FlowRemoteDataSource {
       return map;
     }).toList();
 
-    print('[FlowRemoteDataSource] Sync payload: $flowListInMap');
+    log('[FlowRemoteDataSource] Sync payload: $flowListInMap');
     // for (final map in flowListInMap) {
-    //   print(map['name']);
+    //   log(map['name']);
     // }
 
-    // print(flowListInMap);
+    // log(flowListInMap);
 
     final response = await httpService.post(
       path: "/flows/sync",
@@ -113,7 +114,7 @@ class FlowRemoteDataSource {
     required FlowModel updatedFlow,
     required String token,
   }) async {
-    print(jsonEncode(updatedFlow.toMap()));
+    log("[FlowRemoteDataSource] ${jsonEncode(updatedFlow.toMap())}");
 
     final response = await httpService.put(
       path: "/flows/update/${updatedFlow.id}",
@@ -121,13 +122,13 @@ class FlowRemoteDataSource {
       body: updatedFlow.toMap(),
     );
 
-    print("[FlowRemoteDataSource] Backend response body: ${response.body}");
-    print("[FlowRemoteDataSource] Backend response status code: ${response.statusCode}");
+    log("[FlowRemoteDataSource] Backend response body: ${response.body}");
+    log("[FlowRemoteDataSource] Backend response status code: ${response.statusCode}");
 
     if (response.statusCode != 200) {
-      print("[FlowRemoteDataSource] Failed to update flow:");
-      print("[FlowRemoteDataSource] Status: ${response.statusCode}");
-      print("[FlowRemoteDataSource] Body: ${response.body}");
+      log("[FlowRemoteDataSource] Failed to update flow:");
+      log("[FlowRemoteDataSource] Status: ${response.statusCode}");
+      log("[FlowRemoteDataSource] Body: ${response.body}");
       throw Exception("[FlowRemoteDataSource] Failed to update flow remotely");
     }
 
@@ -143,7 +144,7 @@ class FlowRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      print("[FlowRemoteDataSource] Deleted flow with flow ID $flowId");
+      log("[FlowRemoteDataSource] Deleted flow with flow ID $flowId");
     } else {
       throw Exception("Failed to delete remote flow with ID $flowId");
     }

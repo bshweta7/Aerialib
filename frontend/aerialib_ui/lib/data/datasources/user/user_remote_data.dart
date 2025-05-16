@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
-import 'package:frontend/data/services/sp_service.dart';
 import 'package:frontend/data/models/user_model.dart';
+import 'package:frontend/data/services/sp_service.dart';
 import 'package:frontend/data/services/http_service.dart';
 
 class UserRemoteDataSource {
@@ -55,7 +56,7 @@ class UserRemoteDataSource {
       throw jsonDecode(response.body)['error'];
     }
 
-    print(response.body);
+    log(response.body);
 
     final decoded = jsonDecode(response.body);
     return {
@@ -82,7 +83,7 @@ class UserRemoteDataSource {
     );
 
     if (response.statusCode != 200) {
-      print("Login Error Response Body: ${response.body}");
+      log("Login Error Response Body: ${response.body}");
       throw jsonDecode(response.body)['error'];
     }
 

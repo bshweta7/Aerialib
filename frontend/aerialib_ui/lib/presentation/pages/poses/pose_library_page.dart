@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -87,7 +88,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
   // Search Bar
   void _updateSearchQuery(String newQuery) {
-    print(newQuery);
+    log("[PoseLibraryPage] $newQuery");
     setState(() {
       _searchQuery = newQuery;
     });

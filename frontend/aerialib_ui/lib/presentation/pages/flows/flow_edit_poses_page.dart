@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:frontend/core/utils/formatters.dart';
+import 'package:frontend/core/constants/constants.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/flow_pose_entity.dart';
@@ -15,11 +17,8 @@ import 'package:frontend/presentation/pages/poses/pose_view_sheet.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/list_card.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
 import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 import 'package:frontend/presentation/widgets/navigation/nav_bar.dart';
-
-import '../../../core/constants/constants.dart';
-import '../../widgets/filters/pose_filter_sheet.dart';
+import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
 
 
 class FlowEditPosesPage extends StatefulWidget {
@@ -91,7 +90,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
     final updatedFlow = widget.flow.copyWith(poses: poses);
 
-    print("[FlowEditPosesPage] Updating flow poses... ");
+    log("[FlowEditPosesPage] Updating flow poses... ");
     context.read<FlowsCubit>().updateFlowPoses(poses);
     await context.read<FlowsCubit>().saveFlowPoses(token: user.user.token);
     await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
@@ -101,7 +100,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     // );
 
 
-    print("[FlowEditPosesPage] Navigating to FlowViewPage with ${updatedFlow.poses.length} poses");
+    log("[FlowEditPosesPage] Navigating to FlowViewPage with ${updatedFlow.poses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
     context.goNamed(
       'flow-view',

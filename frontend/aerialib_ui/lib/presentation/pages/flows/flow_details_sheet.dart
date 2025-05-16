@@ -1,12 +1,13 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/utils/formatters.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../cubit/flows/flows_cubit.dart';
-import '../../cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 
 class FlowDetailsSheet extends StatelessWidget {
@@ -54,7 +55,7 @@ class FlowDetailsSheet extends StatelessWidget {
   }
 
   Future<void> _confirmDeleteFlow(BuildContext context) async {
-    print('[FlowDetailsSheet] Showed confirmation popup');
+    log('[FlowDetailsSheet] Showed confirmation popup');
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -74,7 +75,7 @@ class FlowDetailsSheet extends StatelessWidget {
     );
 
     if (confirmed == true) {
-      print('[FlowDetailsSheet] Deleting flow...');
+      log('[FlowDetailsSheet] Deleting flow...');
       final authState = context.read<AuthCubit>().state;
       if (authState is! AuthLoggedIn) return;
       final token = authState.user.token;
@@ -84,7 +85,7 @@ class FlowDetailsSheet extends StatelessWidget {
           token: token
       );
 
-      print('[FlowDetailsSheet] Re-fetching latest flow list');
+      log('[FlowDetailsSheet] Re-fetching latest flow list');
       await context.read<FlowsCubit>().getAllFlows(token: token);
 
       Navigator.pop(context); // Close the bottom sheet

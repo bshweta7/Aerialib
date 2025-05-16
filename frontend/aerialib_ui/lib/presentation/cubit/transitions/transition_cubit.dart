@@ -1,6 +1,8 @@
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
+
 import 'package:frontend/domain/entities/transition_entity.dart';
 import 'package:frontend/domain/repositories/transition_repository.dart';
 
@@ -77,7 +79,7 @@ class TransitionCubit extends Cubit<TransitionState> {
         await _transitionRepository.syncLocalToRemote(token);
         await _transitionRepository.syncRemoteToLocal(token);
       } else {
-        print("No connection for sync");
+        log("No connection for sync");
       }
     } catch (e) {
       emit(TransitionError("Sync failed: $e"));

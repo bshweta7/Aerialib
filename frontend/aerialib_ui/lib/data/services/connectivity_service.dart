@@ -1,10 +1,10 @@
 // core/services/connectivity_service.dart
 import 'dart:async';
-
+import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../../presentation/cubit/flows/flows_cubit.dart';
-import '../../presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 
 class ConnectivityService {
   static Future<int> isConnected() async {
@@ -31,18 +31,18 @@ class ConnectivityService {
   }) {
     _subscription = Connectivity().onConnectivityChanged.listen((resultList) async {
       if (_isConnected(resultList)) {
-        print('[ConnectivityService] Connected, triggering sync...');
+        log('[ConnectivityService] Connected, triggering sync...');
         await posesCubit.syncPoses(token: token);
         await flowsCubit.syncFlows(token: token);
         // TODO add other syncs
       } else {
-        print('[ConnectivityService] Offline');
+        log('[ConnectivityService] Offline');
       }
     });
   }
 
   void stopLiveSync() {
-    print("[ConnectivityService] Stopping Live Sync");
+    log("[ConnectivityService] Stopping Live Sync");
     _subscription?.cancel();
   }
 }

@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:frontend/data/datasources/flows/flow_local_data.dart';
 import 'package:frontend/data/datasources/flows/flow_remote_data.dart';
-
 import 'package:frontend/data/models/flow_model.dart';
 
 import 'package:frontend/domain/mappers/flow_mapper.dart';
@@ -31,7 +32,7 @@ class FlowRepository {
     required String token,
   }) async {
     try {
-      print("[FlowRepository] Creating flow in remote db... ");
+      log("[FlowRepository] Creating flow in remote db... ");
       final flowModel = await remoteDataSource.createFlow(
         name: name,
         description: description,
@@ -45,14 +46,14 @@ class FlowRepository {
         createdBy: createdBy,
         token: token,
       );
-      print("[FlowRepository] Done, adding to local db... ");
+      log("[FlowRepository] Done, adding to local db... ");
       await localDataSource.insertFlow(flowModel);
 
-      print("[FlowRepository] Done, returning flow entity ... ");
+      log("[FlowRepository] Done, returning flow entity ... ");
 
       return FlowMapper.modelToEntityDetailsOnly(flowModel);
     } catch (e) {
-      print("[FlowRepository] Failed to create remotely... ");
+      log("[FlowRepository] Failed to create remotely... ");
       rethrow;
     }
   }
@@ -77,14 +78,14 @@ class FlowRepository {
     final List<FlowModel> unsynced = await localDataSource.getUnsyncedFlows();
     if (unsynced.isEmpty) return;
 
-    print("[FlowRepository] Fetched ${unsynced.length} unsynced flows from local data source");
+    log("[FlowRepository] Fetched ${unsynced.length} unsynced flows from local data source");
 
     // for (final flow in unsynced) {
     //   final flowMap = flow.toMap(); // or toMap() if you use that instead
     //
-    //   print("[FlowRepository] Flow ID: ${flow.id}");
+    //   log("[FlowRepository] Flow ID: ${flow.id}");
     //   flowMap.forEach((key, value) {
-    //     print("  $key: $value");
+    //     log("  $key: $value");
     //   });
     // }
 
@@ -99,8 +100,8 @@ class FlowRepository {
       }
     }
 
-    print("[FlowRepository] Synced flows to remote");
-    print("[FlowRepository] Success $success");
+    log("[FlowRepository] Synced flows to remote");
+    log("[FlowRepository] Success $success");
 
 
   }
@@ -112,16 +113,16 @@ class FlowRepository {
   }) async {
     final flowModel = FlowMapper.entityToModel(updatedFlow);
 
-    print("[FlowRepository] Updating pose remotely...");
+    log("[FlowRepository] Updating pose remotely...");
     final updatedModel = await remoteDataSource.updateFlow(
       updatedFlow: flowModel,
       token: token,
     );
-    print("[FlowRepository] Remote update successful");
+    log("[FlowRepository] Remote update successful");
 
-    print("[FlowRepository] Updating pose locally...");
+    log("[FlowRepository] Updating pose locally...");
     await localDataSource.updateFlow(updatedModel);
-    print("[FlowRepository] Local update successful");
+    log("[FlowRepository] Local update successful");
 
   }
 
@@ -135,7 +136,7 @@ class FlowRepository {
     try {
       await remoteDataSource.deleteFlowById(id, token);
     } catch (e){
-      print("[FlowRepository] Error deleting flow from remote data source: $e");
+      log("[FlowRepository] Error deleting flow from remote data source: $e");
     }
       // TODO only delete locally if remote is success, otherwise say "try again later when you have internet connection"
     await localDataSource.deleteFlow(id);

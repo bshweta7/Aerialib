@@ -1,6 +1,8 @@
-import 'package:frontend/data/models/media_model.dart';
+import 'dart:developer';
+
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import '../../services/local_database_service.dart';
+import 'package:frontend/data/models/media_model.dart';
+import 'package:frontend/data/services/local_database_service.dart';
 
 class MediaLocalDataSource {
   String tableName = "media";
@@ -46,13 +48,13 @@ class MediaLocalDataSource {
   /// Get list of media models that are primary images for poses
   Future<List<MediaModel>> getPoseMedia() async {
     final db = await database;
-    print("Entered getPoseMedia");
+    log("Entered getPoseMedia");
     final result = await db.query(
       tableName,
       where: 'primary_media = ?',
       whereArgs: ['pose'],
     );
-    print("Got Result");
+    log("Got Result");
 
     if (result.isNotEmpty) {
       return result.map((elem) => MediaModel.fromMap(elem)).toList();

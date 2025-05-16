@@ -44,7 +44,7 @@ class TransitionRemoteRepository {
       );
 
       if(res.statusCode != 201) {
-        print("ERROR: Could not create transition --> POST /transition");
+        log("ERROR: Could not create transition --> POST /transition");
         throw jsonDecode(res.body)['error'];
       } else {
         return TransitionModel.fromJson(res.body);
@@ -88,8 +88,8 @@ class TransitionRemoteRepository {
       );
 
       if(res.statusCode != 200) {
-        print("ERROR: Remote repository fetch error - GET /transition");
-        // print(res.body);
+        log("ERROR: Remote repository fetch error - GET /transition");
+        // log(res.body);
         throw jsonDecode(res.body)['error'];
       }
 
@@ -137,7 +137,7 @@ class TransitionRemoteRepository {
 
       return true;
     } catch (e) {
-      print(e);
+      log(e);
       return false;
     }
   }

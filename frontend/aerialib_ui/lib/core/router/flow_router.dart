@@ -1,8 +1,8 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
@@ -65,7 +65,7 @@ List<GoRoute> flowRoutes = [
       }
 
       // Fallback or loading
-      print("[FlowRouter] Error loading, state is $flowsState");
+      log("[FlowRouter] Error loading, state is $flowsState");
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -102,7 +102,7 @@ List<GoRoute> flowRoutes = [
       }
 
       // Fallback or loading
-      print("[FlowRouter] Error loading, state is $flowsState");
+      log("[FlowRouter] Error loading, state is $flowsState");
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -139,7 +139,7 @@ List<GoRoute> flowRoutes = [
       }
 
       // Fallback or loading
-      print("[FlowRouter] Error loading, state is $flowsState");
+      log("[FlowRouter] Error loading, state is $flowsState");
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -165,7 +165,7 @@ List<GoRoute> flowRoutes = [
 //   Widget build(BuildContext context) {
 //     final state = context.watch<FlowsCubit>().state;
 //
-//     print("[FlowRouter] State is $state");
+//     log("[FlowRouter] State is $state");
 //     if (state is! GetFlowsSuccess || state is! EditFlowState) {
 //       return const Scaffold(
 //         body: Center(child: CircularProgressIndicator()),

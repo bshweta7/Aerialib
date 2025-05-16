@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('[HomePage] Building HomePage UI');
+    log('[HomePage] Building HomePage UI');
 
     final authState = context.watch<AuthCubit>().state;
     String currentUsername = "guest"; // Default username
@@ -136,7 +137,6 @@ class HomePage extends StatelessWidget {
             // Feedback Form Navigation
             ElevatedButton(
                 onPressed: () {
-                  print("PRESSED");
                   context.pushNamed('feedback');
                 },
                 child: const Text(

@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'package:uuid/uuid.dart';
 
 import 'package:frontend/data/models/flow_pose_model.dart';
 import 'package:frontend/data/services/http_service.dart';
-import 'package:uuid/uuid.dart';
+
 
 class FlowPoseRemoteDataSource {
   final HttpService httpService;
@@ -66,7 +68,7 @@ class FlowPoseRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      print("[FlowPoseRemoteDataSource] Deleted all flow poses for $flowId");
+      log("[FlowPoseRemoteDataSource] Deleted all flow poses for $flowId");
     } else {
       throw Exception("Failed to delete remote flow poses for $flowId");
     }
@@ -83,12 +85,12 @@ class FlowPoseRemoteDataSource {
       return map;
     }).toList();
 
-    // print('[FlowPoseRemoteDataSource] Sync payload:');
+    // log('[FlowPoseRemoteDataSource] Sync payload:');
     // for (final map in flowPoseListInMap) {
-    //   print(map.keys);
+    //   log(map.keys);
     // }
 
-    print(flowPoseListInMap);
+    log("[FlowPoseRemoteDataSource] $flowPoseListInMap");
 
     final response = await httpService.post(
       path: "/flow_poses/sync",
@@ -96,14 +98,14 @@ class FlowPoseRemoteDataSource {
       body: flowPoseListInMap,
     );
 
-    print('Status Code: ${response.statusCode}');
-    print('Response Body: ${response.body}');
+    log('[FlowPoseRemoteDataSource] Status Code: ${response.statusCode}');
+    log('[FlowPoseRemoteDataSource] Response Body: ${response.body}');
 
     if (response.statusCode == 201) {
-      print('[FlowPoseRemoteDataSource] Sync successful');
+      log('[FlowPoseRemoteDataSource] Sync successful');
       return true;
     } else {
-      print('[FlowPoseRemoteDataSource] Sync failed');
+      log('[FlowPoseRemoteDataSource] Sync failed');
       return false;
     }
   }

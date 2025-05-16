@@ -1,5 +1,6 @@
 // lib/presentation/widgets/navigation/smart_back_wrapper.dart
 
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +22,7 @@ class SmartBackWrapper extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        print("[SmartBackWrapper] Pop invoked: didPop=$didPop");
+        log("[SmartBackWrapper] Pop invoked: didPop=$didPop");
 
         if (didPop) return;
 
@@ -29,7 +30,7 @@ class SmartBackWrapper extends StatelessWidget {
         final last = navHistory.pop();
 
         if (last != null) {
-          print("[SmartBackWrapper] Popped to $last");
+          log("[SmartBackWrapper] Popped to $last");
           context.goNamed(last);
         } else {
           context.goNamed(fallbackRoute);
