@@ -50,6 +50,7 @@ class UserRepository {
     required String email,
     required String password,
   }) async {
+    // TODO get existing users, check emails and usernames HERE before sending to backend
     final userModel = await remoteDataSource.signUp(
       username: username,
       email: email,

@@ -62,8 +62,21 @@ authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Respons
             password: hashedPassword
         }
 
+        // insert new user into db
         const [user] = await db.insert(usersTable).values(newUser).returning()
-        res.status(201).json(user);
+
+        // send info to the frontend
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
+
+        res.status(201).json({
+            token: token,
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            bio: user.bio,
+        });
 
     } catch (e) {
         console.log(e)
