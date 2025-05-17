@@ -28,14 +28,21 @@ poseRouter.post("/", auth, async (req: AuthRequest, res) => {
 poseRouter.get("/", auth, async (req: AuthRequest, res) => {
     
   try {
+
+    const currentUserId = req.user;
+    // console.log('[PoseRouter] Current user:', currentUserId);
+    const adminId = process.env.ADMIN_USER_ID;
+
       // TODO use drizzle ORM instead of sql query
     const query = sql`
       SELECT 
         poses.*, 
         media.media_path AS primary_media_path
       FROM poses
-      JOIN media ON poses.primary_media_id = media.id;
-      `;
+      JOIN media ON poses.primary_media_id = media.id
+      WHERE poses.created_by = ${currentUserId}
+         OR poses.created_by = ${adminId};
+    `;
 
     // Execute the raw SQL query using db.execute()
     const result = await db.execute(query); 
