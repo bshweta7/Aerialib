@@ -1,0 +1,4 @@
+docker compose -f docker-compose.dev.yaml up --build
+docker compose exec -it db /bin/bash
+psql -U postgres -d aerialib
+

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
+import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -70,7 +71,9 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
   Widget build(BuildContext context) {
     return MainScaffold(
         currentIndex: 2,
-        appBar: AppBar(title: const Text("Add New Pose")),
+        appBar: AppBar(
+            leading: const SmartBackButton(),
+            title: const Text("Add New Pose")),
         body: BlocConsumer<PosesCubit, PosesState>(
           listener: (context, state) {
             if (state is PoseError) {

@@ -125,15 +125,15 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
         appBar: AppBar(
           leading: const SmartBackButton(),
           title: const Text("Poses"),
-          // actions: [
-          //   IconButton(
-          //     icon: const Icon(Icons.add),
-          //     onPressed: () {
-          //       Navigator.push(context, AddNewPosePage.route());
-          //     },
-          //     tooltip: 'Add a new pose',
-          //   ),
-          // ]
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                context.goNamed('add-new-pose',);
+              },
+              tooltip: 'Add a new pose',
+            ),
+          ]
           // TODO three dots to show page view options and add new pose button
           // actions: [
           //   IconButton(
