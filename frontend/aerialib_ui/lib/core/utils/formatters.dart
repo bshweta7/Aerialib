@@ -1,7 +1,6 @@
 // Useful functions
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 String formatUrlFromName(String name) {
   // 1. Trim whitespace:
@@ -30,4 +29,8 @@ String formatNameFromPath(String path) {
   String formattedName = path.replaceAll('-', ' ');
 
   return capitalizeFirstLetter(formattedName);
+}
+
+String formatDate(DateTime date) {
+  return DateFormat.yMMMMd().format(date); // Example: May 29, 2025
 }

@@ -20,4 +20,5 @@ enum MediaType {
   pose,
   flow,
   media,
+  music,
 }

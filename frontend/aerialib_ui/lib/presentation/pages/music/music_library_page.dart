@@ -1,16 +1,19 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/presentation/widgets/main_scaffold.dart'; // TODO main scaffold should be moved to core (not presentation)
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
-// import 'package:frontend/presentation/widgets/search_bars/generic_search_bar.dart';
-import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
-
 import 'package:frontend/domain/entities/music_entity.dart';
+import 'package:frontend/domain/entities/media_icon_entity.dart';
+
 import 'package:frontend/presentation/cubit/music/music_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+
+import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
+import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
+import 'package:frontend/presentation/widgets/main_scaffold.dart';
+import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+
+import '../../../core/utils/conversions.dart';
 
 class MusicLibraryPage extends StatefulWidget {
   const MusicLibraryPage({super.key});
@@ -21,7 +24,7 @@ class MusicLibraryPage extends StatefulWidget {
 
 class _MusicLibraryPageState extends State<MusicLibraryPage> {
   final ScrollController _scrollController = ScrollController();
-  String _searchQuery = '';
+  List<MusicEntity> _allMusic = [];
 
   @override
   void initState() {
@@ -33,22 +36,7 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
     await context.read<MusicCubit>().syncMusic(token: user.user.token);
     if (!mounted) return;
-    await context.read<MusicCubit>().getAllMusic(token: user.user.token);
-  }
-
-  void _updateSearchQuery(String newQuery) {
-    log("[MusicLibraryPage] search: $newQuery");
-    setState(() {
-      _searchQuery = newQuery;
-    });
-  }
-
-  void _navigateToMusicDetail(MusicEntity music) {
-    context.goNamed(
-      'music-view',
-      pathParameters: {'musicId': music.id},
-      queryParameters: {'from': 'music-library'},
-    );
+    context.read<MusicCubit>().getAllMusic(token: user.user.token);
   }
 
   @override
@@ -57,20 +45,31 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
     super.dispose();
   }
 
+  void _navigateToMusicPage(MediaIconEntity mediaItem) {
+    context.goNamed(
+      'music-view',
+      pathParameters: {'musicId': mediaItem.data.id},
+      queryParameters: {'from': 'music-library'},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      currentIndex: 0, // adjust as needed for nav
+      currentIndex: 0,
       appBar: AppBar(
         leading: const SmartBackButton(),
-        title: const Text("Music Library"),
+        title: const Text("My Music"),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              context.goNamed('add-new-music');
+              context.goNamed(
+                'add-new-music',
+                queryParameters: {'from': 'music-library'},
+              );
             },
-            tooltip: 'Add a new song',
+            tooltip: 'Add new song',
           ),
         ],
       ),
@@ -85,58 +84,28 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
           }
 
           if (state is GetMusicSuccess) {
-            final List<MusicEntity> filteredMusic = state.musicList.where((song) {
-              final q = _searchQuery.toLowerCase();
-              return _searchQuery.isEmpty ||
-                  song.name.toLowerCase().contains(q) ||
-                  (song.artist?.toLowerCase().contains(q) ?? false) ||
-                  (song.mood?.toLowerCase().contains(q) ?? false);
-            }).toList();
+            _allMusic = state.musicList;
+            final mediaIcons = musicToMediaIcons(_allMusic);
 
-            return Column(
+            return Stack(
               children: [
-                // TODO
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                //   child: GenericSearchBar(
-                //     hintText: 'Search Music',
-                //     onSearchChanged: _updateSearchQuery,
-                //     suggestionList: state.musicList.map((e) => e.name).toList(),
-                //   ),
-                // ),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      if (filteredMusic.isEmpty)
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 40),
-                            child: Text(
-                              "No music found. Try adding or changing your search.",
-                              style: TextStyle(fontSize: 16, color: Colors.black38),
-                            ),
-                          ),
-                        )
-                      else
-                        ListView.separated(
-                          controller: _scrollController,
-                          itemCount: filteredMusic.length,
-                          itemBuilder: (context, index) {
-                            final song = filteredMusic[index];
-                            return ListTile(
-                              title: Text(song.name),
-                              subtitle: Text(song.artist ?? 'Unknown Artist'),
-                              trailing: song.favorite ? const Icon(Icons.favorite, color: Colors.red) : null,
-                              onTap: () => _navigateToMusicDetail(song),
-                            );
-                          },
-                          separatorBuilder: (_, __) => const Divider(height: 1),
-                        ),
-
-                      ScrollToTopButton(scrollController: _scrollController),
-                    ],
+                if (mediaIcons.isEmpty)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40),
+                      child: Text(
+                        "No songs yet, try adding one!",
+                        style: TextStyle(fontSize: 16, color: Colors.black38),
+                      ),
+                    ),
+                  )
+                else
+                  MediaList(
+                    mediaItems: mediaIcons,
+                    onMediaTap: _navigateToMusicPage,
+                    scrollController: _scrollController,
                   ),
-                ),
+                ScrollToTopButton(scrollController: _scrollController),
               ],
             );
           }

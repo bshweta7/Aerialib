@@ -58,5 +58,12 @@ class Constants {
     'default/flow_placeholders/lavender.png',
   ];
 
+  static const List<String> defaultMusicThumbnails = [ // TODO Make music placeholders
+    'default/flow_placeholders/peach.png',
+    'default/flow_placeholders/yellow.png',
+    'default/flow_placeholders/mint.png',
+    'default/flow_placeholders/lavender.png',
+  ];
+
   static const double visibleScrollThreshold = 150.0;
 }

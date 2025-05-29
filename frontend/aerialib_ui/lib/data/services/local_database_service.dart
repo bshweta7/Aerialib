@@ -75,6 +75,9 @@ class DatabaseService {
                 log('[DatabaseService] Creating media table...');
                 await db.execute(createMediaTable);
 
+                log('[DatabaseService] Creating music table...');
+                await db.execute(createMusicTable);
+
                 log('[DatabaseService] Creating user table...');
                 await db.execute(createUserTable);
 
@@ -86,28 +89,34 @@ class DatabaseService {
               }
             },
             onUpgrade: (db, oldVersion, newVersion) async {
-            // Poses
-            log('[DatabaseService] Dropping Pose table...');
+              // Poses
+              log('[DatabaseService] Dropping Pose table...');
 
-            await db.execute(dropPoseTable); // Use drop command from schema
-            log('[DatabaseService] Creating Pose table...');
-            await db.execute(createPoseTable); // Use create command from schema
+              await db.execute(dropPoseTable); // Use drop command from schema
+              log('[DatabaseService] Creating Pose table...');
+              await db.execute(createPoseTable); // Use create command from schema
 
-            // Flows
-            await db.execute(dropFlowTable);
-            await db.execute(createFlowTable);
+              // Flows
+              await db.execute(dropFlowTable);
+              await db.execute(createFlowTable);
 
-            // Flow Poses
-            await db.execute(dropFlowPoseTable); // Use drop command from schema
-            await db.execute(createFlowPoseTable); // Use create command from schema
+              // Flow Poses
+              await db.execute(dropFlowPoseTable); // Use drop command from schema
+              await db.execute(createFlowPoseTable); // Use create command from schema
 
-            // Media
-            await db.execute(dropMediaTable); // Use drop command from schema
-            await db.execute(createMediaTable); // Use create command from schema
+              // Media
+              await db.execute(dropMediaTable); // Use drop command from schema
+              await db.execute(createMediaTable); // Use create command from schema
 
-            // Users
-            await db.execute(dropUserTable); // Use drop command from schema
-            await db.execute(createUserTable); // Use create command from schema
+              // Users
+              await db.execute(dropUserTable); // Use drop command from schema
+              await db.execute(createUserTable); // Use create command from schema
+
+              // Music
+              await db.execute(dropMusicTable);
+              await db.execute(createMusicTable);
+
+              log('[DatabaseService] Upgrade complete.');
 
           },
         ),

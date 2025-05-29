@@ -4,7 +4,8 @@ import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';
 import 'package:frontend/domain/entities/media_entity.dart';
 
-import '../constants/constants.dart';
+import 'package:frontend/domain/entities/music_entity.dart';
+import 'package:frontend/core/constants/constants.dart';
 
 List<MediaIconEntity> posesToMediaIcons(List<PoseEntity> poses) {
   return poses.map((pose) => MediaIconEntity(
@@ -60,3 +61,27 @@ List<MediaIconEntity> mediaToMediaIcons(List<MediaEntity> mediaList) {
     );
   }).toList();
 }
+
+List<MediaIconEntity> musicToMediaIcons(List<MusicEntity> musicList) {
+  return musicList.asMap().entries.map((entry) {
+    final index = entry.key;
+    final music = entry.value;
+
+    // Fallback to a default thumbnail if none provided
+    // final useDefault = music.thumbnailImagePath == Constants.missingImagePath; TODO add this ?
+    final defaultPath = "/${Constants.defaultMusicThumbnails[index % Constants.defaultMusicThumbnails.length]}";
+
+    return MediaIconEntity(
+      title: music.name,
+      subtitle: [
+        if (music.mood?.isNotEmpty == true) capitalizeFirstLetter(music.mood!),
+        if (music.artist?.isNotEmpty == true) music.artist!,
+      ].join(" • "),
+      // imageUrl: useDefault ? defaultPath : music.thumbnailImagePath,
+      imageUrl: defaultPath,
+      data: music,
+      type: MediaType.music,
+    );
+  }).toList();
+}
+
