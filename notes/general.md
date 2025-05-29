@@ -17,7 +17,8 @@ remember ; for sql
 
 \dt shows all of the available tables in a postgres db 
 
-run "npx drizzle-kit push" from src folder when you want to add a new database schema to the postgreSQL db (e.g. after adding a Tasks table)
+GOOD OPTION ---> run "npx drizzle-kit generate" from src folder to create migration file (that can be used in server)
+DESTRUCTIVE OPTION ---> run "npx drizzle-kit push" from src folder when you want to add a new database schema to the postgreSQL db (e.g. after adding a Tasks table)
 
 GIT TAG:
 git tag -a v1.0.0 -m "Release version 1.0.0"
