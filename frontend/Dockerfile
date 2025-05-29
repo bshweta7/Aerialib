@@ -23,10 +23,11 @@ WORKDIR /app/aerialib_ui
 RUN flutter build web --release
 
 # Stage 2
-FROM nginx:stable-alpine
+#FROM nginx:stable-alpine
+FROM cgr.dev/chainguard/nginx:latest
 
 # Install curl
-RUN apk add --no-cache curl
+#RUN apk add --no-cache curl
 
 # Bundle the NGINX config files
 COPY webproxy/nginx.conf /etc/nginx/
