@@ -12,7 +12,8 @@
 3. Copy to local machine if needed (stored in db_backups on server)
 
 ## Migration
-1. Define New Table (Locally)
+### Local Steps
+1. Define New Table 
    1. Update schema.ts
    2. Create router
    3. Add router to index.ts
@@ -20,7 +21,8 @@
    1. cd to ```Aerialib/backend/src```
    2. Run ```npx drizzle-kit generate```
    3. Verify and rename the file in ```Aerialib/backend/src/drizzle```
-
+   4. Update name in ```drizzle/meta/_journal.json```
+3. Git commit all changes and push
 
 3. Run the Migration on the Server
    Option A: If your app has drizzle connected to the Dockerized DB

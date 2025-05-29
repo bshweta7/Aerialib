@@ -1,194 +1,136 @@
-// import { Router } from "express";
-// import { auth, AuthRequest } from "../middleware/auth";
-// import {mediaTable, NewFlow, NewPose, posesTable} from "../db/schema";
-// import { db } from "../db";
-// import { eq, sql } from "drizzle-orm";
-// import mediaRouter from "./media";
-//
-// const musicRouter = Router();
-//
-// musicRouter.post("/", auth, async (req: AuthRequest, res) => {
+import { Router } from "express";
+import { auth, AuthRequest } from "../middleware/auth";
+import { db } from "../db";
+import {musicTable, NewMusic} from "../db/schema";
+import { eq, sql } from "drizzle-orm";
+
+const musicRouter = Router();
+
+// Create a new music entry
+musicRouter.post("/", auth, async (req: AuthRequest, res) => {
+    try {
+        const newMusic: NewMusic = {
+            ...req.body,
+            userId: req.user,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        const [created] = await db.insert(musicTable).values(newMusic).returning();
+        res.status(201).json(created);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e });
+    }
+});
+
+// Get all music for the user (and admin)
+musicRouter.get("/", auth, async (req: AuthRequest, res) => {
+    try {
+        const userId = req.user;
+        const adminId = process.env.ADMIN_USER_ID;
+
+        const result = await db.execute(sql`
+          SELECT * FROM music
+          WHERE user_id = ${userId}
+             OR user_id = ${adminId}
+        `);
+
+        // Access the rows from the result
+        const usersMusic = result.rows;
+
+        res.json(usersMusic);
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e });
+    }
+});
+
+// Delete a music entry
+musicRouter.delete("/", auth, async (req: AuthRequest, res) => {
+    try {
+        const { musicId }: { musicId: string } = req.body;
+        await db.delete(musicTable).where(eq(musicTable.id, musicId)).returning();
+
+        // TODO add check that it did delete
+        // const result = await db.delete(musicTable).where(eq(musicTable.id, musicId)).returning();
+        // if (result.length === 0) {
+        //     return res.status(404).json({ error: "Music entry not found" });
+        // }
+
+        res.json({ success: true });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e });
+    }
+});
+
+// Update music by ID
+musicRouter.put("/:id", auth, async (req: AuthRequest, res) => {
+    try {
+        const id = req.params.id;
+
+        const updated = await db
+            .update(musicTable)
+            .set({
+                ...req.body,
+                updatedAt: new Date(),
+            })
+            .where(eq(musicTable.id, id))
+            .returning();
+
+        // if (updated.length === 0) {
+        //     return res.status(404).json({ error: "Music not found" });
+        // }
+
+        res.json(updated[0]);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e });
+    }
+});
+
+export default musicRouter;
+
+// TODO
+// Sync music
+// musicRouter.post("/sync", auth, async (req: AuthRequest, res: Response): Promise<void> => {
 //     try {
-//         // TODO make sure the pose doesn't exist already?
-//         //create new pose in db
-//         req.body = { ...req.body, uid: req.user };
-//         const NewPose: NewPose = req.body;
-//         console.log(NewPose);
+//         const musicList = req.body;
+//         const filteredMusic: NewMusic[] = [];
 //
-//         const [pose] = await db.insert(posesTable).values(NewPose).returning();
-//
-//         res.status(201).json(pose);
-//
-//     } catch (e) {
-//         console.log(e)
-//         res.status(500).json({ error: e })
-//     }
-// })
-//
-// musicRouter.get("/", auth, async (req: AuthRequest, res) => {
-//
-//     try {
-//
-//         const currentUserId = req.user;
-//         // console.log('[musicRouter] Current user:', currentUserId);
-//         const adminId = process.env.ADMIN_USER_ID;
-//
-//         // TODO use drizzle ORM instead of sql query
-//         const query = sql`
-//       SELECT
-//         poses.*,
-//         media.media_path AS primary_media_path
-//       FROM poses
-//       JOIN media ON poses.primary_media_id = media.id
-//       WHERE poses.created_by = ${currentUserId}
-//          OR poses.created_by = ${adminId};
-//     `;
-//
-//         // Execute the raw SQL query using db.execute()
-//         const result = await db.execute(query);
-//
-//         // Access the rows from the result
-//         const allPoses = result.rows;
-//
-//         res.json(allPoses);
-//
-//
-//         // const allPoses = await db.select().from(posesTable);
-//         // // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
-//
-//         // res.json(allPoses);
-//
-//     } catch (e) {
-//         res.status(500).json({ error: e })
-//     }
-// })
-//
-// musicRouter.delete("/", auth, async (req: AuthRequest, res) => {
-//     try {
-//         const { poseId }: { poseId: string } = req.body;
-//         await db.delete(posesTable).where(eq(posesTable.id, poseId));
-//
-//         res.json(true);
-//
-//     } catch (e) {
-//         res.status(500).json({ error: e })
-//     }
-// })
-//
-// musicRouter.post("/sync", auth, async (req: AuthRequest, res) => {
-//     try {
-//         const posesList = req.body;
-//         const filteredPoses: NewPose[] = [];
-//         // TODO
-//         // for (let t of posesList) {
-//         //     // 👇 Strip frontend camelCase keys and normalize
-//         //     const cleaned = {
-//         //         id: t.id,
-//         //         name: t.name,
-//         //         primary_media_id: t.primary_media_id,
-//         //         apparatus: t.apparatus,
-//         //         level: t.level,
-//         //         description: t.description,
-//         //         teaching_cues: t.teaching_cues,
-//         //         safety_cues: t.safety_cues,
-//         //         progressions: t.progressions,
-//         //         created_by: t.created_by ?? req.user,
-//         //         updated_by: t.updated_by ?? req.user,
-//         //         created_at: new Date(t.created_at),
-//         //         updated_at: new Date(t.updated_at),
-//         //     };
-//         //
-//         //     filteredPoses.push(cleaned);
-//         // }
-//
-//         posesList.forEach((pose: { primary_media_id: any; }) => {
-//             console.log('[musicRouter] Received primary_media_id:', pose.primary_media_id);
-//         });
-//
-//         console.log(req.body);
-//
-//         for (let t of posesList) {
-//             t = {
-//                 // ...t,
+//         for (let t of musicList) {
+//             const cleaned: NewMusic = {
 //                 id: t.id,
 //                 name: t.name,
-//                 primaryMediaId: t.primary_media_id,
-//                 apparatus: t.apparatus,
-//                 level: t.level,
-//                 description: t.description,
-//                 teachingCues: t.teaching_cues,
-//                 safetyCues: t.safety_cues,
-//                 progressions: t.progressions,
-//                 createdBy: t.created_by,
-//                 updatedBy: req.user,
+//                 artist: t.artist,
+//                 mood: t.mood,
+//                 link: t.link,
+//                 performanceNotes: t.performance_notes,
+//                 tempoBpm: t.tempo_bpm,
+//                 durationSec: t.duration_sec,
+//                 favorite: t.favorite ?? 0,
+//                 userId: t.user_id ?? req.user,
 //                 createdAt: new Date(t.created_at),
 //                 updatedAt: new Date(t.updated_at),
 //             };
-//             filteredPoses.push(t);
+//
+//             filteredMusic.push(cleaned);
 //         }
 //
-//         filteredPoses.forEach(pose => {
-//             console.log('[musicRouter] Received primary_media_id (AFTER FILTERING):', pose.primaryMediaId);
-//         });
+//         console.log(`[musicRouter] Syncing ${filteredMusic.length} music entries`);
+//         filteredMusic.forEach(m => console.log(m.name, m.link));
 //
-//         console.log('[musicRouter] Inserting poses with keys:');
-//         filteredPoses.forEach(p => console.log(Object.keys(p)));
-//         filteredPoses.forEach(p => console.log(Object.values(p)));
-//
-//         const pushedPoses = await db
-//             .insert(posesTable)
-//             .values(filteredPoses)
-//             .onConflictDoNothing() // TODO verify if this can works
+//         const pushedMusic = await db
+//             .insert(musicTable)
+//             .values(filteredMusic)
+//             .onConflictDoNothing()
 //             .returning();
 //
-//         res.status(201).json(pushedPoses);
+//         res.status(201).json(pushedMusic);
 //     } catch (e) {
-//         console.log(e);
+//         console.error("[musicRouter] Sync error:", e);
 //         res.status(500).json({ error: e });
 //     }
 // });
-//
-//
-// musicRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
-//     try {
-//         const poseId = req.params.id; // Get the pose ID from the URL
-//         req.body = { ...req.body, uid: req.user };
-//
-//         const updatedPose: NewPose = {
-//             name: req.body.name,
-//             primaryMediaId: req.body.primaryMediaId ?? req.body.primary_media_id,
-//             apparatus: req.body.apparatus,
-//             level: req.body.level,
-//             description: req.body.description,
-//             teachingCues: req.body.teachingCues ?? req.body.teaching_cues,
-//             safetyCues: req.body.safetyCues ?? req.body.safety_cues,
-//             progressions: req.body.progressions,
-//             updatedBy: req.user,
-//             updatedAt: new Date(),
-//             createdBy: req.body.createdBy ?? req.body.created_by,
-//             createdAt: new Date(req.body.createdAt ?? req.body.created_at),
-//         };
-//
-//         console.log("Updating Pose:", updatedPose);
-//
-//         const [pose] = await db
-//             .update(posesTable)
-//             .set(updatedPose) // Use set to update the values
-//             .where(eq(posesTable.id, poseId)) // Use where to target the pose
-//             .returning();
-//
-//         if (!pose) {
-//             res.status(404).json({error: "Pose not found"});
-//             return;
-//         }
-//
-//         res.status(200).json(pose); // Change status to 200 (OK)
-//
-//     } catch (e) {
-//         console.log(e);
-//         res.status(500).json({ error: e });
-//     }
-// });
-//
-//
-// export default musicRouter;
