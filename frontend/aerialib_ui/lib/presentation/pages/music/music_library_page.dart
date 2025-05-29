@@ -55,6 +55,9 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userState = context.read<AuthCubit>().state;
+    final userToken = (userState is AuthLoggedIn) ? userState.user.token : null;
+
     return MainScaffold(
       currentIndex: 0, // TODO move this to a "media" tab instead of home
       appBar: AppBar(
@@ -104,6 +107,21 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
                     mediaItems: mediaIcons,
                     onMediaTap: _navigateToMusicPage,
                     scrollController: _scrollController,
+                    onFavoriteToggle: (mediaItem) async {
+                      if (mediaItem.type == MediaType.music &&
+                          mediaItem.data is MusicEntity &&
+                          userToken != null) {
+                        final music = mediaItem.data as MusicEntity;
+
+                        await context.read<MusicCubit>().toggleFavorite(
+                          music: music,
+                          token: userToken,
+                        );
+
+                        // Re-fetch updated list to reflect favorite state
+                        await context.read<MusicCubit>().getAllMusic(token: userToken);
+                      }
+                    },
                   ),
                 ScrollToTopButton(scrollController: _scrollController),
               ],

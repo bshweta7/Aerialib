@@ -101,6 +101,31 @@ class MusicCubit extends Cubit<MusicState> {
     }
   }
 
+  /// Toggle the favorite status of a music entry
+  Future<void> toggleFavorite({
+    required MusicEntity music,
+    required String token,
+  }) async {
+    emit(const MusicLoading());
+
+    try {
+      final updatedMusic = music.copyWith(
+        favorite: !music.favorite,
+        updatedAt: DateTime.now(),
+        isSynced: 0,
+      );
+
+      await _musicRepository.updateMusic(
+        updatedMusic: updatedMusic,
+        token: token,
+      );
+
+      emit(UpdateMusicSuccess(updatedMusic));
+    } catch (e) {
+      emit(MusicError("Failed to update favorite status: $e"));
+    }
+  }
+
   /// Delete a music entry
   Future<void> deleteMusic(String musicId) async {
     try {
@@ -112,4 +137,6 @@ class MusicCubit extends Cubit<MusicState> {
       emit(MusicError(e.toString()));
     }
   }
+
+
 }

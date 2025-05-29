@@ -65,4 +65,40 @@ class MusicEntity {
       createdAt.hashCode ^
       updatedAt.hashCode ^
       isSynced.hashCode;
+
+  MusicEntity copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? artist,
+    String? mood,
+    String? link,
+    String? performanceNotes,
+    int? tempoBpm,
+    int? durationSec,
+    bool? favorite,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? isSynced,
+  }) {
+    return MusicEntity(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      artist: artist ?? this.artist,
+      mood: mood ?? this.mood,
+      link: link ?? this.link,
+      performanceNotes: performanceNotes ?? this.performanceNotes,
+      tempoBpm: tempoBpm ?? this.tempoBpm,
+      durationSec: durationSec ?? this.durationSec,
+      favorite: favorite ?? this.favorite,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isSynced: isSynced ?? this.isSynced,
+    );
+  }
+
+
 }
+
+

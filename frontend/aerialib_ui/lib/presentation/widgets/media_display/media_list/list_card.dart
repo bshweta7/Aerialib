@@ -25,17 +25,15 @@ class ListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTapFunction,
-      child: Card(
-        margin: const EdgeInsets.all(5.0),
-        elevation: 2.0,
-        clipBehavior: Clip.none,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: SizedBox(
-        width: double.infinity, // Makes the SizedBox take full width
+    return Card(
+      margin: const EdgeInsets.all(5.0),
+      elevation: 2.0,
+      clipBehavior: Clip.none,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: InkWell(
+        onTap: onTapFunction,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -43,7 +41,7 @@ class ListCard extends StatelessWidget {
               SizedBox(
                 width: 80.0,
                 height: 80.0,
-                child: ClipRRect( // To round the image corners if you like
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: FormattedCachedNetworkImage(imageUrl),
                 ),
@@ -52,7 +50,6 @@ class ListCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       title,
@@ -65,27 +62,25 @@ class ListCard extends StatelessWidget {
                     Text(
                       subtitle,
                       style: const TextStyle(fontSize: 14.0),
-                      overflow: TextOverflow.ellipsis, // Handle long text
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              if (trailing != null)
-                trailing!
-              else if (isFavorite != null)
+              if (isFavorite != null)
                 IconButton(
                   icon: Icon(
                     isFavorite! ? Icons.favorite : Icons.favorite_border,
                     color: isFavorite! ? Colors.red : Colors.grey,
                   ),
                   onPressed: onFavoriteToggle,
-                  tooltip: isFavorite! ? 'Unfavorite' : 'Favorite',
-                ),
+                )
+              else if (trailing != null)
+                trailing!,
             ],
           ),
         ),
       ),
-    )
     );
   }
 }
