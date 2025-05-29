@@ -65,8 +65,23 @@ List<GoRoute> musicRoutes = [
     path: '/music/edit/:musicId',
     name: 'music-edit',
     builder: (context, state) {
-      final music = state.extra as MusicEntity;
-      return MusicEditPage(music: music);
+      final musicId = state.pathParameters['musicId']!;
+      final musicState = context.read<MusicCubit>().state;
+
+      if (musicState is GetMusicSuccess) {
+        final music = musicState.musicList.firstWhere(
+              (m) => m.id == musicId,
+          orElse: () => throw Exception('Music not found'),
+        );
+
+        return MusicEditPage(music: music);
+      }
+
+      // Fallback or loading UI
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     },
   ),
+
 ];

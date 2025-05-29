@@ -56,10 +56,10 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      currentIndex: 0,
+      currentIndex: 0, // TODO move this to a "media" tab instead of home
       appBar: AppBar(
         leading: const SmartBackButton(),
-        title: const Text("My Music"),
+        title: const Text("My Music Ideas"),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
