@@ -93,6 +93,33 @@ class _UserProfilePage extends State<UserProfilePage> {
                     ),
                   ),
 
+                  const Divider(),
+                  const SizedBox(height: 15,),
+                  const Text(
+                    "Have an idea or found a bug? We'd love to hear from you!",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      // color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10,),
+
+                  // Feedback Form Navigation
+                  ElevatedButton(
+                      onPressed: () {
+                        context.pushNamed('feedback');
+                      },
+                      child: const Text(
+                          "Submit Feedback",
+                          style: TextStyle(
+                            fontSize: 20,
+                          )
+                      )
+                  ),
+                  const SizedBox(height: 10,),
+
                   // // TODO move this to an advanced settings section
                   // const SizedBox(height: 30),
                   // ElevatedButton.icon(

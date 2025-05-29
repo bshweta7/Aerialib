@@ -155,3 +155,29 @@ const String createFlowPoseTable = '''
 ''';
 const String dropFlowPoseTable = 'DROP TABLE IF EXISTS $flowPoseTable';
 
+
+/* MUSIC */
+const String musicTable = "music";
+
+const String createMusicTable = '''
+  CREATE TABLE $musicTable (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    
+    name TEXT NOT NULL,
+    artist TEXT,
+    mood TEXT,
+    link TEXT,
+    performance_notes TEXT,
+    tempo_bpm INTEGER,
+    duration_sec INTEGER,
+    favorite INTEGER DEFAULT 0,
+    
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    
+    is_synced INTEGER NOT NULL
+  )
+''';
+
+const String dropMusicTable = 'DROP TABLE IF EXISTS $musicTable';

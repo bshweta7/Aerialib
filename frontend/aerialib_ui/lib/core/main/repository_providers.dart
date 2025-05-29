@@ -4,7 +4,7 @@
 // import 'package:frontend/data/services/http_service.dart';
 //
 // import 'package:frontend/data/datasources/poses/pose_local_data.dart';
-// import 'package:frontend/data/datasources/poses/pose_remote_data.dart';
+// import 'package:frontend/data/datasources/poses/music_remote_data.dart';
 // import 'package:frontend/data/datasources/user/user_local_data.dart';
 // import 'package:frontend/data/datasources/user/user_remote_data.dart';
 // import 'package:frontend/data/datasources/transitions/transition_local_data.dart';

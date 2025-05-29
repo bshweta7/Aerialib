@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/domain/repositories/music_repository.dart';
+import 'package:frontend/presentation/cubit/music/music_cubit.dart';
 import 'package:frontend/presentation/widgets/navigation/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -34,6 +36,9 @@ import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/media/media_cubit.dart';
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
+
+import 'data/datasources/music/music_local_data.dart';
+import 'data/datasources/music/music_remote_data.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +85,11 @@ Future<void> main() async {
     remoteDataSource: MediaRemoteDataSource(httpService: HttpService()),
   );
 
+  final musicRepo = MusicRepository(
+    localDataSource: MusicLocalDataSource(),
+    remoteDataSource: MusicRemoteDataSource(httpService: HttpService()),
+  );
+
   // Run app
   runApp(MultiBlocProvider(
     providers: [
@@ -88,6 +98,7 @@ Future<void> main() async {
       BlocProvider(create: (_) => MediaCubit(mediaRepo)),
       BlocProvider(create: (_) => FlowsCubit(flowRepo, flowPoseRepo)),
       BlocProvider(create: (_) => NavHistoryCubit()),
+      BlocProvider(create: (_) => MusicCubit(musicRepo)),
     ],
     child: const MyApp(),
   ));
