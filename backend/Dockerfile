@@ -15,6 +15,7 @@ WORKDIR /app
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules/ ./node_modules
 COPY src ./src
+COPY scripts ./scripts
 COPY tsconfig.json ./
 COPY nodemon.json ./ 
 COPY .env ./ 

@@ -17,6 +17,7 @@ services:
       - DB_USERNAME=postgres
       - DB_PASSWORD=aerialib_postgres_secret_password
       - DB_DATABASE=aerialib
+      - DATABASE_URL=postgres://postgres:aerialib_postgres_secret_password@db:5432/aerialib
     ports:
       - "8000:8000"
     volumes:

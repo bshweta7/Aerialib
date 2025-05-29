@@ -162,6 +162,32 @@ export const feedbackTable = pgTable("feedback", {
 export type Feedback = typeof feedbackTable.$inferSelect;
 export type NewFeedback = typeof feedbackTable.$inferInsert;
 
+//
+// /* MUSIC */
+// export const musicTable = pgTable("music", {
+//     id: uuid("id").primaryKey().defaultRandom(),
+//
+//     userId: uuid("user_id")
+//         .references(() => usersTable.id, {
+//             onDelete: "set null",
+//         }),
+//
+//     name: text("name").notNull(), // song name or description
+//     artist: text("artist"), // optional
+//     mood: text("mood"), // e.g., "playful", "intense", "romantic"
+//     link: text("link"), // YouTube, Spotify, etc.
+//     performanceNotes: text("performance_notes"), // choreography/mood ideas
+//     tempoBpm: integer("tempo_bpm"), // optional: beats per minute
+//     durationSec: integer("duration_sec"), // optional: in seconds
+//     favorite: integer("favorite").default(0), // True or false
+//
+//     createdAt: timestamp("created_at").defaultNow(),
+//     updatedAt: timestamp("updated_at").defaultNow(),
+// });
+//
+//
+// export type Music = typeof musicTable.$inferSelect;
+// export type NewMusic = typeof musicTable.$inferInsert;
 
 
 

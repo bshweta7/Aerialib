@@ -7,6 +7,7 @@ import mediaRouter from "./routes/media";
 import flowRouter from "./routes/flow";
 import flowPoseRouter from "./routes/flow_poses";
 import feedbackRouter from "./routes/feedback";
+// import musicRouter from "./routes/music";
 
 // Load values from .env file
 import 'dotenv/config'
@@ -28,6 +29,7 @@ app.use("/media", mediaRouter);
 app.use("/flows", flowRouter);
 app.use("/flow_poses", flowPoseRouter); // TODO consistent routes - pose, flow, flow_pose/ (not poses)
 app.use("/feedback", feedbackRouter);
+// app.use("/music", musicRouter);
 
 // create rest api
 app.get("/", (req, res) => {
