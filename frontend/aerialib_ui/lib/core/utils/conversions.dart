@@ -67,8 +67,6 @@ List<MediaIconEntity> musicToMediaIcons(List<MusicEntity> musicList) {
     final index = entry.key;
     final music = entry.value;
 
-    // Fallback to a default thumbnail if none provided
-    // final useDefault = music.thumbnailImagePath == Constants.missingImagePath; TODO add this ?
     final defaultPath = "/${Constants.defaultMusicThumbnails[index % Constants.defaultMusicThumbnails.length]}";
 
     return MediaIconEntity(
@@ -77,11 +75,12 @@ List<MediaIconEntity> musicToMediaIcons(List<MusicEntity> musicList) {
         if (music.mood?.isNotEmpty == true) capitalizeFirstLetter(music.mood!),
         if (music.artist?.isNotEmpty == true) music.artist!,
       ].join(" • "),
-      // imageUrl: useDefault ? defaultPath : music.thumbnailImagePath,
       imageUrl: defaultPath,
       data: music,
       type: MediaType.music,
+      isFavorite: music.favorite, // ✅ Added here
     );
   }).toList();
 }
+
 

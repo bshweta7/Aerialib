@@ -10,6 +10,8 @@ class ListCard extends StatelessWidget {
     required this.imageUrl,
     this.onTapFunction,
     this.trailing,
+    this.isFavorite,
+    this.onFavoriteToggle,
     super.key,
   });
 
@@ -18,17 +20,18 @@ class ListCard extends StatelessWidget {
   final String imageUrl;
   final Widget? trailing;
   final GestureTapCallback? onTapFunction;
+  final bool? isFavorite;
+  final VoidCallback? onFavoriteToggle;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTapFunction,
       child: Card(
-        margin: EdgeInsets.all(5.0), // To ensure it takes full width
+        margin: const EdgeInsets.all(5.0),
         elevation: 2.0,
         clipBehavior: Clip.none,
         shape: RoundedRectangleBorder(
-          // side: const BorderSide(color: Colors.grey, width: 1.0), // Customize color and width
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: SizedBox(
@@ -67,7 +70,17 @@ class ListCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (trailing != null) trailing!,
+              if (trailing != null)
+                trailing!
+              else if (isFavorite != null)
+                IconButton(
+                  icon: Icon(
+                    isFavorite! ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite! ? Colors.red : Colors.grey,
+                  ),
+                  onPressed: onFavoriteToggle,
+                  tooltip: isFavorite! ? 'Unfavorite' : 'Favorite',
+                ),
             ],
           ),
         ),
