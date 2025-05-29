@@ -88,16 +88,16 @@ class MusicCubit extends Cubit<MusicState> {
     required MusicEntity updatedMusic,
     required String token,
   }) async {
+    emit(const MusicLoading());
+
     try {
-      emit(const MusicLoading());
       await _musicRepository.updateMusic(
         updatedMusic: updatedMusic,
         token: token,
       );
       emit(UpdateMusicSuccess(updatedMusic));
     } catch (e) {
-      log('[MusicCubit] Update error: $e');
-      emit(MusicError(e.toString()));
+      emit(MusicError("Failed to update music: $e"));
     }
   }
 

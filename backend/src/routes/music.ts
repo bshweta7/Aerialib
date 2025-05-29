@@ -67,7 +67,7 @@ musicRouter.delete("/", auth, async (req: AuthRequest, res) => {
 });
 
 // Update music by ID
-musicRouter.put("/:id", auth, async (req: AuthRequest, res) => {
+musicRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
     try {
         const id = req.params.id;
 

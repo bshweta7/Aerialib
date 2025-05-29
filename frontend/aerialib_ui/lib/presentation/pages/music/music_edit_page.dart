@@ -91,7 +91,7 @@ class _MusicEditPageState extends State<MusicEditPage> {
     context.goNamed(
       'music-view',
       pathParameters: {'musicId': updatedMusic.id},
-      queryParameters: {'from': 'music-edit'},
+      // queryParameters: {'from': 'music-edit'},
     );
   }
 

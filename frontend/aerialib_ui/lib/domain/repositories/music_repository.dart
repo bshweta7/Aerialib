@@ -110,15 +110,29 @@ class MusicRepository {
     required MusicEntity updatedMusic,
     required String token,
   }) async {
-    final model = MusicMapper.entityToModel(updatedMusic);
+    try {
+      log("[MusicRepository] Updating music: ${updatedMusic.name}");
 
-    final updated = await remoteDataSource.updateMusic(
-      updatedMusic: model,
-      token: token,
-    );
+      // Convert entity to model
+      final model = MusicMapper.entityToModel(updatedMusic);
 
-    final syncedModel = updated.copyWith(isSynced: 1);
-    await localDataSource.updateMusic(syncedModel);
+      // Update remotely
+      final updated = await remoteDataSource.updateMusic(
+        updatedMusic: model,
+        token: token,
+      );
+      log("[MusicRepository] Remote update succeeded for: ${updated.id}");
+
+      // Save updated version locally
+      final syncedModel = updated.copyWith(isSynced: 1);
+      await localDataSource.updateMusic(syncedModel);
+      log("[MusicRepository] Local update completed for: ${syncedModel.id}");
+
+    } catch (e, st) {
+      log("[MusicRepository] ERROR during music update: $e");
+      log("[MusicRepository] Stacktrace:\n$st");
+      rethrow;
+    }
   }
 
   /// Delete music entry locally
