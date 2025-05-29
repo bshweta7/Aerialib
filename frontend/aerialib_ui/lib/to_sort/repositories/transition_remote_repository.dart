@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/to_sort/repositories/transition_local_repository.dart';
@@ -137,7 +138,7 @@ class TransitionRemoteRepository {
 
       return true;
     } catch (e) {
-      log(e);
+      // log(e);
       return false;
     }
   }
