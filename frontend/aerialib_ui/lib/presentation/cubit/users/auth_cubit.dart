@@ -5,6 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:frontend/domain/repositories/user_repository.dart';
 import 'package:frontend/domain/entities/user_entity.dart';
 
+import '../../../data/services/local_database_service.dart';
+
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -86,7 +88,8 @@ class AuthCubit extends Cubit<AuthState> {
   void logout() async {
     try {
       emit(const AuthLoading());
-      await _userRepository.clearUser();
+      await DatabaseService.clearLocalDatabase(); // Clears everything
+      // TODO verify if there are any unsynced flows/poses before logging out, store separately or something idk....
       emit(const AuthLoggedOut());
     } catch (e) {
       emit(AuthError(e.toString()));

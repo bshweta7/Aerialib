@@ -129,4 +129,16 @@ class DatabaseService {
       rethrow;
     }
   }
+
+  /// Clears the entire local database by deleting the file and resetting the instance
+  static Future<void> clearLocalDatabase() async {
+    final path = kIsWeb ? 'aerialib_web.db' : join(await getDatabasesPath(), _getDatabaseFileName());
+    try {
+      await databaseFactory.deleteDatabase(path);
+      _db = null;
+      log('[DatabaseService] Local database deleted successfully');
+    } catch (e, st) {
+      log('[DatabaseService] Failed to delete local database: $e, $st');
+    }
+  }
 }

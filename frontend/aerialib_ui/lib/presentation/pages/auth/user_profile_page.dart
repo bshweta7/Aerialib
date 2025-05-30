@@ -76,8 +76,6 @@ class _UserProfilePage extends State<UserProfilePage> {
                   // Logout button
                   ElevatedButton.icon(
                     onPressed: () {
-                      context.read<FlowsCubit>().clearLocalFlows();
-                      // TODO verify if there are any unsaved ones
                       context.read<AuthCubit>().logout();
                       context.go('/login');
                     },

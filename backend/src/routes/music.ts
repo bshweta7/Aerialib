@@ -28,19 +28,13 @@ musicRouter.post("/", auth, async (req: AuthRequest, res) => {
 musicRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
         const userId = req.user;
-        const adminId = process.env.ADMIN_USER_ID;
 
         const result = await db.execute(sql`
-          SELECT * FROM music
-          WHERE user_id = ${userId}
-             OR user_id = ${adminId}
-        `);
+      SELECT * FROM music
+      WHERE user_id = ${userId}
+    `);
 
-        // Access the rows from the result
-        const usersMusic = result.rows;
-
-        res.json(usersMusic);
-
+        res.json(result.rows);
     } catch (e) {
         console.error(e);
         res.status(500).json({ error: e });
