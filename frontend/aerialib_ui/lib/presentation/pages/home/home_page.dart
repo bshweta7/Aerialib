@@ -7,7 +7,10 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/presentation/cubit/music/music_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
+
+import '../../widgets/quick_add/quick_add_music.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -19,9 +22,12 @@ class HomePage extends StatelessWidget {
 
     final authState = context.watch<AuthCubit>().state;
     String currentUsername = "guest"; // Default username
+    String? userToken;
+    String userId;
 
     if (authState is AuthLoggedIn) {
       currentUsername = authState.user.username;
+      userToken = authState.user.token;
     }
 
     return MainScaffold(
@@ -64,11 +70,6 @@ class HomePage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-
-            // ElevatedButton(
-            //     onPressed: _syncPoses,
-            //     child: const Text("Sync Poses")
-            // ),
 
             // Pose Library Navigation
             ElevatedButton(
@@ -119,7 +120,7 @@ class HomePage extends StatelessWidget {
                     )
                 )
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(height: 10,),
 
             // Flow Library Navigation
             ElevatedButton(
@@ -139,6 +140,20 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 30,),
 
+            QuickAddMusicCard(
+              onSubmit: (name, description, isFavorite) async {
+                if (authState is! AuthLoggedIn) return;
+
+                final user = authState.user;
+                await context.read<MusicCubit>().createNewMusic(
+                  name: name,
+                  performanceNotes: description,
+                  favorite: isFavorite,
+                  token: user.token,
+                  userId: user.id,
+                );
+              },
+            ),
 
 
             // // Opinion Poll Navigation
@@ -153,40 +168,8 @@ class HomePage extends StatelessWidget {
             //         )
             //     )
             // ),
-            // const SizedBox(height: 10,),
-
-            // const SizedBox(height:30),
-
-            // const Text(
-            //   "More Features Coming Soon... 🙂",
-            //   style: TextStyle(
-            //     fontWeight: FontWeight.bold,
-            //     // color: Colors.black,
-            //     fontSize: 20,
-            //   ),
-            //   textAlign: TextAlign.center,
-            // ),
-            // const SizedBox(height: 20),
-            //
-            // ClipRRect(
-            //   borderRadius: BorderRadius.circular(16),
-            //   child: CachedNetworkImage(
-            //     imageUrl: "${Constants.backendUrl}/media/data/default/under_construction_gpt.png",
-            //     width: 300,
-            //     height: 300,
-            //     fit: BoxFit.contain,
-            //     placeholder: (context, url) => const CircularProgressIndicator(),
-            //     errorWidget: (context, url, error) => const Icon(Icons.error, size: 50, color: Colors.red),
-            //   ),
-            // ),
 
             const SizedBox(height: 10,),
-
-
-
-
-
-            // FormattedCachedNetworkImage("${Constants.backendUrl}/media/data/default/under_construction_gpt.png",)
 
             // const SizedBox(height: 20),
             // const Text(
