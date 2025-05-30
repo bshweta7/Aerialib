@@ -2,15 +2,13 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:frontend/core/utils/formatters.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/cubit/music/music_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
-
-import '../../widgets/quick_add/quick_add_music.dart';
+import 'package:frontend/presentation/widgets/quick_add/quick_add_category.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -33,7 +31,7 @@ class HomePage extends StatelessWidget {
     return MainScaffold(
       currentIndex: 0,
       appBar: AppBar(
-          title: const Text("My Dashboard"),
+          title: const Text("Aerialib"),
           actions: [
             IconButton(
                 onPressed: () {
@@ -51,9 +49,9 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
 
-            const Text(
-              "📚 Welcome to Aerialib!",
-              style: TextStyle(
+            Text(
+              "📚 Welcome, ${capitalizeFirstLetter(currentUsername)}!", // TODO use first name if available or username
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
@@ -64,65 +62,13 @@ class HomePage extends StatelessWidget {
             const Text(
               "Organize your aerial flows, explore new poses from Joanne's pose flashcard library, and keep track of your favorite poses for Hoopla — all in one place.",
               style: TextStyle(
-                // fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
 
-            // Pose Library Navigation
-            ElevatedButton(
-              onPressed: () {
-                context.goNamed(
-                  'pose-library',
-                  queryParameters: {'from': 'home'},
-                );
-              },
-              child: const Text(
-                "Pose Library",
-                style: TextStyle(
-                  // fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                )
-              )
-            ),
-            const SizedBox(height: 10,),
-
-            // Media Library Navigation
-            // ElevatedButton(
-            //     onPressed: () {
-            //       Navigator.push(context, MediaGalleryPage.route());
-            //     },
-            //     child: const Text(
-            //         "Media Gallery",
-            //         style: TextStyle(
-            //           // fontWeight: FontWeight.bold,
-            //           fontSize: 20,
-            //         )
-            //     )
-            // ),
-            // const SizedBox(height: 10,),
-
-            // Flow Library Navigation
-            ElevatedButton(
-                onPressed: () {
-                  context.goNamed(
-                    'flow-library',
-                    queryParameters: {'from': 'home'},
-                  );
-                },
-                child: const Text(
-                    "Flow Library",
-                    style: TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )
-                )
-            ),
-            const SizedBox(height: 10,),
-
-            // Flow Library Navigation
+            // Music Library Navigation
             ElevatedButton(
                 onPressed: () {
                   context.goNamed(
@@ -140,10 +86,11 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 30,),
 
-            QuickAddMusicCard(
-              onSubmit: (name, description, isFavorite) async {
-                if (authState is! AuthLoggedIn) return;
 
+            // TODO - maybe switch to modal for everything instead of having textboxes on the dashboard itself... might look cleaner?
+            QuickAddCategoryCard(
+              onMusicSubmit: (name, description, isFavorite) async {
+                if (authState is! AuthLoggedIn) return;
                 final user = authState.user;
                 await context.read<MusicCubit>().createNewMusic(
                   name: name,
@@ -154,6 +101,7 @@ class HomePage extends StatelessWidget {
                 );
               },
             ),
+
 
 
             // // Opinion Poll Navigation

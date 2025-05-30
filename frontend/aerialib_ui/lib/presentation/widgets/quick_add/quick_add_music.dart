@@ -39,63 +39,63 @@ class _QuickAddMusicCardState extends State<QuickAddMusicCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(12),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
+    return Container(
+      padding: const EdgeInsets.only(right: 8),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(_isExpanded
+                    ? Icons.expand_less
+                    : Icons.expand_more),
+                onPressed: () {
+                  setState(() => _isExpanded = !_isExpanded);
+                },
+                tooltip: _isExpanded ? "Collapse" : "Expand",
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: "Song Name",
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                tooltip: 'Quick add song',
+                onPressed: _handleSubmit,
+              ),
+            ],
+          ),
+          if (_isExpanded) ...[
+            const SizedBox(height: 8),
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(
+                labelText: "Description (optional)",
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              ),
+              maxLines: 2,
+            ),
+            const SizedBox(height: 8),
             Row(
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: _nameController,
-                    decoration: const InputDecoration(
-                      labelText: "Song Name",
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(_isExpanded
-                      ? Icons.expand_less
-                      : Icons.expand_more),
-                  onPressed: () {
-                    setState(() => _isExpanded = !_isExpanded);
+                Checkbox(
+                  value: _isFavorite,
+                  onChanged: (val) {
+                    setState(() => _isFavorite = val ?? false);
                   },
                 ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  tooltip: 'Quick add song',
-                  onPressed: _handleSubmit,
-                ),
+                const Text("Mark as Favorite"),
               ],
             ),
-            if (_isExpanded) ...[
-              const SizedBox(height: 12),
-              TextField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: "Description (optional)",
-                ),
-                maxLines: 2,
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Checkbox(
-                    value: _isFavorite,
-                    onChanged: (val) {
-                      setState(() => _isFavorite = val ?? false);
-                    },
-                  ),
-                  const Text("Mark as Favorite"),
-                ],
-              ),
-            ]
-          ],
-        ),
+          ]
+        ],
       ),
     );
   }
