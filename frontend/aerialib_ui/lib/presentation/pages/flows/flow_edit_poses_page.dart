@@ -16,7 +16,7 @@ import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/pages/poses/pose_view_sheet.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/list_card.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
-import 'package:frontend/presentation/widgets/modals/flow_help_dialog.dart';
+import 'package:frontend/presentation/widgets/dialogs/flow_help_dialog.dart';
 import 'package:frontend/presentation/widgets/navigation/nav_bar.dart';
 import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
 
