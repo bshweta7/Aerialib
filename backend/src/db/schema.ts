@@ -193,6 +193,85 @@ export type NewMusic = typeof musicTable.$inferInsert;
 
 
 
+/* TAGS */
+export const tagsTable = pgTable("tags", {
+    id: uuid("id").primaryKey().defaultRandom(),
+
+    name: text("name").notNull(),
+    scope: text("scope").notNull(), // e.g. 'pose', 'flow', or 'global'
+
+    createdBy: uuid("created_by").references(() => usersTable.id, {
+        onDelete: "set null",
+        onUpdate: "no action",
+    }),
+
+    isDefault: integer("is_default").default(0), // 1 = system tag, 0 = user-created
+    color: text("color").default("#B8B8B8FF"),
+});
+
+export type Tag = typeof tagsTable.$inferSelect;
+export type NewTag = typeof tagsTable.$inferInsert;
+
+/* POSE TAGS CONNECTOR */
+export const poseTagsTable = pgTable("pose_tags", {
+    id: uuid("id").primaryKey().defaultRandom(),
+
+    poseId: uuid("pose_id").notNull().references(() => posesTable.id, {
+        onDelete: "cascade",
+        onUpdate: "no action",
+    }),
+
+    tagId: uuid("tag_id").notNull().references(() => tagsTable.id, {
+        onDelete: "cascade",
+        onUpdate: "no action",
+    }),
+
+    userId: uuid("user_id").notNull().references(() => usersTable.id, {
+        onDelete: "cascade",
+        onUpdate: "no action",
+    }),
+});
+
+export type PoseTag = typeof poseTagsTable.$inferSelect;
+export type NewPoseTag = typeof poseTagsTable.$inferInsert;
+
+/* FLOW TAGS CONNECTOR */
+export const flowTagsTable = pgTable("flow_tags", {
+    id: uuid("id").primaryKey().defaultRandom(),
+
+    flowId: uuid("flow_id").notNull().references(() => flowsTable.id, {
+        onDelete: "cascade",
+        onUpdate: "no action",
+    }),
+
+    tagId: uuid("tag_id").notNull().references(() => tagsTable.id, {
+        onDelete: "cascade",
+        onUpdate: "no action",
+    }),
+
+    userId: uuid("user_id").notNull().references(() => usersTable.id, {
+        onDelete: "cascade",
+        onUpdate: "no action",
+    }),
+});
+
+export type FlowTag = typeof flowTagsTable.$inferSelect;
+export type NewFlowTag = typeof flowTagsTable.$inferInsert;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -15,7 +15,7 @@
 ### Local Set Up Steps
 1. Define New Table 
    1. Update schema.ts
-   2. Create router
+   2. Create router file
    3. Add router to index.ts
 2. Generate a Migration
    1. cd to ```Aerialib/backend/src```

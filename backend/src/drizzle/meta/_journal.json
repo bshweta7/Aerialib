@@ -15,6 +15,13 @@
       "when": 1748538748511,
       "tag": "0001_add_music_table",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1748623801661,
+      "tag": "0002_add_tag_tables",
+      "breakpoints": true
     }
   ]
 }
