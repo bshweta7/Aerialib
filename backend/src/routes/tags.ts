@@ -54,7 +54,7 @@ tagRouter.get("/", auth, async (req: AuthRequest, res) => {
 
 // ------------------------------
 // Delete a tag
-tagRouter.delete("/", auth, async (req: AuthRequest, res) => {
+tagRouter.delete("/:id", auth, async (req: AuthRequest, res) => {
     try {
         const { tagId }: { tagId: string } = req.body;
         await db.delete(tagsTable).where(eq(tagsTable.id, tagId)).returning();
