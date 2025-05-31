@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/music/domain/repositories/music_repository.dart';
 import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
+import 'package:frontend/features/tags/data/tag_local_data.dart';
+import 'package:frontend/features/tags/data/tag_remote_data.dart';
+import 'package:frontend/features/tags/domain/tag_repository.dart';
+import 'package:frontend/features/tags/presentation/cubit/tag_cubit.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -26,7 +30,7 @@ import 'package:frontend/features/media/data/datasources/media_local_data.dart';
 import 'package:frontend/features/media/data/datasources/media_remote_data.dart';
 
 import 'package:frontend/features/pose/domain/repositories/pose_repository.dart';
-import 'package:frontend/features/user/domain/user_repository.dart';
+import 'package:frontend/features/user/domain/repositories/user_repository.dart';
 import 'package:frontend/features/flow/domain/repositories/flow_pose_repository.dart';
 import 'package:frontend/features/flow/domain/repositories/flow_repository.dart';
 import 'package:frontend/features/media/domain/repositories/media_repository.dart';
@@ -90,6 +94,11 @@ Future<void> main() async {
     remoteDataSource: MusicRemoteDataSource(httpService: HttpService()),
   );
 
+  final tagRepo = TagRepository(
+    localDataSource: TagLocalDataSource(),
+    remoteDataSource: TagRemoteDataSource(httpService: HttpService()),
+  );
+
   // Run app
   runApp(MultiBlocProvider(
     providers: [
@@ -99,6 +108,7 @@ Future<void> main() async {
       BlocProvider(create: (_) => FlowsCubit(flowRepo, flowPoseRepo)),
       BlocProvider(create: (_) => NavHistoryCubit()),
       BlocProvider(create: (_) => MusicCubit(musicRepo)),
+      BlocProvider(create: (_) => TagCubit(tagRepository: tagRepo)), // TODO make this match format of others (positional)
     ],
     child: const MyApp(),
   ));

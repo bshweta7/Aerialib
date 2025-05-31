@@ -1,5 +1,5 @@
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:frontend/features/tags/data/models/tag_model.dart';
+import 'package:frontend/features/tags/data/tag_model.dart';
 import 'package:frontend/core/services/local_database_service.dart';
 
 class TagLocalDataSource {

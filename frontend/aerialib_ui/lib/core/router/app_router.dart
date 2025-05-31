@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/router/tag_router.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/router/auth_router.dart';
@@ -33,6 +34,7 @@ GoRouter createRouter(AuthCubit authCubit) {
       ...mediaRoutes,
       ...musicRoutes,
       ...poseRoutes,
+      ...tagRoutes,
     ],
     redirect: (context, state) {
       final authState = authCubit.state;

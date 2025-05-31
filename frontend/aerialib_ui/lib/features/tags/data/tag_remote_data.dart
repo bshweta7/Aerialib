@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:uuid/uuid.dart';
-import 'package:frontend/features/tags/data/models/tag_model.dart';
+import 'package:frontend/features/tags/data/tag_model.dart';
 import 'package:frontend/core/services/http_service.dart';
 
 class TagRemoteDataSource {
