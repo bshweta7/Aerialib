@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 
-import 'package:frontend/presentation/cubit/music/music_cubit.dart';
+import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 class AddNewMusicPage extends StatefulWidget {

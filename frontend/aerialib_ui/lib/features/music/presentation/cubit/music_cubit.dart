@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:frontend/domain/entities/music_entity.dart';
-import 'package:frontend/domain/repositories/music_repository.dart';
+import 'package:frontend/features/music/domain/entities/music_entity.dart';
+import 'package:frontend/features/music/domain/repositories/music_repository.dart';
 
 part 'music_state.dart';
 

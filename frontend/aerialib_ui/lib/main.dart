@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/domain/repositories/music_repository.dart';
-import 'package:frontend/presentation/cubit/music/music_cubit.dart';
+import 'package:frontend/features/music/domain/repositories/music_repository.dart';
+import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
 import 'package:frontend/presentation/widgets/navigation/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -17,7 +17,7 @@ import 'package:frontend/features/pose/data/datasources/pose_local_data.dart';
 import 'package:frontend/features/pose/data/datasources/pose_remote_data.dart';
 import 'package:frontend/data/datasources/user/user_local_data.dart';
 import 'package:frontend/data/datasources/user/user_remote_data.dart';
-import 'package:frontend/data/datasources/transitions/transition_local_data.dart';
+import 'package:frontend/features/transitions/data/datasources/transition_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_pose_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_pose_remote_data.dart';

@@ -1,7 +1,7 @@
 // lib/data/mappers/music_mapper.dart
 
-import 'package:frontend/data/models/music_model.dart';
-import 'package:frontend/domain/entities/music_entity.dart';
+import 'package:frontend/features/music/data/models/music_model.dart';
+import 'package:frontend/features/music/domain/entities/music_entity.dart';
 
 class MusicMapper {
   /// Convert a MusicModel to a MusicEntity

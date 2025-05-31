@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/domain/entities/music_entity.dart';
-import 'package:frontend/presentation/cubit/music/music_cubit.dart';
+import 'package:frontend/features/music/domain/entities/music_entity.dart';
+import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
-import 'package:frontend/presentation/pages/music/music_library_page.dart';
-import 'package:frontend/presentation/pages/music/add_new_music_page.dart';
-import 'package:frontend/presentation/pages/music/music_view_page.dart';
-import 'package:frontend/presentation/pages/music/music_edit_page.dart';
+import 'package:frontend/features/music/presentation/pages/music_library_page.dart';
+import 'package:frontend/features/music/presentation/pages/add_new_music_page.dart';
+import 'package:frontend/features/music/presentation/pages/music_view_page.dart';
+import 'package:frontend/features/music/presentation/pages/music_edit_page.dart';
 
 List<GoRoute> musicRoutes = [
   /// Music Library Page

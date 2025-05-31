@@ -6,7 +6,7 @@ import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/music/music_cubit.dart';
+import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 import 'package:frontend/presentation/widgets/quick_add/quick_add_category.dart';
 

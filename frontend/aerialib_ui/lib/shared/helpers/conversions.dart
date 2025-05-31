@@ -4,7 +4,7 @@ import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
 import 'package:frontend/features/media/domain/entities/media_entity.dart';
 
-import 'package:frontend/domain/entities/music_entity.dart';
+import 'package:frontend/features/music/domain/entities/music_entity.dart';
 import 'package:frontend/core/constants/constants.dart';
 
 List<MediaIconEntity> posesToMediaIcons(List<PoseEntity> poses) {
