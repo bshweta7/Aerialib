@@ -48,21 +48,3 @@ OTHER STUFF
 ps aux | grep pacman --> check other pacman processes
 processes are stored in lock file, can clear lock file with this command
 
-
-GIT TAGS
-# Step 1: Find the commit the old tag points to
-git rev-parse v1.0
-# Example output: abc123def456...
-
-# Step 2: Delete the old tag
-git tag -d v1.0
-
-# Step 3: Create the new tag pointing to the same commit
-git tag v1.0.0 abc123def456
-
-# OR (preferred for releases): make it annotated
-git tag -a v1.0.0 abc123def456^{} -m "Rename v1.0 to v1.0.0"
-
-# Step 4: Push changes to remote
-git push origin :refs/tags/v1.0   # delete old remote tag
-git push origin v1.0.0            # push new tag
