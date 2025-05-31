@@ -103,7 +103,8 @@ class UserRemoteDataSource {
       body: '',
     );
 
-    if (tokenIsValidResponse.statusCode != 200 || jsonDecode(tokenIsValidResponse.body) == false) {
+    if (tokenIsValidResponse.statusCode != 200 ||
+        jsonDecode(tokenIsValidResponse.body) == false) {
       return null;
     }
 
@@ -112,9 +113,19 @@ class UserRemoteDataSource {
       token: token,
     );
 
-    if (userResponse.statusCode != 200) {
-      throw jsonDecode(userResponse.body)['error'];
+    final contentType = userResponse.headers['content-type'];
+    if (userResponse.statusCode != 200 ||
+        contentType?.contains("application/json") != true) {
+      log("[UserRemoteDataSource] Unexpected response (not JSON): ${userResponse.body}");
+      return null;
     }
-    return UserModel.fromJson(userResponse.body);
+
+    try {
+      return UserModel.fromJson(userResponse.body);
+    } catch (e, st) {
+      log("[UserRemoteDataSource] Failed to parse user: $e");
+      log("[UserRemoteDataSource] Stack: $st");
+      return null;
+    }
   }
 }

@@ -27,14 +27,15 @@ class UserLocalDataSource {
 
     try {
       final result = await db.query(tableName);
-      log('[UserLocalData] User found, username: ${result.first["username"]}');
 
       if (result.isEmpty) {
         log('[UserLocalData] No user found in local DB');
         return null;
       }
 
-      return UserModel.fromMap(result.first); // Replace with your real logic
+      log('[UserLocalData] User found, username: ${result.first["username"]}');
+      return UserModel.fromMap(result.first);
+
     } catch (e, st) {
       log('[UserLocalData] Error getting user: $e, $st');
       return null;
