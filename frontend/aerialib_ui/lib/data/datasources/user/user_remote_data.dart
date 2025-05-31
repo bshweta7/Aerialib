@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:frontend/data/models/user_model.dart';
-import 'package:frontend/data/services/sp_service.dart';
-import 'package:frontend/data/services/http_service.dart';
+import 'package:frontend/core/services/sp_service.dart';
+import 'package:frontend/core/services/http_service.dart';
 
 class UserRemoteDataSource {
   final HttpService httpService;

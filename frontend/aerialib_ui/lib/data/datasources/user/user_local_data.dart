@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:frontend/data/models/user_model.dart';
-import 'package:frontend/data/services/local_database_service.dart';
+import 'package:frontend/core/services/local_database_service.dart';
 
 
 class UserLocalDataSource {

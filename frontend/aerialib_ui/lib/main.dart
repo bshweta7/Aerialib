@@ -10,8 +10,8 @@ import 'package:frontend/core/main/repository_providers.dart';
 import 'package:frontend/core/main/app_theme.dart';
 import 'package:frontend/core/router/app_router.dart';
 
-import 'package:frontend/data/services/connectivity_service.dart';
-import 'package:frontend/data/services/http_service.dart';
+import 'package:frontend/core/services/connectivity_service.dart';
+import 'package:frontend/core/services/http_service.dart';
 
 import 'package:frontend/data/datasources/poses/pose_local_data.dart';
 import 'package:frontend/data/datasources/poses/pose_remote_data.dart';

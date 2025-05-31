@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import 'package:frontend/data/models/media_model.dart';
-import 'package:frontend/data/services/http_service.dart';
+import 'package:frontend/core/services/http_service.dart';
 
 
 class MediaRemoteDataSource {

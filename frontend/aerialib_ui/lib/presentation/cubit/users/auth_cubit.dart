@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:frontend/domain/repositories/user_repository.dart';
 import 'package:frontend/domain/entities/user_entity.dart';
 
-import '../../../data/services/local_database_service.dart';
+import '../../../core/services/local_database_service.dart';
 
 part 'auth_state.dart';
 

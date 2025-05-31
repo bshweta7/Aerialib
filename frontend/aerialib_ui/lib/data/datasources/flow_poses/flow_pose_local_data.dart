@@ -1,6 +1,6 @@
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:frontend/data/models/flow_pose_model.dart';
-import 'package:frontend/data/services/local_database_service.dart';
+import 'package:frontend/core/services/local_database_service.dart';
 
 class FlowPoseLocalDataSource {
   String tableName = 'flow_poses';

@@ -1,6 +1,6 @@
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:frontend/data/models/music_model.dart';
-import '../../services/local_database_service.dart';
+import '../../../core/services/local_database_service.dart';
 
 class MusicLocalDataSource {
   final String tableName = 'music';

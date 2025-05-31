@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:uuid/uuid.dart';
 import 'package:frontend/data/models/music_model.dart';
-import 'package:frontend/data/services/http_service.dart';
+import 'package:frontend/core/services/http_service.dart';
 
 class MusicRemoteDataSource {
   final HttpService httpService;

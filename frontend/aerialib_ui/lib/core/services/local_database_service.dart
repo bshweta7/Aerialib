@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:flutter/foundation.dart';
-import 'package:frontend/data/schema/database_schema.dart';
+import 'package:frontend/core/schema/database_schema.dart';
 
 
 String _getDatabaseFileName() {
