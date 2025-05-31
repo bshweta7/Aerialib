@@ -1,6 +1,6 @@
-import '../../../../domain/mappers/pose_mapper.dart';
+import '../../../pose/domain/mappers/pose_mapper.dart';
 import '../../../../domain/mappers/transition_mapper.dart';
-import 'package:frontend/data/models/pose_model.dart';
+import 'package:frontend/features/pose/data/models/pose_model.dart';
 import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
 import 'package:frontend/data/models/transition_model.dart';
 import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
+import 'package:frontend/features/pose/presentation/pages/add_new_pose_page.dart';
 import 'package:go_router/go_router.dart'; // TODO modify to take in the route so itll work for all.
 
 // TODO See how flow handles this - why does this need to exist?

@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 
 class ConnectivityService {
   static Future<int> isConnected() async {

@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:frontend/domain/entities/music_entity.dart';
 import 'package:frontend/domain/mappers/music_mapper.dart';
 
-import 'package:frontend/data/datasources/music/music_local_data.dart';
-import 'package:frontend/data/datasources/music/music_remote_data.dart';
+import 'package:frontend/features/music/data/datasources/music_local_data.dart';
+import 'package:frontend/features/music/data/datasources/music_remote_data.dart';
 import 'package:frontend/data/models/music_model.dart';
 
 class MusicRepository {

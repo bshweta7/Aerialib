@@ -13,8 +13,8 @@ import 'package:frontend/core/router/app_router.dart';
 import 'package:frontend/core/services/connectivity_service.dart';
 import 'package:frontend/core/services/http_service.dart';
 
-import 'package:frontend/data/datasources/poses/pose_local_data.dart';
-import 'package:frontend/data/datasources/poses/pose_remote_data.dart';
+import 'package:frontend/features/pose/data/datasources/pose_local_data.dart';
+import 'package:frontend/features/pose/data/datasources/pose_remote_data.dart';
 import 'package:frontend/data/datasources/user/user_local_data.dart';
 import 'package:frontend/data/datasources/user/user_remote_data.dart';
 import 'package:frontend/data/datasources/transitions/transition_local_data.dart';
@@ -22,23 +22,23 @@ import 'package:frontend/features/flow/data/datasources/flow_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_pose_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_pose_remote_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_remote_data.dart';
-import 'package:frontend/data/datasources/media/media_local_data.dart';
-import 'package:frontend/data/datasources/media/media_remote_data.dart';
+import 'package:frontend/features/media/data/datasources/media_local_data.dart';
+import 'package:frontend/features/media/data/datasources/media_remote_data.dart';
 
-import 'package:frontend/domain/repositories/pose_repository.dart';
+import 'package:frontend/features/pose/domain/repositories/pose_repository.dart';
 import 'package:frontend/domain/repositories/user_repository.dart';
 import 'package:frontend/features/flow/domain/repositories/flow_pose_repository.dart';
 import 'package:frontend/features/flow/domain/repositories/flow_repository.dart';
-import 'package:frontend/domain/repositories/media_repository.dart';
+import 'package:frontend/features/media/domain/repositories/media_repository.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
-import 'package:frontend/presentation/cubit/media/media_cubit.dart';
+import 'package:frontend/features/media/presentation/cubit/media_cubit.dart';
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
-import 'data/datasources/music/music_local_data.dart';
-import 'data/datasources/music/music_remote_data.dart';
+import 'features/music/data/datasources/music_local_data.dart';
+import 'features/music/data/datasources/music_remote_data.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

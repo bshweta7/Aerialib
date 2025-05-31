@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
+import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
+import 'package:frontend/features/pose/presentation/pages/pose_view_page.dart';
 import 'package:go_router/go_router.dart';
 
 class PoseSearchBarWidget extends StatefulWidget {

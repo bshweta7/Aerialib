@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:frontend/presentation/cubit/poses/poses_cubit.dart';
+import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
+import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
-import 'package:frontend/presentation/pages/poses/add_new_pose_page.dart';
-import 'package:frontend/presentation/pages/poses/pose_edit_page.dart';
-import 'package:frontend/presentation/pages/poses/pose_library_page.dart';
-import 'package:frontend/presentation/pages/poses/pose_view_page.dart';
+import 'package:frontend/features/pose/presentation/pages/add_new_pose_page.dart';
+import 'package:frontend/features/pose/presentation/pages/pose_edit_page.dart';
+import 'package:frontend/features/pose/presentation/pages/pose_library_page.dart';
+import 'package:frontend/features/pose/presentation/pages/pose_view_page.dart';
 
 
 

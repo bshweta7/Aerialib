@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
-import 'package:frontend/domain/entities/pose_entity.dart';
+import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';
 
 import 'package:frontend/features/flow/domain/repositories/flow_repository.dart';
