@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/shared/helpers/formatters.dart';
-import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
 
-import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 
 

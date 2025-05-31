@@ -1,4 +1,4 @@
-import 'package:frontend/domain/entities/flow_pose_entity.dart';
+import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';
 
 class FlowEntity {
   final String id;

@@ -1,17 +1,17 @@
 import 'dart:developer';
 
 import 'package:frontend/data/models/transition_model.dart';
-import 'package:frontend/data/models/flow_pose_model.dart';
+import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
 
 import 'package:frontend/data/datasources/poses/pose_local_data.dart';
-import 'package:frontend/data/datasources/flow_poses/flow_pose_local_data.dart';
-import 'package:frontend/data/datasources/flow_poses/flow_pose_remote_data.dart';
+import 'package:frontend/features/flow/data/datasources/flow_pose_local_data.dart';
+import 'package:frontend/features/flow/data/datasources/flow_pose_remote_data.dart';
 import 'package:frontend/data/datasources/transitions/transition_local_data.dart';
 
 import 'package:frontend/domain/entities/pose_entity.dart';
-import 'package:frontend/domain/entities/flow_pose_entity.dart';
+import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';
 
-import 'package:frontend/domain/mappers/flow_pose_mapper.dart';
+import 'package:frontend/features/flow/domain/mappers/flow_pose_mapper.dart';
 import 'package:frontend/domain/mappers/pose_mapper.dart';
 
 class FlowPoseRepository {

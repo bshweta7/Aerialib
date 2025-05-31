@@ -1,7 +1,7 @@
-import 'package:frontend/data/models/flow_model.dart';
+import 'package:frontend/features/flow/data/models/flow_model.dart';
 import 'package:frontend/data/models/pose_model.dart';
-import 'package:frontend/data/models/flow_pose_model.dart';
-import 'package:frontend/domain/entities/flow_entity.dart';
+import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
+import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
 import '../entities/flow_pose_entity.dart';
 import 'flow_pose_mapper.dart';
 

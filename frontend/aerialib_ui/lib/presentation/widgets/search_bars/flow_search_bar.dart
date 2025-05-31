@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/domain/entities/flow_entity.dart';
-import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
+import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
+import 'package:frontend/features/flow/presentation/pages/flow_view_page.dart';
 import 'package:go_router/go_router.dart';
 
 class FlowSearchBarWidget extends StatefulWidget {

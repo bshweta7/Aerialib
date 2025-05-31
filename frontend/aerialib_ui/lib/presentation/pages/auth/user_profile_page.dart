@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
-import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 

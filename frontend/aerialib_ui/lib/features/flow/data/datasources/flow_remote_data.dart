@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:uuid/uuid.dart';
-import 'package:frontend/data/models/flow_model.dart';
+import 'package:frontend/features/flow/data/models/flow_model.dart';
 import 'package:frontend/core/services/http_service.dart';
 
 class FlowRemoteDataSource {

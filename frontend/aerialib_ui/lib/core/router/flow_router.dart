@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/presentation/cubit/flows/flows_cubit.dart';
+import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
-import 'package:frontend/presentation/pages/flows/add_new_flow_page.dart';
-import 'package:frontend/presentation/pages/flows/flow_edit_details_page.dart';
-import 'package:frontend/presentation/pages/flows/flow_edit_poses_page.dart';
-import 'package:frontend/presentation/pages/flows/flow_library_page.dart';
-import 'package:frontend/presentation/pages/flows/flow_view_page.dart';
+import 'package:frontend/features/flow/presentation/pages/add_new_flow_page.dart';
+import 'package:frontend/features/flow/presentation/pages/flow_edit_details_page.dart';
+import 'package:frontend/features/flow/presentation/pages/flow_edit_poses_page.dart';
+import 'package:frontend/features/flow/presentation/pages/flow_library_page.dart';
+import 'package:frontend/features/flow/presentation/pages/flow_view_page.dart';
 
 
 List<GoRoute> flowRoutes = [
