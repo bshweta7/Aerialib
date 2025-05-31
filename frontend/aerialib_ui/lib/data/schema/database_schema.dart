@@ -181,3 +181,50 @@ const String createMusicTable = '''
 ''';
 
 const String dropMusicTable = 'DROP TABLE IF EXISTS $musicTable';
+
+
+/* TAGS */
+const String tagsTable = "tags";
+
+const String createTagsTable = '''
+  CREATE TABLE $tagsTable (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    color TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  )
+''';
+
+const String dropTagsTable = 'DROP TABLE IF EXISTS $tagsTable';
+
+
+/* POSE TAG CONNECTOR */
+const String poseTagsTable = "pose_tags";
+
+const String createPoseTagsTable = '''
+  CREATE TABLE $poseTagsTable (
+    id TEXT PRIMARY KEY,
+    pose_id TEXT NOT NULL,
+    tag_id TEXT NOT NULL,
+    user_id TEXT NOT NULL
+  )
+''';
+
+const String dropPoseTagsTable = 'DROP TABLE IF EXISTS $poseTagsTable';
+
+
+/* FLOW TAG CONNECTOR */
+const String flowTagsTable = "flow_tags";
+
+const String createFlowTagsTable = '''
+  CREATE TABLE $flowTagsTable (
+    id TEXT PRIMARY KEY,
+    flow_id TEXT NOT NULL,
+    tag_id TEXT NOT NULL,
+    user_id TEXT NOT NULL
+  )
+''';
+
+const String dropFlowTagsTable = 'DROP TABLE IF EXISTS $flowTagsTable';

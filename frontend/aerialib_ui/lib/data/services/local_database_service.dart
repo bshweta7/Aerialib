@@ -81,6 +81,15 @@ class DatabaseService {
                 log('[DatabaseService] Creating user table...');
                 await db.execute(createUserTable);
 
+                log('[DatabaseService] Creating tag table...');
+                await db.execute(createTagsTable);
+
+                log('[DatabaseService] Creating pose_tag table...');
+                await db.execute(createPoseTagsTable);
+
+                log('[DatabaseService] Creating flow_tag table...');
+                await db.execute(createFlowTagsTable);
+
                 log('[DatabaseService] All tables created successfully');
               } catch (e, st) {
                 log('[DatabaseService] ERROR in onCreate: $e, $st');
@@ -115,6 +124,18 @@ class DatabaseService {
               // Music
               await db.execute(dropMusicTable);
               await db.execute(createMusicTable);
+
+              // Tags
+              await db.execute(dropTagsTable);
+              await db.execute(createTagsTable);
+
+              // Pose Tags
+              await db.execute(dropPoseTagsTable);
+              await db.execute(createPoseTagsTable);
+
+              // Flow Tags
+              await db.execute(dropFlowTagsTable);
+              await db.execute(createFlowTagsTable);
 
               log('[DatabaseService] Upgrade complete.');
 
