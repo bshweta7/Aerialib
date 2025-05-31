@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:frontend/data/models/transition_model.dart';
+import 'package:frontend/features/transitions/data/models/transition_model.dart';
 import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
 
 import 'package:frontend/features/pose/data/datasources/pose_local_data.dart';

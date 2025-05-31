@@ -1,8 +1,8 @@
 import 'package:frontend/features/transitions/data/datasources/transition_local_data.dart';
 import 'package:frontend/features/transitions/data/datasources/transition_remote_data.dart';
-import 'package:frontend/data/models/transition_model.dart';
-import 'package:frontend/domain/entities/transition_entity.dart';
-import 'package:frontend/domain/mappers/transition_mapper.dart';
+import 'package:frontend/features/transitions/data/models/transition_model.dart';
+import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
+import 'package:frontend/features/transitions/domain/mappers/transition_mapper.dart';
 
 class TransitionRepository {
   final TransitionLocalDataSource localDataSource;

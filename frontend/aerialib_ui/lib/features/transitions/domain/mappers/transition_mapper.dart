@@ -1,5 +1,5 @@
-import 'package:frontend/data/models/transition_model.dart';
-import 'package:frontend/domain/entities/transition_entity.dart';
+import 'package:frontend/features/transitions/data/models/transition_model.dart';
+import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
 
 class TransitionMapper {
   static TransitionEntity modelToEntity(TransitionModel model) {

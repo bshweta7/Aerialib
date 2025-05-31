@@ -3,8 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:frontend/domain/entities/transition_entity.dart';
-import 'package:frontend/domain/repositories/transition_repository.dart';
+import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
+import 'package:frontend/features/transitions/domain/repositories/transition_repository.dart';
 
 part 'transition_state.dart';
 
