@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:frontend/features/flow/data/datasources/flow_local_data.dart';
-import 'package:frontend/features/flow/data/datasources/flow_remote_data.dart';
+import 'package:frontend/features/flow/data/datasources/flow/flow_local_data.dart';
+import 'package:frontend/features/flow/data/datasources/flow/flow_remote_data.dart';
 import 'package:frontend/features/flow/data/models/flow_model.dart';
 
 import 'package:frontend/features/flow/domain/mappers/flow_mapper.dart';

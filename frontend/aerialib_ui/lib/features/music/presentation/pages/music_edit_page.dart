@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/music/domain/entities/music_entity.dart';
 import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 import 'package:frontend/shared/helpers/validators.dart';
 

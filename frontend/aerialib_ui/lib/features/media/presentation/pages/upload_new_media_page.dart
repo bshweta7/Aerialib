@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/features/media/presentation/cubit/media_cubit.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
 
 class UploadNewMediaPage extends StatefulWidget {

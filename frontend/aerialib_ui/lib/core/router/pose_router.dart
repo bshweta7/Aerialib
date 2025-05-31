@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
-import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
+import 'package:frontend/shared/presentation/cubit/navigation/nav_history_cubit.dart';
 
 import 'package:frontend/features/pose/presentation/pages/add_new_pose_page.dart';
 import 'package:frontend/features/pose/presentation/pages/pose_edit_page.dart';

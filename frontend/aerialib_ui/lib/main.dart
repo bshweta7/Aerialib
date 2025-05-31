@@ -13,29 +13,29 @@ import 'package:frontend/core/router/app_router.dart';
 import 'package:frontend/core/services/connectivity_service.dart';
 import 'package:frontend/core/services/http_service.dart';
 
-import 'package:frontend/features/pose/data/datasources/pose_local_data.dart';
-import 'package:frontend/features/pose/data/datasources/pose_remote_data.dart';
-import 'package:frontend/data/datasources/user/user_local_data.dart';
-import 'package:frontend/data/datasources/user/user_remote_data.dart';
+import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dart';
+import 'package:frontend/features/pose/data/datasources/pose/pose_remote_data.dart';
+import 'package:frontend/features/user/data/datasources/user_local_data.dart';
+import 'package:frontend/features/user/data/datasources/user_remote_data.dart';
 import 'package:frontend/features/transitions/data/datasources/transition_local_data.dart';
-import 'package:frontend/features/flow/data/datasources/flow_local_data.dart';
-import 'package:frontend/features/flow/data/datasources/flow_pose_local_data.dart';
-import 'package:frontend/features/flow/data/datasources/flow_pose_remote_data.dart';
-import 'package:frontend/features/flow/data/datasources/flow_remote_data.dart';
+import 'package:frontend/features/flow/data/datasources/flow/flow_local_data.dart';
+import 'package:frontend/features/flow/data/datasources/flow_poses/flow_pose_local_data.dart';
+import 'package:frontend/features/flow/data/datasources/flow_poses/flow_pose_remote_data.dart';
+import 'package:frontend/features/flow/data/datasources/flow/flow_remote_data.dart';
 import 'package:frontend/features/media/data/datasources/media_local_data.dart';
 import 'package:frontend/features/media/data/datasources/media_remote_data.dart';
 
 import 'package:frontend/features/pose/domain/repositories/pose_repository.dart';
-import 'package:frontend/domain/repositories/user_repository.dart';
+import 'package:frontend/features/user/domain/repositories/user_repository.dart';
 import 'package:frontend/features/flow/domain/repositories/flow_pose_repository.dart';
 import 'package:frontend/features/flow/domain/repositories/flow_repository.dart';
 import 'package:frontend/features/media/domain/repositories/media_repository.dart';
 
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/features/media/presentation/cubit/media_cubit.dart';
-import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
+import 'package:frontend/shared/presentation/cubit/navigation/nav_history_cubit.dart';
 
 import 'features/music/data/datasources/music_local_data.dart';
 import 'features/music/data/datasources/music_remote_data.dart';

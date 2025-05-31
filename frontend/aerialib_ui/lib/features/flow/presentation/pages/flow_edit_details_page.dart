@@ -6,7 +6,7 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/shared/helpers/validators.dart';
 
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';

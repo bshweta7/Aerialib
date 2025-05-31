@@ -1,10 +1,10 @@
-import 'package:frontend/presentation/pages/home/feedback_form.dart';
-import 'package:frontend/presentation/pages/home/home_page.dart';
-import 'package:frontend/presentation/pages/home/landing_page.dart';
-import 'package:frontend/presentation/pages/home/opinion_page.dart';
+import 'package:frontend/features/home/presentation/pages/feedback_form.dart';
+import 'package:frontend/features/home/presentation/pages/home_page.dart';
+import 'package:frontend/features/home/presentation/pages/landing_page.dart';
+import 'package:frontend/features/home/presentation/pages/opinion_page.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../presentation/pages/home/install_page.dart';
+import '../../features/home/presentation/pages/install_page.dart';
 
 
 List<GoRoute> homeRoutes = [

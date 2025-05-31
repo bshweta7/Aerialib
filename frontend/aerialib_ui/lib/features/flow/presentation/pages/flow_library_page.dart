@@ -6,11 +6,11 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/shared/helpers/conversions.dart';
 
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
-import 'package:frontend/domain/entities/media_icon_entity.dart';
+import 'package:frontend/shared/domain/entities/media_icon_entity.dart';
 
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
 import 'package:frontend/presentation/widgets/filters/flow_filter_sheet.dart';
 import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';

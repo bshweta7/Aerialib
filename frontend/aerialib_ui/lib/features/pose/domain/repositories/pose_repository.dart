@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/pose/domain/mappers/pose_mapper.dart';
 
-import 'package:frontend/features/pose/data/datasources/pose_local_data.dart';
-import 'package:frontend/features/pose/data/datasources/pose_remote_data.dart';
+import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dart';
+import 'package:frontend/features/pose/data/datasources/pose/pose_remote_data.dart';
 import 'package:frontend/features/pose/data/models/pose_model.dart';
 
 

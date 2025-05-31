@@ -12,7 +12,7 @@ import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/pose/presentation/pages/pose_view_sheet.dart';
 import 'package:frontend/presentation/widgets/media_display/media_list/list_card.dart';
 import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';

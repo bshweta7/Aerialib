@@ -7,7 +7,7 @@ import 'package:frontend/core/router/pose_router.dart';
 import 'package:frontend/core/router/flow_router.dart';
 import 'package:frontend/core/router/media_router.dart';
 import 'package:frontend/core/router/music_router.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 

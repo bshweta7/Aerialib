@@ -2,10 +2,10 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:frontend/domain/repositories/user_repository.dart';
-import 'package:frontend/domain/entities/user_entity.dart';
+import 'package:frontend/features/user/domain/repositories/user_repository.dart';
+import 'package:frontend/features/user/domain/entities/user_entity.dart';
 
-import '../../../core/services/local_database_service.dart';
+import '../../../../core/services/local_database_service.dart';
 
 part 'auth_state.dart';
 

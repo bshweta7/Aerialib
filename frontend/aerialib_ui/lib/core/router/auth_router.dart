@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/presentation/pages/auth/login_page.dart';
-import 'package:frontend/presentation/pages/auth/signup_page.dart';
-import 'package:frontend/presentation/pages/auth/user_profile_page.dart';
+import 'package:frontend/features/user/presentation/pages/login_page.dart';
+import 'package:frontend/features/user/presentation/pages/signup_page.dart';
+import 'package:frontend/features/user/presentation/pages/user_profile_page.dart';
 
 
 List<GoRoute> authRoutes = [

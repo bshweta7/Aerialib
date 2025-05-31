@@ -7,7 +7,7 @@ import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
 
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
 
 class FlowDetailsSheet extends StatelessWidget {

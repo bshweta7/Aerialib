@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/domain/entities/media_icon_entity.dart';
+import 'package:frontend/shared/domain/entities/media_icon_entity.dart';
 import 'package:frontend/presentation/widgets/media_display/media_grid/media_icon_grid_card.dart';
 
 // TODO if the screen is too small, only show name if tapped on ?

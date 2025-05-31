@@ -2,86 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/presentation/widgets/password_field.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
-  bool isUsernameTaken = false;
-  bool isEmailTaken = false;
-
+class _LoginPageState extends State<LoginPage> {
   final usernameController = TextEditingController();
-  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     usernameController.dispose();
-    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
-  void signUpUser() async {
-    // Clear previous "taken" flags before re-checking
-    setState(() {
-      isUsernameTaken = false;
-      isEmailTaken = false;
-    });
-
-    final isFormValid = formKey.currentState!.validate();
-
-    if (!isFormValid) return;
-
-    final username = usernameController.text.trim();
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-
-    // Step 1: Check availability from backend
-    try {
-      final checkResult = await context.read<AuthCubit>().checkIfTaken(
-        username: username,
-        email: email,
+  void logInUser() {
+    if (formKey.currentState!.validate()) {
+      context.read<AuthCubit>().login(
+        username: usernameController.text.trim(),
+        password: passwordController.text.trim(),
       );
-
-      final usernameTaken = checkResult['username'] ?? false;
-      final emailTaken = checkResult['email'] ?? false;
-
-      setState(() {
-        isUsernameTaken = usernameTaken;
-        isEmailTaken = emailTaken;
-      });
-
-      if (usernameTaken || emailTaken) {
-        // Re-run validation to trigger red error messages
-        formKey.currentState!.validate();
-        return;
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Failed to check availability: $e"),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-      return;
     }
-
-    // Step 2: Proceed with signup
-    context.read<AuthCubit>().signUp(
-      username: username,
-      email: email,
-      password: password,
-    );
   }
-
 
   void resetPage() {
     context.read<AuthCubit>().reInitialize();
@@ -110,12 +60,7 @@ class _SignupPageState extends State<SignupPage> {
                 SnackBar(content: Text(state.error)),
               );
               resetPage();
-            } else if (state is AuthLoggedIn) { // TODO eventually, emit a different state authSignedUp so that it will go to the tutorial on how to use it.
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Account created! Welcome!"),
-                ),
-              );
+            } else if (state is AuthLoggedIn) {
               context.goNamed('home');
             }
           },
@@ -132,7 +77,7 @@ class _SignupPageState extends State<SignupPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        "Create Account",
+                        "Welcome Back",
                         style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
@@ -141,7 +86,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        "Sign up to get started",
+                        "Log in to continue",
                         style: TextStyle(
                           fontSize: 18,
                           color: Color(0xFF334155),
@@ -149,6 +94,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       const SizedBox(height: 32),
 
+                      // Username field
                       TextFormField(
                         controller: usernameController,
                         decoration: const InputDecoration(
@@ -161,74 +107,46 @@ class _SignupPageState extends State<SignupPage> {
                           if (value == null || value.trim().isEmpty) {
                             return "Username field cannot be empty!";
                           }
-                          if (isUsernameTaken) {
-                            return "Username is already taken!";
-                          }
                           return null;
                         },
                       ),
 
                       const SizedBox(height: 16),
 
-                      TextFormField(
-                        controller: emailController,
-                        decoration: const InputDecoration(
-                          hintText: 'Email',
-                          border: OutlineInputBorder(),
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Email field cannot be empty!";
-                          }
-                          if (!value.contains('@')) {
-                            return "Email is invalid!";
-                          }
-                          if (isEmailTaken) {
-                            return "Email is already taken!";
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 16),
-
+                      // Password field
                       PasswordField(
                         controller: passwordController,
                         label: "Password",
                       ),
-
                       const SizedBox(height: 24),
-
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: signUpUser,
+                          onPressed: logInUser,
                           child: const Text(
-                            'SIGN UP',
+                            'LOG IN',
                             style: TextStyle(fontSize: 18),
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 16),
 
+                      // More prominent Sign Up prompt
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            "Already have an account? ",
+                            "Don't have an account? ",
                             style: TextStyle(
                               fontSize: 16,
                               color: Color(0xFF334155),
                             ),
                           ),
                           GestureDetector(
-                            onTap: () => context.goNamed('login'),
+                            onTap: () => context.goNamed('signup'),
                             child: const Text(
-                              "Log In",
+                              "Sign Up",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -242,6 +160,7 @@ class _SignupPageState extends State<SignupPage> {
 
                       const SizedBox(height: 50),
 
+                      // Back button
                       Align(
                         alignment: Alignment.center,
                         child: TextButton.icon(
@@ -252,10 +171,11 @@ class _SignupPageState extends State<SignupPage> {
                             style: TextStyle(color: Color(0xFF1e293b)),
                           ),
                           style: TextButton.styleFrom(
-                            foregroundColor: Color(0xFF1e293b),
+                            foregroundColor: Color(0xFF1e293b), // for consistency on hover/tap
                           ),
                         ),
                       ),
+
                     ],
                   ),
                 ),

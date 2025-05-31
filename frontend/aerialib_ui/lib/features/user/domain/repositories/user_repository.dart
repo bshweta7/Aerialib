@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:frontend/domain/entities/user_entity.dart';
-import 'package:frontend/data/datasources/user/user_local_data.dart';
-import 'package:frontend/data/datasources/user/user_remote_data.dart';
-import 'package:frontend/data/models/user_model.dart';
+import 'package:frontend/features/user/domain/entities/user_entity.dart';
+import 'package:frontend/features/user/data/datasources/user_local_data.dart';
+import 'package:frontend/features/user/data/datasources/user_remote_data.dart';
+import 'package:frontend/features/user/data/models/user_model.dart';
 
 class UserRepository {
   final UserLocalDataSource localDataSource;
