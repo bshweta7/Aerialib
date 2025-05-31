@@ -194,6 +194,7 @@ const String createTagsTable = '''
     color TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
+    is_synced INTEGER NOT NULL
   )
 ''';
 
@@ -209,6 +210,7 @@ const String createPoseTagsTable = '''
     pose_id TEXT NOT NULL,
     tag_id TEXT NOT NULL,
     user_id TEXT NOT NULL
+    is_synced INTEGER NOT NULL
   )
 ''';
 
@@ -224,6 +226,7 @@ const String createFlowTagsTable = '''
     flow_id TEXT NOT NULL,
     tag_id TEXT NOT NULL,
     user_id TEXT NOT NULL
+    is_synced INTEGER NOT NULL
   )
 ''';
 
