@@ -6,18 +6,18 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/shared/helpers/conversions.dart';
 
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
-import 'package:frontend/shared/domain/entities/media_icon_entity.dart';
+import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
 
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
-import 'package:frontend/presentation/widgets/filters/flow_filter_sheet.dart';
-import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
-import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
-import 'package:frontend/presentation/widgets/search_bars/flow_search_bar.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+import 'package:frontend/features/flow/presentation/widgets/flow_filter_sheet.dart';
+import 'package:frontend/shared/widgets/scroll_to_top.dart';
+import 'package:frontend/shared/features/media_display/widgets/media_list/media_list.dart';
+import 'package:frontend/features/flow/presentation/widgets/flow_search_bar.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
 
 class FlowLibraryPage extends StatefulWidget {

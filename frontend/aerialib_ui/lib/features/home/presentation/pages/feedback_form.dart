@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:frontend/core/services/http_service.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
 
 // TODO move this page to user profile after beta release
 

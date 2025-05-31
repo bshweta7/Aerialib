@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
-import 'package:frontend/shared/presentation/cubit/navigation/nav_history_cubit.dart';
+import 'package:frontend/shared/features/navigation/cubit/nav_history_cubit.dart';
 
 import 'package:frontend/features/flow/presentation/pages/add_new_flow_page.dart';
 import 'package:frontend/features/flow/presentation/pages/flow_edit_details_page.dart';

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
 
 
 class AddNewPosePage extends StatefulWidget {

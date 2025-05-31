@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/presentation/widgets/quick_add/quick_add_music.dart';
+import 'package:frontend/features/home/presentation/widgets/quick_add/quick_add_music.dart';
 
 class QuickAddCategoryCard extends StatelessWidget {
   final void Function(String name, String description, bool isFavorite) onMusicSubmit;

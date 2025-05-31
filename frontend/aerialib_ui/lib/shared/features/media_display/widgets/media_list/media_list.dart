@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/shared/domain/entities/media_icon_entity.dart';
-import 'package:frontend/presentation/widgets/media_display/media_list/list_card.dart';
+import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
+import 'package:frontend/shared/features/media_display/widgets/media_list/list_card.dart';
 
 typedef NavigateToMediaPage = void Function(MediaIconEntity mediaItem); // Define the typedef here
 typedef ToggleFavorite = void Function(MediaIconEntity mediaItem);

@@ -1,32 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
-import 'package:frontend/presentation/widgets/filters/filter_multi_select.dart';
+import 'package:frontend/shared/widgets/filter_multi_select.dart';
 
-class PoseFiltersSheet extends StatefulWidget {
+class FlowFiltersSheet extends StatefulWidget {
   final List<String> initialApparatus;
   final List<int> initialLevels;
+  final List<String> initialShareStatus;
   final ValueChanged<List<String>> onApparatusChanged;
   final ValueChanged<List<int>> onLevelsChanged;
+  final ValueChanged<List<String>> onShareStatusChanged;
 
-  const PoseFiltersSheet({
+  const FlowFiltersSheet({
     super.key,
     required this.initialApparatus,
     required this.initialLevels,
+    required this.initialShareStatus,
     required this.onApparatusChanged,
     required this.onLevelsChanged,
+    required this.onShareStatusChanged,
   });
 
   @override
-  State<PoseFiltersSheet> createState() => _PoseFiltersSheetState();
+  State<FlowFiltersSheet> createState() => _FlowFiltersSheetState();
 
   /// Modal Bottom Sheet entry point
   static Future<void> showFilterSheet({
     required BuildContext context,
     required List<String> selectedApparatus,
     required List<int> selectedLevels,
+    required List<String> selectedShareStatus,
     required ValueChanged<List<String>> onApparatusChanged,
     required ValueChanged<List<int>> onLevelsChanged,
+    required ValueChanged<List<String>> onShareStatusChanged,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -59,11 +65,13 @@ class PoseFiltersSheet extends StatefulWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    PoseFiltersSheet(
+                    FlowFiltersSheet(
                       initialApparatus: selectedApparatus,
                       initialLevels: selectedLevels,
+                      initialShareStatus: selectedShareStatus,
                       onApparatusChanged: onApparatusChanged,
                       onLevelsChanged: onLevelsChanged,
+                      onShareStatusChanged: onShareStatusChanged,
                     ),
                   ],
                 ),
@@ -76,9 +84,10 @@ class PoseFiltersSheet extends StatefulWidget {
   }
 }
 
-class _PoseFiltersSheetState extends State<PoseFiltersSheet> {
+class _FlowFiltersSheetState extends State<FlowFiltersSheet> {
   late List<String> _selectedApparatus;
   late List<int> _selectedLevels;
+  // TODO add share status here...
   bool _apparatusError = false;
   bool _levelsError = false;
 

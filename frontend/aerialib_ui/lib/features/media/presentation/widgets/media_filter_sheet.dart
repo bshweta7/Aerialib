@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
-import 'package:frontend/presentation/widgets/filters/filter_multi_select.dart';
+import 'package:frontend/shared/widgets/filter_multi_select.dart';
 
 class MediaFiltersSheet extends StatefulWidget {
   final List<String> initialMediaTypes;

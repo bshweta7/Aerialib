@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../../core/constants/constants.dart';
+import '../../core/constants/constants.dart';
 
 class ScrollToTopButton extends StatefulWidget {
   final ScrollController scrollController;

@@ -6,13 +6,13 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/shared/helpers/conversions.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 
-import 'package:frontend/shared/domain/entities/media_icon_entity.dart';
+import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
 
 import 'package:frontend/features/media/presentation/cubit/media_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
-import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
-import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
-import 'package:frontend/presentation/widgets/filters/media_filter_sheet.dart';
+import 'package:frontend/shared/widgets/scroll_to_top.dart';
+import 'package:frontend/shared/features/media_display/widgets/media_list/media_list.dart';
+import 'package:frontend/features/media/presentation/widgets/media_filter_sheet.dart';
 
 
 class MediaGalleryPage extends StatefulWidget {

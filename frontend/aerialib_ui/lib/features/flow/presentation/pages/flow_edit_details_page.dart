@@ -8,8 +8,8 @@ import 'package:frontend/shared/helpers/validators.dart';
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
 class FlowEditDetailsPage extends StatefulWidget {
   final FlowEntity flow;

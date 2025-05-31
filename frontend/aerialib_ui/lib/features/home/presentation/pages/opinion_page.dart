@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:frontend/core/services/http_service.dart';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
 
 class LogoPollPage extends StatelessWidget {
   const LogoPollPage({super.key});

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/shared/presentation/cubit/navigation/nav_history_cubit.dart';
+import 'package:frontend/shared/features/navigation/cubit/nav_history_cubit.dart';
 
 class SmartBackWrapper extends StatelessWidget {
   final Widget child;

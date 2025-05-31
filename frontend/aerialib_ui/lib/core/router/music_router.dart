@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/music/domain/entities/music_entity.dart';
 import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
-import 'package:frontend/shared/presentation/cubit/navigation/nav_history_cubit.dart';
+import 'package:frontend/shared/features/navigation/cubit/nav_history_cubit.dart';
 
 import 'package:frontend/features/music/presentation/pages/music_library_page.dart';
 import 'package:frontend/features/music/presentation/pages/add_new_music_page.dart';

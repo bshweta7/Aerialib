@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
 
 import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';

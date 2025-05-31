@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/music/domain/entities/music_entity.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:go_router/go_router.dart';
 

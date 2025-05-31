@@ -14,11 +14,11 @@ import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/pose/presentation/pages/pose_view_sheet.dart';
-import 'package:frontend/presentation/widgets/media_display/media_list/list_card.dart';
-import 'package:frontend/presentation/widgets/search_bars/pose_search_bar.dart';
-import 'package:frontend/presentation/widgets/dialogs/flow_help_dialog.dart';
-import 'package:frontend/presentation/widgets/navigation/nav_bar.dart';
-import 'package:frontend/presentation/widgets/filters/pose_filter_sheet.dart';
+import 'package:frontend/shared/features/media_display/widgets/media_list/list_card.dart';
+import 'package:frontend/features/pose/presentation/widgets/pose_search_bar.dart';
+import 'package:frontend/features/flow/presentation/widgets/flow_help_dialog.dart';
+import 'package:frontend/shared/features/navigation/widgets/nav_bar.dart';
+import 'package:frontend/features/pose/presentation/widgets/pose_filter_sheet.dart';
 
 
 class FlowEditPosesPage extends StatefulWidget {

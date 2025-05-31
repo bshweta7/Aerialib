@@ -150,6 +150,7 @@ class FlowDetailsSheet extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
+        // TODO make _infoRow a separate widget
         _infoRow("Apparatus:", capitalizeFirstLetter(flow.apparatus)),
         _infoRow("Level:", "Level ${flow.level}"),
         const Divider(),

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
-import 'package:frontend/presentation/widgets/password_field.dart';
+import 'package:frontend/shared/widgets/password_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

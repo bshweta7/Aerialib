@@ -6,14 +6,14 @@ import 'package:frontend/shared/helpers/conversions.dart';
 import 'package:frontend/core/constants/constants.dart';
 
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
-import 'package:frontend/shared/domain/entities/media_icon_entity.dart';
+import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
 
 import 'package:frontend/features/flow/presentation/pages/flow_details_sheet.dart';
 import 'package:frontend/features/pose/presentation/pages/pose_view_sheet.dart';
 
-import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+import 'package:frontend/shared/features/media_display/widgets/media_list/media_list.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
 
 class FlowViewPage extends StatefulWidget {

@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
-import 'package:frontend/presentation/widgets/quick_add/quick_add_category.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
+import 'package:frontend/features/home/presentation/widgets/quick_add/quick_add_category.dart';
 
 
 class HomePage extends StatelessWidget {

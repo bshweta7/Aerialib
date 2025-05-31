@@ -1,8 +1,8 @@
 // lib/presentation/widgets/common/main_scaffold.dart
 
 import 'package:flutter/material.dart';
-import 'package:frontend/presentation/widgets/navigation/nav_bar.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_wrapper.dart';
+import 'package:frontend/shared/features/navigation/widgets/nav_bar.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_wrapper.dart';
 
 class MainScaffold extends StatelessWidget {
   final Widget body;

@@ -3,15 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/music/domain/entities/music_entity.dart';
-import 'package:frontend/shared/domain/entities/media_icon_entity.dart';
+import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
 
 import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
-import 'package:frontend/presentation/widgets/functional_buttons/scroll_to_top.dart';
-import 'package:frontend/presentation/widgets/media_display/media_list/media_list.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+import 'package:frontend/shared/widgets/scroll_to_top.dart';
+import 'package:frontend/shared/features/media_display/widgets/media_list/media_list.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
 import 'package:frontend/shared/helpers/conversions.dart';
 

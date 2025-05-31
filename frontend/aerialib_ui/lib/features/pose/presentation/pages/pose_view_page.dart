@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
-import 'package:frontend/presentation/widgets/media_display/formatted_cached_network_image.dart';
-import 'package:frontend/presentation/widgets/main_scaffold.dart';
-import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
+import 'package:frontend/shared/features/media_display/widgets/formatted_cached_network_image.dart';
+import 'package:frontend/shared/widgets/main_scaffold.dart';
+import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
 
 class PoseViewPage extends StatefulWidget {
