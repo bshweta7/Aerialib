@@ -1,4 +1,4 @@
-import 'package:frontend/core/utils/formatters.dart';
+import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/domain/entities/media_icon_entity.dart';
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/domain/entities/flow_entity.dart';

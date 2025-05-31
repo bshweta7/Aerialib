@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/utils/conversions.dart';
+import 'package:frontend/shared/helpers/conversions.dart';
 
 import 'package:frontend/domain/entities/pose_entity.dart';
 import 'package:frontend/domain/entities/media_icon_entity.dart';

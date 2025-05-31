@@ -6,7 +6,7 @@ import 'package:frontend/domain/entities/music_entity.dart';
 import 'package:frontend/presentation/cubit/music/music_cubit.dart';
 import 'package:frontend/presentation/cubit/users/auth_cubit.dart';
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
-import 'package:frontend/core/utils/validators.dart';
+import 'package:frontend/shared/helpers/validators.dart';
 
 class MusicEditPage extends StatefulWidget {
   final MusicEntity music;

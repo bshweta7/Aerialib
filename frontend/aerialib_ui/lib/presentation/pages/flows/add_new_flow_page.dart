@@ -4,8 +4,8 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/core/utils/validators.dart';
-import 'package:frontend/core/utils/formatters.dart';
+import 'package:frontend/shared/helpers/validators.dart';
+import 'package:frontend/shared/helpers/formatters.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';
 

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/core/utils/conversions.dart';
+import 'package:frontend/shared/helpers/conversions.dart';
 import 'package:frontend/core/constants/constants.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';

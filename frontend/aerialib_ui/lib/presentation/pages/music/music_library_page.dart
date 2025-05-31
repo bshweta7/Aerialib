@@ -13,7 +13,7 @@ import 'package:frontend/presentation/widgets/media_display/media_list/media_lis
 import 'package:frontend/presentation/widgets/main_scaffold.dart';
 import 'package:frontend/presentation/widgets/navigation/smart_back_button.dart';
 
-import '../../../core/utils/conversions.dart';
+import 'package:frontend/shared/helpers/conversions.dart';
 
 class MusicLibraryPage extends StatefulWidget {
   const MusicLibraryPage({super.key});

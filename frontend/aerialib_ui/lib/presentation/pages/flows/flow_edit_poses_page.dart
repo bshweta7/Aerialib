@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:frontend/core/utils/formatters.dart';
+import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/core/constants/constants.dart';
 
 import 'package:frontend/domain/entities/flow_entity.dart';

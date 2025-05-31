@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:frontend/presentation/cubit/navigation/nav_history_cubit.dart';
 
-import '../../../core/utils/formatters.dart';
+import 'package:frontend/shared/helpers/formatters.dart';
 
 class SmartBackButton extends StatelessWidget {
   final String? fallbackRouteName;
