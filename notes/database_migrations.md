@@ -7,9 +7,20 @@
 * Migrations are managed by Drizzle ORM (with drizzle-kit)
 
 ## Backup Prod Database
+### On Server
 1. Exec into the container ```docker compose exec -it db /bin/bash```
 2. Inside the container, run ```pg_dump -U postgres -d aerialib -F c -f /db_backups/prod_$(date +%Y%m%d_%H%M).dump```
 3. Copy to local machine if needed (stored in db_backups on server)
+
+### On Local
+1. cd /Aerialib/db_backups
+2. ```scp root@10.20.29.99:/docker/Aerialib/db_backups/prod_{name}.dump ./```
+3. ```docker compose exec -it db /bin/bash```
+4. To completely disregard existing local data:
+   1. ```dropdb -U postgres aerialib```
+   2. ```createdb -U postgres aerialib```
+5. ```pg_restore --clean --no-owner -U postgres -d aerialib /db_backups/prod_{name}.dump ```
+6. Errors may show up because of --clean (trying to drop things that don't exist). That's okay.
 
 ## Migration
 ### Local Set Up Steps
