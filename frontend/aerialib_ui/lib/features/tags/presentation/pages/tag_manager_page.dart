@@ -13,7 +13,16 @@ class TagManagerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Manage Tags')),
+      appBar: AppBar(
+        title: const Text('Manage Tags'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Add New Tag',
+            onPressed: () => _showAddTagDialog(context),
+          ),
+        ],
+      ),
       body: BlocBuilder<TagCubit, TagState>(
         builder: (context, state) {
           if (state is TagLoading) {
@@ -26,7 +35,14 @@ class TagManagerPage extends StatelessWidget {
 
           final tags = state is GetTagsSuccess ? state.tags : [];
 
-          return ListView.builder(
+          return tags.isEmpty
+              ? const Center(
+            child: Text(
+              "No Tags",
+              style: TextStyle(fontSize: 16, color: Colors.black54),
+            ),
+          )
+              : ListView.builder(
             padding: const EdgeInsets.all(12),
             itemCount: tags.length,
             itemBuilder: (context, index) {
@@ -51,6 +67,7 @@ class TagManagerPage extends StatelessWidget {
               );
             },
           );
+
         },
       ),
     );
@@ -111,4 +128,47 @@ class TagManagerPage extends StatelessWidget {
     final updatedTag = tag.copyWith(color: pickedColor.value.toString());
     context.read<TagCubit>().updateTag(updatedTag, user.user.token);
   }
+
+  void _showAddTagDialog(BuildContext context) {
+    final nameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add New Tag'),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(hintText: 'Enter tag name'),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              final name = nameController.text.trim();
+              if (name.isNotEmpty) {
+                final user = context.read<AuthCubit>().state as AuthLoggedIn;
+                final newTag = TagEntity(
+                  id: '', // backend will assign
+                  name: name,
+                  userId: user.user.id,
+                  color: null,
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                  isSynced: 0,
+                );
+                context.read<TagCubit>().addNewTag(newTag, user.user.token);
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
