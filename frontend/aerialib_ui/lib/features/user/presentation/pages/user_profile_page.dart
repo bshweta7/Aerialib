@@ -94,19 +94,19 @@ class _UserProfilePage extends State<UserProfilePage> {
                   const Divider(),
                   const SizedBox(height: 15,),
 
-                  // Tag Management Navigation
-                  ElevatedButton(
-                      onPressed: () {
-                        context.pushNamed('tag-manager');
-                      },
-                      child: const Text(
-                          "Manage Tags",
-                          style: TextStyle(
-                            fontSize: 20,
-                          )
-                      )
-                  ),
-                  const SizedBox(height: 10,),
+                  // // Tag Management Navigation
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //       context.pushNamed('tag-manager');
+                  //     },
+                  //     child: const Text(
+                  //         "Manage Tags",
+                  //         style: TextStyle(
+                  //           fontSize: 20,
+                  //         )
+                  //     )
+                  // ),
+                  // const SizedBox(height: 10,),
 
 
 
