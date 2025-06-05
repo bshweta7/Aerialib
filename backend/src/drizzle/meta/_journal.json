@@ -19,8 +19,8 @@
     {
       "idx": 2,
       "version": "7",
-      "when": 1748623801661,
-      "tag": "0002_add_tag_tables",
+      "when": 1749145067337,
+      "tag": "0002_create_poses_table",
       "breakpoints": true
     }
   ]

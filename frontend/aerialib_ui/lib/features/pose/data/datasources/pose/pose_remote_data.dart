@@ -85,8 +85,8 @@ class PoseRemoteDataSource {
     required List<PoseModel> poses,
   }) async {
     final poseListInMap = poses.map((pose) {
-      final map = pose.toMap();
-      map.remove('is_synced');
+      final map = pose.toMapCamel();
+      map.remove('is_synced'); // TODO dont need this with the new toMapCamel
       map.remove('primary_media_path');
       log("MEDIA: ${pose.primaryMediaId}");
       return map;

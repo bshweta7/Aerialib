@@ -1,5 +1,5 @@
 {
-  "id": "75ef3545-aeb4-4a38-a014-8b0d6c104dbc",
+  "id": "c6afca42-18aa-4696-b229-f21f231d42be",
   "prevId": "636027bf-6588-4ed7-aeea-2ffd036317e0",
   "version": "7",
   "dialect": "postgresql",
@@ -640,17 +640,59 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
+        "pose_slug": {
+          "name": "pose_slug",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "primary_media_id": {
-          "name": "primary_media_id",
-          "type": "uuid",
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "alt_name": {
+          "name": "alt_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "base_name": {
+          "name": "base_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prefix": {
+          "name": "prefix",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suffix": {
+          "name": "suffix",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "grip_position": {
+          "name": "grip_position",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "leg_position": {
+          "name": "leg_position",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "position_in_bar": {
+          "name": "position_in_bar",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "apparatus": {
           "name": "apparatus",
@@ -660,9 +702,15 @@
         },
         "level": {
           "name": "level",
-          "type": "double precision",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "pose_type": {
+          "name": "pose_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "description": {
           "name": "description",
@@ -687,6 +735,30 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "modifications": {
+          "name": "modifications",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "common_errors": {
+          "name": "common_errors",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "thumbnail_media_id": {
+          "name": "thumbnail_media_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "media_id": {
+          "name": "media_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         },
         "created_by": {
           "name": "created_by",
@@ -717,12 +789,25 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "poses_primary_media_id_media_id_fk": {
-          "name": "poses_primary_media_id_media_id_fk",
+        "poses_thumbnail_media_id_media_id_fk": {
+          "name": "poses_thumbnail_media_id_media_id_fk",
           "tableFrom": "poses",
           "tableTo": "media",
           "columnsFrom": [
-            "primary_media_id"
+            "thumbnail_media_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "poses_media_id_media_id_fk": {
+          "name": "poses_media_id_media_id_fk",
+          "tableFrom": "poses",
+          "tableTo": "media",
+          "columnsFrom": [
+            "media_id"
           ],
           "columnsTo": [
             "id"

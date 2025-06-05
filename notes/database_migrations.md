@@ -23,7 +23,7 @@
 6. Errors may show up because of --clean (trying to drop things that don't exist). That's okay.
 
 ## Migration
-### Local Set Up Steps
+### Set Up Steps
 1. Define New Table 
    1. Update schema.ts
    2. Create router file
@@ -38,14 +38,12 @@
 ### Local Testing Steps
 1. cd to ```Aerialib/``` folder
 2. Run ```docker compose exec backend npx ts-node scripts/migrate.ts```
-3. Run ```docker compose exec -it db /bin/bash```
-4. Inside the container, run ```psql -U postgres -d aerialib```
-5. Verify that the migration ran successfully (with ```\dt``` or ```SELECT * FROM <table_name>;```)
+3. Run ```docker compose exec db psql -U postgres -d aerialib```
+4. Verify that the migration ran successfully (with ```\dt``` or ```SELECT * FROM <table_name>;```)
 
 ### Production Steps
 1. Git pull
 2. Run ```docker compose up --build -d```
 3. Run ```docker compose exec backend npx ts-node scripts/migrate.ts```
-4. Run ```docker compose exec -it db /bin/bash```
-5. Inside the container, run ```psql -U postgres -d aerialib```
-6. Verify that the migration ran successfully (with ```\dt``` or ```SELECT * FROM <table_name>;```)
+4. Run ```docker compose exec db psql -U postgres -d aerialib```
+5. Verify that the migration ran successfully (with ```\dt``` or ```SELECT * FROM <table_name>;```)

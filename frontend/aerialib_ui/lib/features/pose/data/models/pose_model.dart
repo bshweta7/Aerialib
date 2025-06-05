@@ -79,6 +79,28 @@ class PoseModel {
     };
   }
 
+  Map<String, dynamic> toMapCamel() { // TODO remove toMap if its not needed
+    return {
+      'id': id,
+      'name': name,
+      'primaryMediaId': primaryMediaId,
+      'apparatus': apparatus,
+      'level': level,
+      'description': description,
+      'teachingCues': teachingCues,
+      'safetyCues': safetyCues,
+      'progressions': progressions,
+      // 'modifications': modifications,
+      // 'commonErrors': commonErrors,
+      'createdBy': createdBy,
+      'updatedBy': updatedBy,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      // no local-only fields like isSynced or UI display helpers
+    };
+  }
+
+
   factory PoseModel.fromJson(String source) =>
       PoseModel.fromMap(json.decode(source));
 
