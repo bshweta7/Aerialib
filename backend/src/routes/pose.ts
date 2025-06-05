@@ -7,188 +7,207 @@ import mediaRouter from "./media";
 
 const poseRouter = Router();
 
+/// Create new pose in db
 poseRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
-      // TODO make sure the pose doesn't exist already?
-        //create new pose in db 
-        req.body = { ...req.body, uid: req.user }; 
-        const NewPose: NewPose = req.body;
-        console.log(NewPose);
+        // Verify user
+        if (!req.user) {
+            console.log('[PoseRouter] Unauthorized user');
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
 
-        const [pose] = await db.insert(posesTable).values(NewPose).returning();
+        // Prevent duplicate slug
+        const existing = await db
+            .select()
+            .from(posesTable)
+            .where(eq(posesTable.slug, req.body.slug));
 
-        res.status(201).json(pose);
+        if (existing.length > 0) {
+            res.status(409).json({ error: "duplicate" });
+            return; // TODO - cleaner to update AuthRequest and return every res.status - i.e. return res.status... instead of res.status; return;
+        }
+
+        const newPose: NewPose = req.body;
+        console.log(newPose);
+
+        const [pose] = await db.insert(posesTable).values(newPose).returning();
+
+        // Verify pose was added
+        if (pose) {
+            res.status(201).json(pose);
+        } else {
+            res.status(500).json({ error: "Pose not created" });
+        }
 
     } catch (e) {
-        console.log(e)
+        console.log('[PoseRouter] Post error', e);
         res.status(500).json({ error: e })
     }
 })
 
 poseRouter.get("/", auth, async (req: AuthRequest, res) => {
-    
-  try {
+    try {
+        // Verify user
+        if (!req.user) {
+            console.log('[PoseRouter] Unauthorized user');
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
 
-    const currentUserId = req.user;
-    // console.log('[PoseRouter] Current user:', currentUserId);
-    const adminId = process.env.ADMIN_USER_ID;
+        const userId = req.user;
+        const adminId = process.env.ADMIN_USER_ID;
 
-      // TODO use drizzle ORM instead of sql query
-    const query = sql`
-      SELECT 
-        poses.*, 
-        media.media_path AS primary_media_path
-      FROM poses
-      JOIN media ON poses.primary_media_id = media.id
-      WHERE poses.created_by = ${currentUserId}
-         OR poses.created_by = ${adminId};
-    `;
+        const query = sql`
+          SELECT 
+            poses.*,
+            thumbnail_media.media_path AS thumbnail_path,
+            full_media.media_path AS media_path
+          FROM poses
+            LEFT JOIN media 
+                AS thumbnail_media 
+                ON poses.thumbnail_media_id = thumbnail_media.id
+            LEFT JOIN media 
+                AS full_media 
+                ON poses.media_id = full_media.id
+            WHERE poses.created_by = ${userId}
+                OR poses.created_by = ${adminId};
+        `;
 
-    // Execute the raw SQL query using db.execute()
-    const result = await db.execute(query); 
+        // Execute the raw SQL query using db.execute()
+        const result = await db.execute(query);
 
-    // Access the rows from the result
-    const allPoses = result.rows; 
+        // Access the rows from the result
+        const allPoses = result.rows;
 
-    res.json(allPoses);
-
-    
-    // const allPoses = await db.select().from(posesTable);
-    // // const allPoses = await db.select().from(posesTable).where(eq(posesTable.createdBy, req.user!));
-
-    // res.json(allPoses);
+        res.json(allPoses);
 
     } catch (e) {
+        console.log('[PoseRouter] Get error', e);
         res.status(500).json({ error: e })
     }
 })
 
-poseRouter.delete("/", auth, async (req: AuthRequest, res) => {
+poseRouter.delete("/delete/:id", auth, async (req: AuthRequest, res) => {
     try {
-        const { poseId }: { poseId: string } = req.body;
-        await db.delete(posesTable).where(eq(posesTable.id, poseId));
+        // Verify user
+        if (!req.user) {
+            console.log('[PoseRouter] Unauthorized user');
+            res.status(401).json({ error: "Unauthorized" });
+            return;
+        }
+
+        const poseId = req.params.id;
+
+        const [pose] = await db
+            .select()
+            .from(posesTable)
+            .where(eq(posesTable.id, poseId));
+
+        // Verify the pose exists
+        if (!pose) {
+            console.log('[PoseRouter] Delete attempt for pose that does not exist');
+            res.status(404).json({ error: "Pose not found" });
+            return;
+        }
+
+        // Verify the pose belongs to the user
+        if (pose.createdBy !== req.user) {
+            console.log('[PoseRouter] Delete attempt by user who does not own the pose');
+            res.status(403).json({ error: "Forbidden: You do not own this pose" });
+            return;
+        }
+
+        // Attempt deletion and return deleted rows
+        const deleted = await db.delete(posesTable)
+            .where(eq(posesTable.id, poseId))
+            .returning();
+
+        if (deleted.length === 0) {
+            console.log('[PoseRouter] Pose was not found');
+            res.status(404).json({ error: "Pose not found" });
+            return;
+        }
 
         res.json(true);
-
     } catch (e) {
+        console.log('[PoseRouter] Delete error', e);
         res.status(500).json({ error: e })
     }
 })
 
+/// Sync poses from frontend
 poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
-  try {
-    const posesList = req.body;
-    const filteredPoses: NewPose[] = [];
-      // TODO
-      // for (let t of posesList) {
-      //     // 👇 Strip frontend camelCase keys and normalize
-      //     const cleaned = {
-      //         id: t.id,
-      //         name: t.name,
-      //         primary_media_id: t.primary_media_id,
-      //         apparatus: t.apparatus,
-      //         level: t.level,
-      //         description: t.description,
-      //         teaching_cues: t.teaching_cues,
-      //         safety_cues: t.safety_cues,
-      //         progressions: t.progressions,
-      //         created_by: t.created_by ?? req.user,
-      //         updated_by: t.updated_by ?? req.user,
-      //         created_at: new Date(t.created_at),
-      //         updated_at: new Date(t.updated_at),
-      //     };
-      //
-      //     filteredPoses.push(cleaned);
-      // }
+    try {
+        // Verify user
+        if (!req.user) {
+          console.log('[PoseRouter] Unauthorized user');
+          res.status(401).json({ error: "Unauthorized" });
+          return;
+        }
 
-      posesList.forEach((pose: { primary_media_id: any; }) => {
-          console.log('[PoseRouter] Received primary_media_id:', pose.primary_media_id);
-      });
+        const userId = req.user;
+        const posesList = req.body;
 
-      console.log(req.body);
+        console.log(`[PoseRouter] Received ${posesList.length} poses for sync.`);
 
-      for (let t of posesList) {
-      t = {
-        // ...t,
-        id: t.id,
-        name: t.name,
-        primaryMediaId: t.primary_media_id,
-        apparatus: t.apparatus,
-        level: t.level,
-        description: t.description,
-        teachingCues: t.teaching_cues,
-        safetyCues: t.safety_cues,
-        progressions: t.progressions,
-        createdBy: t.created_by,
-        updatedBy: req.user,
-        createdAt: new Date(t.created_at),
-        updatedAt: new Date(t.updated_at),
-      };
-      filteredPoses.push(t);
+        // Ensure audit fields are set correctly
+        const normalized: NewPose[] = posesList.map((pose: any) => ({
+            ...pose,
+            createdBy: pose.createdBy ?? userId,
+            updatedBy: userId,
+            createdAt: new Date(pose.createdAt),
+            updatedAt: new Date(pose.updatedAt),
+        }));
+
+        const pushedPoses = await db
+            .insert(posesTable)
+            .values(normalized)
+            .onConflictDoUpdate({
+                target: posesTable.id,
+                set: buildPoseUpsertSet()
+            })
+            .returning();
+
+        console.log(`[PoseRouter] ${pushedPoses.length} poses inserted or updated.`);
+        pushedPoses.forEach(p => {
+            console.log(`[PoseRouter] Upserted pose: ${p.slug}`);
+        });
+
+        res.status(201).json(pushedPoses);
+    } catch (e) {
+        console.error("[PoseRouter] Sync error:", e);
+        res.status(500).json({ error: "Failed to sync poses" });
     }
-
-      filteredPoses.forEach(pose => {
-          console.log('[PoseRouter] Received primary_media_id (AFTER FILTERING):', pose.primaryMediaId);
-      });
-
-    console.log('[PoseRouter] Inserting poses with keys:');
-    filteredPoses.forEach(p => console.log(Object.keys(p)));
-    filteredPoses.forEach(p => console.log(Object.values(p)));
-
-    const pushedPoses = await db
-      .insert(posesTable)
-      .values(filteredPoses)
-      .onConflictDoNothing() // TODO verify if this can works
-      .returning();
-
-    res.status(201).json(pushedPoses);
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({ error: e });
-  }
-});
-  
-
-poseRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
-  try {
-    const poseId = req.params.id; // Get the pose ID from the URL
-    req.body = { ...req.body, uid: req.user };
-
-    const updatedPose: NewPose = {
-      name: req.body.name,
-      primaryMediaId: req.body.primaryMediaId ?? req.body.primary_media_id,
-      apparatus: req.body.apparatus,
-      level: req.body.level,
-      description: req.body.description,
-      teachingCues: req.body.teachingCues ?? req.body.teaching_cues,
-      safetyCues: req.body.safetyCues ?? req.body.safety_cues,
-      progressions: req.body.progressions,
-      updatedBy: req.user,
-      updatedAt: new Date(),
-      createdBy: req.body.createdBy ?? req.body.created_by,
-      createdAt: new Date(req.body.createdAt ?? req.body.created_at),
-    };
-
-    console.log("Updating Pose:", updatedPose);
-
-    const [pose] = await db
-      .update(posesTable)
-      .set(updatedPose) // Use set to update the values
-      .where(eq(posesTable.id, poseId)) // Use where to target the pose
-      .returning();
-
-    if (!pose) {
-        res.status(404).json({error: "Pose not found"});
-        return;
-    }
-
-    res.status(200).json(pose); // Change status to 200 (OK)
-
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({ error: e });
-  }
 });
 
 
 export default poseRouter;
+
+function buildPoseUpsertSet() {
+    return {
+        slug: sql`excluded.slug`,
+        displayName: sql`excluded.display_name`,
+        altName: sql`excluded.alt_name`,
+        baseName: sql`excluded.base_name`,
+        prefix: sql`excluded.prefix`,
+        suffix: sql`excluded.suffix`,
+        gripPosition: sql`excluded.grip_position`,
+        legPosition: sql`excluded.leg_position`,
+        positionInBar: sql`excluded.position_in_bar`,
+        apparatus: sql`excluded.apparatus`,
+        level: sql`excluded.level`,
+        poseType: sql`excluded.pose_type`,
+        description: sql`excluded.description`,
+        teachingCues: sql`excluded.teaching_cues`,
+        safetyCues: sql`excluded.safety_cues`,
+        progressions: sql`excluded.progressions`,
+        modifications: sql`excluded.modifications`,
+        commonErrors: sql`excluded.common_errors`,
+        thumbnailId: sql`excluded.thumbnail_media_id`,
+        mediaId: sql`excluded.media_id`,
+        createdBy: sql`excluded.created_by`,
+        updatedBy: sql`excluded.updated_by`,
+        updatedAt: sql`excluded.updated_at`,
+    };
+}

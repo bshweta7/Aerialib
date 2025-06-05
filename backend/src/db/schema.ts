@@ -50,15 +50,32 @@ export type NewMedia = typeof mediaTable.$inferInsert;
 /* POSES */
 export const posesTable = pgTable("poses", {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: text("name").notNull(),
-    primaryMediaId: uuid("primary_media_id").notNull().references(() => mediaTable.id),
+
+    slug: text("pose_slug").notNull(),
+    displayName: text("display_name").notNull(),
+    altName: text("alt_name"),
+
+    baseName: text("base_name").notNull(),
+    prefix: text("prefix"),
+    suffix: text("suffix"),
+
+    gripPosition: text("grip_position"),
+    legPosition: text("leg_position"),
+    positionInBar: text("position_in_bar"),
+
     apparatus: text("apparatus").notNull(),
-    level: doublePrecision("level").notNull(),
+    level: integer("level"),
+    poseType: text("pose_type"),
 
     description: text("description"),
     teachingCues: text("teaching_cues"),
     safetyCues: text("safety_cues"),
     progressions: text("progressions"),
+    modifications: text("modifications"),
+    commonErrors: text("common_errors"),
+
+    thumbnailId: uuid("thumbnail_media_id").notNull().references(() => mediaTable.id),
+    mediaId: uuid("media_id").notNull().references(() => mediaTable.id),
 
     createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     updatedBy: uuid("updated_by").references(() => usersTable.id),
