@@ -16,36 +16,18 @@ class PosesCubit extends Cubit<PosesState> {
   /// Crud ----------------------------
   /// Create a new pose
   Future<void> createNewPose({
-    required String name,
-    required String description,
-    String? teachingCues,
-    String? safetyCues,
-    String? progressions,
-    required String apparatus,
-    required double level,
-    required String primaryMediaId,
-    required String primaryMediaPath,
+    required PoseEntity pose,
     required String token,
-    required String createdBy,
   }) async {
     try {
       emit(const PoseLoading());
 
-      final pose = await _poseRepository.createPose(
-        name: name,
-        description: description,
-        teachingCues: teachingCues,
-        safetyCues: safetyCues,
-        progressions: progressions,
-        apparatus: apparatus,
-        level: level,
-        primaryMediaId: primaryMediaId,
-        primaryMediaPath: primaryMediaPath,
+      final createdPose = await _poseRepository.createPose(
+        pose: pose,
         token: token,
-        createdBy: createdBy,
       );
 
-      emit(AddNewPoseSuccess(pose));
+      emit(AddNewPoseSuccess(createdPose));
     } catch (e) {
       log("Error creating pose: $e");
       emit(PoseError(e.toString()));

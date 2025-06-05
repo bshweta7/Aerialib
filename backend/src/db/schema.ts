@@ -59,7 +59,7 @@ export const posesTable = pgTable("poses", {
     prefix: text("prefix"),
     suffix: text("suffix"),
 
-    gripPosition: text("grip_position"),
+    handPosition: text("hand_position"),
     legPosition: text("leg_position"),
     positionInBar: text("position_in_bar"),
 
@@ -75,7 +75,7 @@ export const posesTable = pgTable("poses", {
     commonErrors: text("common_errors"),
 
     thumbnailId: uuid("thumbnail_media_id").notNull().references(() => mediaTable.id),
-    mediaId: uuid("media_id").notNull().references(() => mediaTable.id),
+    primaryMediaId: uuid("primary_media_id").notNull().references(() => mediaTable.id),
 
     createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     updatedBy: uuid("updated_by").references(() => usersTable.id),

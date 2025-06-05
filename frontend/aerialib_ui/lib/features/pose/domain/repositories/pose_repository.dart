@@ -19,43 +19,23 @@ class PoseRepository {
 
   /// Create a new pose (tries remote first, fallback to local if offline)
   Future<PoseEntity> createPose({
-    required String name,
-    String? description,
-    String? teachingCues,
-    String? safetyCues,
-    String? progressions,
-    required String apparatus,
-    required double level,
-    required String primaryMediaId,
-    required String primaryMediaPath,
+    required PoseEntity pose,
     required String token,
-    required String createdBy,
   }) async {
     try {
       log('[PoseRepository] Creating pose remotely...');
 
-      // Step 1: Create pose on backend
+      // Convert to model and send to backend
       final poseModel = await remoteDataSource.createPose(
-        name: name,
-        description: description,
-        teachingCues: teachingCues,
-        safetyCues: safetyCues,
-        progressions: progressions,
-        apparatus: apparatus,
-        level: level,
-        primaryMediaId: primaryMediaId,
-        primaryMediaPath: primaryMediaPath,
-        createdBy: createdBy,
+        pose: PoseMapper.entityToModel(pose),
         token: token,
       );
 
-      log('[PoseRepository] Remote pose created with ID: ${poseModel.id}');
-
-      // Step 2: Insert into local DB
+      // Save to local DB
       await localDataSource.insertPose(poseModel);
       log('[PoseRepository] Pose inserted into local database.');
 
-      // Step 3: Return mapped PoseEntity
+      // Return as entity
       final entity = PoseMapper.modelToEntity(poseModel);
       log('[PoseRepository] Mapped PoseModel to PoseEntity: ${entity.id}');
       return entity;
@@ -65,6 +45,7 @@ class PoseRepository {
       rethrow;
     }
   }
+
 
 
   /// Fetch all poses from local DB

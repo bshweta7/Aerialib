@@ -9,6 +9,9 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../domain/entities/pose_entity.dart';
 
 
 class AddNewPosePage extends StatefulWidget {
@@ -35,25 +38,48 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
       final level = double.tryParse(levelController.text.trim());
 
       if (level != null) {
-        await context.read<PosesCubit>().createNewPose(
-          name: nameController.text.trim(),
+        final now = DateTime.now();
+
+        final newPose = PoseEntity(
+          id: const Uuid().v6(),
+          slug: nameController.text.trim().toLowerCase().replaceAll(' ', '-'), // basic slug logic
+          displayName: nameController.text.trim(),
+          altName: null,
+          baseName: nameController.text.trim().toLowerCase(), // adjust if needed
+          prefix: null,
+          suffix: null,
+          gripPosition: null,
+          legPosition: null,
+          positionInBar: null,
+          apparatus: apparatusController.text.trim(),
+          level: level,
+          poseType: null,
           description: descriptionController.text.trim(),
           teachingCues: teachingCuesController.text.trim(),
           safetyCues: safetyCuesController.text.trim(),
           progressions: progressionsController.text.trim(),
-          apparatus: apparatusController.text.trim(),
-          level: level,
+          modifications: null,
+          commonErrors: null,
           primaryMediaId: Constants.missingImageId,
           primaryMediaPath: Constants.missingImagePath,
-          token: user.user.token,
+          thumbnailMediaId: Constants.missingImageId,
+          thumbnailMediaPath: Constants.missingImagePath,
           createdBy: user.user.id,
-          // TODO add upload image portion on create new pose page
-          // TODO OR allow image selection
-          // TODO this should be default to exclamation point
+          updatedBy: user.user.id,
+          createdAt: now,
+          updatedAt: now,
+          isSynced: 0,
+        );
+
+        await context.read<PosesCubit>().createNewPose(
+          pose: newPose,
+          token: user.user.token,
         );
       }
     }
   }
+
+  // TODO add upload image portion on create new pose page
 
   @override
   void dispose() {

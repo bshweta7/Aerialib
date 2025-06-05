@@ -1,33 +1,133 @@
 // lib/domain/entities/pose_entity.dart
 
+import 'package:uuid/uuid.dart';
+
 class PoseEntity {
   final String id;
-  final String name;
-  final String primaryMediaId;
-  final String primaryMediaPath;
+  final String slug;
+  final String displayName;
+  final String? altName;
+  final String baseName;
+  final String? prefix;
+  final String? suffix;
+  final String? handPosition;
+  final String? legPosition;
+  final String? positionInBar;
   final String apparatus;
-  final double level;
+  final int? level;
+  final String? poseType;
   final String? description;
   final String? teachingCues;
   final String? safetyCues;
   final String? progressions;
+  final String? modifications;
+  final String? commonErrors;
+  final String primaryMediaId;
+  final String primaryMediaPath;
+  final String thumbnailMediaId;
+  final String thumbnailMediaPath;
   final String createdBy;
   final String? updatedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
   final int isSynced;
 
+  factory PoseEntity.withGeneratedSlug({
+    String? id,
+    required String displayName,
+    required String baseName,
+    String? prefix,
+    String? suffix,
+    String? handPosition,
+    String? legPosition,
+    String? positionInBar,
+    required String apparatus,
+    int? level,
+    String? poseType,
+    String? description,
+    String? teachingCues,
+    String? safetyCues,
+    String? progressions,
+    String? modifications,
+    String? commonErrors,
+    required String primaryMediaId,
+    required String primaryMediaPath,
+    required String thumbnailMediaId,
+    required String thumbnailMediaPath,
+    required String createdBy,
+    String? updatedBy,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    int isSynced = 0,
+  }) {
+    final slugParts = [
+      prefix,
+      baseName,
+      suffix,
+      handPosition,
+      legPosition,
+      positionInBar,
+    ].where((part) => part != null && part.trim().isNotEmpty)
+        .map((part) => part!.trim().toLowerCase());
+
+    final generatedSlug = slugParts.join('-');
+
+    return PoseEntity(
+      id: id ?? const Uuid().v6(),
+      slug: generatedSlug,
+      displayName: displayName,
+      altName: null,
+      baseName: baseName,
+      prefix: prefix,
+      suffix: suffix,
+      handPosition: handPosition,
+      legPosition: legPosition,
+      positionInBar: positionInBar,
+      apparatus: apparatus,
+      level: level,
+      poseType: poseType,
+      description: description,
+      teachingCues: teachingCues,
+      safetyCues: safetyCues,
+      progressions: progressions,
+      modifications: modifications,
+      commonErrors: commonErrors,
+      primaryMediaId: primaryMediaId,
+      primaryMediaPath: primaryMediaPath,
+      thumbnailMediaId: thumbnailMediaId,
+      thumbnailMediaPath: thumbnailMediaPath,
+      createdBy: createdBy,
+      updatedBy: updatedBy,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      isSynced: isSynced,
+    );
+  }
+
   const PoseEntity({
     required this.id,
-    required this.name,
-    required this.primaryMediaId,
-    required this.primaryMediaPath,
+    required this.slug,
+    required this.displayName,
+    this.altName,
+    required this.baseName,
+    this.prefix,
+    this.suffix,
+    this.handPosition,
+    this.legPosition,
+    this.positionInBar,
     required this.apparatus,
-    required this.level,
+    this.level,
+    this.poseType,
     this.description,
     this.teachingCues,
     this.safetyCues,
     this.progressions,
+    this.modifications,
+    this.commonErrors,
+    required this.primaryMediaId,
+    required this.primaryMediaPath,
+    required this.thumbnailMediaId,
+    required this.thumbnailMediaPath,
     required this.createdBy,
     this.updatedBy,
     required this.createdAt,
@@ -41,15 +141,28 @@ class PoseEntity {
           other is PoseEntity &&
               runtimeType == other.runtimeType &&
               id == other.id &&
-              name == other.name &&
-              primaryMediaId == other.primaryMediaId &&
-              primaryMediaPath == other.primaryMediaPath &&
+              slug == other.slug &&
+              displayName == other.displayName &&
+              altName == other.altName &&
+              baseName == other.baseName &&
+              prefix == other.prefix &&
+              suffix == other.suffix &&
+              handPosition == other.handPosition &&
+              legPosition == other.legPosition &&
+              positionInBar == other.positionInBar &&
               apparatus == other.apparatus &&
               level == other.level &&
+              poseType == other.poseType &&
               description == other.description &&
               teachingCues == other.teachingCues &&
               safetyCues == other.safetyCues &&
               progressions == other.progressions &&
+              modifications == other.modifications &&
+              commonErrors == other.commonErrors &&
+              primaryMediaId == other.primaryMediaId &&
+              primaryMediaPath == other.primaryMediaPath &&
+              thumbnailMediaId == other.thumbnailMediaId &&
+              thumbnailMediaPath == other.thumbnailMediaPath &&
               createdBy == other.createdBy &&
               updatedBy == other.updatedBy &&
               createdAt == other.createdAt &&
@@ -59,15 +172,28 @@ class PoseEntity {
   @override
   int get hashCode =>
       id.hashCode ^
-      name.hashCode ^
-      primaryMediaId.hashCode ^
-      primaryMediaPath.hashCode ^
+      slug.hashCode ^
+      displayName.hashCode ^
+      altName.hashCode ^
+      baseName.hashCode ^
+      prefix.hashCode ^
+      suffix.hashCode ^
+      handPosition.hashCode ^
+      legPosition.hashCode ^
+      positionInBar.hashCode ^
       apparatus.hashCode ^
       level.hashCode ^
+      poseType.hashCode ^
       description.hashCode ^
       teachingCues.hashCode ^
       safetyCues.hashCode ^
       progressions.hashCode ^
+      modifications.hashCode ^
+      commonErrors.hashCode ^
+      primaryMediaId.hashCode ^
+      primaryMediaPath.hashCode ^
+      thumbnailMediaId.hashCode ^
+      thumbnailMediaPath.hashCode ^
       createdBy.hashCode ^
       updatedBy.hashCode ^
       createdAt.hashCode ^

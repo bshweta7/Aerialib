@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:convert';
 
 import 'package:frontend/features/pose/data/models/pose_model.dart';
-import 'package:uuid/uuid.dart';
 import 'package:frontend/core/services/http_service.dart';
 
 class PoseRemoteDataSource {
@@ -12,59 +11,19 @@ class PoseRemoteDataSource {
 
   /// Create and return PoseModel
   Future<PoseModel> createPose({
-    required String name,
-    required String apparatus,
-    required double level,
-    String? description,
-    String? teachingCues,
-    String? safetyCues,
-    String? progressions,
-    required String primaryMediaId,
-    required String primaryMediaPath,
-    required String createdBy,
+    required PoseModel pose,
     required String token,
   }) async {
-
-    final body = {
-      'name': name,
-      'apparatus': apparatus,
-      'level': level,
-      'primaryMediaId': primaryMediaId,
-      // 'primaryMediaPath': primaryMediaPath,
-      'createdBy': createdBy,
-      if (description != null) 'description': description,
-      if (teachingCues != null) 'teachingCues': teachingCues,
-      if (safetyCues != null) 'safetyCues': safetyCues,
-      if (progressions != null) 'progressions': progressions,
-    };
-
     try {
       final response = await httpService.post(
         path: "/poses",
         token: token,
-        body: body,
+        body: pose.toMapRemote(),
       );
 
       return PoseModel.fromJson(response.body);
     } catch (e) {
-      // Fallback: construct a local unsynced PoseModel
-      return PoseModel(
-        id: const Uuid().v6(),
-        name: name,
-        primaryMediaId: primaryMediaId,
-        primaryMediaPath: primaryMediaPath,
-        apparatus: apparatus,
-        level: level,
-        description: description,
-        teachingCues: teachingCues,
-        safetyCues: safetyCues,
-        progressions: progressions,
-        createdBy: createdBy,
-        updatedBy: createdBy,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        isSynced: 0,
-      );
+      return pose.copyWith(isSynced: 0); // fallback if server call fails
     }
   }
 
@@ -85,7 +44,7 @@ class PoseRemoteDataSource {
     required List<PoseModel> poses,
   }) async {
     final poseListInMap = poses.map((pose) {
-      final map = pose.toMapCamel();
+      final map = pose.toMap();
       map.remove('is_synced'); // TODO dont need this with the new toMapCamel
       map.remove('primary_media_path');
       log("MEDIA: ${pose.primaryMediaId}");

@@ -54,23 +54,40 @@ const String poseTable = "poses";
 const String createPoseTable = '''
   CREATE TABLE $poseTable (  
     id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    apparatus TEXT NOT NULL,
-    level REAL NOT NULL,
     
-    primary_media_id TEXT NOT NULL,
-    primary_media_path TEXT NOT NULL,
-  
+    slug TEXT NOT NULL,
+    display_name TEXT NOT NULL,
+    alt_name TEXT,
+    
+    base_name TEXT NOT NULL,
+    prefix TEXT,
+    suffix TEXT,
+    
+    hand_position TEXT,
+    leg_position TEXT,
+    position_in_bar TEXT,
+    
+    apparatus TEXT NOT NULL,
+    level INTEGER,
+    pose_type TEXT,
+
     description TEXT,
     teaching_cues TEXT,
     safety_cues TEXT,
     progressions TEXT,
-  
+    modifications TEXT,
+    common_errors TEXT,
+
+    primary_media_id TEXT NOT NULL,
+    primary_media_path TEXT NOT NULL,
+    thumbnail_media_id TEXT NOT NULL,
+    thumbnail_media_path TEXT NOT NULL,
+
     created_by TEXT NOT NULL,
     updated_by TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-  
+
     is_synced INTEGER NOT NULL
   )
 ''';
