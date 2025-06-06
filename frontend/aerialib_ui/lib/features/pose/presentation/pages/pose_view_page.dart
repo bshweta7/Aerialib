@@ -6,8 +6,8 @@ import 'package:frontend/shared/features/media_display/widgets/formatted_cached_
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
-import '../../../../shared/widgets/info_row.dart';
-import '../../../../shared/widgets/section_card.dart';
+import '../../../../shared/widgets/info_display/info_row.dart';
+import '../../../../shared/widgets/info_display/section_card.dart';
 
 
 class PoseViewPage extends StatelessWidget {
@@ -64,7 +64,7 @@ class PoseViewPage extends StatelessWidget {
             const SizedBox(height: 20),
 
             /// Basic Info
-            SectionCard(
+            SectionCard( // TODO Make this take the whole page
               title: "Basic Info",
               children: [
                 InfoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),

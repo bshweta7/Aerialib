@@ -13,7 +13,7 @@ import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
 import 'package:frontend/features/flow/presentation/widgets/flow_filter_sheet.dart';
-import 'package:frontend/shared/widgets/scroll_to_top.dart';
+import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/shared/features/media_display/widgets/media_list/media_list.dart';
 import 'package:frontend/features/flow/presentation/widgets/flow_search_bar.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';

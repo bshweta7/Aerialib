@@ -15,10 +15,12 @@ class TextInputField extends StatelessWidget {
     }
   );
 
+  // TODO optional info buttons that show details when you hover for each entry - also for other input field widgets
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: controller,
         maxLines: maxLines,

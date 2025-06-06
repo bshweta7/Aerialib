@@ -3,7 +3,7 @@ import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/shared/features/media_display/widgets/formatted_cached_network_image.dart';
 
-import '../../../../shared/widgets/info_row.dart';
+import '../../../../shared/widgets/info_display/info_row.dart';
 
 
 class PoseViewSheet extends StatelessWidget {

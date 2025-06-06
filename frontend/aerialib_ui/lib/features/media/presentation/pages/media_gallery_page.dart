@@ -10,7 +10,7 @@ import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
 
 import 'package:frontend/features/media/presentation/cubit/media_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
-import 'package:frontend/shared/widgets/scroll_to_top.dart';
+import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/shared/features/media_display/widgets/media_list/media_list.dart';
 import 'package:frontend/features/media/presentation/widgets/media_filter_sheet.dart';
 

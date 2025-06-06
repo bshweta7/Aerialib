@@ -32,6 +32,10 @@ class Constants {
     }
   }
 
+
+  // TODO STANDARDIZE FONT SIZES
+
+
   // static String backendUrl =
   //   kReleaseMode ? "https://aerialib.com/api"
   //     : (Platform.isAndroid || Platform.isIOS)

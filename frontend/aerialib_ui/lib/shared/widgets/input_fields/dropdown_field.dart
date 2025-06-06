@@ -16,7 +16,7 @@ class DropdownField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: DropdownButtonFormField<String>(
         value: controller.text.isNotEmpty ? controller.text : null,
         onChanged: (String? newValue) {

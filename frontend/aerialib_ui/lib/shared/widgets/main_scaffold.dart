@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/shared/features/navigation/widgets/nav_bar.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_wrapper.dart';
 
+// TODO should every page can have a scroll to top button? maybe make an optional arg here that adds it?
 class MainScaffold extends StatelessWidget {
   final Widget body;
   final int currentIndex;

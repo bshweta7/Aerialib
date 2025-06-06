@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
+import 'package:frontend/shared/widgets/info_display/expandable_card.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
@@ -10,9 +11,10 @@ import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../shared/widgets/forms/dropdown_field.dart';
-import '../../../../shared/widgets/forms/int_input_field.dart';
-import '../../../../shared/widgets/forms/text_input_field.dart';
+import '../../../../shared/widgets/info_display/info_row.dart';
+import '../../../../shared/widgets/input_fields/dropdown_field.dart';
+import '../../../../shared/widgets/input_fields/int_input_field.dart';
+import '../../../../shared/widgets/input_fields/text_input_field.dart';
 import '../../domain/entities/pose_entity.dart';
 
 class AddNewPosePage extends StatefulWidget {
@@ -223,15 +225,9 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                   children: [
 
                     /// Basic Info
-                    ExpansionTile( // TODO make a custom expansion tile widget so the text style is consistent.
+                    ExpandableCard(
+                      title: "Basic Info",
                       initiallyExpanded: true,
-                      title: const Text(
-                          "Basic Info",
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold
-                          )
-                      ),
                       children: [
                         TextInputField("Pose Name", nameController, required: true),
                         DropdownField("Apparatus", apparatusController, Constants.apparatusOptions),
@@ -241,37 +237,19 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                     ),
 
                     /// Additional Details
-                    ExpansionTile(
-                      title: const Text(
-                          "Additional Details",
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold
-                          )
-                      ),
+                    ExpandableCard(
+                      title: "Additional Details",
                       initiallyExpanded: false,
                       children: [
-                        // const Text( // TODO replace these "subtitles" with info buttons that show info when hover for each entry field.
-                        //   "Optional details",
-                        //   style: TextStyle(fontSize: 14),
-                        // ),
-
                         TextInputField("Alternative Name", altNameController),
                         TextInputField("Description", descriptionController, maxLines: 2),
                         DropdownField("Pose Type", poseTypeController, Constants.poseTypeOptions),
-                        const SizedBox(height: 10),
                       ],
                     ),
 
                     /// Instructor Notes
-                    ExpansionTile(
-                      title: const Text(
-                          "Instructor Notes",
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold
-                          )
-                      ),
+                    ExpandableCard(
+                      title: "Instructor Notes",
                       initiallyExpanded: false,
                       children: [
                         TextInputField("Teaching Cues", teachingCuesController, maxLines: 2),
@@ -283,57 +261,24 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                     ),
 
                     /// Advanced Tagging
-                    ExpansionTile(
-                      title: const Text(
-                          "Advanced Tagging",
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold
-                          )
-                      ),
+                    // TODO Button for advanced features that opens a new screen that shows this card and lets you add transitions
+                    ExpandableCard(
+                      title: "Advanced Tagging",
                       initiallyExpanded: false,
                       children: [
-                        const SizedBox(height: 5),
-
-// TODO make a widget for this or use the "info row" and wrap it in a center, and have a optional color manual override.
-                        // Generated Slug
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: "Generated Slug: ",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              TextSpan(
-                                text: generatedSlug,
-                                style: const TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 18,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 5),
-
+                        InfoRow("Generated Slug: ", generatedSlug, valueColor: Colors.grey,),
                         TextInputField("Base Name", baseNameController),
                         TextInputField("Prefix", prefixController),
                         TextInputField("Suffix", suffixController),
                         TextInputField("Hand Position", handPositionController),
                         TextInputField("Leg Position", legPositionController),
                         TextInputField("Position in Bar", positionInBarController),
-                        TextInputField("Pose Type", poseTypeController),
-                        const SizedBox(height: 10),
-
+                        DropdownField("Pose Type", poseTypeController, Constants.poseTypeOptions),
                       ],
                     ),
+
+                    const SizedBox(height: 24),
+
                     ElevatedButton(
                       onPressed: createNewPose,
                       child: const Text(
@@ -350,8 +295,4 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
       ),
     );
   }
-
-
-  // TODO should have used this instead of the TextFormField - move this to a shared widget.
-
 }

@@ -5,7 +5,7 @@ import 'package:frontend/shared/features/navigation/widgets/smart_back_button.da
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../shared/widgets/info_row.dart';
+import '../../../../shared/widgets/info_display/info_row.dart';
 
 class MusicViewPage extends StatelessWidget {
   final MusicEntity music;
