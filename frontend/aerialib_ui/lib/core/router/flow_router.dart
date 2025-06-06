@@ -96,9 +96,7 @@ List<GoRoute> flowRoutes = [
           orElse: () => throw Exception('Flow not found'),
         );
 
-        return FlowEditDetailsPage(
-          flow: flow,
-        );
+        return FlowEditDetailsPage(flow: flow);
       }
 
       // Fallback or loading

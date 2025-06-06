@@ -54,7 +54,7 @@ List<GoRoute> poseRoutes = [
       if (posesState is GetPosesSuccess) {
         final pose = posesState.poses.firstWhere(
           (p) => p.id == poseId,
-          orElse: () => throw Exception('Flow not found'),
+          orElse: () => throw Exception('Pose not found'),
         );
 
         return PoseViewPage(
@@ -76,9 +76,25 @@ List<GoRoute> poseRoutes = [
     path: '/poses/edit/:poseId',
     name: 'pose-edit',
     builder: (context, state) {
-      final pose = state.extra as PoseEntity;
-      return PoseEditDetailsPage(pose:pose);
+
+      // Get pose entity from pose ID
+      final poseId = state.pathParameters['poseId']!;
+      final posesState = context.read<PosesCubit>().state;
+
+      if (posesState is GetPosesSuccess) {
+        final pose = posesState.poses.firstWhere(
+              (p) => p.id == poseId,
+          orElse: () => throw Exception('Pose not found'),
+        );
+
+        return PoseEditDetailsPage(pose: pose);
+      }
+
+      // Fallback or loading
+      log('[PoseRouter] $posesState');
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     },
-    // TODO update this with smart button and nav History (see pose library)
   ),
 ];

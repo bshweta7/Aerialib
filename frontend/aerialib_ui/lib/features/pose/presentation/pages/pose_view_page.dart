@@ -5,6 +5,7 @@ import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/shared/features/media_display/widgets/formatted_cached_network_image.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../shared/widgets/info_display/info_row.dart';
 import '../../../../shared/widgets/info_display/section_card.dart';
@@ -25,9 +26,15 @@ class PoseViewPage extends StatelessWidget {
         leading: const SmartBackButton(),
         title: const Text("Pose Details") ,  // overflow: TextOverflow.ellipsis,),
         actions: [
+          // TODO if the user did not create the pose, they should still be able to edit it but their changes will only show to them (need new table, maybe can use tag table or make new user_mod table)
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
+              context.goNamed(
+                'pose-edit',
+                pathParameters: {'poseId': pose.id},
+                queryParameters: {'from': 'pose-view'},
+              );
             },
             tooltip: 'Edit this pose',
           ),
