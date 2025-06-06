@@ -59,19 +59,19 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
         const adminId = process.env.ADMIN_USER_ID;
 
         const query = sql`
-          SELECT 
-            poses.*,
-            thumbnail_media.media_path AS thumbnail_path,
-            full_media.media_path AS media_path
-          FROM poses
-            LEFT JOIN media 
-                AS thumbnail_media 
-                ON poses.thumbnail_media_id = thumbnail_media.id
-            LEFT JOIN media 
-                AS full_media 
-                ON poses.media_id = full_media.id
+            SELECT
+                poses.*,
+                thumbnail_media.media_path AS thumbnail_path,
+                full_media.media_path AS media_path
+            FROM poses
+                     LEFT JOIN media
+                AS thumbnail_media
+                               ON poses.thumbnail_media_id = thumbnail_media.id
+                     LEFT JOIN media
+                AS full_media
+                               ON poses.primary_media_id = full_media.id
             WHERE poses.created_by = ${userId}
-                OR poses.created_by = ${adminId};
+               OR poses.created_by = ${adminId};
         `;
 
         // Execute the raw SQL query using db.execute()
@@ -83,7 +83,7 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
         res.json(allPoses);
 
     } catch (e) {
-        console.log('[PoseRouter] Get error', e);
+        console.log('[PoseRouter] Get -', e);
         res.status(500).json({ error: e })
     }
 })
@@ -176,7 +176,7 @@ poseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
 
         res.status(201).json(pushedPoses);
     } catch (e) {
-        console.error("[PoseRouter] Sync error:", e);
+        console.error("[PoseRouter] Sync -", e);
         res.status(500).json({ error: "Failed to sync poses" });
     }
 });
