@@ -5,6 +5,8 @@ import 'package:frontend/shared/features/navigation/widgets/smart_back_button.da
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../shared/widgets/info_row.dart';
+
 class MusicViewPage extends StatelessWidget {
   final MusicEntity music;
 
@@ -43,42 +45,42 @@ class MusicViewPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            _infoRow("Artist:", music.artist),
-            _infoRow("Mood:", music.mood),
-            _infoRow("Link:", music.link),
-            _infoRow("Performance Notes:", music.performanceNotes),
-            _infoRow("Tempo (BPM):", music.tempoBpm?.toString()),
-            _infoRow("Duration (sec):", music.durationSec?.toString()),
-            _infoRow("Favorite:", music.favorite ? "Yes" : "No"),
-            _infoRow("Created At:", formatDate(music.createdAt)),
-            _infoRow("Updated At:", formatDate(music.updatedAt)),
+            InfoRow("Artist:", music.artist),
+            InfoRow("Mood:", music.mood),
+            InfoRow("Link:", music.link),
+            InfoRow("Performance Notes:", music.performanceNotes),
+            InfoRow("Tempo (BPM):", music.tempoBpm?.toString()),
+            InfoRow("Duration (sec):", music.durationSec?.toString()),
+            InfoRow("Favorite:", music.favorite ? "Yes" : "No"),
+            InfoRow("Created At:", formatDate(music.createdAt)),
+            InfoRow("Updated At:", formatDate(music.updatedAt)),
           ],
         ),
       ),
     );
   }
 
-  Widget _infoRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "$label ",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: Text(
-              value?.isNotEmpty == true ? value! : 'None',
-              style: TextStyle(
-                fontStyle: value?.isNotEmpty == true ? FontStyle.normal : FontStyle.italic,
-                color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _infoRow(String label, String? value) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(bottom: 10),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           "$label ",
+  //           style: const TextStyle(fontWeight: FontWeight.bold),
+  //         ),
+  //         Expanded(
+  //           child: Text(
+  //             value?.isNotEmpty == true ? value! : 'None',
+  //             style: TextStyle(
+  //               fontStyle: value?.isNotEmpty == true ? FontStyle.normal : FontStyle.italic,
+  //               color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

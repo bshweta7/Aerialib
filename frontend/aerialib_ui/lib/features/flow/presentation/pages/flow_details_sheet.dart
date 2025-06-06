@@ -9,6 +9,8 @@ import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
+import '../../../../shared/widgets/info_row.dart';
+
 
 class FlowDetailsSheet extends StatelessWidget {
   final FlowEntity flow;
@@ -103,31 +105,31 @@ class FlowDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    Widget _infoRow(String label, String? value) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "$label ",
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Expanded(
-              child: Text(
-                value?.isNotEmpty == true ? value! : 'None',
-                style: TextStyle(
-                  fontStyle: value?.isNotEmpty == true
-                      ? FontStyle.normal
-                      : FontStyle.italic,
-                  color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    // Widget _infoRow(String label, String? value) {
+    //   return Padding(
+    //     padding: const EdgeInsets.only(bottom: 10),
+    //     child: Row(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text(
+    //           "$label ",
+    //           style: const TextStyle(fontWeight: FontWeight.bold),
+    //         ),
+    //         Expanded(
+    //           child: Text(
+    //             value?.isNotEmpty == true ? value! : 'None',
+    //             style: TextStyle(
+    //               fontStyle: value?.isNotEmpty == true
+    //                   ? FontStyle.normal
+    //                   : FontStyle.italic,
+    //               color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,14 +152,13 @@ class FlowDetailsSheet extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // TODO make _infoRow a separate widget
-        _infoRow("Apparatus:", capitalizeFirstLetter(flow.apparatus)),
-        _infoRow("Level:", "Level ${flow.level}"),
+        InfoRow("Apparatus:", capitalizeFirstLetter(flow.apparatus)),
+        InfoRow("Level:", "Level ${flow.level}"),
         const Divider(),
-        _infoRow("Description:", flow.description),
-        _infoRow("Teaching Cues:", flow.teachingCues),
-        _infoRow("Safety Cues:", flow.safetyCues),
-        _infoRow("Progressions:", flow.progressions),
+        InfoRow("Description:", flow.description),
+        InfoRow("Teaching Cues:", flow.teachingCues),
+        InfoRow("Safety Cues:", flow.safetyCues),
+        InfoRow("Progressions:", flow.progressions),
         // TODO add thumbnail picture
 
         const SizedBox(height: 20),
