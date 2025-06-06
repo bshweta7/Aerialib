@@ -42,9 +42,9 @@ class PosesCubit extends Cubit<PosesState> {
       log('[PosesCubit] Fetching poses...');
       emit(const PoseLoading());
 
-      List<PoseEntity> poses = await _poseRepository.getAllPoses();  // Fetch local poses
-      log('[PosesCubit] Number of Poses Retrieved: ${poses.length}');
-      emit(GetPosesSuccess(poses));
+      List<PoseEntity> allPoses = await _poseRepository.getAllPoses();  // Fetch local poses
+      log('[PosesCubit] Number of Poses Retrieved: ${allPoses.length}');
+      emit(GetPosesSuccess(allPoses));
 
     } catch (e) {
       log('[PosesCubit] GetAllPoses failed: $e');
@@ -66,8 +66,8 @@ class PosesCubit extends Cubit<PosesState> {
       await _poseRepository.syncRemoteToLocal(token);
       log('[PosesCubit] Synced remote to local.');
 
-      final updatedPoses = await _poseRepository.getAllPoses();
-      emit(GetPosesSuccess(updatedPoses));
+      final allPoses = await _poseRepository.getAllPoses();
+      emit(GetPosesSuccess(allPoses));
     } catch (e) {
       log('[PosesCubit] Sync error: $e');
       emit(PoseError('[PosesCubit] Sync error: $e'));
@@ -117,8 +117,8 @@ class PosesCubit extends Cubit<PosesState> {
   Future<void> refresh({required String token}) async {
     try {
       emit(const PoseLoading());
-      final poses = await _poseRepository.getAllPoses();
-      emit(GetPosesSuccess(poses));
+      final allPoses = await _poseRepository.getAllPoses();
+      emit(GetPosesSuccess(allPoses));
     } catch (e) {
       emit(PoseError('Refresh error: ${e.toString()}'));
     }

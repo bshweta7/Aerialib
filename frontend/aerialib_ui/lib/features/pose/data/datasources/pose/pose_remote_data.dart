@@ -38,8 +38,8 @@ class PoseRemoteDataSource {
       path: "/poses",
       token: token,
     );
-    final decoded = jsonDecode(response.body);
-    log('[PoseRemoteDataSource] Raw response: $decoded');
+    // final decoded = jsonDecode(response.body);
+    // log('[PoseRemoteDataSource] Raw response: $decoded');
 
     final List<dynamic> jsonList = jsonDecode(response.body);
     return jsonList.map((e) => PoseModel.fromMap(e).copyWith(isSynced: 1)).toList();

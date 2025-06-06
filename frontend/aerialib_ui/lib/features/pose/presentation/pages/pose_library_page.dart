@@ -54,7 +54,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
     await context.read<PosesCubit>().syncPoses(token: user.user.token);
     if (!mounted) return;
-    context.read<PosesCubit>().getAllPoses(token: user.user.token);
   }
 
   @override
