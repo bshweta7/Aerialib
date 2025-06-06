@@ -69,7 +69,7 @@ class _FlowViewPageState extends State<FlowViewPage> {
 
     final poses = (flow.poses ?? []).map((fp) => fp.pose).toList();
 
-    log("[FlowViewPage] Pose names: ${poses.map((p) => p.name).toList()}");
+    log("[FlowViewPage] Pose names: ${poses.map((p) => p.slug).toList()}");
     log("[FlowViewPage] Pose image paths: ${poses.map((p) => p.primaryMediaPath).toList()}");
 
     final mediaItems = posesToMediaIcons(poses);

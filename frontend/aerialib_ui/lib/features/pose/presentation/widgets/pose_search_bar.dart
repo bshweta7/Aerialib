@@ -48,13 +48,13 @@ class _PoseSearchBarWidgetState extends State<PoseSearchBarWidget> {
       },
       suggestionsBuilder: (BuildContext context, SearchController controller) {
         final suggestions = widget.suggestionList
-            .where((pose) => pose.name.toLowerCase().contains(controller.text.toLowerCase()))
+            .where((pose) => pose.slug.toLowerCase().contains(controller.text.toLowerCase()))
             .toList();
 
         return List<ListTile>.generate(suggestions.length, (int index) {
           final PoseEntity pose = suggestions[index];
           return ListTile(
-            title: Text(pose.name),
+            title: Text(pose.slug),
             onTap: () {
               setState(() {
                 controller.clear(); // ✨ clear the search text

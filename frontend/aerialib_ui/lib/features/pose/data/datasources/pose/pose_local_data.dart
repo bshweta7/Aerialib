@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:frontend/features/pose/data/models/pose_model.dart';
 import '../../../../../core/services/local_database_service.dart';
@@ -7,21 +9,35 @@ class PoseLocalDataSource {
 
   Future<Database> get database async => DatabaseService.database;
 
-  Future<void> insertPose(PoseModel pose) async {
+  Future<void> createPose(PoseModel pose) async {
     final db = await database;
-    // TODO decide if upsert or not: await db.delete(tableName, where: 'id = ?', whereArgs: [pose.id]);
-    await db.insert(tableName, pose.toMap());
+
+    // Insert the pose
+    await db.insert(tableName, pose.toMapLocal());
+
+    // Verify insertion by checking if the pose exists
+    final result = await db.query(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [pose.id],
+    );
+
+    if (result.isNotEmpty) {
+      // Only log if the pose was successfully inserted
+      log('[PoseLocalDataSource] Successfully added pose: ${pose.id}');
+    } else {
+      log('[PoseLocalDataSource] Failed to add pose: ${pose.id}');
+    }
   }
 
-  Future<void> insertPoses(List<PoseModel> poses) async {
+  Future<void> createPoses(List<PoseModel> poses) async {
     final db = await database;
     final batch = db.batch();
     for (final pose in poses) {
       batch.insert(
         tableName,
-        pose.toMap(),
-        conflictAlgorithm: ConflictAlgorithm
-            .ignore, //TODO replace might be wrong here - use replace if upserting
+        pose.toMapLocal(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
 
@@ -61,35 +77,6 @@ class PoseLocalDataSource {
     return [];
   }
 
-  Future<void> setSyncedStatus(String id, int newValue) async {
-    final db = await database;
-    await db.update(
-      tableName,
-      {'is_synced': newValue},
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  Future<void> updatePose(PoseModel pose) async {
-    final db = await database;
-    await db.update(
-      tableName,
-      pose.toMap(),
-      where: 'id = ?',
-      whereArgs: [pose.id],
-    );
-  }
-
-  Future<void> deletePose(String id) async {
-    final db = await database;
-    await db.delete(
-        tableName,
-        where: 'id = ?',
-        whereArgs: [id]
-    );
-  }
-
   /// Returns PoseModel given an ID
   Future<PoseModel?> getPoseById(String poseId) async {
     final db = await database;
@@ -114,6 +101,35 @@ class PoseLocalDataSource {
       whereArgs: ids,
     );
     return result.map((e) => PoseModel.fromMap(e)).toList();
+  }
+
+  Future<void> updateSyncStatus(String id, int newValue) async {
+    final db = await database;
+    await db.update(
+      tableName,
+      {'is_synced': newValue},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> updatePose(PoseModel pose) async {
+    final db = await database;
+    await db.update(
+      tableName,
+      pose.toMapLocal(),
+      where: 'id = ?',
+      whereArgs: [pose.id],
+    );
+  }
+
+  Future<void> deletePose(String id) async {
+    final db = await database;
+    await db.delete(
+        tableName,
+        where: 'id = ?',
+        whereArgs: [id]
+    );
   }
 
 }

@@ -32,7 +32,7 @@ class PoseRepository {
       );
 
       // Save to local DB
-      await localDataSource.insertPose(poseModel);
+      await localDataSource.createPose(poseModel);
       log('[PoseRepository] Pose inserted into local database.');
 
       // Return as entity
@@ -45,8 +45,6 @@ class PoseRepository {
       rethrow;
     }
   }
-
-
 
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllPoses() async {
@@ -66,39 +64,40 @@ class PoseRepository {
 
   /// Fetch all poses from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
-    final poseModels = await remoteDataSource.fetchRemotePoses(token: token);
-    // log(poseModels);
-    await localDataSource.insertPoses(poseModels);
+    try {
+      final poseModels = await remoteDataSource.getRemotePoses(token: token);
+      await localDataSource.createPoses(poseModels);
+      log('[PoseRepository] Synced ${poseModels.length} remote poses to local.');
+    } catch (e) {
+      log('[PoseRepository] Failed syncing remote poses to local: $e');
+      rethrow;
+    }
   }
-
 
   /// Send unsynced local poses to remote, and mark them as synced
   Future<void> syncLocalToRemote(String token) async {
     final List<PoseModel> unsynced = await localDataSource.getUnsyncedPoses();
     if (unsynced.isEmpty) {
+      log("[PoseRepository] No unsynced poses found.");
       return;
     }
 
-    log("[PoseRepository] Retrieved unsynced poses from local");
+    log("[PoseRepository] Attempting to sync ${unsynced.length} poses to remote...");
     final success = await remoteDataSource.syncPoses(
       token: token,
       poses: unsynced,
     );
-    log("[PoseRepository] Synced poses to remote");
 
     if (success) {
       for (final pose in unsynced) {
-        await localDataSource.setSyncedStatus(pose.id, 1);
+        await localDataSource.updateSyncStatus(pose.id, 1);
       }
+      log("[PoseRepository] Successfully updated sync status locally.");
+    } else {
+      log("[PoseRepository] Remote sync failed. Sync status not updated.");
     }
   }
-
-  // /// Full sync (both directions)
-  // Future<void> fullSync(String token) async {
-  //   await syncLocalToRemote(token);
-  //   await syncRemoteToLocal(token);
-  // }
-
+  
   /// Update a pose remotely and locally
   Future<void> updatePose({
     required PoseEntity updatedPose,
@@ -118,7 +117,18 @@ class PoseRepository {
   }
 
   /// Delete locally
-  Future<void> deletePose(String id) async {
+  Future<void> deletePoseLocal(String id) async {
     await localDataSource.deletePose(id);
   }
+
+  /// Delete Pose Remote Data Source
+  Future<void> deletePoseRemote({
+    required String id,
+    required String token,
+  }) async {
+    await remoteDataSource.deletePose(poseId: id, token: token);
+    await localDataSource.deletePose(id);
+    log('[PoseRepository] Pose $id deleted from both remote and local.');
+  }
+
 }

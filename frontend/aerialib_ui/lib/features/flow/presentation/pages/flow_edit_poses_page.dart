@@ -156,13 +156,13 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
               // Filtering
               List<PoseEntity> filteredPoses = state.availablePoses.where(
                     (elem) =>
-                selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase()) &&
-                    selectedLevels.contains(elem.level.floor()),
+                selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase())
+                    // selectedLevels.contains(elem.level.floor()),
               ).toList();
 
               // Search suggestion list
               final List<PoseEntity> sortedFilteredPoses = List<PoseEntity>.from(filteredPoses)
-                ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+                ..sort((a, b) => a.slug.toLowerCase().compareTo(b.slug.toLowerCase()));
               // TODO - decide if search list should only show filtered poses or all poses
 
 
@@ -310,7 +310,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('${removedPose.pose.name} removed'),
+                                  content: Text('${removedPose.pose.slug} removed'),
                                   action: SnackBarAction(
                                     label: 'Undo',
                                     onPressed: () {
@@ -326,7 +326,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                               );
                             },
                             child: ListCard(
-                              title: flowPose.pose.name,
+                              title: flowPose.pose.slug,
                               subtitle: 'Level ${flowPose.pose.level} | ${capitalizeFirstLetter(flowPose.pose.apparatus)}',
                               imageUrl: '/${flowPose.pose.primaryMediaPath}',
                               onTapFunction: () {

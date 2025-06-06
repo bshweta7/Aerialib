@@ -35,7 +35,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
   void initState() {
     super.initState();
 
-    nameController = TextEditingController(text: widget.pose.name);
+    nameController = TextEditingController(text: widget.pose.slug);
     descriptionController =
         TextEditingController(text: widget.pose.description);
     teachingCuesController =
@@ -44,7 +44,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
     progressionsController = TextEditingController(text: widget.pose.progressions);
 
     apparatus = widget.pose.apparatus;
-    level = widget.pose.level;
+    // level = widget.pose.level;
   }
 
   @override
@@ -65,7 +65,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
 
     final updatedPose = PoseEntity(
       id: widget.pose.id,
-      name: nameController.text.trim(),
+      slug: nameController.text.trim(),
       primaryMediaId: widget.pose.primaryMediaId,
       primaryMediaPath: widget.pose.primaryMediaPath,
       description: descriptionController.text.trim(),
@@ -73,12 +73,12 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
       safetyCues: safetyCuesController.text.trim(),
       progressions: progressionsController.text.trim(),
       apparatus: apparatus,
-      level: level,
+      level: -1,
       createdBy: widget.pose.createdBy,
       createdAt: widget.pose.createdAt,
       updatedBy: user.user.id,
       updatedAt: DateTime.now(),
-      isSynced: 0,
+      isSynced: 0, displayName: '', baseName: '', thumbnailMediaId: '', thumbnailMediaPath: '',
     );
 
     await context.read<PosesCubit>().updatePoseInfo(

@@ -10,7 +10,7 @@ import 'package:frontend/core/constants/constants.dart';
 List<MediaIconEntity> posesToMediaIcons(List<PoseEntity> poses) {
   return poses.map((pose) => MediaIconEntity(
     imageUrl: "/${pose.primaryMediaPath}",
-    title: pose.name,
+    title: pose.displayName,
     subtitle: "Level ${pose.level} | ${capitalizeFirstLetter(pose.apparatus)}", // TODO - adjust the subtitle with tags
     type: MediaType.pose,
     data: pose,

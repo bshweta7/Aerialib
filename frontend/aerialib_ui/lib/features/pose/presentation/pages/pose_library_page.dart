@@ -169,15 +169,15 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               // Filtering
               List<PoseEntity> filteredPoses = state.poses.where(
                     (elem) =>
-                selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase()) &&
-                    selectedLevels.contains(elem.level.floor()),
+                selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase())
+                    // selectedLevels.contains(elem.level.floor()),
               ).toList();
 
               List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
 
               // Search suggestion list
               final List<PoseEntity> sortedPoses = List<PoseEntity>.from(state.poses)
-                ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+                ..sort((a, b) => a.slug.toLowerCase().compareTo(b.slug.toLowerCase()));
               // TODO - decide if search list should only show filtered poses or all poses
 
               return Column(

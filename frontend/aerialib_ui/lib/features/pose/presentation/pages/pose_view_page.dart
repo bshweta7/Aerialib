@@ -5,32 +5,16 @@ import 'package:frontend/shared/features/media_display/widgets/formatted_cached_
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../../shared/widgets/info_row.dart';
 
-class PoseViewPage extends StatefulWidget {
+
+class PoseViewPage extends StatelessWidget {
   final PoseEntity pose;
 
   const PoseViewPage({super.key, required this.pose});
 
   @override
-  State<PoseViewPage> createState() => _PoseViewPageState();
-}
-
-class _PoseViewPageState extends State<PoseViewPage> {
-  final formKey = GlobalKey<FormState>();
-
-  @override
   Widget build(BuildContext context) {
-    final pose = widget.pose;
-    // final state = context.read<PosesCubit>().state;
-    // late final PoseEntity updatedPose;
-    //
-    // if (state is GetPosesSuccess) {
-    //   updatedPose = state.poses.firstWhere((p) => p.id == widget.pose.id);
-    // } else {
-    //   // fallback to old pose if needed
-    //   updatedPose = widget.pose;
-    // }
-    //
     final screenHeight = MediaQuery.of(context).size.height;
 
     return MainScaffold(
@@ -49,33 +33,26 @@ class _PoseViewPageState extends State<PoseViewPage> {
         //     },
         //     tooltip: 'Edit this pose',
         //   ),
-        //   ] // TODO ADD EDITING
+        //   ] // TODO ADD EDITING - only allow editing if the pose was created by the user.
       ),
-        // TODO Ask about ordering of items on page, ensure consistency across add, edit, and details pages
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
+            /// Title
             Center(
               child: Text(
-                pose.name,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                )
+                pose.displayName,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-
             const SizedBox(height: 10),
 
-            // Updated: image in a rounded Card
+            /// Media preview
             Card(
               elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               clipBehavior: Clip.antiAlias,
               child: Container(
                 constraints: BoxConstraints(
@@ -88,41 +65,32 @@ class _PoseViewPageState extends State<PoseViewPage> {
             ),
             const SizedBox(height: 20),
 
-            _infoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
-            _infoRow("Level:", "Level ${pose.level}"),
+            /// Basic Info
+            // TODO Make this a small subtitle right under the title instead of taking up two rows like "Lyra | Level 1"
+            InfoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
+            InfoRow("Level:", "Level ${pose.level}"),
+
+            /// Details
             const Divider(),
-            _infoRow("Description:", pose.description),
-            _infoRow("Teaching Cues:", pose.teachingCues),
-            _infoRow("Safety Cues:", pose.safetyCues),
-            _infoRow("Progressions:", pose.progressions),
+            InfoRow("Description:", pose.description),
+            InfoRow("Teaching Cues:", pose.teachingCues),
+            InfoRow("Safety Cues:", pose.safetyCues),
+            InfoRow("Progressions:", pose.progressions),
+            InfoRow("Modifications:", pose.modifications),
+            InfoRow("Common Errors:", pose.commonErrors),
+
+            /// Positional tags
+            const Divider(),
+            // TODO Add a expandable card for "Advanced Tagging"
+            InfoRow("Prefix:", pose.prefix),
+            InfoRow("Suffix:", pose.suffix),
+            InfoRow("Base Name:", pose.baseName),
+            InfoRow("Hand Position:", pose.handPosition),
+            InfoRow("Leg Position:", pose.legPosition),
+            InfoRow("Position in Hoop:", pose.positionInBar),
+            // TODO where should "alternative names" go?
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _infoRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "$label ",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: Text(
-              value?.isNotEmpty == true ? value! : 'None',
-              style: TextStyle(
-                fontStyle: value?.isNotEmpty == true
-                    ? FontStyle.normal
-                    : FontStyle.italic,
-                color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

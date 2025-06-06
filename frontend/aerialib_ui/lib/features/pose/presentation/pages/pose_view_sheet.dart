@@ -3,6 +3,8 @@ import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/shared/features/media_display/widgets/formatted_cached_network_image.dart';
 
+import '../../../../shared/widgets/info_row.dart';
+
 
 class PoseViewSheet extends StatelessWidget {
   final PoseEntity pose;
@@ -50,31 +52,31 @@ class PoseViewSheet extends StatelessWidget {
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
 
-    Widget _infoRow(String label, String? value) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "$label ",
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Expanded(
-              child: Text(
-                value?.isNotEmpty == true ? value! : 'None',
-                style: TextStyle(
-                  fontStyle: value?.isNotEmpty == true
-                      ? FontStyle.normal
-                      : FontStyle.italic,
-                  color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    // Widget _infoRow(String label, String? value) {
+    //   return Padding(
+    //     padding: const EdgeInsets.only(bottom: 10),
+    //     child: Row(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         Text(
+    //           "$label ",
+    //           style: const TextStyle(fontWeight: FontWeight.bold),
+    //         ),
+    //         Expanded(
+    //           child: Text(
+    //             value?.isNotEmpty == true ? value! : 'None',
+    //             style: TextStyle(
+    //               fontStyle: value?.isNotEmpty == true
+    //                   ? FontStyle.normal
+    //                   : FontStyle.italic,
+    //               color: value?.isNotEmpty == true ? Colors.black : Colors.grey[600],
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +94,7 @@ class PoseViewSheet extends StatelessWidget {
           ),
         ),
         Text(
-          pose.name,
+          pose.slug,
           style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
@@ -115,13 +117,13 @@ class PoseViewSheet extends StatelessWidget {
         ),
         const SizedBox(height: 20),
 
-        _infoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
-        _infoRow("Level:", "Level ${pose.level}"),
+        InfoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
+        InfoRow("Level:", "Level ${pose.level}"),
         const Divider(),
-        _infoRow("Description:", pose.description),
-        _infoRow("Teaching Cues:", pose.teachingCues),
-        _infoRow("Safety Cues:", pose.safetyCues),
-        _infoRow("Progressions:", pose.progressions),
+        InfoRow("Description:", pose.description),
+        InfoRow("Teaching Cues:", pose.teachingCues),
+        InfoRow("Safety Cues:", pose.safetyCues),
+        InfoRow("Progressions:", pose.progressions),
       ],
     );
   }

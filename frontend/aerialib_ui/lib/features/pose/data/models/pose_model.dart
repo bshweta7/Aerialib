@@ -118,7 +118,7 @@ class PoseModel {
   }
 
   // TODO is toMap supposed to just be camelcase?
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMapLocal() {
     return {
       'id': id,
 
@@ -200,7 +200,7 @@ class PoseModel {
   factory PoseModel.fromJson(String source) =>
       PoseModel.fromMap(json.decode(source));
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMapLocal());
 
   PoseModel copyWith({
     String? id,

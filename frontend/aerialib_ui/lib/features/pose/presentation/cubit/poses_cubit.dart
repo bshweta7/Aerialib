@@ -13,7 +13,6 @@ class PosesCubit extends Cubit<PosesState> {
 
   PosesCubit(this._poseRepository) : super(const PoseInitial());
 
-  /// Crud ----------------------------
   /// Create a new pose
   Future<void> createNewPose({
     required PoseEntity pose,
@@ -28,13 +27,15 @@ class PosesCubit extends Cubit<PosesState> {
       );
 
       emit(AddNewPoseSuccess(createdPose));
+      final allPoses = await _poseRepository.getAllPoses();
+      emit(GetPosesSuccess(allPoses));
+
     } catch (e) {
       log("Error creating pose: $e");
       emit(PoseError(e.toString()));
     }
   }
 
-  /// cRud ----------------------------
   /// Fetch all poses (from local storage or remote if needed)
   Future<void> getAllPoses({required String token}) async {
     try {
@@ -75,7 +76,6 @@ class PosesCubit extends Cubit<PosesState> {
     }
   }
 
-  /// crUd ----------------------------
   /// Update pose info (both local and remote)
   Future<void> updatePoseInfo({
     required PoseEntity updatedPose,
@@ -88,25 +88,41 @@ class PosesCubit extends Cubit<PosesState> {
         token: token,
       );
       emit(UpdatePoseSuccess(updatedPose));
+      final allPoses = await _poseRepository.getAllPoses();
+      emit(GetPosesSuccess(allPoses));
+
     } catch (e) {
       log(e.toString());
       emit(PoseError(e.toString()));
     }
   }
 
-  /// cruD ----------------------------
   /// Delete a pose locally
-  Future<void> deletePose(String poseId) async {
+  Future<void> deletePoseLocal(String poseId) async {
     try {
       emit(const PoseLoading());
-      await _poseRepository.deletePose(poseId);
+      await _poseRepository.deletePoseLocal(poseId);
       emit(DeletePoseSuccess(poseId));
+      final allPoses = await _poseRepository.getAllPoses();
+      emit(GetPosesSuccess(allPoses));
+
     } catch (e) {
       log('[PosesCubit] Deleting error: $e');
       emit(PoseError('[PosesCubit] Deleting error: $e'));
     }
   }
 
+  // TODO add delete Pose Remote function
+
+  Future<void> refresh({required String token}) async {
+    try {
+      emit(const PoseLoading());
+      final poses = await _poseRepository.getAllPoses();
+      emit(GetPosesSuccess(poses));
+    } catch (e) {
+      emit(PoseError('Refresh error: ${e.toString()}'));
+    }
+  }
 }
 
 
