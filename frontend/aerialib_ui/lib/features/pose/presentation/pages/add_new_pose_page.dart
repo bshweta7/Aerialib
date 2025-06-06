@@ -47,14 +47,32 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
   final commonErrorsController = TextEditingController();
 
   String generatedSlug = '';
+  bool _baseNameManuallyEdited = false;
 
   @override
   void initState() {
     super.initState();
     apparatusController.text = 'lyra';
 
+    // Watch for name changes to update base name
+    nameController.addListener(() {
+      if (!_baseNameManuallyEdited) {
+        final nameText = nameController.text.trim();
+        baseNameController.value = TextEditingValue(
+          text: nameText,
+          selection: TextSelection.collapsed(offset: nameText.length),
+        );
+      }
+      generateSlug();
+    });
 
-    // Add listeners to update slug
+    // TODO eventually, split the name by - to make prefix and suffix and use some word detection (like no hands) and remove that and add to hand position
+    // Detect manual edits to base name
+    baseNameController.addListener(() {
+      _baseNameManuallyEdited = baseNameController.text.trim() != nameController.text.trim();
+      generateSlug();
+    });
+
     [
       prefixController,
       baseNameController,
@@ -103,7 +121,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
 
       final newPose = PoseEntity(
         id: const Uuid().v6(),
-        slug: '',
+        slug: generatedSlug,
         displayName: nameController.text.trim(),
         altName: altNameController.text
             .trim()
@@ -130,13 +148,17 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
             .isNotEmpty ? positionInBarController.text.trim() : null,
         apparatus: apparatusController.text.trim(),
         level: level,
-        poseType: poseTypeController.text
+        poseType: poseTypeController.text.trim().isNotEmpty ?
+            poseTypeController.text.trim() : null,
+        description: descriptionController.text.trim().isNotEmpty ?
+            descriptionController.text.trim() : null,
+        teachingCues: teachingCuesController.text.trim().isNotEmpty ?
+            teachingCuesController.text.trim() : null,
+        safetyCues: safetyCuesController.text.trim().isNotEmpty ?
+            safetyCuesController.text.trim() : null,
+        progressions: progressionsController.text
             .trim()
-            .isNotEmpty ? poseTypeController.text.trim() : null,
-        description: descriptionController.text.trim(),
-        teachingCues: teachingCuesController.text.trim(),
-        safetyCues: safetyCuesController.text.trim(),
-        progressions: progressionsController.text.trim(),
+            .isNotEmpty ? progressionsController.text.trim() : null,
         modifications: modificationsController.text
             .trim()
             .isNotEmpty ? modificationsController.text.trim() : null,
@@ -267,13 +289,13 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                       initiallyExpanded: false,
                       children: [
                         InfoRow("Generated Slug: ", generatedSlug, valueColor: Colors.grey,),
+
                         TextInputField("Base Name", baseNameController),
                         TextInputField("Prefix", prefixController),
                         TextInputField("Suffix", suffixController),
                         TextInputField("Hand Position", handPositionController),
                         TextInputField("Leg Position", legPositionController),
                         TextInputField("Position in Bar", positionInBarController),
-                        DropdownField("Pose Type", poseTypeController, Constants.poseTypeOptions),
                       ],
                     ),
 

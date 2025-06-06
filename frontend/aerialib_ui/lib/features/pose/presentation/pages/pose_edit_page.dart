@@ -41,7 +41,8 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
     teachingCuesController =
         TextEditingController(text: widget.pose.teachingCues);
     safetyCuesController = TextEditingController(text: widget.pose.safetyCues);
-    progressionsController = TextEditingController(text: widget.pose.progressions);
+    progressionsController =
+        TextEditingController(text: widget.pose.progressions);
 
     apparatus = widget.pose.apparatus;
     // level = widget.pose.level;
@@ -61,7 +62,9 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
   Future<void> _handleUpdatePose() async {
     if (!formKey.currentState!.validate()) return;
 
-    final user = context.read<AuthCubit>().state as AuthLoggedIn;
+    final user = context
+        .read<AuthCubit>()
+        .state as AuthLoggedIn;
 
     final updatedPose = PoseEntity(
       id: widget.pose.id,
@@ -78,7 +81,11 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
       createdAt: widget.pose.createdAt,
       updatedBy: user.user.id,
       updatedAt: DateTime.now(),
-      isSynced: 0, displayName: '', baseName: '', thumbnailMediaId: '', thumbnailMediaPath: '',
+      isSynced: 0,
+      displayName: '',
+      baseName: '',
+      thumbnailMediaId: '',
+      thumbnailMediaPath: '',
     );
 
     await context.read<PosesCubit>().updatePoseInfo(
@@ -103,17 +110,29 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = context
+        .watch<AuthCubit>()
+        .state;
+
+    // Default to not editable
+    bool isOwner = false;
+    if (state is AuthLoggedIn) {
+      isOwner = widget.pose.createdBy == state.user.id;
+    }
+
     return MainScaffold(
       currentIndex: 2,
       appBar: AppBar(
         title: const Text('Update Pose'),
-        actions: [
+        actions: isOwner
+            ? [
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: _handleUpdatePose,
             tooltip: 'Save changes',
           )
-        ],
+        ]
+            : [],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -123,8 +142,18 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (!isOwner)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      "You are viewing a shared pose. You cannot edit this version.",
+                      style: TextStyle(color: Colors.redAccent),
+                    ),
+                  ),
+
                 TextFormField(
                   controller: nameController,
+                  enabled: isOwner,
                   decoration: const InputDecoration(labelText: 'Name'),
                   validator: requiredFieldValidator,
                 ),
@@ -132,13 +161,15 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   value: apparatus,
-                  onChanged: (String? newValue) {
+                  onChanged: isOwner
+                      ? (String? newValue) {
                     if (newValue != null) {
                       setState(() {
                         apparatus = newValue;
                       });
                     }
-                  },
+                  }
+                      : null,
                   items: Constants.apparatusOptions
                       .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                       .toList(),
@@ -146,22 +177,26 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                   validator: requiredFieldValidator,
                 ),
 
-                const SizedBox(height: 10),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Level'),
-                  keyboardType: TextInputType.number,
-                  initialValue: level.toString(),
-                  onChanged: (value) {
-                    setState(() {
-                      level = double.tryParse(value) ?? level;
-                    });
-                  },
-                  validator: requiredFieldValidator,
-                ),
+                // const SizedBox(height: 10),
+                // TextFormField(
+                //   decoration: const InputDecoration(labelText: 'Level'),
+                //   enabled: isOwner,
+                //   keyboardType: TextInputType.number,
+                //   initialValue: level.toString(),
+                //   onChanged: isOwner
+                //       ? (value) {
+                //     setState(() {
+                //       level = double.tryParse(value) ?? level;
+                //     });
+                //   }
+                //       : null,
+                //   validator: requiredFieldValidator,
+                // ),
 
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: descriptionController,
+                  enabled: isOwner,
                   decoration: const InputDecoration(labelText: 'Description'),
                   maxLines: 2,
                 ),
@@ -169,6 +204,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: teachingCuesController,
+                  enabled: isOwner,
                   decoration: const InputDecoration(labelText: 'Teaching Cues'),
                   maxLines: 2,
                 ),
@@ -176,6 +212,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: safetyCuesController,
+                  enabled: isOwner,
                   decoration: const InputDecoration(labelText: 'Safety Cues'),
                   maxLines: 2,
                 ),
@@ -183,15 +220,17 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: progressionsController,
+                  enabled: isOwner,
                   decoration: const InputDecoration(labelText: 'Progressions'),
                   maxLines: 2,
                 ),
 
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _handleUpdatePose,
-                  child: const Text('Update Pose'),
-                ),
+                if (isOwner)
+                  ElevatedButton(
+                    onPressed: _handleUpdatePose,
+                    child: const Text('Update Pose'),
+                  ),
               ],
             ),
           ),

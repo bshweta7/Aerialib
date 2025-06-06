@@ -24,9 +24,9 @@ class PoseLocalDataSource {
 
     if (result.isNotEmpty) {
       // Only log if the pose was successfully inserted
-      log('[PoseLocalDataSource] Successfully added pose: ${pose.id}');
+      log('[PoseLocalDataSource] Successfully added pose: ${pose.slug}');
     } else {
-      log('[PoseLocalDataSource] Failed to add pose: ${pose.id}');
+      log('[PoseLocalDataSource] Failed to add pose: ${pose.slug}');
     }
   }
 

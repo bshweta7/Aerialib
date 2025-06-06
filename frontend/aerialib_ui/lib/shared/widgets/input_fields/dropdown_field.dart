@@ -4,11 +4,13 @@ class DropdownField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final List<String> options;
+  final bool required;
 
   const DropdownField(
     this.label,
     this.controller,
     this.options, {
+        this.required = false,
         super.key,
     }
   );
@@ -33,8 +35,11 @@ class DropdownField extends StatelessWidget {
           );
         }).toList(),
         decoration: InputDecoration(labelText: label),
-        validator: (value) =>
-        value == null || value.isEmpty ? 'Please select $label' : null,
+        validator: (value) {
+          if (required && (value == null || value.isEmpty)) {
+             return '$label cannot be empty';
+          }
+        }
       ),
     );
   }

@@ -33,7 +33,7 @@ class PoseRepository {
 
       // Save to local DB
       await localDataSource.createPose(poseModel);
-      log('[PoseRepository] Pose inserted into local database.');
+      // log('[PoseRepository] Pose inserted into local database.');
 
       // Return as entity
       final entity = PoseMapper.modelToEntity(poseModel);
