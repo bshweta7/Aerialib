@@ -10,6 +10,9 @@ import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../shared/widgets/forms/dropdown_field.dart';
+import '../../../../shared/widgets/forms/int_input_field.dart';
+import '../../../../shared/widgets/forms/text_input_field.dart';
 import '../../domain/entities/pose_entity.dart';
 
 class AddNewPosePage extends StatefulWidget {
@@ -66,7 +69,9 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
   void generateSlug() {
     final parts = [
       prefixController.text,
-      baseNameController.text.isNotEmpty ? baseNameController.text : nameController.text,
+      baseNameController.text.isNotEmpty
+          ? baseNameController.text
+          : nameController.text,
       suffixController.text,
       handPositionController.text,
       legPositionController.text,
@@ -74,7 +79,10 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
     ];
 
     final slug = parts
-        .where((part) => part.trim().isNotEmpty)
+        .where((part) =>
+    part
+        .trim()
+        .isNotEmpty)
         .map((part) => part.trim().toLowerCase())
         .join('-');
 
@@ -85,7 +93,9 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
 
   void createNewPose() async {
     if (formKey.currentState!.validate()) {
-      final user = context.read<AuthCubit>().state as AuthLoggedIn;
+      final user = context
+          .read<AuthCubit>()
+          .state as AuthLoggedIn;
       final level = int.tryParse(levelController.text.trim());
       final now = DateTime.now();
 
@@ -93,25 +103,46 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
         id: const Uuid().v6(),
         slug: '',
         displayName: nameController.text.trim(),
-        altName: altNameController.text.trim().isNotEmpty ? altNameController.text.trim() : null,
-        baseName: baseNameController.text.trim().isNotEmpty
+        altName: altNameController.text
+            .trim()
+            .isNotEmpty ? altNameController.text.trim() : null,
+        baseName: baseNameController.text
+            .trim()
+            .isNotEmpty
             ? baseNameController.text.trim().toLowerCase()
             : nameController.text.trim().toLowerCase(),
-        prefix: prefixController.text.trim().isNotEmpty ? prefixController.text.trim() : null,
-        suffix: suffixController.text.trim().isNotEmpty ? suffixController.text.trim() : null,
-        handPosition: handPositionController.text.trim().isNotEmpty ? handPositionController.text.trim() : null,
-        legPosition: legPositionController.text.trim().isNotEmpty ? legPositionController.text.trim() : null,
-        positionInBar: positionInBarController.text.trim().isNotEmpty ? positionInBarController.text.trim() : null,
+        prefix: prefixController.text
+            .trim()
+            .isNotEmpty ? prefixController.text.trim() : null,
+        suffix: suffixController.text
+            .trim()
+            .isNotEmpty ? suffixController.text.trim() : null,
+        handPosition: handPositionController.text
+            .trim()
+            .isNotEmpty ? handPositionController.text.trim() : null,
+        legPosition: legPositionController.text
+            .trim()
+            .isNotEmpty ? legPositionController.text.trim() : null,
+        positionInBar: positionInBarController.text
+            .trim()
+            .isNotEmpty ? positionInBarController.text.trim() : null,
         apparatus: apparatusController.text.trim(),
         level: level,
-        poseType: poseTypeController.text.trim().isNotEmpty ? poseTypeController.text.trim() : null,
+        poseType: poseTypeController.text
+            .trim()
+            .isNotEmpty ? poseTypeController.text.trim() : null,
         description: descriptionController.text.trim(),
         teachingCues: teachingCuesController.text.trim(),
         safetyCues: safetyCuesController.text.trim(),
         progressions: progressionsController.text.trim(),
-        modifications: modificationsController.text.trim().isNotEmpty ? modificationsController.text.trim() : null,
-        commonErrors: commonErrorsController.text.trim().isNotEmpty ? commonErrorsController.text.trim() : null,
-        primaryMediaId: Constants.missingImageId, // TODO this should be a nicer image than the broken one... it should be a placeholder image
+        modifications: modificationsController.text
+            .trim()
+            .isNotEmpty ? modificationsController.text.trim() : null,
+        commonErrors: commonErrorsController.text
+            .trim()
+            .isNotEmpty ? commonErrorsController.text.trim() : null,
+        primaryMediaId: Constants.missingImageId,
+        // TODO this should be a nicer image than the broken one... it should be a placeholder image
         primaryMediaPath: Constants.missingImagePath,
         thumbnailMediaId: Constants.missingImageId,
         thumbnailMediaPath: Constants.missingImagePath,
@@ -167,7 +198,8 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
         listener: (context, state) {
           if (state is PoseError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("There was an error adding the pose")),
+              const SnackBar(
+                  content: Text("There was an error adding the pose")),
             );
           } else if (state is AddNewPoseSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -191,56 +223,20 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                   children: [
 
                     /// Basic Info
-                    ExpansionTile(
+                    ExpansionTile( // TODO make a custom expansion tile widget so the text style is consistent.
                       initiallyExpanded: true,
                       title: const Text(
-                        "Basic Info",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold
-                        )
+                          "Basic Info",
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold
+                          )
                       ),
                       children: [
-                        const SizedBox(height: 5),
-
-                        // Name
-                        TextFormField(
-                          controller: nameController,
-                          decoration: const InputDecoration(
-                            labelText: "Pose Name",
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return "Pose Name cannot be empty";
-                            }
-                            return null;
-                          },
-                        ),
+                        TextInputField("Pose Name", nameController, required: true),
+                        DropdownField("Apparatus", apparatusController, Constants.apparatusOptions),
+                        IntInputField("Level", levelController,),
                         const SizedBox(height: 10),
-
-                        // Apparatus
-                        _dropdownField(
-                          label: "Apparatus",
-                          controller: apparatusController,
-                          options: Constants.apparatusOptions,
-                        ),
-                        const SizedBox(height: 10),
-
-
-                        // Level
-                        TextFormField(
-                          controller: levelController,
-                          decoration: const InputDecoration(labelText: 'Level'),
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value != null && value.trim().isNotEmpty) {
-                              final parsed = int.tryParse(value);
-                              if (parsed == null) return 'Please enter a valid number';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height:10),
                       ],
                     ),
 
@@ -255,34 +251,14 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                       ),
                       initiallyExpanded: false,
                       children: [
-                        const SizedBox(height: 5),
-
                         // const Text( // TODO replace these "subtitles" with info buttons that show info when hover for each entry field.
                         //   "Optional details",
                         //   style: TextStyle(fontSize: 14),
                         // ),
 
-                        // Alternate Name
-                        TextFormField(
-                          controller: altNameController,
-                          decoration: const InputDecoration(labelText: "Alternate Name"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Description
-                        TextFormField(
-                          controller: descriptionController,
-                          maxLines: 2,
-                          decoration: const InputDecoration(labelText: "Description"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Pose Type
-                        _dropdownField(
-                          label: "Pose Type",
-                          controller: poseTypeController,
-                          options: ["static", "dynamic"],
-                        ),
+                        TextInputField("Alternative Name", altNameController),
+                        TextInputField("Description", descriptionController, maxLines: 2),
+                        DropdownField("Pose Type", poseTypeController, Constants.poseTypeOptions),
                         const SizedBox(height: 10),
                       ],
                     ),
@@ -298,47 +274,11 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                       ),
                       initiallyExpanded: false,
                       children: [
-                        const SizedBox(height: 5),
-
-                        // Teaching Cues
-                        TextFormField(
-                          controller: teachingCuesController,
-                          maxLines: 2,
-                          decoration: const InputDecoration(labelText: "Teaching Cues"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Safety Cues
-                        TextFormField(
-                          controller: safetyCuesController,
-                          maxLines: 2,
-                          decoration: const InputDecoration(labelText: "Safety Cues"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Progressions
-                        TextFormField(
-                          controller: progressionsController,
-                          maxLines: 2,
-                          decoration: const InputDecoration(labelText: "Progressions"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Modifications
-                        TextFormField(
-                          controller: modificationsController,
-                          maxLines: 2,
-                          decoration: const InputDecoration(labelText: "Modifications"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Common Errors
-                        TextFormField(
-                          controller: commonErrorsController,
-                          maxLines: 2,
-                          decoration: const InputDecoration(labelText: "Common Errors"),
-                        ),
-                        const SizedBox(height: 10),
+                        TextInputField("Teaching Cues", teachingCuesController, maxLines: 2),
+                        TextInputField("Safety Cues", safetyCuesController, maxLines: 2),
+                        TextInputField("Progressions", progressionsController, maxLines: 2),
+                        TextInputField("Modifications", modificationsController, maxLines: 2),
+                        TextInputField("Common Errors", commonErrorsController, maxLines: 2),
                       ],
                     ),
 
@@ -355,6 +295,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                       children: [
                         const SizedBox(height: 5),
 
+// TODO make a widget for this or use the "info row" and wrap it in a center, and have a optional color manual override.
                         // Generated Slug
                         Text.rich(
                           TextSpan(
@@ -380,48 +321,15 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
                           ),
                         ),
 
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
 
-                        // Base Name
-                        TextFormField(
-                          controller: baseNameController,
-                          decoration: const InputDecoration(labelText: "Base Name"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Prefix
-                        TextFormField(
-                          controller: prefixController,
-                          decoration: const InputDecoration(labelText: "Prefix"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Suffix
-                        TextFormField(
-                          controller: suffixController,
-                          decoration: const InputDecoration(labelText: "Suffix"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Hand Position
-                        TextFormField(
-                          controller: handPositionController,
-                          decoration: const InputDecoration(labelText: "Hand Position"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Leg Position
-                        TextFormField(
-                          controller: legPositionController,
-                          decoration: const InputDecoration(labelText: "Leg Position"),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Position in Bar
-                        TextFormField(
-                          controller: positionInBarController,
-                          decoration: const InputDecoration(labelText: "Position in Bar"),
-                        ),
+                        TextInputField("Base Name", baseNameController),
+                        TextInputField("Prefix", prefixController),
+                        TextInputField("Suffix", suffixController),
+                        TextInputField("Hand Position", handPositionController),
+                        TextInputField("Leg Position", legPositionController),
+                        TextInputField("Position in Bar", positionInBarController),
+                        TextInputField("Pose Type", poseTypeController),
                         const SizedBox(height: 10),
 
                       ],
@@ -445,46 +353,5 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
 
 
   // TODO should have used this instead of the TextFormField - move this to a shared widget.
-  Widget _inputField(String label, TextEditingController controller,
-      {int maxLines = 1, bool required = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: TextFormField(
-        controller: controller,
-        maxLines: maxLines,
-        decoration: InputDecoration(hintText: label),
-        validator: (value) {
-          if (required && (value == null || value.trim().isEmpty)) {
-            return "$label cannot be empty";
-          }
-          return null;
-        },
-      ),
-    );
-  }
 
-  Widget _dropdownField({
-    required String label,
-    required TextEditingController controller,
-    required List<String> options,
-  }) {
-    return DropdownButtonFormField<String>(
-      value: controller.text.isNotEmpty ? controller.text : null,
-      onChanged: (String? newValue) {
-        if (newValue != null) {
-          controller.text = newValue;
-        }
-      },
-      items: options.map((lowerValue) {
-        final displayLabel = lowerValue[0].toUpperCase() + lowerValue.substring(1);
-        return DropdownMenuItem(
-          value: lowerValue,
-          child: Text(displayLabel),
-        );
-      }).toList(),
-      decoration: InputDecoration(labelText: label),
-      validator: (value) =>
-      value == null || value.isEmpty ? 'Please select $label' : null,
-    );
-  }
 }

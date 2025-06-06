@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/pose/presentation/pages/pose_edit_page.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/shared/features/media_display/widgets/formatted_cached_network_image.dart';
@@ -6,6 +7,7 @@ import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
 import '../../../../shared/widgets/info_row.dart';
+import '../../../../shared/widgets/section_card.dart';
 
 
 class PoseViewPage extends StatelessWidget {
@@ -22,18 +24,14 @@ class PoseViewPage extends StatelessWidget {
       appBar: AppBar(
         leading: const SmartBackButton(),
         title: const Text("Pose Details") ,  // overflow: TextOverflow.ellipsis,),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.edit),
-        //     onPressed: () {
-        //       Navigator.push(
-        //           context,
-        //           PoseEditDetailsPage.route(widget.pose)
-        //       );
-        //     },
-        //     tooltip: 'Edit this pose',
-        //   ),
-        //   ] // TODO ADD EDITING - only allow editing if the pose was created by the user.
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+            },
+            tooltip: 'Edit this pose',
+          ),
+        ] // TODO ADD EDITING - only allow editing if the pose was created by the user.
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -66,29 +64,48 @@ class PoseViewPage extends StatelessWidget {
             const SizedBox(height: 20),
 
             /// Basic Info
-            // TODO Make this a small subtitle right under the title instead of taking up two rows like "Lyra | Level 1"
-            InfoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
-            InfoRow("Level:", "Level ${pose.level}"),
+            SectionCard(
+              title: "Basic Info",
+              children: [
+                InfoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
+                InfoRow("Level:", "Level ${pose.level}"),
+              ],
+            ),
 
-            /// Details
-            const Divider(),
-            InfoRow("Description:", pose.description),
-            InfoRow("Teaching Cues:", pose.teachingCues),
-            InfoRow("Safety Cues:", pose.safetyCues),
-            InfoRow("Progressions:", pose.progressions),
-            InfoRow("Modifications:", pose.modifications),
-            InfoRow("Common Errors:", pose.commonErrors),
+            /// Additional Details
+            SectionCard(
+              title: "Additional Details",
+              children: [
+                InfoRow("Alternative Name:", pose.altName),
+                InfoRow("Description:", pose.description),
+                InfoRow("Pose Type:", pose.poseType),
+              ],
+            ),
 
-            /// Positional tags
-            const Divider(),
-            // TODO Add a expandable card for "Advanced Tagging"
-            InfoRow("Prefix:", pose.prefix),
-            InfoRow("Suffix:", pose.suffix),
-            InfoRow("Base Name:", pose.baseName),
-            InfoRow("Hand Position:", pose.handPosition),
-            InfoRow("Leg Position:", pose.legPosition),
-            InfoRow("Position in Hoop:", pose.positionInBar),
-            // TODO where should "alternative names" go?
+            /// Notes
+            SectionCard(
+              title: "Notes",
+              children: [
+                InfoRow("Teaching Cues:", pose.teachingCues),
+                InfoRow("Safety Cues:", pose.safetyCues),
+                InfoRow("Progressions:", pose.progressions),
+                InfoRow("Modifications:", pose.modifications),
+                InfoRow("Common Errors:", pose.commonErrors),
+              ],
+            ),
+
+            /// Advanced Tagging
+            SectionCard(
+              title: "Advanced Tagging",
+              children: [
+                InfoRow("Prefix:", pose.prefix),
+                InfoRow("Base Name:", pose.baseName),
+                InfoRow("Suffix:", pose.suffix),
+                InfoRow("Hand Position:", pose.handPosition),
+                InfoRow("Leg Position:", pose.legPosition),
+                InfoRow("Position in Hoop:", pose.positionInBar),
+              ],
+            ),
           ],
         ),
       ),

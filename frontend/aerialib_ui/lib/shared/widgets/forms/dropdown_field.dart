@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+
+class DropdownField extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final List<String> options;
+
+  const DropdownField(
+    this.label,
+    this.controller,
+    this.options, {
+        super.key,
+    }
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+      child: DropdownButtonFormField<String>(
+        value: controller.text.isNotEmpty ? controller.text : null,
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            controller.text = newValue;
+          }
+        },
+        items: options.map((lowerValue) {
+          final displayLabel =
+              lowerValue[0].toUpperCase() + lowerValue.substring(1);
+          return DropdownMenuItem(
+            value: lowerValue,
+            child: Text(displayLabel),
+          );
+        }).toList(),
+        decoration: InputDecoration(labelText: label),
+        validator: (value) =>
+        value == null || value.isEmpty ? 'Please select $label' : null,
+      ),
+    );
+  }
+}
