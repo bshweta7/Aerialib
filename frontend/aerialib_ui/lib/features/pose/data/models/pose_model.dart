@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:frontend/core/constants/constants.dart';
 
 class PoseModel {
@@ -78,43 +79,57 @@ class PoseModel {
   });
 
   factory PoseModel.fromMap(Map<String, dynamic> map) {
-    return PoseModel(
-      id: map['id'] ?? '',
+    try {
+      return PoseModel(
+        id: map['id'] ?? '',
 
-      slug: map['slug'] ?? '',
-      displayName: map['display_name'] ?? map['displayName'] ?? '',
-      altName: map['alt_name'],
+        slug: map['slug'] ?? '',
+        displayName: map['display_name'] ?? map['displayName'] ?? '',
+        altName: map['alt_name'],
 
-      baseName: map['base_name'] ?? '',
-      prefix: map['prefix'],
-      suffix: map['suffix'],
+        baseName: map['base_name'] ?? '',
+        prefix: map['prefix'],
+        suffix: map['suffix'],
 
-      handPosition: map['hand_position'],
-      legPosition: map['leg_position'],
-      positionInBar: map['position_in_bar'],
+        handPosition: map['hand_position'],
+        legPosition: map['leg_position'],
+        positionInBar: map['position_in_bar'],
 
-      apparatus: map['apparatus'] ?? '',
-      level: map['level'],
-      poseType: map['pose_type'],
+        apparatus: map['apparatus'] ?? '',
+        level: map['level'],
+        poseType: map['pose_type'],
 
-      description: map['description'],
-      teachingCues: map['teaching_cues'] ?? map['teachingCues'],
-      safetyCues: map['safety_cues'] ?? map['safetyCues'],
-      progressions: map['progressions'],
-      modifications: map['modifications'],
-      commonErrors: map['common_errors'],
+        description: map['description'],
+        teachingCues: map['teaching_cues'] ?? map['teachingCues'],
+        safetyCues: map['safety_cues'] ?? map['safetyCues'],
+        progressions: map['progressions'],
+        modifications: map['modifications'],
+        commonErrors: map['common_errors'],
 
-      primaryMediaId: map['primary_media_id'] ?? map['primaryMediaId'] ?? Constants.missingImageId,
-      primaryMediaPath: map['primary_media_path'] ?? map['primaryMediaPath'] ?? Constants.missingImagePath,
-      thumbnailMediaId: map['thumbnail_media_id'] ?? map['thumbnailMediaId'],
-      thumbnailMediaPath: map['thumbnail_media_path'] ?? map['thumbnailMediaPath'],
+        // TODO change this to placeholder image
+        primaryMediaId: map['primary_media_id'] ?? map['primaryMediaId'] ??
+            Constants.missingImageId,
+        primaryMediaPath: map['primary_media_path'] ??
+            map['primaryMediaPath'] ?? Constants.missingImagePath,
+        thumbnailMediaId: map['thumbnail_media_id'] ??
+            Constants.missingImageId,
+        thumbnailMediaPath: map['thumbnail_media_path'] ?? Constants.missingImagePath,
 
-      createdBy: map['created_by'] ?? map['createdBy'] ?? '',
-      updatedBy: map['updated_by'] ?? map['updatedBy'],
-      createdAt: DateTime.parse(map['created_at'] ?? map['createdAt']),
-      updatedAt: DateTime.parse(map['updated_at'] ?? map['updatedAt']),
-      isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
-    );
+        createdBy: map['created_by'] ?? map['createdBy'] ?? '',
+        updatedBy: map['updated_by'] ?? map['updatedBy'],
+        createdAt: (map['created_at'] ?? map['createdAt']) != null
+            ? DateTime.parse(map['created_at'] ?? map['createdAt'])
+            : DateTime.now(),
+
+        updatedAt: (map['updated_at'] ?? map['updatedAt']) != null
+            ? DateTime.parse(map['updated_at'] ?? map['updatedAt'])
+            : DateTime.now(),
+        isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
+      );
+    } catch (e) {
+      log("[PoseModel] Failed parsing map: $map\nError: $e");
+      rethrow;
+    }
   }
 
   // TODO is toMap supposed to just be camelcase?

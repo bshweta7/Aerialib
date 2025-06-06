@@ -61,8 +61,8 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
         const query = sql`
             SELECT
                 poses.*,
-                thumbnail_media.media_path AS thumbnail_path,
-                full_media.media_path AS media_path
+                thumbnail_media.media_path AS thumbnail_media_path,
+                full_media.media_path AS primary_media_path
             FROM poses
                      LEFT JOIN media
                 AS thumbnail_media
