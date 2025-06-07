@@ -27,7 +27,11 @@ poseRouter.post("/", auth, async (req: AuthRequest, res) => {
             return; // TODO - cleaner to update AuthRequest and return every res.status - i.e. return res.status... instead of res.status; return;
         }
 
-        const newPose: NewPose = req.body;
+        const newPose: NewPose = {
+            ...req.body,
+            createdAt: new Date(req.body.createdAt),
+            updatedAt: new Date(req.body.updatedAt),
+        };
         console.log(newPose);
 
         const [pose] = await db.insert(posesTable).values(newPose).returning();

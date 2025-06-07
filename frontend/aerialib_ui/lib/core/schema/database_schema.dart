@@ -101,26 +101,28 @@ const String transitionTable = "transitions";
 const String createTransitionTable = '''
   CREATE TABLE $transitionTable (
     id TEXT PRIMARY KEY,
-    
     from_pose_id TEXT NOT NULL,
-    to_pose_id TEXT NOT NULL, 
-    level REAL NOT NULL,
+    to_pose_id TEXT NOT NULL,
     
     name TEXT,
+    apparatus TEXT NOT NULL,
+    level INTEGER,
+    transition_type TEXT,
+
     description TEXT,
     teaching_cues TEXT,
     safety_cues TEXT,
     progressions TEXT,
-    
-    transition_type TEXT,
-    starting_grip TEXT,
-    ending_grip TEXT,
-    
+    modifications TEXT,
+    common_errors TEXT,
+
+    primary_media_id TEXT,
+
     created_by TEXT NOT NULL,
     updated_by TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    
+
     is_synced INTEGER NOT NULL
   )
 ''';
