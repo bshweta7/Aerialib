@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 const appTextTheme = TextTheme(
   headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
   headlineMedium: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-  bodyLarge: TextStyle(fontSize: 16),
-  bodyMedium: TextStyle(fontSize: 14),
+  bodyLarge: TextStyle(fontSize: 20),
+  bodyMedium: TextStyle(fontSize: 16),
+  labelMedium: TextStyle(fontSize: 20),
   labelSmall: TextStyle(fontSize: 12, color: Colors.grey),
 );
 

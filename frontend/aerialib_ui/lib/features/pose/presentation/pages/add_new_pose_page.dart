@@ -303,9 +303,9 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
 
                     ElevatedButton(
                       onPressed: createNewPose,
-                      child: const Text(
+                      child: Text(
                         "Submit",
-                        style: TextStyle(fontSize: 24),
+                        style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
                   ],

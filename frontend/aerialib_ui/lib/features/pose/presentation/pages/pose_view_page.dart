@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
-import 'package:frontend/shared/features/media_display/widgets/formatted_cached_network_image.dart';
+import 'package:frontend/shared/widgets/media_display/formatted_cached_network_image.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/constants.dart';
 import '../../../../shared/widgets/info_display/info_row.dart';
 import '../../../../shared/widgets/info_display/section_card.dart';
+import '../../../../shared/widgets/media_display/horizontal_media_gallery.dart';
+import '../../../../shared/widgets/media_display/media_item.dart';
 
 
 class PoseViewPage extends StatelessWidget {
@@ -18,6 +21,12 @@ class PoseViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final mediaItems = [
+      MediaItem(url: 'default/flow_placeholders/peach.png'),
+      MediaItem(url: 'default/flow_placeholders/mint.png'),
+      MediaItem(url: pose.primaryMediaPath),
+      // MediaItem(url: pose.primaryMediaPath),
+    ];
 
     return MainScaffold(
       currentIndex: 2,
@@ -47,12 +56,14 @@ class PoseViewPage extends StatelessWidget {
             Center(
               child: Text(
                 pose.displayName,
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.headlineLarge
               ),
             ),
             const SizedBox(height: 10),
 
             /// Media preview
+            HorizontalMediaGallery(mediaList: mediaItems),
+
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

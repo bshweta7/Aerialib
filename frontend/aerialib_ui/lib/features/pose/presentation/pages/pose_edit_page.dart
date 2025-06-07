@@ -202,6 +202,8 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                     ),
                   ),
 
+                // TODO edit image
+
                 ExpandableCard(
                   title: "Basic Info",
                   initiallyExpanded: true,
@@ -252,17 +254,22 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                 if (isOwner)
                   ElevatedButton(
                     onPressed: _handleUpdatePose,
-                    child: const Text("Save Changes", style: TextStyle(fontSize: 20)),
+                    child: Text(
+                      "Save Changes",
+                      style: Theme.of(context).textTheme.labelMedium
+                    )
                   ),
                   const SizedBox(height: 10),
+                if (isOwner)
                   ElevatedButton(
                     onPressed: _handleDeletePose,
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.red.shade200),
+                      backgroundColor: MaterialStateProperty.all(Colors.red.shade300),
+                      foregroundColor: MaterialStateProperty.all(Colors.red.shade900),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Delete Pose",
-                      style: TextStyle(fontSize: 20),
+                      style: Theme.of(context).textTheme.labelMedium
                     ),
                   ),
 

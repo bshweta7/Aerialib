@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:frontend/core/constants/constants.dart';
@@ -10,8 +12,8 @@ class FormattedCachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fullUrl = Constants.mediaUrlPrefix + mediaUrl;
-    // log('[FormattedCachedNetworkImage] Loading URL: $fullUrl');
+    final fullUrl = '${Constants.mediaUrlPrefix}/$mediaUrl';
+    log('[FormattedCachedNetworkImage] Loading URL: $fullUrl');
 
     return CachedNetworkImage(
       imageUrl: fullUrl,

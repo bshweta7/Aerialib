@@ -250,14 +250,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     child: Stack(
                       children: [
                         if (filteredMediaIcons.isEmpty)
-                          const Center(
+                          Center(
                             child: Padding(
-                              padding: EdgeInsets.only(top: 40),
+                              padding: const EdgeInsets.symmetric(vertical: 40,horizontal: 20),
                               child: Text(
                                 "No poses, try changing the filters",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black38),
+                                style: Theme.of(context).textTheme.bodyMedium
                               ),
                             ),
                           )
