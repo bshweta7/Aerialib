@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/shared/widgets/media_display/media_item.dart';
-import 'package:frontend/shared/widgets/media_display/formatted_cached_network_image.dart';
-import 'package:frontend/shared/widgets/media_display/formatted_video_player.dart';
+import 'package:frontend/shared/widgets/media_display/general/media_item.dart';
+import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
+import 'package:frontend/shared/widgets/media_display/general/formatted_video_player.dart';
 
-import 'formatted_cached_network_image.dart';
-
-class HorizontalMediaGallery extends StatefulWidget {
+class HorizontalCoverMediaGallery extends StatefulWidget {
   final List<MediaItem> mediaList;
 
-  const HorizontalMediaGallery({super.key, required this.mediaList});
+  const HorizontalCoverMediaGallery({super.key, required this.mediaList});
 
   @override
-  State<HorizontalMediaGallery> createState() => _HorizontalMediaGalleryState();
+  State<HorizontalCoverMediaGallery> createState() => _HorizontalCoverMediaGalleryState();
 }
 
-class _HorizontalMediaGalleryState extends State<HorizontalMediaGallery> {
+class _HorizontalCoverMediaGalleryState extends State<HorizontalCoverMediaGallery> {
   late final PageController _controller;
   int _currentIndex = 0;
 
@@ -35,7 +33,13 @@ class _HorizontalMediaGalleryState extends State<HorizontalMediaGallery> {
     if (item.url.toLowerCase().endsWith('.mp4')) {
       return FormattedVideoPlayer(videoUrl: item.url); // TODO Verify this works
     } else {
-      return FormattedCachedNetworkImage(item.url);
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: FormattedCachedNetworkImage(item.url),
+        ),
+      );
     }
   }
 

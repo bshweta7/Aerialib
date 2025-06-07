@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
-import 'package:frontend/shared/widgets/media_display/formatted_cached_network_image.dart';
+import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 import 'package:go_router/go_router.dart';
@@ -9,8 +9,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../shared/widgets/info_display/info_row.dart';
 import '../../../../shared/widgets/info_display/section_card.dart';
-import '../../../../shared/widgets/media_display/horizontal_media_gallery.dart';
-import '../../../../shared/widgets/media_display/media_item.dart';
+import '../../../../shared/widgets/media_display/horizontal_cover_media_gallery.dart';
+import '../../../../shared/widgets/media_display/general/media_item.dart';
 
 
 class PoseViewPage extends StatelessWidget {
@@ -62,7 +62,7 @@ class PoseViewPage extends StatelessWidget {
             const SizedBox(height: 10),
 
             /// Media preview
-            HorizontalMediaGallery(mediaList: mediaItems),
+            HorizontalCoverMediaGallery(mediaList: mediaItems),
 
             Card(
               elevation: 4,

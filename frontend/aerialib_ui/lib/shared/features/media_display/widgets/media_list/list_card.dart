@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../widgets/media_display/formatted_cached_network_image.dart';
+import '../../../../widgets/media_display/general/formatted_cached_network_image.dart';
 
 class ListCard extends StatelessWidget {
   // Creates tappable list with image, name, subtitle
