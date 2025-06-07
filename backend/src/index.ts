@@ -12,6 +12,7 @@ import tagRouter from "./routes/tags";
 
 // Load values from .env file
 import 'dotenv/config'
+import transitionRouter from "./routes/transitions";
 
 
 const app = express(); // TODO should this be let instead of const
@@ -32,6 +33,7 @@ app.use("/flow_poses", flowPoseRouter); // TODO consistent routes - pose, flow, 
 app.use("/feedback", feedbackRouter);
 app.use("/music", musicRouter);
 app.use("/tags", tagRouter);
+app.use("/transitions", transitionRouter);
 
 // create rest api
 app.get("/", (req, res) => {

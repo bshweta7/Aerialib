@@ -29,6 +29,13 @@
       "when": 1749150696838,
       "tag": "0003_update_pose_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1749232512399,
+      "tag": "0004_create_transitions_table",
+      "breakpoints": true
     }
   ]
 }

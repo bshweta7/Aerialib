@@ -51,7 +51,7 @@ export type NewMedia = typeof mediaTable.$inferInsert;
 export const posesTable = pgTable("poses", {
     id: uuid("id").primaryKey().defaultRandom(),
 
-    slug: text("pose_slug").notNull(),
+    slug: text("slug").notNull(),
     displayName: text("display_name").notNull(),
     altName: text("alt_name"),
 
@@ -90,20 +90,22 @@ export type NewPose = typeof posesTable.$inferInsert;
 /* TRANSITIONS */
 export const transitionsTable = pgTable("transitions", {
     id: uuid("id").primaryKey().defaultRandom(),
-
     fromPoseId: uuid("from_pose_id").notNull().references(() => posesTable.id),
     toPoseId: uuid("to_pose_id").notNull().references(() => posesTable.id),
-    level: doublePrecision("level").notNull(),
 
     name: text("name"),
+    apparatus: text("apparatus").notNull(), // TODO generated from frontend (based on which poses are in it (“mixed” if they dont match))
+    level: integer("level"),
+    transitionType: text("transition_type"),
+
     description: text("description"),
     teachingCues: text("teaching_cues"),
     safetyCues: text("safety_cues"),
     progressions: text("progressions"),
+    modifications: text("modifications"),
+    commonErrors: text("common_errors"),
 
-    transitionType: text("transition_type"),
-    startingGrip: text("starting_grip"),
-    endingGrip: text("ending_grip"),
+    primaryMediaId: uuid("primary_media_id").references(() => mediaTable.id),
 
     createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     updatedBy: uuid("updated_by").references(() => usersTable.id),

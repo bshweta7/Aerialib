@@ -1,9 +1,8 @@
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
-import {mediaTable, NewFlow, NewPose, posesTable} from "../db/schema";
+import { posesTable, NewPose} from "../db/schema";
 import { db } from "../db";
 import { eq, sql } from "drizzle-orm";
-import mediaRouter from "./media";
 
 const poseRouter = Router();
 
