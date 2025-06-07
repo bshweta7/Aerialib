@@ -1,6 +1,14 @@
 // lib/core/theme/app_theme.dart
 import 'package:flutter/material.dart';
 
+const appTextTheme = TextTheme(
+  headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+  headlineMedium: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+  bodyLarge: TextStyle(fontSize: 16),
+  bodyMedium: TextStyle(fontSize: 14),
+  labelSmall: TextStyle(fontSize: 12, color: Colors.grey),
+);
+
 ThemeData getLightTheme() {
   return ThemeData(
     useMaterial3: true,
@@ -11,6 +19,7 @@ ThemeData getLightTheme() {
       primary: const Color(0xFFB39DDB), // Lavender
       secondary: const Color(0xFF80CBC4), // Muted Teal
     ),
+    textTheme: appTextTheme,
     scaffoldBackgroundColor: const Color(0xFFE4E2ED),
     fontFamily: "Cera Pro",
     appBarTheme: const AppBarTheme(
@@ -117,6 +126,7 @@ ThemeData getDarkTheme() {
   return ThemeData(
     brightness: Brightness.dark,
     useMaterial3: true,
+    textTheme: appTextTheme,
     colorScheme: ColorScheme.fromSeed(
       seedColor: const Color(0xFF9575CD), // Dark lavender
       brightness: Brightness.dark,

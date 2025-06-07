@@ -10,8 +10,8 @@ import 'package:frontend/features/tags/presentation/cubit/tag_cubit.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:frontend/core/main/repository_providers.dart';
-import 'package:frontend/core/main/app_theme.dart';
+import 'package:frontend/core/services/repository_providers.dart';
+import 'package:frontend/core/constants/app_theme.dart';
 import 'package:frontend/core/router/app_router.dart';
 
 import 'package:frontend/core/services/connectivity_service.dart';
