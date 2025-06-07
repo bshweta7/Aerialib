@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/features/pose/presentation/pages/pose_edit_page.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/shared/features/media_display/widgets/formatted_cached_network_image.dart';
@@ -26,7 +25,6 @@ class PoseViewPage extends StatelessWidget {
         leading: const SmartBackButton(),
         title: const Text("Pose Details") ,  // overflow: TextOverflow.ellipsis,),
         actions: [
-          // TODO if the user did not create the pose, they should still be able to edit it but their changes will only show to them (need new table, maybe can use tag table or make new user_mod table)
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
@@ -38,7 +36,7 @@ class PoseViewPage extends StatelessWidget {
             },
             tooltip: 'Edit this pose',
           ),
-        ] // TODO ADD EDITING - only allow editing if the pose was created by the user.
+        ]
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

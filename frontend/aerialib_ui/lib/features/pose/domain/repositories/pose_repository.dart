@@ -121,12 +121,7 @@ class PoseRepository {
     }
   }
 
-  /// Delete locally
-  Future<void> deletePoseLocal(String id) async {
-    await localDataSource.deletePose(id);
-  }
-
-  /// Delete Pose Remote Data Source
+  /// Delete Pose
   Future<void> deletePoseRemote({
     required String id,
     required String token,

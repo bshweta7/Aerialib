@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/shared/helpers/validators.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
@@ -12,6 +11,9 @@ import 'package:frontend/shared/widgets/info_display/expandable_card.dart';
 import 'package:frontend/shared/widgets/input_fields/dropdown_field.dart';
 import 'package:frontend/shared/widgets/input_fields/int_input_field.dart';
 import 'package:frontend/shared/widgets/input_fields/text_input_field.dart';
+
+import '../../../../shared/features/navigation/widgets/smart_back_button.dart';
+import '../../../../shared/widgets/confirmation_dialog.dart';
 
 class PoseEditDetailsPage extends StatefulWidget {
   final PoseEntity pose;
@@ -130,8 +132,44 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
 
     await context.read<PosesCubit>().getAllPoses(token: user.user.token);
 
-    context.goNamed('pose-view', pathParameters: {'poseId': updatedPose.id}, queryParameters: {'from': 'pose-edit'});
+    context.goNamed(
+        'pose-view',
+        pathParameters: {'poseId': updatedPose.id},
+        queryParameters: {'from': 'pose-edit'}
+    );
   }
+
+  Future<void> _handleDeletePose() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => const ConfirmationDialog(
+        title: "Confirm Delete",
+        content: "Are you sure you want to delete this pose? This action cannot be undone.",
+        confirmText: "Delete",
+        cancelText: "Cancel",
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    final state = context.read<AuthCubit>().state;
+    if (state is! AuthLoggedIn) return;
+
+    try {
+      await context.read<PosesCubit>().deletePose(
+        poseId: widget.pose.id,
+        token: state.user.token,
+      );
+      if (mounted) {
+        context.goNamed('pose-library');
+      }
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to delete pose")),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +179,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
     return MainScaffold(
       currentIndex: 2,
       appBar: AppBar(
+        leading: const SmartBackButton(),
         title: const Text('Edit Pose'),
         actions: isOwner
             ? [IconButton(icon: const Icon(Icons.save), onPressed: _handleUpdatePose)]
@@ -215,6 +254,18 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
                     onPressed: _handleUpdatePose,
                     child: const Text("Save Changes", style: TextStyle(fontSize: 20)),
                   ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _handleDeletePose,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.red.shade200),
+                    ),
+                    child: const Text(
+                      "Delete Pose",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+
               ],
             ),
           ),

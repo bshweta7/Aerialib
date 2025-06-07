@@ -78,7 +78,7 @@ class PoseRemoteDataSource {
     required String token,
   }) async {
     final response = await httpService.delete(
-      path: "/poses/$poseId",
+      path: "/poses/delete/$poseId",
       token: token,
     );
 

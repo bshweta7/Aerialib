@@ -97,20 +97,24 @@ class PosesCubit extends Cubit<PosesState> {
     }
   }
 
-  /// Delete a pose locally
-  Future<void> deletePoseLocal(String poseId) async {
+  /// Delete a pose
+  Future<void> deletePose({
+    required String poseId,
+    required String token,
+  }) async {
     try {
       emit(const PoseLoading());
-      await _poseRepository.deletePoseLocal(poseId);
+      await _poseRepository.deletePoseRemote(id: poseId, token: token);
       emit(DeletePoseSuccess(poseId));
+
       final allPoses = await _poseRepository.getAllPoses();
       emit(GetPosesSuccess(allPoses));
-
     } catch (e) {
       log('[PosesCubit] Deleting error: $e');
       emit(PoseError('[PosesCubit] Deleting error: $e'));
     }
   }
+
 
   // TODO add delete Pose Remote function
 
