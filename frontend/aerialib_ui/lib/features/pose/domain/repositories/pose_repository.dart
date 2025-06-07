@@ -97,23 +97,28 @@ class PoseRepository {
       log("[PoseRepository] Remote sync failed. Sync status not updated.");
     }
   }
-  
-  /// Update a pose remotely and locally
+
+  /// Update a pose remotely and locally using sync
   Future<void> updatePose({
     required PoseEntity updatedPose,
     required String token,
   }) async {
     final poseModel = PoseMapper.entityToModel(updatedPose);
 
-    log("[PoseRepository] Updating pose remotely...");
-    final updatedModel = await remoteDataSource.updatePose(
-      updatedPose: poseModel,
+    log("[PoseRepository] Syncing updated pose remotely...");
+    final success = await remoteDataSource.syncPoses(
       token: token,
+      poses: [poseModel], // Just pass this one updated pose
     );
 
-    log("[PoseRepository] Updating pose locally...");
-    final syncedModel = updatedModel.copyWith(isSynced: 1);
-    await localDataSource.updatePose(syncedModel);
+    if (success) {
+      final syncedModel = poseModel.copyWith(isSynced: 1);
+      log("[PoseRepository] Updating pose locally...");
+      await localDataSource.updatePose(syncedModel);
+    } else {
+      log("[PoseRepository] Remote sync failed. Pose not updated locally.");
+      throw Exception("Failed to update pose remotely via sync.");
+    }
   }
 
   /// Delete locally

@@ -5,12 +5,14 @@ class DropdownField extends StatelessWidget {
   final TextEditingController controller;
   final List<String> options;
   final bool required;
+  final bool enabled;
 
   const DropdownField(
     this.label,
     this.controller,
     this.options, {
         this.required = false,
+        this.enabled = true,
         super.key,
     }
   );
@@ -21,11 +23,13 @@ class DropdownField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: DropdownButtonFormField<String>(
         value: controller.text.isNotEmpty ? controller.text : null,
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            controller.text = newValue;
+          onChanged: enabled
+              ? (String? newValue) {
+            if (newValue != null) {
+              controller.text = newValue;
+            }
           }
-        },
+              : null,
         items: options.map((lowerValue) {
           final displayLabel =
               lowerValue[0].toUpperCase() + lowerValue.substring(1);

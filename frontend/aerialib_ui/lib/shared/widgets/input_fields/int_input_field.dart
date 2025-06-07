@@ -5,12 +5,14 @@ class IntInputField extends StatelessWidget {
   final TextEditingController controller;
   final int maxLines;
   final bool required;
+  final bool enabled;
 
   const IntInputField(
       this.label,
       this.controller, {
         this.maxLines = 1,
         this.required = false,
+        this.enabled = true,
         super.key,
       }
       );
@@ -22,6 +24,7 @@ class IntInputField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(labelText: label),
+        enabled: enabled,
         maxLines: maxLines,
         keyboardType: TextInputType.number,
         validator: (value) {

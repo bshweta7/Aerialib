@@ -72,30 +72,6 @@ class PoseRemoteDataSource {
     }
   }
 
-  /// Update one pose
-  Future<PoseModel> updatePose({
-    required PoseModel updatedPose,
-    required String token,
-  }) async {
-    final body = updatedPose.toMapRemote(); // uses camelCase and omits local-only fields
-
-    final response = await httpService.put(
-      path: "/poses/update/${updatedPose.id}",
-      token: token,
-      body: body,
-    );
-
-    if (response.statusCode != 200) {
-      log("[PoseRemoteDataSource] Failed to update pose, status ${response.statusCode}");
-      log("[PoseRemoteDataSource] Body: ${response.body}");
-      throw Exception("[PoseRemoteDataSource] Failed to update pose remotely");
-    }
-
-    final json = jsonDecode(response.body);
-    log("[PoseRemoteDataSource] Pose updated successfully: ${updatedPose.id}");
-    return PoseModel.fromMap(json);
-  }
-
   /// Delete a pose
   Future<void> deletePose({
     required String poseId,
