@@ -64,15 +64,10 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
         const query = sql`
             SELECT
                 poses.*,
-                thumbnail_media.media_path AS thumbnail_media_path,
-                full_media.media_path AS primary_media_path
+                media.media_path AS primary_media_path
             FROM poses
-                     LEFT JOIN media
-                AS thumbnail_media
-                               ON poses.thumbnail_media_id = thumbnail_media.id
-                     LEFT JOIN media
-                AS full_media
-                               ON poses.primary_media_id = full_media.id
+            LEFT JOIN media AS media
+                ON poses.primary_media_id = media.id
             WHERE poses.created_by = ${userId}
                OR poses.created_by = ${adminId};
         `;
@@ -207,7 +202,6 @@ function buildPoseUpsertSet() {
         progressions: sql`excluded.progressions`,
         modifications: sql`excluded.modifications`,
         commonErrors: sql`excluded.common_errors`,
-        thumbnailId: sql`excluded.thumbnail_media_id`,
         primaryMediaId: sql`excluded.primary_media_id`,
         createdBy: sql`excluded.created_by`,
         updatedBy: sql`excluded.updated_by`,

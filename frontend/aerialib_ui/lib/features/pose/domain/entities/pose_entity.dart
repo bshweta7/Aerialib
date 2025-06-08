@@ -24,8 +24,6 @@ class PoseEntity {
   final String? commonErrors;
   final String primaryMediaId;
   final String primaryMediaPath;
-  final String thumbnailMediaId;
-  final String thumbnailMediaPath;
   final String createdBy;
   final String? updatedBy;
   final DateTime createdAt;
@@ -52,8 +50,6 @@ class PoseEntity {
     String? commonErrors,
     required String primaryMediaId,
     required String primaryMediaPath,
-    required String thumbnailMediaId,
-    required String thumbnailMediaPath,
     required String createdBy,
     String? updatedBy,
     required DateTime createdAt,
@@ -94,8 +90,6 @@ class PoseEntity {
       commonErrors: commonErrors,
       primaryMediaId: primaryMediaId,
       primaryMediaPath: primaryMediaPath,
-      thumbnailMediaId: thumbnailMediaId,
-      thumbnailMediaPath: thumbnailMediaPath,
       createdBy: createdBy,
       updatedBy: updatedBy,
       createdAt: createdAt,
@@ -126,8 +120,6 @@ class PoseEntity {
     this.commonErrors,
     required this.primaryMediaId,
     required this.primaryMediaPath,
-    required this.thumbnailMediaId,
-    required this.thumbnailMediaPath,
     required this.createdBy,
     this.updatedBy,
     required this.createdAt,
@@ -157,8 +149,6 @@ class PoseEntity {
     String? commonErrors,
     String? primaryMediaId,
     String? primaryMediaPath,
-    String? thumbnailMediaId,
-    String? thumbnailMediaPath,
     String? createdBy,
     String? updatedBy,
     DateTime? createdAt,
@@ -187,8 +177,6 @@ class PoseEntity {
       commonErrors: commonErrors ?? this.commonErrors,
       primaryMediaId: primaryMediaId ?? this.primaryMediaId,
       primaryMediaPath: primaryMediaPath ?? this.primaryMediaPath,
-      thumbnailMediaId: thumbnailMediaId ?? this.thumbnailMediaId,
-      thumbnailMediaPath: thumbnailMediaPath ?? this.thumbnailMediaPath,
       createdBy: createdBy ?? this.createdBy,
       updatedBy: updatedBy ?? this.updatedBy,
       createdAt: createdAt ?? this.createdAt,
@@ -223,8 +211,6 @@ class PoseEntity {
               commonErrors == other.commonErrors &&
               primaryMediaId == other.primaryMediaId &&
               primaryMediaPath == other.primaryMediaPath &&
-              thumbnailMediaId == other.thumbnailMediaId &&
-              thumbnailMediaPath == other.thumbnailMediaPath &&
               createdBy == other.createdBy &&
               updatedBy == other.updatedBy &&
               createdAt == other.createdAt &&
@@ -254,8 +240,6 @@ class PoseEntity {
       commonErrors.hashCode ^
       primaryMediaId.hashCode ^
       primaryMediaPath.hashCode ^
-      thumbnailMediaId.hashCode ^
-      thumbnailMediaPath.hashCode ^
       createdBy.hashCode ^
       updatedBy.hashCode ^
       createdAt.hashCode ^

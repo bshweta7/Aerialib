@@ -168,8 +168,6 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
         primaryMediaId: Constants.missingImageId,
         // TODO this should be a nicer image than the broken one... it should be a placeholder image
         primaryMediaPath: Constants.missingImagePath,
-        thumbnailMediaId: Constants.missingImageId,
-        thumbnailMediaPath: Constants.missingImagePath,
         createdBy: user.user.id,
         updatedBy: user.user.id,
         createdAt: now,

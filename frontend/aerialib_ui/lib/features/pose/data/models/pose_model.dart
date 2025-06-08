@@ -30,8 +30,6 @@ class PoseModel {
 
   final String primaryMediaId;
   final String primaryMediaPath;
-  final String thumbnailMediaId;
-  final String thumbnailMediaPath;
 
   final String createdBy;
   final String? updatedBy;
@@ -68,8 +66,6 @@ class PoseModel {
 
     required this.primaryMediaId,
     required this.primaryMediaPath,
-    required this.thumbnailMediaId,
-    required this.thumbnailMediaPath,
 
     required this.createdBy,
     this.updatedBy,
@@ -110,9 +106,6 @@ class PoseModel {
           Constants.missingImageId,
       primaryMediaPath: map['primary_media_path'] ??
           map['primaryMediaPath'] ?? Constants.missingImagePath,
-      thumbnailMediaId: map['thumbnail_media_id'] ??
-          Constants.missingImageId,
-      thumbnailMediaPath: map['thumbnail_media_path'] ?? Constants.missingImagePath,
 
       createdBy: map['created_by'] ?? map['createdBy'] ?? '',
       updatedBy: map['updated_by'] ?? map['updatedBy'],
@@ -157,8 +150,6 @@ class PoseModel {
 
       'primary_media_id': primaryMediaId,
       'primary_media_path': primaryMediaPath,
-      'thumbnail_media_id': thumbnailMediaId,
-      'thumbnail_media_path': thumbnailMediaPath,
 
       'created_by': createdBy,
       'updated_by': updatedBy,
@@ -197,7 +188,6 @@ class PoseModel {
       'commonErrors': commonErrors,
 
       'primaryMediaId': primaryMediaId,
-      'thumbnailMediaId': thumbnailMediaId,
 
       'createdBy': createdBy,
       'updatedBy': updatedBy,
@@ -234,8 +224,6 @@ class PoseModel {
     String? commonErrors,
     String? primaryMediaId,
     String? primaryMediaPath,
-    String? thumbnailMediaId,
-    String? thumbnailMediaPath,
     String? createdBy,
     String? updatedBy,
     DateTime? createdAt,
@@ -264,8 +252,6 @@ class PoseModel {
       commonErrors: commonErrors ?? this.commonErrors,
       primaryMediaId: primaryMediaId ?? this.primaryMediaId,
       primaryMediaPath: primaryMediaPath ?? this.primaryMediaPath,
-      thumbnailMediaId: thumbnailMediaId ?? this.thumbnailMediaId,
-      thumbnailMediaPath: thumbnailMediaPath ?? this.thumbnailMediaPath,
       createdBy: createdBy ?? this.createdBy,
       updatedBy: updatedBy ?? this.updatedBy,
       createdAt: createdAt ?? this.createdAt,
