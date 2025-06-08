@@ -1,6 +1,6 @@
 import os
 import csv
-from uuid6 import uuid6
+from uuid import uuid4
 
 output_csv = "media_data_lowercase_names.csv"
 file_data = []
@@ -17,7 +17,7 @@ for i in range(4):
             file_size = os.path.getsize(file_path)
 
             file_data.append({
-                "id": str(uuid6()),
+                "id": str(uuid4()),
                 "media_path": f"uplift/{formatted_filename}",
                 "media_type": "image",
                 "file_size": file_size,
