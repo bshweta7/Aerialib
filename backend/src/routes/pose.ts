@@ -49,6 +49,7 @@ poseRouter.post("/", auth, async (req: AuthRequest, res) => {
     }
 })
 
+/// Get poses from remote db
 poseRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user
@@ -69,8 +70,10 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
             LEFT JOIN media AS media
                 ON poses.primary_media_id = media.id
             WHERE poses.created_by = ${userId}
-               OR poses.created_by = ${adminId};
+               OR poses.created_by = ${adminId}
+--             ORDER BY poses.base_name DESC;
         `;
+        // TODO decide what to order the poses on
 
         // Execute the raw SQL query using db.execute()
         const result = await db.execute(query);
@@ -203,7 +206,6 @@ function buildPoseUpsertSet() {
         modifications: sql`excluded.modifications`,
         commonErrors: sql`excluded.common_errors`,
         primaryMediaId: sql`excluded.primary_media_id`,
-        createdBy: sql`excluded.created_by`,
         updatedBy: sql`excluded.updated_by`,
         updatedAt: sql`excluded.updated_at`,
     };
