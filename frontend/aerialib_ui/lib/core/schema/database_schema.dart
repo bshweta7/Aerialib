@@ -33,13 +33,20 @@ const String createMediaTable = '''
     
     media_type TEXT NOT NULL,
     file_size INTEGER,
+    duration_seconds INTEGER,
     
     name TEXT,
     description TEXT,
     apparatus TEXT,
+    origin TEXT,
     
-    uploaded_by TEXT NOT NULL, 
-    uploaded_at TEXT NOT NULL,
+    taken_time TEXT,
+    taken_location TEXT,
+    
+    created_by TEXT NOT NULL, 
+    created_at TEXT NOT NULL,
+    updated_by TEXT, 
+    updated_at TEXT NOT NULL,
     
     is_synced INTEGER NOT NULL
   )
@@ -80,8 +87,6 @@ const String createPoseTable = '''
 
     primary_media_id TEXT NOT NULL,
     primary_media_path TEXT NOT NULL,
-    thumbnail_media_id TEXT NOT NULL,
-    thumbnail_media_path TEXT NOT NULL,
 
     created_by TEXT NOT NULL,
     updated_by TEXT,
