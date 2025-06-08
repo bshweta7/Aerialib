@@ -28,16 +28,24 @@ export type NewUser = typeof usersTable.$inferInsert;
 export const mediaTable = pgTable("media", {
     id: uuid("id").primaryKey().defaultRandom(),
     mediaPath: text("media_path").notNull(),
+    hasThumbnail: integer("has_thumbnail"),
 
     mediaType: text("media_type").notNull(),
     fileSize: integer("file_size"),
+    durationSeconds: integer("duration_seconds"),
 
     name: text("name"),
     description: text("description"),
     apparatus: text("apparatus"),
+    origin: text("origin"), // instagram, personal, uplift flashcards
 
-    uploadedBy: uuid("uploaded_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
-    uploadedAt: timestamp("uploaded_at").defaultNow(),
+    takenTime: timestamp("taken_time"),
+    takenLocation: text("taken_location"),
+
+    createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    updatedBy: uuid("updated_by").references(() => usersTable.id),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
 
     // TODO delete metadata EXIF (security)
 });
@@ -74,7 +82,6 @@ export const posesTable = pgTable("poses", {
     modifications: text("modifications"),
     commonErrors: text("common_errors"),
 
-    thumbnailId: uuid("thumbnail_media_id").notNull().references(() => mediaTable.id),
     primaryMediaId: uuid("primary_media_id").notNull().references(() => mediaTable.id),
 
     createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
@@ -121,6 +128,7 @@ export type NewTransition = typeof transitionsTable.$inferInsert;
 export const flowsTable = pgTable("flows", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(), // NOTE: Give suggestions in frontend (like April Flow) or default to date created
+    // TODO change thumbnail image id
     thumbnailImageId: uuid("thumbnail_image_id").notNull().references(() => mediaTable.id),
     apparatus: text("apparatus").notNull(), // NOTE: this can be interpreted from poses contained within it, don't need to ask the user to enter it
     level: doublePrecision("level").notNull(),

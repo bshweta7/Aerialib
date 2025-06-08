@@ -36,6 +36,13 @@
       "when": 1749232512399,
       "tag": "0004_create_transitions_table",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1749407857749,
+      "tag": "0005_update_media_and_pose_tables",
+      "breakpoints": true
     }
   ]
 }
