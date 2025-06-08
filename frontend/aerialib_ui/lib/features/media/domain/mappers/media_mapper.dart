@@ -6,15 +6,20 @@ class MediaMapper {
   static MediaEntity modelToEntity(MediaModel model) {
     return MediaEntity(
       id: model.id,
-      path: model.path,
-      type: model.type,
+      mediaPath: model.mediaPath,
+      mediaType: model.mediaType,
       fileSize: model.fileSize,
-      primaryMedia: model.primaryMedia,
+      durationSeconds: model.durationSeconds,
       name: model.name,
       description: model.description,
       apparatus: model.apparatus,
-      uploadedBy: model.uploadedBy,
-      uploadedAt: model.uploadedAt,
+      origin: model.origin,
+      takenTime: model.takenTime,
+      takenLocation: model.takenLocation,
+      createdBy: model.createdBy,
+      updatedBy: model.updatedBy,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
       isSynced: model.isSynced,
     );
   }
@@ -23,15 +28,20 @@ class MediaMapper {
   static MediaModel entityToModel(MediaEntity entity) {
     return MediaModel(
       id: entity.id,
-      path: entity.path,
-      type: entity.type,
+      mediaPath: entity.mediaPath,
+      mediaType: entity.mediaType,
       fileSize: entity.fileSize,
-      primaryMedia: entity.primaryMedia,
+      durationSeconds: entity.durationSeconds,
       name: entity.name,
       description: entity.description,
       apparatus: entity.apparatus,
-      uploadedBy: entity.uploadedBy,
-      uploadedAt: entity.uploadedAt,
+      origin: entity.origin,
+      takenTime: entity.takenTime,
+      takenLocation: entity.takenLocation,
+      createdBy: entity.createdBy,
+      updatedBy: entity.updatedBy,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
       isSynced: entity.isSynced,
     );
   }

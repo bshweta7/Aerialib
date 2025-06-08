@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:frontend/core/constants/constants.dart';
 
 class PoseModel {

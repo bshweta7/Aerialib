@@ -1,78 +1,151 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-
 class MediaModel {
   final String id;
-  final String path; // maps to 'media_path'
-  final String type; // maps to 'media_type'
+
+  final String mediaPath;
+  final String mediaType;
   final int? fileSize;
-  final String? primaryMedia;
+  final int? durationSeconds;
+
   final String? name;
   final String? description;
   final String? apparatus;
-  final String uploadedBy;
-  final DateTime uploadedAt;
+  final String? origin;
+
+  final DateTime? takenTime;
+  final String? takenLocation;
+
+  final String createdBy;
+  final String? updatedBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
   final int isSynced;
 
-  MediaModel({
+  const MediaModel({
     required this.id,
-    required this.path,
-    required this.type,
+    required this.mediaPath,
+    required this.mediaType,
     this.fileSize,
-    this.primaryMedia,
+    this.durationSeconds,
     this.name,
     this.description,
     this.apparatus,
-    required this.uploadedBy,
-    required this.uploadedAt,
+    this.origin,
+    this.takenTime,
+    this.takenLocation,
+    required this.createdBy,
+    this.updatedBy,
+    required this.createdAt,
+    required this.updatedAt,
     required this.isSynced,
   });
 
-  // TODO - switch to snake_case (to match pose model). needs backend changes
   factory MediaModel.fromMap(Map<String, dynamic> map) {
-    try {
-      return MediaModel(
-        id: map['id'] ?? '',
-        path: map['media_path'] ?? map['mediaPath'] ?? '',
-        type: map['media_type'] ?? map['mediaType'] ?? '',
-        fileSize: map['file_size'] ?? map['fileSize'],
-        primaryMedia: map['primary_media'] ?? map['primaryMedia'],
-        name: map['name'],
-        description: map['description'],
-        apparatus: map['apparatus'],
-        uploadedBy: map['uploaded_by'] ?? map['uploadedBy'] ?? '',
-        uploadedAt: DateTime.parse(map['uploaded_at'] ?? map['uploadedAt']),
-        isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
-      );
-    } catch (e, stack) {
-      //debuglog("Failed to map media: $map");
-      //debuglog("Error: $e\nStack: $stack");
-      rethrow;
-    }
+    return MediaModel(
+      id: map['id'] ?? '',
+      mediaPath: map['media_path'] ?? map['mediaPath'] ?? '',
+      mediaType: map['media_type'] ?? map['mediaType'] ?? '',
+      fileSize: map['file_size'] ?? map['fileSize'],
+      durationSeconds: map['duration_seconds'] ?? map['durationSeconds'],
+      name: map['name'],
+      description: map['description'],
+      apparatus: map['apparatus'],
+      origin: map['origin'],
+      takenTime: map['taken_time'] != null
+          ? DateTime.tryParse(map['taken_time'])
+          : null,
+      takenLocation: map['taken_location'],
+      createdBy: map['created_by'] ?? map['createdBy'] ?? '',
+      updatedBy: map['updated_by'] ?? map['updatedBy'],
+      createdAt: DateTime.parse(map['created_at'] ?? map['createdAt']),
+      updatedAt: DateTime.parse(map['updated_at'] ?? map['updatedAt']),
+      isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
+    );
   }
 
-
-
-
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMapLocal() {
     return {
       'id': id,
-      'media_path': path,
-      'media_type': type,
+      'media_path': mediaPath,
+      'media_type': mediaType,
       'file_size': fileSize,
+      'duration_seconds': durationSeconds,
       'name': name,
       'description': description,
       'apparatus': apparatus,
-      'uploaded_by': uploadedBy,
-      'uploaded_at': uploadedAt.toIso8601String(),
+      'origin': origin,
+      'taken_time': takenTime?.toIso8601String(),
+      'taken_location': takenLocation,
+      'created_by': createdBy,
+      'updated_by': updatedBy,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
       'is_synced': isSynced,
     };
   }
 
+  Map<String, dynamic> toMapRemote() {
+    return {
+      'id': id,
+      'mediaPath': mediaPath,
+      'mediaType': mediaType,
+      'fileSize': fileSize,
+      'durationSeconds': durationSeconds,
+      'name': name,
+      'description': description,
+      'apparatus': apparatus,
+      'origin': origin,
+      'takenTime': takenTime?.toIso8601String(),
+      'takenLocation': takenLocation,
+      'createdBy': createdBy,
+      'updatedBy': updatedBy,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
+  }
+
   factory MediaModel.fromJson(String source) =>
-      MediaModel.fromMap(json.decode(source) as Map<String, dynamic>);
+      MediaModel.fromMap(json.decode(source));
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMapLocal());
 
+  MediaModel copyWith({
+    String? id,
+    String? mediaPath,
+    String? mediaType,
+    int? fileSize,
+    int? durationSeconds,
+    String? name,
+    String? description,
+    String? apparatus,
+    String? origin,
+    DateTime? takenTime,
+    String? takenLocation,
+    String? createdBy,
+    String? updatedBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? isSynced,
+  }) {
+    return MediaModel(
+      id: id ?? this.id,
+      mediaPath: mediaPath ?? this.mediaPath,
+      mediaType: mediaType ?? this.mediaType,
+      fileSize: fileSize ?? this.fileSize,
+      durationSeconds: durationSeconds ?? this.durationSeconds,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      apparatus: apparatus ?? this.apparatus,
+      origin: origin ?? this.origin,
+      takenTime: takenTime ?? this.takenTime,
+      takenLocation: takenLocation ?? this.takenLocation,
+      createdBy: createdBy ?? this.createdBy,
+      updatedBy: updatedBy ?? this.updatedBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isSynced: isSynced ?? this.isSynced,
+    );
+  }
 }

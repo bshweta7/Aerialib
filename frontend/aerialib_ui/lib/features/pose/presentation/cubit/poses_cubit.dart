@@ -130,6 +130,3 @@ class PosesCubit extends Cubit<PosesState> {
 }
 
 
-// TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional PoseError state to handle those errors.
-// TODO - The syncPoses method has been modified to first sync local unsynced poses and then sync remote poses back to local. You might want to consider handling the case where network is unavailable or when some poses are not synced successfully.
-// TODO see his next video on background plugin that syncs every 7 days.

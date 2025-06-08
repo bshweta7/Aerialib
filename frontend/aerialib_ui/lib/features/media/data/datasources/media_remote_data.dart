@@ -1,113 +1,59 @@
 import 'dart:developer';
-import 'dart:async';
 import 'dart:convert';
-import 'package:uuid/uuid.dart';
+
 import 'package:frontend/features/media/data/models/media_model.dart';
 import 'package:frontend/core/services/http_service.dart';
-
 
 class MediaRemoteDataSource {
   final HttpService httpService;
 
   MediaRemoteDataSource({required this.httpService});
 
+  /// Create and return MediaModel
+  // TODO meta data only right now, should also send the file
   Future<MediaModel> createMedia({
-    required String path,
-    required String type,
-    int? fileSize,
-    String? primaryMedia,
-    String? name,
-    String? description,
-    String? apparatus,
-    required String uploadedBy,
+    required MediaModel media,
     required String token,
   }) async {
-    final body = {
-      'mediaPath': path,
-      'mediaType': type,
-      if (fileSize != null) 'fileSize': fileSize,
-      if (primaryMedia != null) 'primaryMedia': primaryMedia,
-      if (name != null) 'name': name, // TODO generate name based on user uploading and date?
-      if (description != null) 'description': description,
-      if (apparatus != null) 'apparatus': apparatus,
-      'uploadedBy': uploadedBy,
-    };
-
     try {
-      // POST to backend
       final response = await httpService.post(
         path: "/media",
         token: token,
-        body: body,
+        body: media.toMapRemote(),
       );
 
-      return MediaModel.fromJson(response.body);
-
+      final createdMedia = MediaModel.fromJson(response.body);
+      return createdMedia.copyWith(isSynced: 1);
     } catch (e) {
-      // Fallback: construct local unsynced MediaModel
-      return MediaModel(
-        id: const Uuid().v6(),
-        path: path,
-        type: type,
-        fileSize: fileSize,
-        primaryMedia: primaryMedia,
-        name: name,
-        description: description,
-        apparatus: apparatus,
-        uploadedBy: uploadedBy,
-        uploadedAt: DateTime.now(),
-        isSynced: 0,
-      );
+      // Fallback: return original media marked as not synced
+      return media.copyWith(isSynced: 0);
     }
   }
 
-
-  Future<List<MediaModel>> fetchRemoteMediaList({ // TODO refactored from getMediaList
+  /// Get all media from remote database
+  Future<List<MediaModel>> getRemoteMedia({
     required String token,
   }) async {
-    log("[MediaRemoteDataSource] Sending GET request... ");
     final response = await httpService.get(
       path: "/media",
       token: token,
     );
 
-    log("[MediaRemoteDataSource] Mapping response to MediaModel... ");
     final List<dynamic> jsonList = jsonDecode(response.body);
-
-    for (var e in jsonList) {
-      try {
-        log("Mapping: $e");
-        final media = MediaModel.fromMap(e);
-        // Optionally log media to confirm success
-      } catch (error, stack) {
-        log("Failed to map media: $e");
-        log("Error: $error");
-        log("Stack: $stack");
-        rethrow; // Optional: or return a fallback
-      }
-    }
-
-
-    return jsonList.map((e) => MediaModel.fromMap(e)).toList();
+    return jsonList.map((e) => MediaModel.fromMap(e).copyWith(isSynced: 1)).toList();
   }
 
-  /// Sync local media entries to the remote data source
+  /// Sync media from local to remote (metadata only)
   Future<bool> syncMedia({
     required String token,
     required List<MediaModel> mediaList,
   }) async {
-    final List<Map<String, dynamic>> mediaListInMap = mediaList.map((media) {
-      final map = media.toMap();
-      map.remove('is_synced');
-      return map;
-    }).toList();
+    final mediaListInMap = mediaList.map((m) => m.toMapRemote()).toList();
 
-    log('[MediaRemoteDataSource] Sync payload:');
+    log('[MediaRemoteDataSource] Syncing ${mediaListInMap.length} media items...');
     for (final map in mediaListInMap) {
-      log('[MediaRemoteDataSource] ${map.keys}');
+      log('[MediaRemoteDataSource] Syncing media path: ${map['mediaPath']}');
     }
-
-    log('[MediaRemoteDataSource] $mediaListInMap');
 
     final response = await httpService.post(
       path: "/media/sync",
@@ -115,23 +61,31 @@ class MediaRemoteDataSource {
       body: mediaListInMap,
     );
 
-    log('[MediaRemoteDataSource] Status Code: ${response.statusCode}');
-    log('[MediaRemoteDataSource] Response: ${response.body}');
-
-    return response.statusCode == 201;
+    if (response.statusCode == 201) {
+      log('[MediaRemoteDataSource] Sync successful');
+      return true;
+    } else {
+      log('[MediaRemoteDataSource] Sync failed: ${response.statusCode} - ${response.body}');
+      return false;
+    }
   }
 
-  Future<MediaModel> updateMedia({
-    required MediaModel updatedMedia,
+  /// Delete a media item
+  Future<void> deleteMedia({
+    required String mediaId,
     required String token,
   }) async {
-    final response = await httpService.put(
-      path: "/media/update/${updatedMedia.id}",
+    final response = await httpService.delete(
+      path: "/media/delete/$mediaId",
       token: token,
-      body: updatedMedia.toJson(),
     );
 
-    return MediaModel.fromJson(response.body);
-  }
+    if (response.statusCode != 200) {
+      log("[MediaRemoteDataSource] Failed to delete media, status ${response.statusCode}");
+      log("[MediaRemoteDataSource] Body: ${response.body}");
+      throw Exception("[MediaRemoteDataSource] Failed to delete media remotely");
+    }
 
+    log("[MediaRemoteDataSource] Media deleted successfully: $mediaId");
+  }
 }

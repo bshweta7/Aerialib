@@ -1,105 +1,159 @@
+import 'package:uuid/uuid.dart';
+
 class MediaEntity {
   final String id;
-  final String path;
-  final String type;
+  final String mediaPath;
+  final String mediaType;
   final int? fileSize;
-  final String? primaryMedia;
+  final int? durationSeconds;
+
   final String? name;
   final String? description;
   final String? apparatus;
-  final String uploadedBy;
-  final DateTime uploadedAt;
+  final String? origin;
+
+  final DateTime? takenTime;
+  final String? takenLocation;
+
+  final String createdBy;
+  final String? updatedBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
   final int isSynced;
 
-  // TODO: Add fields like location later
-
-  MediaEntity({
+  const MediaEntity({
     required this.id,
-    required this.path,
-    required this.type,
+    required this.mediaPath,
+    required this.mediaType,
     this.fileSize,
-    this.primaryMedia,
+    this.durationSeconds,
     this.name,
     this.description,
     this.apparatus,
-    required this.uploadedBy,
-    required this.uploadedAt,
+    this.origin,
+    this.takenTime,
+    this.takenLocation,
+    required this.createdBy,
+    this.updatedBy,
+    required this.createdAt,
+    required this.updatedAt,
     required this.isSynced,
   });
 
-  MediaEntity copyWith({
-    String? id,
-    String? path,
-    String? type,
+  factory MediaEntity.withGeneratedId({
+    required String mediaPath,
+    required String mediaType,
     int? fileSize,
-    String? primaryMedia,
+    int? durationSeconds,
     String? name,
     String? description,
     String? apparatus,
-    String? uploadedBy,
-    DateTime? uploadedAt,
+    String? origin,
+    DateTime? takenTime,
+    String? takenLocation,
+    required String createdBy,
+    String? updatedBy,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    int isSynced = 0,
+  }) {
+    return MediaEntity(
+      id: const Uuid().v6(),
+      mediaPath: mediaPath,
+      mediaType: mediaType,
+      fileSize: fileSize,
+      durationSeconds: durationSeconds,
+      name: name,
+      description: description,
+      apparatus: apparatus,
+      origin: origin,
+      takenTime: takenTime,
+      takenLocation: takenLocation,
+      createdBy: createdBy,
+      updatedBy: updatedBy,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      isSynced: isSynced,
+    );
+  }
+
+  MediaEntity copyWith({
+    String? id,
+    String? mediaPath,
+    String? mediaType,
+    int? fileSize,
+    int? durationSeconds,
+    String? name,
+    String? description,
+    String? apparatus,
+    String? origin,
+    DateTime? takenTime,
+    String? takenLocation,
+    String? createdBy,
+    String? updatedBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     int? isSynced,
   }) {
     return MediaEntity(
       id: id ?? this.id,
-      path: path ?? this.path,
-      type: type ?? this.type,
+      mediaPath: mediaPath ?? this.mediaPath,
+      mediaType: mediaType ?? this.mediaType,
       fileSize: fileSize ?? this.fileSize,
-      primaryMedia: primaryMedia ?? this.primaryMedia,
+      durationSeconds: durationSeconds ?? this.durationSeconds,
       name: name ?? this.name,
       description: description ?? this.description,
       apparatus: apparatus ?? this.apparatus,
-      uploadedBy: uploadedBy ?? this.uploadedBy,
-      uploadedAt: uploadedAt ?? this.uploadedAt,
+      origin: origin ?? this.origin,
+      takenTime: takenTime ?? this.takenTime,
+      takenLocation: takenLocation ?? this.takenLocation,
+      createdBy: createdBy ?? this.createdBy,
+      updatedBy: updatedBy ?? this.updatedBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,
     );
   }
 
   @override
-  String toString() {
-    return 'MediaEntity('
-        'id: $id, '
-        'path: $path, '
-        'type: $type, '
-        'fileSize: $fileSize, '
-        'primaryMedia: $primaryMedia, '
-        'name: $name, '
-        'description: $description, '
-        'apparatus: $apparatus, '
-        'uploadedBy: $uploadedBy, '
-        'uploadedAt: $uploadedAt, '
-        'isSynced: $isSynced'
-        ')';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is MediaEntity &&
-        other.id == id &&
-        other.path == path &&
-        other.type == type &&
-        other.fileSize == fileSize &&
-        other.primaryMedia == primaryMedia &&
-        other.name == name &&
-        other.description == description &&
-        other.apparatus == apparatus &&
-        other.uploadedBy == uploadedBy &&
-        other.uploadedAt == uploadedAt &&
-        other.isSynced == isSynced;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is MediaEntity &&
+              runtimeType == other.runtimeType &&
+              id == other.id &&
+              mediaPath == other.mediaPath &&
+              mediaType == other.mediaType &&
+              fileSize == other.fileSize &&
+              durationSeconds == other.durationSeconds &&
+              name == other.name &&
+              description == other.description &&
+              apparatus == other.apparatus &&
+              origin == other.origin &&
+              takenTime == other.takenTime &&
+              takenLocation == other.takenLocation &&
+              createdBy == other.createdBy &&
+              updatedBy == other.updatedBy &&
+              createdAt == other.createdAt &&
+              updatedAt == other.updatedAt &&
+              isSynced == other.isSynced;
 
   @override
   int get hashCode =>
       id.hashCode ^
-      path.hashCode ^
-      type.hashCode ^
+      mediaPath.hashCode ^
+      mediaType.hashCode ^
       fileSize.hashCode ^
-      primaryMedia.hashCode ^
+      durationSeconds.hashCode ^
       name.hashCode ^
       description.hashCode ^
       apparatus.hashCode ^
-      uploadedBy.hashCode ^
-      uploadedAt.hashCode ^
+      origin.hashCode ^
+      takenTime.hashCode ^
+      takenLocation.hashCode ^
+      createdBy.hashCode ^
+      updatedBy.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode ^
       isSynced.hashCode;
 }
