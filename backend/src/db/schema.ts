@@ -101,7 +101,7 @@ export const transitionsTable = pgTable("transitions", {
     toPoseId: uuid("to_pose_id").notNull().references(() => posesTable.id),
 
     name: text("name"),
-    apparatus: text("apparatus").notNull(), // TODO generated from frontend (based on which poses are in it (“mixed” if they dont match))
+    apparatus: text("apparatus").notNull(),
     level: integer("level"),
     transitionType: text("transition_type"),
 

@@ -122,6 +122,7 @@ const String createTransitionTable = '''
     common_errors TEXT,
 
     primary_media_id TEXT,
+    primary_media_path TEXT,
 
     created_by TEXT NOT NULL,
     updated_by TEXT,
