@@ -5,11 +5,17 @@ import 'package:frontend/shared/widgets/media_display/general/formatted_video_pl
 
 class HorizontalCoverMediaGallery extends StatefulWidget {
   final List<MediaItem> mediaList;
+  final double height;
 
-  const HorizontalCoverMediaGallery({super.key, required this.mediaList});
+  const HorizontalCoverMediaGallery({
+    super.key,
+    required this.mediaList,
+    this.height = 250,
+  });
 
   @override
-  State<HorizontalCoverMediaGallery> createState() => _HorizontalCoverMediaGalleryState();
+  State<HorizontalCoverMediaGallery> createState() =>
+      _HorizontalCoverMediaGalleryState();
 }
 
 class _HorizontalCoverMediaGalleryState extends State<HorizontalCoverMediaGallery> {
@@ -31,17 +37,18 @@ class _HorizontalCoverMediaGalleryState extends State<HorizontalCoverMediaGaller
 
   Widget _buildMediaItem(MediaItem item) {
     if (item.url.toLowerCase().endsWith('.mp4')) {
-      return FormattedVideoPlayer(videoUrl: item.url); // TODO Verify this works
+      return SizedBox(
+        height: widget.height,
+        child: FormattedVideoPlayer(videoUrl: item.url), // TODO verify that this works
+      );
     } else {
-      return AspectRatio(
-        aspectRatio: 16 / 9,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: FormattedCachedNetworkImage(item.url),
-        ),
+      return SizedBox(
+        height: widget.height,
+        child: FormattedCachedNetworkImage(item.url, fit: BoxFit.contain),
       );
     }
   }
+
 
   @override
   void dispose() {
@@ -55,10 +62,12 @@ class _HorizontalCoverMediaGalleryState extends State<HorizontalCoverMediaGaller
 
     return Row(
       children: [
-        IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: _currentIndex > 0 ? () => _goToPage(_currentIndex - 1) : null,
-        ),
+        if (media.length > 1)
+          IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: _currentIndex > 0 ? () => _goToPage(_currentIndex - 1) : null,
+          ),
+
         Expanded(
           child: SizedBox(
             height: 250,
@@ -71,12 +80,14 @@ class _HorizontalCoverMediaGalleryState extends State<HorizontalCoverMediaGaller
             ),
           ),
         ),
-        IconButton(
-          icon: const Icon(Icons.arrow_forward_ios),
-          onPressed: _currentIndex < media.length - 1
-              ? () => _goToPage(_currentIndex + 1)
-              : null,
-        ),
+
+        if (media.length > 1)
+          IconButton(
+            icon: const Icon(Icons.arrow_forward_ios),
+            onPressed: _currentIndex < media.length - 1
+                ? () => _goToPage(_currentIndex + 1)
+                : null,
+          ),
       ],
     );
   }

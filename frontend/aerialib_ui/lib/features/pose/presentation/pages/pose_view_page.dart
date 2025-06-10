@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
+import 'package:frontend/shared/widgets/info_display/expandable_card.dart';
 import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
@@ -22,9 +23,8 @@ class PoseViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final mediaItems = [
-      MediaItem(url: 'default/flow_placeholders/peach.png'),
-      MediaItem(url: 'default/flow_placeholders/mint.png'),
       MediaItem(url: pose.primaryMediaPath),
+      // TODO will show other media items too
       // MediaItem(url: pose.primaryMediaPath),
     ];
 
@@ -64,23 +64,23 @@ class PoseViewPage extends StatelessWidget {
             /// Media preview
             HorizontalCoverMediaGallery(mediaList: mediaItems),
 
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              clipBehavior: Clip.antiAlias,
-              child: Container(
-                constraints: BoxConstraints(
-                  maxHeight: screenHeight * 0.4,
-                  minHeight: 20,
-                ),
-                width: double.infinity,
-                child: FormattedCachedNetworkImage("/${pose.primaryMediaPath}"),
-              ),
-            ),
-            const SizedBox(height: 20),
+            // Card(
+            //   elevation: 4,
+            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            //   clipBehavior: Clip.antiAlias,
+            //   child: Container(
+            //     constraints: BoxConstraints(
+            //       maxHeight: screenHeight * 0.4,
+            //       minHeight: 20,
+            //     ),
+            //     width: double.infinity,
+            //     child: FormattedCachedNetworkImage("/${pose.primaryMediaPath}"),
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
 
             /// Basic Info
-            SectionCard( // TODO Make this take the whole page
+            ExpandableCard( // TODO Make this take the whole page
               title: "Basic Info",
               children: [
                 InfoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
