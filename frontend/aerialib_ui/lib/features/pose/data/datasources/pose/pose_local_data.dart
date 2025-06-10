@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:frontend/features/pose/data/models/pose_model.dart';
-import '../../../../../core/services/local_database_service.dart';
+import 'package:frontend/core/services/local_database_service.dart';
 
 class PoseLocalDataSource {
   String tableName = 'poses';
