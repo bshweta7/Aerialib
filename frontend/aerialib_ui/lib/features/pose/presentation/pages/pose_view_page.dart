@@ -80,8 +80,9 @@ class PoseViewPage extends StatelessWidget {
             // const SizedBox(height: 20),
 
             /// Basic Info
-            ExpandableCard( // TODO Make this take the whole page
+            ExpandableCard(
               title: "Basic Info",
+              isExpandable: false,
               children: [
                 InfoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
                 InfoRow("Level:", "Level ${pose.level}"),
@@ -89,7 +90,7 @@ class PoseViewPage extends StatelessWidget {
             ),
 
             /// Additional Details
-            SectionCard(
+            ExpandableCard(
               title: "Additional Details",
               children: [
                 InfoRow("Alternative Name:", pose.altName),
@@ -99,7 +100,7 @@ class PoseViewPage extends StatelessWidget {
             ),
 
             /// Notes
-            SectionCard(
+            ExpandableCard(
               title: "Notes",
               children: [
                 InfoRow("Teaching Cues:", pose.teachingCues),
@@ -111,8 +112,9 @@ class PoseViewPage extends StatelessWidget {
             ),
 
             /// Advanced Tagging
-            SectionCard(
+            ExpandableCard(
               title: "Advanced Tagging",
+              initiallyExpanded: false,
               children: [
                 InfoRow("Prefix:", pose.prefix),
                 InfoRow("Base Name:", pose.baseName),
