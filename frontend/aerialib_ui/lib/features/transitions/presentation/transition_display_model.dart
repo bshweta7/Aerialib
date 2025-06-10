@@ -1,5 +1,5 @@
 import '../../pose/domain/entities/pose_entity.dart';
-import '../domain/entities/transition_entity.dart';
+import '../domain/transition_entity.dart';
 
 class TransitionDisplayModel {
   final TransitionEntity transition;

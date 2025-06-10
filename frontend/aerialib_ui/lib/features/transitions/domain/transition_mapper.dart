@@ -1,8 +1,8 @@
-import 'package:frontend/features/transitions/data/models/transition_model.dart';
-import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
+import 'package:frontend/features/transitions/data/transition_model.dart';
+import 'package:frontend/features/transitions/domain/transition_entity.dart';
 
-import '../../../pose/domain/entities/pose_entity.dart';
-import '../../presentation/transition_display_model.dart';
+import '../../pose/domain/entities/pose_entity.dart';
+import '../presentation/transition_display_model.dart';
 
 class TransitionMapper {
 

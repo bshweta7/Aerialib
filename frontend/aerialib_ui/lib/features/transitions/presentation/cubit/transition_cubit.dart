@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
-import 'package:frontend/features/transitions/domain/repositories/transition_repository.dart';
+import 'package:frontend/features/transitions/domain/transition_entity.dart';
+import 'package:frontend/features/transitions/domain/transition_repository.dart';
 
 part 'transition_state.dart';
 

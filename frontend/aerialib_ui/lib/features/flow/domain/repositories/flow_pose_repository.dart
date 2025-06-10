@@ -1,12 +1,12 @@
 import 'dart:developer';
 
-import 'package:frontend/features/transitions/data/models/transition_model.dart';
+import 'package:frontend/features/transitions/data/transition_model.dart';
 import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
 
 import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_poses/flow_pose_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_poses/flow_pose_remote_data.dart';
-import 'package:frontend/features/transitions/data/datasources/transition_local_data.dart';
+import 'package:frontend/features/transitions/data/transition_local_data.dart';
 
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';

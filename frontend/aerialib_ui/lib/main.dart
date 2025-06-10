@@ -21,7 +21,7 @@ import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dar
 import 'package:frontend/features/pose/data/datasources/pose/pose_remote_data.dart';
 import 'package:frontend/features/user/data/datasources/user_local_data.dart';
 import 'package:frontend/features/user/data/datasources/user_remote_data.dart';
-import 'package:frontend/features/transitions/data/datasources/transition_local_data.dart';
+import 'package:frontend/features/transitions/data/transition_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow/flow_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_poses/flow_pose_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_poses/flow_pose_remote_data.dart';

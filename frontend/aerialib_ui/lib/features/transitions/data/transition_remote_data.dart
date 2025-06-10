@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:frontend/features/transitions/data/models/transition_model.dart';
+import 'package:frontend/features/transitions/data/transition_model.dart';
 import 'package:frontend/core/services/http_service.dart';
 
 class TransitionRemoteDataSource {

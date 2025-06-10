@@ -1,5 +1,5 @@
 import '../../../pose/domain/entities/pose_entity.dart';
-import '../../../transitions/domain/entities/transition_entity.dart';
+import '../../../transitions/domain/transition_entity.dart';
 
 class FlowPoseEntity {
   final String id;
