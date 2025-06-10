@@ -12,10 +12,10 @@ List<GoRoute> mediaRoutes = [
     builder: (context, state) => const MediaGalleryPage(),
   ),
 
-  // Upload New Media Page
-  GoRoute(
-    path: '/gallery/upload',
-    name: 'add-new-media',
-    builder: (context, state) => const UploadNewMediaPage(),
-  ),
+  // // Upload New Media Page
+  // GoRoute(
+  //   path: '/gallery/upload',
+  //   name: 'add-new-media',
+  //   builder: (context, state) => const UploadNewMediaPage(),
+  // ),
 ];

@@ -51,9 +51,10 @@ class MediaRemoteDataSource {
     final mediaListInMap = mediaList.map((m) => m.toMapRemote()).toList();
 
     log('[MediaRemoteDataSource] Syncing ${mediaListInMap.length} media items...');
-    for (final map in mediaListInMap) {
-      log('[MediaRemoteDataSource] Syncing media path: ${map['mediaPath']}');
-    }
+
+    // Log the full payload as JSON
+    final prettyJson = const JsonEncoder.withIndent('  ').convert(mediaListInMap);
+    log('[MediaRemoteDataSource] Full sync payload:\n$prettyJson');
 
     final response = await httpService.post(
       path: "/media/sync",

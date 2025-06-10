@@ -53,7 +53,7 @@ List<MediaIconEntity> flowsToMediaIcons(List<FlowEntity> flows) {
 List<MediaIconEntity> mediaToMediaIcons(List<MediaEntity> mediaList) {
   return mediaList.map((media) {
     return MediaIconEntity(
-      imageUrl: "/${media.path}", // or media.filePath depending on your model
+      imageUrl: "/${media.mediaPath}", // or media.filePath depending on your model
       title: media.name ?? 'Untitled', // fallback if name is null
       subtitle: "", // TODO or use tags/metadata if available
       type: MediaType.media,
@@ -78,7 +78,7 @@ List<MediaIconEntity> musicToMediaIcons(List<MusicEntity> musicList) {
       imageUrl: defaultPath,
       data: music,
       type: MediaType.music,
-      isFavorite: music.favorite, // ✅ Added here
+      isFavorite: music.favorite,
     );
   }).toList();
 }

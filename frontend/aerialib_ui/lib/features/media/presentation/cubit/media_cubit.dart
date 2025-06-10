@@ -5,73 +5,50 @@ import 'package:equatable/equatable.dart';
 import 'package:frontend/features/media/domain/entities/media_entity.dart';
 import 'package:frontend/features/media/domain/repositories/media_repository.dart';
 
-// TODO note - maybe I shouldn't combine the mediaURL into this and instead call it separately - see what makes sense...
-// TODO - If syncRemoteToLocal or syncLocalToRemote can fail (e.g., due to network issues), you might want to handle those errors more gracefully (maybe show a snackbar or a retry button) in the UI. We have an optional MediaError state to handle those errors.
-// TODO - The syncMedias method has been modified to first sync local unsynced medias and then sync remote medias back to local. You might want to consider handling the case where network is unavailable or when some medias are not synced successfully.
-
-
 part 'media_state.dart';
 
-
-
-class MediaCubit extends Cubit<MediaState>{
+class MediaCubit extends Cubit<MediaState> {
   final MediaRepository _mediaRepository;
   bool _isSyncing = false;
 
   MediaCubit(this._mediaRepository) : super(const MediaInitial());
 
-  /// Create a new media
+  /// Create a new media (remote + local)
   Future<void> createNewMedia({
-    required String path,
-    String? name,
-    String? description,
-    String? apparatus,
-    String? primaryMedia, // e.g. 'pose', 'flow', etc.
-    required String uploadedBy,
+    required MediaEntity media,
     required String token,
   }) async {
     try {
       emit(const MediaLoading());
 
-      final media = await _mediaRepository.createMedia(
-        path: path,
-        name: name ?? '',
-        description: description ?? '',
-        apparatus: apparatus ?? '',
-        uploadedBy: uploadedBy,
-        token: token,
-        primaryMedia: primaryMedia,
+      final createdMedia = await _mediaRepository.createMedia(
+        media: media,
+        token: token
       );
 
-      emit(AddNewMediaSuccess(media));
+      final allMedia = await _mediaRepository.getAllMedia();
+      emit(GetMediaSuccess(allMedia));
+
     } catch (e) {
-      log("Error creating media: $e");
+      log("[MediaCubit] Error creating media: $e");
       emit(MediaError(e.toString()));
     }
   }
 
 
+
   /// Fetch all medias (from local storage or remote if needed)
   Future<void> getAllMedia({required String token}) async {
     try {
-      log("Fetching medias...");
+      log('[MediasCubit] Fetching media...');
       emit(const MediaLoading());
 
-      List<MediaEntity> medias = await _mediaRepository.getLocalMedias();  // Fetch local medias
-      if (medias.isEmpty) {
-        // If no local medias, sync from remote and retry
-        log("[MediaCubit] No medias in local datasource, syncing from remote");
-        await _mediaRepository.syncRemoteToLocal(token);
-
-        medias = await _mediaRepository.getLocalMedias();
-      }
-
-      log("[MediaCubit] Number of Medias Retrieved: ${medias.length}");
-      emit(GetMediaSuccess(medias));
+      List<MediaEntity> allMedias = await _mediaRepository.getAllMedia();  // Fetch local medias
+      log('[MediasCubit] Number of Medias Retrieved: ${allMedias.length}');
+      emit(GetMediaSuccess(allMedias));
 
     } catch (e) {
-      log("[MediaCubit] Cubit GetAllMedia failed");
-      log(e.toString());
+      log('[MediasCubit] GetAllMedias failed: $e');
       emit(MediaError(e.toString()));
     }
   }
@@ -81,23 +58,83 @@ class MediaCubit extends Cubit<MediaState>{
     if (_isSyncing) return;
     _isSyncing = true;
 
-    log("[MediaCubit] Starting one-shot sync of flow poses...");
+    log("[MediasCubit] Starting one-shot sync...");
 
     try {
       await _mediaRepository.syncLocalToRemote(token);
-      log('[MediaCubit] Synced local to remote.');
+      log('[MediasCubit] Synced local to remote.');
 
       await _mediaRepository.syncRemoteToLocal(token);
-      log('[MediaCubit] Synced remote to local.');
+      log('[MediasCubit] Synced remote to local.');
 
-      // final updatedFlows = await _flowPoseRepository.getAllFlowPoses();
-      // emit(GetFlowsSuccess(updatedFlows));
+      final allMedias = await _mediaRepository.getAllMedia();
+      emit(GetMediaSuccess(allMedias));
     } catch (e) {
-      log('[MediaCubit] Sync error: $e');
-      emit(MediaError('[MediaCubit] Sync error: $e'));
+      log('[MediasCubit] Sync error: $e');
+      emit(MediaError('[MediasCubit] Sync error: $e'));
     } finally {
       _isSyncing = false;
     }
   }
+
+  /// Update media info (both local and remote)
+  Future<void> updateMediaInfo({
+    required MediaEntity updatedMedia,
+    required String token,
+  }) async {
+    try {
+      emit(const MediaLoading());
+      await _mediaRepository.updateMedia(
+        updatedMedia: updatedMedia,
+        token: token,
+      );
+      emit(UpdateMediaSuccess(updatedMedia));
+      final allMedias = await _mediaRepository.getAllMedia();
+      emit(GetMediaSuccess(allMedias));
+
+    } catch (e) {
+      log(e.toString());
+      emit(MediaError(e.toString()));
+    }
+  }
+
+  /// Delete a media
+  Future<void> deleteMedia({
+    required String mediaId,
+    required String token,
+  }) async {
+    try {
+      emit(const MediaLoading());
+      await _mediaRepository.deleteMediaRemote(id: mediaId, token: token);
+      emit(DeleteMediaSuccess(mediaId));
+
+      final allMedias = await _mediaRepository.getAllMedia();
+      emit(GetMediaSuccess(allMedias));
+    } catch (e) {
+      log('[MediasCubit] Deleting error: $e');
+      emit(MediaError('[MediasCubit] Deleting error: $e'));
+    }
+  }
+
+
+  Future<void> refresh({required String token}) async {
+    try {
+      emit(const MediaLoading());
+      final allMedias = await _mediaRepository.getAllMedia();
+      emit(GetMediaSuccess(allMedias));
+    } catch (e) {
+      emit(MediaError('Refresh error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> refreshLocalOnly() async {
+    try {
+      final allMedias = await _mediaRepository.getAllMedia();
+      emit(GetMediaSuccess(allMedias));
+    } catch (e) {
+      emit(MediaError('Local refresh error: ${e.toString()}'));
+    }
+  }
+
 }
 

@@ -19,61 +19,32 @@ class MediaRepository {
     required this.remoteDataSource,
   });
 
-  /// Detects media type from file path using MIME
-  String? _getMediaTypeFromPath(String path) {
-    final mimeType = lookupMimeType(path);
-    return mimeType?.split('/').first;
-  }
-
-  /// Gets the file size of a local file
-  Future<int> _getFileSizeInBytes(String filePath) async {
-    final file = File(filePath);
-    return await file.length();
-  }
-
   /// Create a new media item (metadata only — no file upload yet)
   Future<MediaEntity> createMedia({
-    required String path,
-    String? name,
-    String? description,
-    String? apparatus,
-    required String uploadedBy,
+    required MediaEntity media,
     required String token,
   }) async {
-    final type = _getMediaTypeFromPath(path) ?? 'unknown';
-    final fileSize = await _getFileSizeInBytes(path);
-
-    final mediaModel = MediaModel(
-      id: UniqueKey().toString(), // or UUID logic
-      mediaPath: path,
-      mediaType: type,
-      fileSize: fileSize,
-      durationSeconds: null,
-      name: name,
-      description: description,
-      apparatus: apparatus,
-      origin: "local",
-      takenTime: null,
-      takenLocation: null,
-      createdBy: uploadedBy,
-      updatedBy: uploadedBy,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      isSynced: 0,
-    );
-
     try {
-      final remoteMedia = await remoteDataSource.createMedia(
-        media: mediaModel,
+      log('[MediaRepository] Creating media remotely...');
+
+      // Convert to model and send to backend
+      final mediaModel = await remoteDataSource.createMedia(
+        media: MediaMapper.entityToModel(media),
         token: token,
       );
 
-      await localDataSource.createMedia(remoteMedia);
-      return MediaMapper.modelToEntity(remoteMedia.copyWith(isSynced: 1));
-    } catch (e) {
-      log("[MediaRepository] Remote create failed, saving locally");
+      // Save to local DB
       await localDataSource.createMedia(mediaModel);
-      return MediaMapper.modelToEntity(mediaModel);
+      // log('[MediaRepository] Media inserted into local database.');
+
+      // Return as entity
+      final entity = MediaMapper.modelToEntity(mediaModel);
+      log('[MediaRepository] Mapped MediaModel to MediaEntity: ${entity.id}');
+      return entity;
+
+    } catch (e) {
+      log('[MediaRepository] Error creating media: $e');
+      rethrow;
     }
   }
 
@@ -138,7 +109,7 @@ class MediaRepository {
 
     if (success) {
       final syncedModel = mediaModel.copyWith(isSynced: 1);
-      log("[MediaRepository] Updating media locally...");
+      log("[MediaRepository] Updating media locally..."); // TODO if it fails it doesn't update locally...
       await localDataSource.updateMedia(syncedModel);
     } else {
       log("[MediaRepository] Remote sync failed. Media not updated locally.");

@@ -26,12 +26,13 @@ class PosesCubit extends Cubit<PosesState> {
         token: token,
       );
 
-      emit(AddNewPoseSuccess(createdPose));
+      // TODO - see if commenting this out breaks anything (router)
+      //  emit(AddNewPoseSuccess(createdPose));
       final allPoses = await _poseRepository.getAllPoses();
       emit(GetPosesSuccess(allPoses));
 
     } catch (e) {
-      log("Error creating pose: $e");
+      log("[PoseCubit] Error creating pose: $e");
       emit(PoseError(e.toString()));
     }
   }
@@ -116,8 +117,6 @@ class PosesCubit extends Cubit<PosesState> {
   }
 
 
-  // TODO add delete Pose Remote function
-
   Future<void> refresh({required String token}) async {
     try {
       emit(const PoseLoading());
@@ -127,6 +126,16 @@ class PosesCubit extends Cubit<PosesState> {
       emit(PoseError('Refresh error: ${e.toString()}'));
     }
   }
+
+  Future<void> refreshLocalOnly() async {
+    try {
+      final allPoses = await _poseRepository.getAllPoses();
+      emit(GetPosesSuccess(allPoses));
+    } catch (e) {
+      emit(PoseError('Local refresh error: ${e.toString()}'));
+    }
+  }
+
 }
 
 

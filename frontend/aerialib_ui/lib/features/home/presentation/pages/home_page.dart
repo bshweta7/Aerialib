@@ -86,6 +86,24 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 30,),
 
+            // Music Library Navigation
+            ElevatedButton(
+                onPressed: () {
+                  context.goNamed(
+                    'media-gallery',
+                    queryParameters: {'from': 'home'},
+                  );
+                },
+                child: const Text(
+                    "Media Library",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )
+                )
+            ),
+            const SizedBox(height: 30,),
+
 
             // TODO - maybe switch to modal for everything instead of having textboxes on the dashboard itself... might look cleaner?
             QuickAddCategoryCard(

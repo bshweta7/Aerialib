@@ -209,23 +209,28 @@ mediaRouter.post("/sync", auth, async (req: AuthRequest, res) => {
 
         console.log(`[MediaRouter] Received ${mediaList.length} media items for sync.`);
 
-        const normalized: NewMedia[] = mediaList.map((media: any) => ({
-            ...media,
-            // id: media.id,
-            // mediaPath: media.media_path,
-            // mediaType: media.media_type,
-            // fileSize: media.file_size,
-            // name: media.name,
-            // description: media.description,
-            // apparatus: media.apparatus,
-            // origin: media.origin,
-            // takenTime: media.taken_time ? new Date(media.taken_time) : undefined,
-            // takenLocation: media.taken_location,
-            createdBy: media.createdBy ?? userId,
-            updatedBy: userId,
-            createdAt: new Date(media.created_at),
-            updatedAt: new Date(media.updated_at),
-        }));
+        const normalized: NewMedia[] = mediaList.map((media: any, i: number) => {
+            function safeParseDate(label: string, raw: any): Date | undefined {
+                const date = new Date(raw);
+                if (!raw || isNaN(date.getTime())) {
+                    console.warn(`[MediaRouter] Invalid ${label} at index ${i}:`, raw);
+                    return undefined;
+                }
+                return date;
+            }
+
+            return {
+                ...media,
+                takenTime : new Date(media.takenTime),
+                createdAt: new Date(media.createdAt),
+                updatedAt: new Date(media.updatedAt),
+                // takenTime: safeParseDate('taken_time', media.taken_time),
+                // createdAt: safeParseDate('created_at', media.created_at) ?? new Date(),
+                // updatedAt: safeParseDate('updated_at', media.updated_at) ?? new Date(),
+                createdBy: media.createdBy ?? userId,
+                updatedBy: userId,
+            };
+        });
 
         const pushedMedia = await db
             .insert(mediaTable)

@@ -46,3 +46,11 @@ class MediaError extends MediaState {
   @override
   List<Object?> get props => [error];
 }
+
+class DeleteMediaSuccess extends MediaState {
+  final String deletedMediaId;
+  const DeleteMediaSuccess(this.deletedMediaId);
+
+  @override
+  List<Object?> get props => [deletedMediaId];
+}

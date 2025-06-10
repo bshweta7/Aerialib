@@ -54,13 +54,18 @@ class MediaModel {
       apparatus: map['apparatus'],
       origin: map['origin'],
       takenTime: map['taken_time'] != null
-          ? DateTime.tryParse(map['taken_time'])
+          ? DateTime.parse(map['taken_time'])
           : null,
       takenLocation: map['taken_location'],
       createdBy: map['created_by'] ?? map['createdBy'] ?? '',
       updatedBy: map['updated_by'] ?? map['updatedBy'],
-      createdAt: DateTime.parse(map['created_at'] ?? map['createdAt']),
-      updatedAt: DateTime.parse(map['updated_at'] ?? map['updatedAt']),
+      createdAt: (map['created_at'] ?? map['createdAt']) != null
+          ? DateTime.parse(map['created_at'] ?? map['createdAt'])
+          : DateTime.now(),
+
+      updatedAt: (map['updated_at'] ?? map['updatedAt']) != null
+          ? DateTime.parse(map['updated_at'] ?? map['updatedAt'])
+          : DateTime.now(),
       isSynced: map['is_synced'] ?? map['isSynced'] ?? 1,
     );
   }
