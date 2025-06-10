@@ -50,3 +50,11 @@ class TransitionError extends TransitionState {
   @override
   List<Object?> get props => [message];
 }
+
+class DeleteTransitionSuccess extends TransitionState {
+  final String deletedTransitionId;
+  const DeleteTransitionSuccess(this.deletedTransitionId);
+
+  @override
+  List<Object?> get props => [deletedTransitionId];
+}

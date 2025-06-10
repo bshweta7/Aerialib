@@ -1,6 +1,5 @@
 import 'dart:developer';
-import 'package:bloc/bloc.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
@@ -10,84 +9,76 @@ part 'transition_state.dart';
 
 class TransitionCubit extends Cubit<TransitionState> {
   final TransitionRepository _transitionRepository;
+  bool _isSyncing = false;
 
   TransitionCubit(this._transitionRepository) : super(const TransitionInitial());
 
   /// Create a new transition
-  Future<void> createTransition({
-    required String fromPoseId,
-    required String toPoseId,
-    required double level,
-    String? name,
-    String? description,
-    String? teachingCues,
-    String? safetyCues,
-    String? progressions,
-    String? transitionType,
-    String? startingGrip,
-    String? endingGrip,
-    required String createdBy,
+  Future<void> createNewTransition({
+    required TransitionEntity transition,
     required String token,
   }) async {
     try {
       emit(const TransitionLoading());
 
-      final transition = await _transitionRepository.createTransition(
-        fromPoseId: fromPoseId,
-        toPoseId: toPoseId,
-        level: level,
-        name: name,
-        description: description,
-        teachingCues: teachingCues,
-        safetyCues: safetyCues,
-        progressions: progressions,
-        transitionType: transitionType,
-        startingGrip: startingGrip,
-        endingGrip: endingGrip,
-        createdBy: createdBy,
+      final createdTransition = await _transitionRepository.createTransition(
+        transition: transition,
         token: token,
       );
 
-      emit(CreateTransitionSuccess(transition));
+      // TODO - see if commenting this out breaks anything (router)
+      //  emit(AddNewTransitionSuccess(createdTransition));
+      final allTransitions = await _transitionRepository.getAllTransitions();
+      emit(GetTransitionsSuccess(allTransitions));
+
     } catch (e) {
-      emit(TransitionError("Failed to create transition: $e"));
+      log("[TransitionCubit] Error creating transition: $e");
+      emit(TransitionError(e.toString()));
     }
   }
 
-  /// Get all transitions (local or remote fallback)
+  /// Fetch all transitions (from local storage or remote if needed)
   Future<void> getAllTransitions({required String token}) async {
     try {
+      log('[TransitionsCubit] Fetching transitions...');
       emit(const TransitionLoading());
 
-      var transitions = await _transitionRepository.getLocalTransitions();
-      if (transitions.isEmpty) {
-        await _transitionRepository.syncRemoteToLocal(token);
-        transitions = await _transitionRepository.getLocalTransitions();
-      }
+      List<TransitionEntity> allTransitions = await _transitionRepository.getAllTransitions();  // Fetch local transitions
+      log('[TransitionsCubit] Number of Transitions Retrieved: ${allTransitions.length}');
+      emit(GetTransitionsSuccess(allTransitions));
 
-      emit(GetTransitionsSuccess(transitions));
     } catch (e) {
-      emit(TransitionError("Failed to get transitions: $e"));
+      log('[TransitionsCubit] GetAllTransitions failed: $e');
+      emit(TransitionError(e.toString()));
     }
   }
 
-  /// Sync unsynced transitions
-  Future<void> syncTransitions(String token) async {
+  /// Run a one-time sync of transitions when network is available (sync the unsynced local transitions with remote)
+  Future<void> syncTransitions({required String token}) async {
+    if (_isSyncing) return;
+    _isSyncing = true;
+
+    log("[TransitionsCubit] Starting one-shot sync...");
+
     try {
-      final result = await Connectivity().checkConnectivity();
-      if (result != ConnectivityResult.none) {
-        await _transitionRepository.syncLocalToRemote(token);
-        await _transitionRepository.syncRemoteToLocal(token);
-      } else {
-        log("No connection for sync");
-      }
+      await _transitionRepository.syncLocalToRemote(token);
+      log('[TransitionsCubit] Synced local to remote.');
+
+      await _transitionRepository.syncRemoteToLocal(token);
+      log('[TransitionsCubit] Synced remote to local.');
+
+      final allTransitions = await _transitionRepository.getAllTransitions();
+      emit(GetTransitionsSuccess(allTransitions));
     } catch (e) {
-      emit(TransitionError("Sync failed: $e"));
+      log('[TransitionsCubit] Sync error: $e');
+      emit(TransitionError('[TransitionsCubit] Sync error: $e'));
+    } finally {
+      _isSyncing = false;
     }
   }
 
-  /// Update a transition
-  Future<void> updateTransition({
+  /// Update transition info (both local and remote)
+  Future<void> updateTransitionInfo({
     required TransitionEntity updatedTransition,
     required String token,
   }) async {
@@ -98,20 +89,51 @@ class TransitionCubit extends Cubit<TransitionState> {
         token: token,
       );
       emit(UpdateTransitionSuccess(updatedTransition));
+      final allTransitions = await _transitionRepository.getAllTransitions();
+      emit(GetTransitionsSuccess(allTransitions));
+
     } catch (e) {
-      emit(TransitionError("Failed to update: $e"));
+      log(e.toString());
+      emit(TransitionError(e.toString()));
     }
   }
 
-  /// Delete locally
-  Future<void> deleteTransition(String id) async {
+  /// Delete a transition
+  Future<void> deleteTransition({
+    required String transitionId,
+    required String token,
+  }) async {
     try {
       emit(const TransitionLoading());
-      await _transitionRepository.deleteTransition(id);
-      final transitions = await _transitionRepository.getLocalTransitions();
-      emit(GetTransitionsSuccess(transitions));
+      await _transitionRepository.deleteTransitionRemote(id: transitionId, token: token);
+      emit(DeleteTransitionSuccess(transitionId));
+
+      final allTransitions = await _transitionRepository.getAllTransitions();
+      emit(GetTransitionsSuccess(allTransitions));
     } catch (e) {
-      emit(TransitionError("Failed to delete: $e"));
+      log('[TransitionsCubit] Deleting error: $e');
+      emit(TransitionError('[TransitionsCubit] Deleting error: $e'));
     }
   }
+
+
+  Future<void> refresh({required String token}) async {
+    try {
+      emit(const TransitionLoading());
+      final allTransitions = await _transitionRepository.getAllTransitions();
+      emit(GetTransitionsSuccess(allTransitions));
+    } catch (e) {
+      emit(TransitionError('Refresh error: ${e.toString()}'));
+    }
+  }
+
+  Future<void> refreshLocalOnly() async {
+    try {
+      final allTransitions = await _transitionRepository.getAllTransitions();
+      emit(GetTransitionsSuccess(allTransitions));
+    } catch (e) {
+      emit(TransitionError('Local refresh error: ${e.toString()}'));
+    }
+  }
+
 }
