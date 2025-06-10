@@ -11,7 +11,7 @@ import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.
 import 'package:frontend/features/flow/presentation/pages/flow_details_sheet.dart';
 import 'package:frontend/features/pose/presentation/pages/pose_view_sheet.dart';
 
-import 'package:frontend/shared/features/media_display/widgets/media_list/media_list.dart';
+import 'package:frontend/shared/widgets/media_display/multi_card_view/media_list.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 

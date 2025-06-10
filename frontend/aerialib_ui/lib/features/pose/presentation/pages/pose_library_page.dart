@@ -14,7 +14,7 @@ import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
 import 'package:frontend/features/pose/presentation/widgets/pose_filter_sheet.dart';
 import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
-import 'package:frontend/shared/features/media_display/widgets/media_list/media_list.dart';
+import 'package:frontend/shared/widgets/media_display/multi_card_view/media_list.dart';
 import 'package:frontend/features/pose/presentation/widgets/pose_search_bar.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';

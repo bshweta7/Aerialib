@@ -27,7 +27,7 @@ class MediaGridCard extends StatelessWidget {
         child: Column(
           children: [
             AspectRatio(
-              aspectRatio: 1, // Square thumbnail
+              aspectRatio: 1, // TODO might not be needed becasue fit.cover --- Square thumbnail
               child: FormattedCachedNetworkImage(mediaUrl),
             ),
             Padding(

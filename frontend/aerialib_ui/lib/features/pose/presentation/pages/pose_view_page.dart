@@ -11,7 +11,8 @@ import '../../../../core/constants/constants.dart';
 import '../../../../shared/widgets/info_display/info_chip.dart';
 import '../../../../shared/widgets/info_display/info_row.dart';
 import '../../../../shared/widgets/info_display/section_card.dart';
-import '../../../../shared/widgets/media_display/horizontal_cover_media_gallery.dart';
+import '../../../../shared/widgets/media_display/general/formatted_video_player.dart';
+import '../../../../shared/widgets/media_display/multi_card_view/horizontal_scroll_gallery.dart';
 import '../../../../shared/widgets/media_display/general/media_item.dart';
 
 
@@ -55,7 +56,23 @@ class PoseViewPage extends StatelessWidget {
           children: [
 
             /// Media preview
-            HorizontalCoverMediaGallery(mediaList: mediaItems),
+            HorizontalScrollGallery(
+              height: screenHeight * 0.4,
+              items: mediaItems.map((item) {
+                if (item.url.endsWith('.mp4')) {
+                  return SizedBox(
+                    height: screenHeight * 0.4,
+                    child: FormattedVideoPlayer(videoUrl: item.url),
+                  );
+                } else {
+                  return SizedBox(
+                    height: screenHeight * 0.4,
+                    child: FormattedCachedNetworkImage(item.url, fit: BoxFit.contain),
+                  );
+                }
+              }).toList(),
+            ),
+            // TODO make a card for the main images -- HorizontalScrollGallery(mediaList: mediaItems),
             const SizedBox(height: 20),
 
             /// Title and subtitle
