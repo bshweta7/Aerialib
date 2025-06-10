@@ -1,21 +1,29 @@
 import 'package:frontend/features/transitions/data/models/transition_model.dart';
 import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
 
+import '../../../pose/domain/entities/pose_entity.dart';
+import '../../presentation/transition_display_model.dart';
+
 class TransitionMapper {
+
+  /// Create a TransitionEntity from a TransitionModel
   static TransitionEntity modelToEntity(TransitionModel model) {
     return TransitionEntity(
       id: model.id,
       fromPoseId: model.fromPoseId,
       toPoseId: model.toPoseId,
-      level: model.level,
       name: model.name,
+      apparatus: model.apparatus,
+      level: model.level,
+      transitionType: model.transitionType,
       description: model.description,
       teachingCues: model.teachingCues,
       safetyCues: model.safetyCues,
       progressions: model.progressions,
-      transitionType: model.transitionType,
-      startingGrip: model.startingGrip,
-      endingGrip: model.endingGrip,
+      modifications: model.modifications,
+      commonErrors: model.commonErrors,
+      primaryMediaId: model.primaryMediaId,
+      primaryMediaPath: model.primaryMediaPath,
       createdBy: model.createdBy,
       updatedBy: model.updatedBy,
       createdAt: model.createdAt,
@@ -24,20 +32,29 @@ class TransitionMapper {
     );
   }
 
+  /// Bulk conversion of TransitionModels to TransitionEntities
+  static List<TransitionEntity> modelsToEntities(List<TransitionModel> models) {
+    return models.map(modelToEntity).toList();
+  }
+
+  /// Create a TransitionModel from a TransitionEntity
   static TransitionModel entityToModel(TransitionEntity entity) {
     return TransitionModel(
       id: entity.id,
       fromPoseId: entity.fromPoseId,
       toPoseId: entity.toPoseId,
-      level: entity.level,
       name: entity.name,
+      apparatus: entity.apparatus,
+      level: entity.level,
+      transitionType: entity.transitionType,
       description: entity.description,
       teachingCues: entity.teachingCues,
       safetyCues: entity.safetyCues,
       progressions: entity.progressions,
-      transitionType: entity.transitionType,
-      startingGrip: entity.startingGrip,
-      endingGrip: entity.endingGrip,
+      modifications: entity.modifications,
+      commonErrors: entity.commonErrors,
+      primaryMediaId: entity.primaryMediaId,
+      primaryMediaPath: entity.primaryMediaPath,
       createdBy: entity.createdBy,
       updatedBy: entity.updatedBy,
       createdAt: entity.createdAt,
@@ -46,11 +63,39 @@ class TransitionMapper {
     );
   }
 
-  static List<TransitionEntity> modelsToEntities(List<TransitionModel> models) {
-    return models.map(modelToEntity).toList();
-  }
-
+  /// Bulk conversion of TransitionEntities to TransitionModels
   static List<TransitionModel> entitiesToModels(List<TransitionEntity> entities) {
     return entities.map(entityToModel).toList();
+  }
+
+  /// Create a TransitionDisplayModel from a TransitionEntity and a poseMap
+  static TransitionDisplayModel toDisplayModel({
+    required TransitionEntity transition,
+    required Map<String, PoseEntity> poseMap,
+  }) {
+    final fromPose = poseMap[transition.fromPoseId];
+    final toPose = poseMap[transition.toPoseId];
+
+    if (fromPose == null || toPose == null) {
+      throw Exception('Missing pose(s) for transition: ${transition.id}');
+    }
+
+    return TransitionDisplayModel(
+      transition: transition,
+      fromPose: fromPose,
+      toPose: toPose,
+    );
+  }
+
+  /// Bulk conversion of transition entities to display models
+  static List<TransitionDisplayModel> toDisplayModels({
+    required List<TransitionEntity> transitions,
+    required Map<String, PoseEntity> poseMap,
+  }) {
+    return transitions
+        .where((t) =>
+    poseMap.containsKey(t.fromPoseId) && poseMap.containsKey(t.toPoseId))
+        .map((t) => toDisplayModel(transition: t, poseMap: poseMap))
+        .toList();
   }
 }

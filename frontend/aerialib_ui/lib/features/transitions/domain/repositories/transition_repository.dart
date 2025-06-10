@@ -1,8 +1,12 @@
+import 'dart:developer';
+
+import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
+import 'package:frontend/features/transitions/domain/mappers/transition_mapper.dart';
+
 import 'package:frontend/features/transitions/data/datasources/transition_local_data.dart';
 import 'package:frontend/features/transitions/data/datasources/transition_remote_data.dart';
 import 'package:frontend/features/transitions/data/models/transition_model.dart';
-import 'package:frontend/features/transitions/domain/entities/transition_entity.dart';
-import 'package:frontend/features/transitions/domain/mappers/transition_mapper.dart';
+
 
 class TransitionRepository {
   final TransitionLocalDataSource localDataSource;
@@ -15,90 +19,117 @@ class TransitionRepository {
 
   /// Create a new transition (tries remote first, fallback to local if offline)
   Future<TransitionEntity> createTransition({
-    required String fromPoseId,
-    required String toPoseId,
-    required double level,
-    String? name,
-    String? description,
-    String? teachingCues,
-    String? safetyCues,
-    String? progressions,
-    String? transitionType,
-    String? startingGrip,
-    String? endingGrip,
-    required String createdBy,
+    required TransitionEntity transition,
     required String token,
   }) async {
     try {
+      log('[TransitionRepository] Creating transition remotely...');
+
+      // Convert to model and send to backend
       final transitionModel = await remoteDataSource.createTransition(
-        fromPoseId: fromPoseId,
-        toPoseId: toPoseId,
-        level: level,
-        name: name,
-        description: description,
-        teachingCues: teachingCues,
-        safetyCues: safetyCues,
-        progressions: progressions,
-        transitionType: transitionType,
-        startingGrip: startingGrip,
-        endingGrip: endingGrip,
-        createdBy: createdBy,
+        transition: TransitionMapper.entityToModel(transition),
         token: token,
       );
 
-      await localDataSource.insertTransition(transitionModel);
-      return TransitionMapper.modelToEntity(transitionModel);
+      // Save to local DB
+      await localDataSource.createTransition(transitionModel);
+      // log('[TransitionRepository] Transition inserted into local database.');
+
+      // Return as entity
+      final entity = TransitionMapper.modelToEntity(transitionModel);
+      log('[TransitionRepository] Mapped TransitionModel to TransitionEntity: ${entity.id}');
+      return entity;
+
     } catch (e) {
+      log('[TransitionRepository] Error creating transition: $e');
       rethrow;
     }
   }
 
   /// Fetch all transitions from local DB
-  Future<List<TransitionEntity>> getLocalTransitions() async {
-    final models = await localDataSource.getTransitions();
-    return TransitionMapper.modelsToEntities(models);
+  Future<List<TransitionEntity>> getAllTransitions() async {
+    log('[TransitionsRepository] Fetching TransitionModels from local database... ');
+
+    final transitionModels = await localDataSource.getAllTransitions();
+
+    // log('[TransitionsRepository] Converting models to entities');
+    final transitionEntitiesList = TransitionMapper.modelsToEntities(transitionModels);
+    log('[TransitionsRepository] Got ${transitionModels.length} transition entities');
+    // log('[TransitionsRepository] Conversion complete');
+
+    return transitionEntitiesList;
   }
+
+
+  // TODO get all transitions - try to sync and if not possible, return local transitions with note that its local only (or last synced time)
 
   /// Fetch all transitions from remote API and save locally
   Future<void> syncRemoteToLocal(String token) async {
-    final models = await remoteDataSource.fetchRemoteTransitions(token: token);
-    await localDataSource.insertTransitions(models);
+    try {
+      final transitionModels = await remoteDataSource.getRemoteTransitions(token: token);
+      await localDataSource.createTransitions(transitionModels);
+      log('[TransitionRepository] Synced ${transitionModels.length} remote transitions to local.');
+    } catch (e) {
+      log('[TransitionRepository] Failed syncing remote transitions to local: $e');
+      rethrow;
+    }
   }
 
   /// Send unsynced local transitions to remote, and mark them as synced
   Future<void> syncLocalToRemote(String token) async {
     final List<TransitionModel> unsynced = await localDataSource.getUnsyncedTransitions();
-    if (unsynced.isEmpty) return;
+    if (unsynced.isEmpty) {
+      log("[TransitionRepository] No unsynced transitions found.");
+      return;
+    }
 
+    log("[TransitionRepository] Attempting to sync ${unsynced.length} transitions to remote...");
     final success = await remoteDataSource.syncTransitions(
       token: token,
       transitions: unsynced,
     );
 
     if (success) {
-      for (final model in unsynced) {
-        await localDataSource.setSyncedStatus(model.id, 1);
+      for (final transition in unsynced) {
+        await localDataSource.updateSyncStatus(transition.id, 1);
       }
+      log("[TransitionRepository] Successfully updated sync status locally.");
+    } else {
+      log("[TransitionRepository] Remote sync failed. Sync status not updated.");
     }
   }
 
-  /// Update transition remotely and locally
+  /// Update a transition remotely and locally using sync
   Future<void> updateTransition({
     required TransitionEntity updatedTransition,
     required String token,
   }) async {
-    final model = TransitionMapper.entityToModel(updatedTransition);
+    final transitionModel = TransitionMapper.entityToModel(updatedTransition);
 
-    final updatedModel = await remoteDataSource.updateTransition(
-      updatedTransition: model,
+    log("[TransitionRepository] Syncing updated transition remotely...");
+    final success = await remoteDataSource.syncTransitions(
       token: token,
+      transitions: [transitionModel], // Just pass this one updated transition
     );
 
-    await localDataSource.updateTransition(updatedModel);
+    if (success) {
+      final syncedModel = transitionModel.copyWith(isSynced: 1);
+      log("[TransitionRepository] Updating transition locally...");
+      await localDataSource.updateTransition(syncedModel);
+    } else {
+      log("[TransitionRepository] Remote sync failed. Transition not updated locally.");
+      throw Exception("Failed to update transition remotely via sync.");
+    }
   }
 
-  /// Delete locally
-  Future<void> deleteTransition(String id) async {
+  /// Delete Transition
+  Future<void> deleteTransitionRemote({
+    required String id,
+    required String token,
+  }) async {
+    await remoteDataSource.deleteTransition(transitionId: id, token: token);
     await localDataSource.deleteTransition(id);
+    log('[TransitionRepository] Transition $id deleted from both remote and local.');
   }
+
 }
