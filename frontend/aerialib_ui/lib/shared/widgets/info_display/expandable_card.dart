@@ -29,9 +29,7 @@ class _ExpandableCardState extends State<ExpandableCard> {
 
   void _toggleExpanded() {
     if (widget.isExpandable) {
-      setState(() {
-        isExpanded = !isExpanded;
-      });
+      setState(() => isExpanded = !isExpanded);
     }
   }
 
@@ -46,19 +44,31 @@ class _ExpandableCardState extends State<ExpandableCard> {
         ),
         child: Column(
           children: [
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              title: Text(
-                widget.title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _toggleExpanded,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                splashColor: widget.isExpandable ? null : Colors.transparent,
+                highlightColor: widget.isExpandable ? null : Colors.transparent,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  title: Text(
+                    widget.title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  trailing: widget.isExpandable
+                      ? AnimatedRotation(
+                    duration: const Duration(milliseconds: 200),
+                    turns: isExpanded ? 0.5 : 0.0,
+                    child: const Icon(Icons.expand_more),
+                  )
+                      : null,
                 ),
               ),
-              trailing: widget.isExpandable
-                  ? Icon(isExpanded ? Icons.expand_less : Icons.expand_more)
-                  : null,
-              onTap: _toggleExpanded,
             ),
             AnimatedCrossFade(
               firstChild: const SizedBox.shrink(),

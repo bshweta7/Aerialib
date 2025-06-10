@@ -6,7 +6,7 @@ import 'package:frontend/shared/helpers/conversions.dart';
 import 'package:frontend/core/constants/constants.dart';
 
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
-import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
+import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.dart';
 
 import 'package:frontend/features/flow/presentation/pages/flow_details_sheet.dart';
 import 'package:frontend/features/pose/presentation/pages/pose_view_sheet.dart';

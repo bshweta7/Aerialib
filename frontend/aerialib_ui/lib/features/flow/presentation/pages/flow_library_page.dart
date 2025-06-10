@@ -6,7 +6,7 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/shared/helpers/conversions.dart';
 
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
-import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
+import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.dart';
 
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';

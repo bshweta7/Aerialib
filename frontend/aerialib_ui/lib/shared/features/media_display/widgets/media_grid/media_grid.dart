@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
-import 'package:frontend/shared/features/media_display/widgets/media_grid/media_icon_grid_card.dart';
+import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.dart';
+import 'package:frontend/shared/widgets/media_display/cards/media_grid_card.dart';
 
 // TODO if the screen is too small, only show name if tapped on ?
 
@@ -28,7 +28,7 @@ class MediaGrid extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         final media = mediaList[index];
-        return MediaIconGridCard(
+        return MediaGridCard(
           caption: media.title,
           mediaUrl: media.imageUrl,
           onTapFunction: onTapBuilder(media),

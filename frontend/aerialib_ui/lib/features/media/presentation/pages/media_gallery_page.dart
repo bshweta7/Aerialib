@@ -6,7 +6,7 @@ import 'package:frontend/core/constants/constants.dart';
 import 'package:frontend/shared/helpers/conversions.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 
-import 'package:frontend/shared/features/media_display/media_icon_entity.dart';
+import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.dart';
 
 import 'package:frontend/features/media/presentation/cubit/media_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';

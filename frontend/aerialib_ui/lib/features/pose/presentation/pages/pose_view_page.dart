@@ -8,6 +8,7 @@ import 'package:frontend/shared/features/navigation/widgets/smart_back_button.da
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../shared/widgets/info_display/info_chip.dart';
 import '../../../../shared/widgets/info_display/info_row.dart';
 import '../../../../shared/widgets/info_display/section_card.dart';
 import '../../../../shared/widgets/media_display/horizontal_cover_media_gallery.dart';
@@ -50,59 +51,62 @@ class PoseViewPage extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            /// Title
-            Center(
-              child: Text(
-                pose.displayName,
-                style: Theme.of(context).textTheme.headlineLarge
-              ),
-            ),
-            const SizedBox(height: 10),
 
             /// Media preview
             HorizontalCoverMediaGallery(mediaList: mediaItems),
+            const SizedBox(height: 20),
 
-            // Card(
-            //   elevation: 4,
-            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            //   clipBehavior: Clip.antiAlias,
-            //   child: Container(
-            //     constraints: BoxConstraints(
-            //       maxHeight: screenHeight * 0.4,
-            //       minHeight: 20,
-            //     ),
-            //     width: double.infinity,
-            //     child: FormattedCachedNetworkImage("/${pose.primaryMediaPath}"),
-            //   ),
-            // ),
-            // const SizedBox(height: 20),
+            /// Title and subtitle
+            Text(
+              pose.displayName,
+              style: Theme.of(context).textTheme.headlineMedium,
+              textAlign: TextAlign.center,
+            ),
+            if (pose.altName != null && pose.altName!.trim().isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                pose.altName!,
+                style: const TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
 
-            /// Basic Info
-            ExpandableCard(
-              title: "Basic Info",
-              isExpandable: false,
+            const SizedBox(height: 12),
+
+            /// Chips
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
               children: [
-                InfoRow("Apparatus:", capitalizeFirstLetter(pose.apparatus)),
-                InfoRow("Level:", "Level ${pose.level}"),
+                InfoChip(
+                  label: pose.apparatus,
+                  tooltipMessage: 'Apparatus',
+                ),
+                InfoChip(
+                  label: pose.level != null ? 'Level ${pose.level}' : null,
+                  tooltipMessage: 'Level at Uplift Aerial Arts',
+                ),
+                InfoChip(
+                  label: pose.poseType,
+                  tooltipMessage: 'Type of Pose (Static or Dynamic)',
+                ),
               ],
             ),
 
-            /// Additional Details
+            const SizedBox(height: 24),
+
+            /// Teaching Notes
             ExpandableCard(
-              title: "Additional Details",
+              title: "Details",
+              initiallyExpanded: false,
               children: [
-                InfoRow("Alternative Name:", pose.altName),
                 InfoRow("Description:", pose.description),
-                InfoRow("Pose Type:", pose.poseType),
-              ],
-            ),
-
-            /// Notes
-            ExpandableCard(
-              title: "Notes",
-              children: [
                 InfoRow("Teaching Cues:", pose.teachingCues),
                 InfoRow("Safety Cues:", pose.safetyCues),
                 InfoRow("Progressions:", pose.progressions),
