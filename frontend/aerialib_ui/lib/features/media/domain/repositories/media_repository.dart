@@ -50,10 +50,10 @@ class MediaRepository {
 
   /// Fetch all local media
   Future<List<MediaEntity>> getAllMedia() async {
-    log('[MediaRepository] Fetching media from local database...');
+    // log('[MediaRepository] Fetching media from local database...');
     final mediaModels = await localDataSource.getAllMedia();
     final mediaEntities = MediaMapper.modelsToEntities(mediaModels);
-    log('[MediaRepository] Got ${mediaModels.length} media items.');
+    log('[MediaRepository] Got ${mediaModels.length} media entities from local database');
     return mediaEntities;
   }
 
@@ -62,7 +62,7 @@ class MediaRepository {
     try {
       final mediaModels = await remoteDataSource.getRemoteMedia(token: token);
       await localDataSource.createMedias(mediaModels);
-      log('[MediaRepository] Synced ${mediaModels.length} remote media items to local.');
+      log('[MediaRepository] Synced ${mediaModels.length} remote media items to local');
     } catch (e) {
       log('[MediaRepository] Failed syncing remote media to local: $e');
       rethrow;
@@ -74,7 +74,7 @@ class MediaRepository {
     final unsynced = await localDataSource.getUnsyncedMedia();
 
     if (unsynced.isEmpty) {
-      log("[MediaRepository] No unsynced media found.");
+      log("[MediaRepository] No unsynced media found");
       return;
     }
 
@@ -88,9 +88,9 @@ class MediaRepository {
       for (final media in unsynced) {
         await localDataSource.updateSyncStatus(media.id, 1);
       }
-      log("[MediaRepository] Successfully updated sync status locally.");
+      log("[MediaRepository] Successfully updated sync status locally");
     } else {
-      log("[MediaRepository] Remote sync failed. Sync status not updated.");
+      log("[MediaRepository] Remote sync failed. Sync status not updated");
     }
   }
 
@@ -112,8 +112,8 @@ class MediaRepository {
       log("[MediaRepository] Updating media locally..."); // TODO if it fails it doesn't update locally...
       await localDataSource.updateMedia(syncedModel);
     } else {
-      log("[MediaRepository] Remote sync failed. Media not updated locally.");
-      throw Exception("Failed to update media remotely via sync.");
+      log("[MediaRepository] Remote sync failed. Media not updated locally");
+      throw Exception("Failed to update media remotely via sync");
     }
   }
 
@@ -124,6 +124,6 @@ class MediaRepository {
   }) async {
     await remoteDataSource.deleteMedia(mediaId: id, token: token);
     await localDataSource.deleteMedia(id);
-    log('[MediaRepository] Media $id deleted from both remote and local.');
+    log('[MediaRepository] Media $id deleted from both remote and local');
   }
 }

@@ -58,14 +58,14 @@ class TransitionCubit extends Cubit<TransitionState> {
     if (_isSyncing) return;
     _isSyncing = true;
 
-    log("[TransitionsCubit] Starting one-shot sync...");
+    // log("[TransitionsCubit] Starting one-shot sync...");
 
     try {
       await _transitionRepository.syncLocalToRemote(token);
-      log('[TransitionsCubit] Synced local to remote.');
+      // log('[TransitionsCubit] Synced local to remote.');
 
       await _transitionRepository.syncRemoteToLocal(token);
-      log('[TransitionsCubit] Synced remote to local.');
+      // log('[TransitionsCubit] Synced remote to local.');
 
       final allTransitions = await _transitionRepository.getAllTransitions();
       emit(GetTransitionsSuccess(allTransitions));

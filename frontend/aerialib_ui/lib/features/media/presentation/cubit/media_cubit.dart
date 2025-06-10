@@ -58,14 +58,14 @@ class MediaCubit extends Cubit<MediaState> {
     if (_isSyncing) return;
     _isSyncing = true;
 
-    log("[MediasCubit] Starting one-shot sync...");
+    // log("[MediasCubit] Starting one-shot sync...");
 
     try {
       await _mediaRepository.syncLocalToRemote(token);
-      log('[MediasCubit] Synced local to remote.');
+      // log('[MediasCubit] Synced local to remote.');
 
       await _mediaRepository.syncRemoteToLocal(token);
-      log('[MediasCubit] Synced remote to local.');
+      // log('[MediasCubit] Synced remote to local.');
 
       final allMedias = await _mediaRepository.getAllMedia();
       emit(GetMediaSuccess(allMedias));

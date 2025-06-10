@@ -48,13 +48,13 @@ class TransitionRepository {
 
   /// Fetch all transitions from local DB
   Future<List<TransitionEntity>> getAllTransitions() async {
-    log('[TransitionsRepository] Fetching TransitionModels from local database... ');
+    // log('[TransitionsRepository] Fetching TransitionModels from local database... ');
 
     final transitionModels = await localDataSource.getAllTransitions();
 
     // log('[TransitionsRepository] Converting models to entities');
     final transitionEntitiesList = TransitionMapper.modelsToEntities(transitionModels);
-    log('[TransitionsRepository] Got ${transitionModels.length} transition entities');
+    log('[TransitionsRepository] Got ${transitionModels.length} transition entities from local database');
     // log('[TransitionsRepository] Conversion complete');
 
     return transitionEntitiesList;

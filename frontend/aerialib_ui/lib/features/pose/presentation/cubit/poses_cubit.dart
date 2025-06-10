@@ -58,14 +58,14 @@ class PosesCubit extends Cubit<PosesState> {
     if (_isSyncing) return;
     _isSyncing = true;
 
-    log("[PosesCubit] Starting one-shot sync...");
+    // log("[PosesCubit] Starting one-shot sync...");
 
     try {
       await _poseRepository.syncLocalToRemote(token);
-      log('[PosesCubit] Synced local to remote.');
+      // log('[PosesCubit] Synced local to remote.');
 
       await _poseRepository.syncRemoteToLocal(token);
-      log('[PosesCubit] Synced remote to local.');
+      // log('[PosesCubit] Synced remote to local.');
 
       final allPoses = await _poseRepository.getAllPoses();
       emit(GetPosesSuccess(allPoses));

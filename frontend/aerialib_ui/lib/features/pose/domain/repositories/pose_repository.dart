@@ -48,13 +48,13 @@ class PoseRepository {
 
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllPoses() async {
-    log('[PosesRepository] Fetching PoseModels from local database... ');
+    // log('[PosesRepository] Fetching PoseModels from local database... ');
 
     final poseModels = await localDataSource.getAllPoses();
 
     // log('[PosesRepository] Converting models to entities');
     final poseEntitiesList = PoseMapper.modelsToEntities(poseModels);
-    log('[PosesRepository] Got ${poseModels.length} pose entities');
+    log('[PosesRepository] Got ${poseModels.length} pose entities from local database');
     // log('[PosesRepository] Conversion complete');
 
     return poseEntitiesList;
