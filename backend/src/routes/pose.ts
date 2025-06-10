@@ -89,6 +89,7 @@ poseRouter.get("/", auth, async (req: AuthRequest, res) => {
     }
 })
 
+/// Delete pose
 poseRouter.delete("/delete/:id", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user
@@ -190,22 +191,28 @@ function buildPoseUpsertSet() {
         slug: sql`excluded.slug`,
         displayName: sql`excluded.display_name`,
         altName: sql`excluded.alt_name`,
+
         baseName: sql`excluded.base_name`,
         prefix: sql`excluded.prefix`,
         suffix: sql`excluded.suffix`,
+
         handPosition: sql`excluded.hand_position`,
         legPosition: sql`excluded.leg_position`,
         positionInBar: sql`excluded.position_in_bar`,
+
         apparatus: sql`excluded.apparatus`,
         level: sql`excluded.level`,
         poseType: sql`excluded.pose_type`,
+
         description: sql`excluded.description`,
         teachingCues: sql`excluded.teaching_cues`,
         safetyCues: sql`excluded.safety_cues`,
         progressions: sql`excluded.progressions`,
         modifications: sql`excluded.modifications`,
         commonErrors: sql`excluded.common_errors`,
+
         primaryMediaId: sql`excluded.primary_media_id`,
+
         updatedBy: sql`excluded.updated_by`,
         updatedAt: sql`excluded.updated_at`,
     };

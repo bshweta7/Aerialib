@@ -6,7 +6,7 @@ import { eq, sql } from "drizzle-orm";
 
 const transitionRouter = Router();
 
-// Create a new transition
+/// Create a new transition
 transitionRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user
@@ -16,19 +16,29 @@ transitionRouter.post("/", auth, async (req: AuthRequest, res) => {
             return;
         }
 
-        const newTransition: NewTransition = req.body;
-        newTransition.createdBy = req.user;
-        newTransition.updatedBy = req.user;
+        const newTransition: NewTransition = {
+            ...req.body,
+            createdAt: new Date(req.body.createdAt),
+            updatedAt: new Date(req.body.updatedAt),
+        }
+        console.log(newTransition);
 
         const [transition] = await db.insert(transitionsTable).values(newTransition).returning();
-        res.status(201).json(transition);
+
+        // Verify transition was added
+        if (transition) {
+            res.status(201).json(transition);
+        } else {
+            res.status(500).json({ error: "Transition not created" });
+        }
+
     } catch (e) {
         console.error("[TransitionRouter] Post error", e);
         res.status(500).json({ error: e });
     }
 });
 
-// Get all transitions for user and admin
+/// Get all transitions for user and admin
 transitionRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user
@@ -61,7 +71,7 @@ transitionRouter.get("/", auth, async (req: AuthRequest, res) => {
     }
 });
 
-// Delete transition
+/// Delete transition
 transitionRouter.delete("/delete/:id", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user
@@ -72,6 +82,7 @@ transitionRouter.delete("/delete/:id", auth, async (req: AuthRequest, res) => {
         }
 
         const transitionId = req.params.id;
+
         const [transition] = await db
             .select()
             .from(transitionsTable)
@@ -143,10 +154,12 @@ transitionRouter.post("/sync", auth, async (req: AuthRequest, res) => {
             })
             .returning();
 
+        console.log(`[TransitionRouter] ${pushedTransitions.length} transitions inserted or updated.`);
+
         res.status(201).json(pushedTransitions);
     } catch (e) {
         console.error("[TransitionRouter] Sync error", e);
-        res.status(500).json({ error: "Failed to sync transitions" });
+        res.status(500).json({ error: "[TransitionRouter] Failed to sync transitions" });
     }
 });
 
@@ -156,8 +169,8 @@ function buildTransitionUpsertSet() {
     return {
         fromPoseId: sql`excluded.from_pose_id`,
         toPoseId: sql`excluded.to_pose_id`,
-
         name: sql`excluded.name`,
+
         apparatus: sql`excluded.apparatus`,
         level: sql`excluded.level`,
         transitionType: sql`excluded.transition_type`,
@@ -171,7 +184,6 @@ function buildTransitionUpsertSet() {
 
         primaryMediaId: sql`excluded.primary_media_id`,
 
-        createdBy: sql`excluded.created_by`,
         updatedBy: sql`excluded.updated_by`,
         updatedAt: sql`excluded.updated_at`,
     };
