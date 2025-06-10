@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/shared/helpers/formatters.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/shared/widgets/info_display/expandable_card.dart';
 import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
@@ -7,13 +7,13 @@ import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/constants.dart';
 import '../../../../shared/widgets/info_display/info_chip.dart';
 import '../../../../shared/widgets/info_display/info_row.dart';
-import '../../../../shared/widgets/info_display/section_card.dart';
 import '../../../../shared/widgets/media_display/general/formatted_video_player.dart';
 import '../../../../shared/widgets/media_display/multi_card_view/horizontal_scroll_gallery.dart';
 import '../../../../shared/widgets/media_display/general/media_item.dart';
+import '../../../transitions/presentation/cubit/transition_cubit.dart';
+import '../cubit/poses_cubit.dart';
 
 
 class PoseViewPage extends StatelessWidget {
@@ -29,6 +29,11 @@ class PoseViewPage extends StatelessWidget {
       // TODO will show other media items too
       // MediaItem(url: pose.primaryMediaPath),
     ];
+    final posesCubit = context.read<PosesCubit>();
+    final poseMap = {
+      for (final p in context.read<PosesCubit>().poses) p.id: p.displayName
+    };
+    final transitionsCubit = context.read<TransitionCubit>();
 
     return MainScaffold(
       currentIndex: 2,
@@ -117,6 +122,29 @@ class PoseViewPage extends StatelessWidget {
             ),
 
             const SizedBox(height: 24),
+
+            /// Incoming Poses
+            FutureBuilder(
+              future: transitionsCubit.getIncomingTransitionsForPose(pose.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error loading transitions: ${snapshot.error}');
+                } else {
+                  final incoming = snapshot.data ?? [];
+
+                  return ExpandableCard(
+                    title: "Incoming Poses",
+                    initiallyExpanded: false,
+                    children: incoming.map((t) {
+                      final fromPoseName = poseMap[t.fromPoseId] ?? '(Unknown pose)';
+                      return Text(fromPoseName);
+                    }).toList(),
+                  );
+                }
+              },
+            ),
 
             /// Teaching Notes
             ExpandableCard(

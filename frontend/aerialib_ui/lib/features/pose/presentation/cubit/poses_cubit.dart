@@ -13,6 +13,14 @@ class PosesCubit extends Cubit<PosesState> {
 
   PosesCubit(this._poseRepository) : super(const PoseInitial());
 
+  List<PoseEntity> get poses {
+    final currentState = state;
+    if (currentState is GetPosesSuccess) {
+      return currentState.poses;
+    }
+    return [];
+  }
+
   /// Create a new pose
   Future<void> createNewPose({
     required PoseEntity pose,

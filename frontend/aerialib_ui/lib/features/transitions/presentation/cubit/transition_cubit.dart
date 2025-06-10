@@ -53,6 +53,19 @@ class TransitionCubit extends Cubit<TransitionState> {
     }
   }
 
+  /// Returns all transitions that end with the given pose ID (i.e., to_pose_id == poseId)
+  Future<List<TransitionEntity>> getIncomingTransitionsForPose(String poseId) async {
+    try {
+      final allTransitions = await _transitionRepository.getAllTransitions();
+      final incomingTransitions = allTransitions.where((t) => t.toPoseId == poseId).toList();
+      return incomingTransitions;
+    } catch (e) {
+      log('[TransitionCubit] Error getting incoming transitions: $e');
+      emit(TransitionError('[TransitionCubit] Error: $e'));
+      return [];
+    }
+  }
+
   /// Run a one-time sync of transitions when network is available (sync the unsynced local transitions with remote)
   Future<void> syncTransitions({required String token}) async {
     if (_isSyncing) return;
