@@ -1,12 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/features/home/cubit/home_cubit.dart';
 import 'package:frontend/features/music/domain/repositories/music_repository.dart';
 import 'package:frontend/features/music/presentation/cubit/music_cubit.dart';
 import 'package:frontend/features/tags/data/tag_local_data.dart';
 import 'package:frontend/features/tags/data/tag_remote_data.dart';
 import 'package:frontend/features/tags/domain/tag_repository.dart';
 import 'package:frontend/features/tags/presentation/cubit/tag_cubit.dart';
+import 'package:frontend/features/transitions/data/transition_remote_data.dart';
+import 'package:frontend/features/transitions/domain/transition_repository.dart';
+import 'package:frontend/features/transitions/presentation/cubit/transition_cubit.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -62,14 +66,24 @@ Future<void> main() async {
   }
 
   // Set up Repos
+  final userRepo = UserRepository(
+    localDataSource: UserLocalDataSource(),
+    remoteDataSource: UserRemoteDataSource(httpService: HttpService()),
+  );
+
   final poseRepo = PoseRepository(
     localDataSource: PoseLocalDataSource(),
     remoteDataSource: PoseRemoteDataSource(httpService: HttpService()),
   );
 
-  final userRepo = UserRepository(
-    localDataSource: UserLocalDataSource(),
-    remoteDataSource: UserRemoteDataSource(httpService: HttpService()),
+  final mediaRepo = MediaRepository(
+    localDataSource: MediaLocalDataSource(),
+    remoteDataSource: MediaRemoteDataSource(httpService: HttpService()),
+  );
+
+  final transitionRepo = TransitionRepository(
+    localDataSource: TransitionLocalDataSource(),
+    remoteDataSource: TransitionRemoteDataSource(httpService: HttpService()),
   );
 
   final flowRepo = FlowRepository(
@@ -82,11 +96,6 @@ Future<void> main() async {
     remoteDataSource: FlowPoseRemoteDataSource(httpService: HttpService()),
     poseLocalDataSource: PoseLocalDataSource(),
     transitionLocalDataSource: TransitionLocalDataSource(),
-  );
-
-  final mediaRepo = MediaRepository(
-    localDataSource: MediaLocalDataSource(),
-    remoteDataSource: MediaRemoteDataSource(httpService: HttpService()),
   );
 
   final musicRepo = MusicRepository(
@@ -103,12 +112,14 @@ Future<void> main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit(userRepo)),
-      BlocProvider(create: (_) => PosesCubit(poseRepo)),
       BlocProvider(create: (_) => MediaCubit(mediaRepo)),
+      BlocProvider(create: (_) => PosesCubit(poseRepo)),
+      BlocProvider(create: (_) => TransitionCubit(transitionRepo)),
       BlocProvider(create: (_) => FlowsCubit(flowRepo, flowPoseRepo)),
       BlocProvider(create: (_) => NavHistoryCubit()),
       BlocProvider(create: (_) => MusicCubit(musicRepo)),
       BlocProvider(create: (_) => TagCubit(tagRepository: tagRepo)), // TODO make this match format of others (positional)
+      BlocProvider(create: (_) => HomeCubit()),
     ],
     child: const MyApp(),
   ));

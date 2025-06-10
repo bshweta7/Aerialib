@@ -63,8 +63,19 @@ class DatabaseService {
               log('[DatabaseService] onCreate started');
 
               try {
+                log('[DatabaseService] Creating user table...');
+                await db.execute(createUserTable);
+
+                log('[DatabaseService] Creating media table...');
+                await db.execute(createMediaTable);
+
                 log('[DatabaseService] Creating pose table...');
                 await db.execute(createPoseTable);
+
+                log('[DatabaseService] Creating transition table...');
+                await db.execute(createTransitionTable);
+
+
 
                 log('[DatabaseService] Creating flow table...');
                 await db.execute(createFlowTable);
@@ -72,14 +83,9 @@ class DatabaseService {
                 log('[DatabaseService] Creating flow_pose table...');
                 await db.execute(createFlowPoseTable);
 
-                log('[DatabaseService] Creating media table...');
-                await db.execute(createMediaTable);
-
                 log('[DatabaseService] Creating music table...');
                 await db.execute(createMusicTable);
 
-                log('[DatabaseService] Creating user table...');
-                await db.execute(createUserTable);
 
                 // log('[DatabaseService] Creating tag table...');
                 // await db.execute(createTagsTable);
@@ -98,12 +104,25 @@ class DatabaseService {
               }
             },
             onUpgrade: (db, oldVersion, newVersion) async {
+              // Users
+              await db.execute(dropUserTable); // Use drop command from schema
+              await db.execute(createUserTable); // Use create command from schema
+
+              // Media
+              await db.execute(dropMediaTable); // Use drop command from schema
+              await db.execute(createMediaTable); // Use create command from schema
+
               // Poses
               log('[DatabaseService] Dropping Pose table...');
-
               await db.execute(dropPoseTable); // Use drop command from schema
               log('[DatabaseService] Creating Pose table...');
               await db.execute(createPoseTable); // Use create command from schema
+
+              // Transitions
+              log('[DatabaseService] Dropping Transition table...');
+              await db.execute(dropTransitionTable); // Use drop command from schema
+              log('[DatabaseService] Creating Transition table...');
+              await db.execute(createTransitionTable); // Use create command from schema
 
               // Flows
               await db.execute(dropFlowTable);
@@ -112,14 +131,6 @@ class DatabaseService {
               // Flow Poses
               await db.execute(dropFlowPoseTable); // Use drop command from schema
               await db.execute(createFlowPoseTable); // Use create command from schema
-
-              // Media
-              await db.execute(dropMediaTable); // Use drop command from schema
-              await db.execute(createMediaTable); // Use create command from schema
-
-              // Users
-              await db.execute(dropUserTable); // Use drop command from schema
-              await db.execute(createUserTable); // Use create command from schema
 
               // Music
               await db.execute(dropMusicTable);

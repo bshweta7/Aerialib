@@ -53,9 +53,9 @@ class TransitionRemoteDataSource {
     final transitionListInMap = transitions.map((transition) => transition.toMapRemote()).toList();
 
     log('[TransitionRemoteDataSource] Syncing ${transitionListInMap.length} transitions...');
-    for (final map in transitionListInMap) {
-      log('[TransitionRemoteDataSource] Syncing transition slug: ${map['slug']}');
-    }
+    // for (final map in transitionListInMap) {
+    //   log('[TransitionRemoteDataSource] Syncing transition slug: ${map['slug']}');
+    // }
 
     final response = await httpService.post(
       path: "/transitions/sync",
