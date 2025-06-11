@@ -14,6 +14,7 @@ List<MediaIconEntity> posesToMediaIcons(List<PoseEntity> poses) {
     subtitle: "Level ${pose.level} | ${capitalizeFirstLetter(pose.apparatus)}", // TODO - adjust the subtitle with tags
     type: MediaType.pose,
     data: pose,
+    // TODO add is_favorite
   )).toList();
 }
 

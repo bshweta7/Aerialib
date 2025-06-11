@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/shared/widgets/media_display/cards/media_grid_card.dart';
+import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.dart';
 
 class HorizontalScrollGallery extends StatefulWidget {
-  final List<Widget> items;
+  final List<MediaIconEntity> mediaList;
   final double height;
+  final int itemsPerPage;
 
   const HorizontalScrollGallery({
     super.key,
-    required this.items,
+    required this.mediaList,
     this.height = 250,
+    this.itemsPerPage = 3, // show 3 cards per view by default
   });
 
   @override
@@ -16,57 +20,64 @@ class HorizontalScrollGallery extends StatefulWidget {
 }
 
 class _HorizontalScrollGalleryState extends State<HorizontalScrollGallery> {
-  late final PageController _controller;
-  int _currentIndex = 0;
+  int _currentPage = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = PageController();
-  }
-
-  void _goToPage(int index) {
-    if (index >= 0 && index < widget.items.length) {
-      setState(() => _currentIndex = index);
-      _controller.jumpToPage(index);
+  void _goToPage(int newPage) {
+    if (newPage >= 0 &&
+        newPage < (widget.mediaList.length / widget.itemsPerPage).ceil()) {
+      setState(() {
+        _currentPage = newPage;
+      });
     }
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final items = widget.items;
+    final totalPages =
+    (widget.mediaList.length / widget.itemsPerPage).ceil();
+
+    final startIndex = _currentPage * widget.itemsPerPage;
+    final endIndex =
+    (startIndex + widget.itemsPerPage).clamp(0, widget.mediaList.length);
+    final currentItems = widget.mediaList.sublist(startIndex, endIndex);
 
     return Row(
       children: [
-        if (items.length > 1)
+        if (totalPages > 1)
           IconButton(
             icon: const Icon(Icons.arrow_back_ios),
-            onPressed:
-            _currentIndex > 0 ? () => _goToPage(_currentIndex - 1) : null,
+            onPressed: _currentPage > 0
+                ? () => _goToPage(_currentPage - 1)
+                : null,
           ),
         Expanded(
           child: SizedBox(
             height: widget.height,
-            child: AbsorbPointer(
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: items.length,
-                itemBuilder: (_, index) => items[index],
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: currentItems.map((icon) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: SizedBox(
+                    width: widget.height * 0.65,
+                    child: MediaGridCard(
+                      caption: icon.title,
+                      mediaUrl: icon.imageUrl,
+                      onTapFunction: () {
+                        // TODO: open transition modal
+                      },
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ),
-        if (items.length > 1)
+        if (totalPages > 1)
           IconButton(
             icon: const Icon(Icons.arrow_forward_ios),
-            onPressed: _currentIndex < items.length - 1
-                ? () => _goToPage(_currentIndex + 1)
+            onPressed: _currentPage < totalPages - 1
+                ? () => _goToPage(_currentPage + 1)
                 : null,
           ),
       ],

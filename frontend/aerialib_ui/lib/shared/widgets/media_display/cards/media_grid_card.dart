@@ -27,19 +27,23 @@ class MediaGridCard extends StatelessWidget {
         child: Column(
           children: [
             AspectRatio(
-              aspectRatio: 1, // TODO might not be needed becasue fit.cover --- Square thumbnail
+              aspectRatio: 1,
               child: FormattedCachedNetworkImage(mediaUrl),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Text(
-                caption,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
+              child: Tooltip(
+                message: caption,
+                waitDuration: const Duration(milliseconds: 400),
+                child: Text(
+                  caption,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
