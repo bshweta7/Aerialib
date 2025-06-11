@@ -6,8 +6,10 @@ const appTextTheme = TextTheme(
   headlineMedium: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
   bodyLarge: TextStyle(fontSize: 20),
   bodyMedium: TextStyle(fontSize: 16),
-  labelMedium: TextStyle(fontSize: 20),
-  labelSmall: TextStyle(fontSize: 12, color: Colors.grey),
+  labelLarge: TextStyle(fontSize: 20),
+  labelMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  labelSmall: TextStyle(fontSize: 12, color: Colors.grey), // Subtitle
+
 );
 
 ThemeData getLightTheme() {

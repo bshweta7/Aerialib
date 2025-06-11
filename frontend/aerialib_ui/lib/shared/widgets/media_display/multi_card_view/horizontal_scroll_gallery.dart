@@ -79,7 +79,8 @@ class _HorizontalScrollGalleryState extends State<HorizontalScrollGallery> {
                   child: SizedBox(
                     width: itemWidth,
                     child: MediaGridCard(
-                      caption: showCaption ? icon.title : null,
+                      title: icon.title,
+                      subtitle: icon.subtitle,
                       mediaUrl: icon.imageUrl,
                       onTapFunction: icon.onTapFunction,
                     ),

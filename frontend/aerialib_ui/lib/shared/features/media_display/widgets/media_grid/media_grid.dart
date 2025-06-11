@@ -29,7 +29,8 @@ class MediaGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final media = mediaList[index];
         return MediaGridCard(
-          caption: media.title,
+          title: media.title,
+          subtitle: media.subtitle,
           mediaUrl: media.imageUrl,
           onTapFunction: onTapBuilder(media),
         );

@@ -7,15 +7,41 @@ import 'package:frontend/features/media/domain/entities/media_entity.dart';
 import 'package:frontend/features/music/domain/entities/music_entity.dart';
 import 'package:frontend/core/constants/constants.dart';
 
-List<MediaIconEntity> posesToMediaIcons(List<PoseEntity> poses) {
+import '../../features/transitions/domain/transition_entity.dart';
+
+List<MediaIconEntity> posesToMediaIcons(
+    List<PoseEntity> poses,
+    {void Function(PoseEntity pose)? onTap}
+  ) {
   return poses.map((pose) => MediaIconEntity(
     imageUrl: "/${pose.primaryMediaPath}",
     title: pose.displayName,
     subtitle: "Level ${pose.level} | ${capitalizeFirstLetter(pose.apparatus)}", // TODO - adjust the subtitle with tags
     type: MediaType.pose,
     data: pose,
+    onTapFunction: onTap != null ? () => onTap(pose) : null,
     // TODO add is_favorite
   )).toList();
+}
+
+List<MediaIconEntity> transitionPosesToMediaIcons({
+  required List<TransitionEntity> transitions,
+  required Map<String, PoseEntity> poseMap,
+  void Function(TransitionEntity transition)? onTap,
+}) {
+  return transitions.map((transition) {
+    final fromPose = poseMap[transition.fromPoseId];
+    if (fromPose == null) return null;
+
+    return MediaIconEntity(
+      imageUrl: "/${fromPose.primaryMediaPath}",
+      title: fromPose.displayName,
+      subtitle: transition.name,
+      type: MediaType.pose,
+      data: fromPose,
+      onTapFunction: onTap != null ? () => onTap(transition) : null,
+    );
+  }).whereType<MediaIconEntity>().toList();
 }
 
 

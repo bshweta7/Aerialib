@@ -130,45 +130,26 @@ class PoseViewPage extends StatelessWidget {
                 } else {
                   final incoming = snapshot.data ?? [];
 
-                    final fromPoses = incoming
-                        .map((t) => poseMap[t.fromPoseId])
-                        .whereType<PoseEntity>()
-                        .toList();
+                  final mediaIcons = transitionPosesToMediaIcons(
+                    transitions: incoming,
+                    poseMap: { for (final p in posesCubit.poses) p.id: p },
+                    // onTap: (transition) {
+                    //   showModalBottomSheet(
+                    //     context: context,
+                    //     builder: (_) => TransitionDetailSheet(transition: transition),
+                    //   );
+                    // },
+                  );
 
-                    final mediaIcons = posesToMediaIcons(fromPoses);
-
-                    return ExpandableCard(
-                      title: 'Incoming Poses',
-                      children: [
-                        HorizontalScrollGallery(
-                          mediaList: mediaIcons,
-                          height: screenHeight * 0.2,
-                        ),
-                      ]
-                    );
-                  //
-                  //
-                  //   return MediaGridCard(
-                  //     caption: fromPose.displayName,
-                  //     mediaUrl: fromPose.primaryMediaPath,
-                  //     onTapFunction: () {
-                  //       // TODO: open transition modal
-                  //     },
-                  //   );
-                  // }).whereType<Widget>().toList();
-                  //
-                  // return ExpandableCard(
-                  //   title: "Incoming Poses",
-                  //   children: [
-                  //     GridView.count(
-                  //       shrinkWrap: true,
-                  //       physics: const NeverScrollableScrollPhysics(),
-                  //       crossAxisCount: 2,
-                  //       childAspectRatio: 0.85,
-                  //       children: cards,
-                  //     )
-                  //   ],
-                  // );
+                  return ExpandableCard(
+                    title: 'Incoming Poses',
+                    children: [
+                      HorizontalScrollGallery(
+                        mediaList: mediaIcons,
+                        height: screenHeight * 0.2,
+                      ),
+                    ]
+                  );
                 }
               },
             ),

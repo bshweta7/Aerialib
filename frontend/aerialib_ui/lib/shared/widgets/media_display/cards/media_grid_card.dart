@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
 
+import '../../../../core/constants/app_theme.dart';
+
 class MediaGridCard extends StatelessWidget {
   final String mediaUrl;
-  final String? caption; // TODO see list card
+  final String? title;
+  final String? subtitle;
   final GestureTapCallback? onTapFunction;
 
   const MediaGridCard({
     super.key,
     required this.mediaUrl,
-    this.caption,
+    this.title,
+    this.subtitle,
     this.onTapFunction,
   });
 
   @override
   Widget build(BuildContext context) {
-    final hasCaption = caption != null && caption!.trim().isNotEmpty;
+    final showBottom = (title != null && title!.trim().isNotEmpty) ||
+        (subtitle != null && subtitle!.trim().isNotEmpty);
 
     return GestureDetector(
       onTap: onTapFunction,
@@ -52,20 +57,24 @@ class MediaGridCard extends StatelessWidget {
               // ),
             ),
 
-            if (hasCaption)
+            if (showBottom)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Tooltip(
-                  message: caption!,
+                  message: subtitle == null ? title : "$subtitle From $title",
                   waitDuration: const Duration(milliseconds: 400),
-                  child: Text(
-                    caption!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (title != null && title!.trim().isNotEmpty)
+                        Text(
+                          title!,
+                          style: appTextTheme.labelMedium,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    ],
                   ),
                 ),
               ),
