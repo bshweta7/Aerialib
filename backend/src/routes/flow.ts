@@ -7,6 +7,7 @@ import { eq, sql } from "drizzle-orm";
 
 const flowRouter = Router();
 
+/// Create new pose (add metadata)
 flowRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user

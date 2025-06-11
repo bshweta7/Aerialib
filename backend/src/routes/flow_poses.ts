@@ -1,166 +1,141 @@
 // src/routes/flow_poses.ts
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
-import { NewFlowPose, flowPosesTable } from "../db/schema";
+import {NewFlowPose, flowPosesTable} from "../db/schema";
 import { db } from "../db";
-import { eq } from "drizzle-orm";
-
-
-// TODO THIS MIGHT NOT BE NECESSARY (MERGE INTO FLOW.TS)
+import {eq, sql} from "drizzle-orm";
 
 const flowPoseRouter = Router();
 
+/// Create a new flowPose
+// flowPoseRouter.post("/", auth, async (req: AuthRequest, res) => {
+//     try {
+//         // Verify user
+//         if (!req.user) {
+//             console.log('[FlowPoseRouter] Unauthorized user');
+//             res.status(401).json({ error: "Unauthorized" });
+//             return;
+//         }
+//
+//         const newFlowPose: NewFlowPose = {...req.body,}
+//         console.log(newFlowPose);
+//
+//         const [flowPose] = await db.insert(flowPosesTable).values(newFlowPose).returning();
+//
+//         // Verify flowPose was added
+//         if (flowPose) {
+//             res.status(201).json(flowPose);
+//         } else {
+//             res.status(500).json({ error: "FlowPose not created" });
+//         }
+//
+//     } catch (e) {
+//         console.error("[FlowPoseRouter] Post error", e);
+//         res.status(500).json({ error: e });
+//     }
+// });
+
+// Create multiple flow poses
 flowPoseRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
-        //create new flow in db 
-
-        req.body = { ...req.body, uid: req.user }; 
-        const NewFlowPose: NewFlowPose = req.body;
-        console.log(NewFlowPose);
-
-        const [flowPose] = await db.insert(flowPosesTable).values(NewFlowPose).returning();
-
-        res.status(201).json(flowPose);
-
-    } catch (e) {
-        console.log(e)
-        res.status(500).json({ error: e })
-    }
-})
-
-flowPoseRouter.get("/", auth, async (req: AuthRequest, res) => {
-    try {
-        const allFlowPoses = await db.select().from(flowPosesTable);
-        // const allMedia = await db.select().from(mediaTable).where(eq(mediaTable.createdBy, req.user!));
-
-        res.json(allFlowPoses); // TODO filter by permissions
-
-    } catch (e) {
-        res.status(500).json({ error: e })
-    }
-})
-
-
-flowPoseRouter.delete("/", auth, async (req: AuthRequest, res) => {
-    try {
-        const { flowPoseId }: { flowPoseId: string } = req.body;
-        await db.delete(flowPosesTable).where(eq(flowPosesTable.id, flowPoseId));
-
-        res.json(true);
-
-    } catch (e) {
-        res.status(500).json({ error: e })
-    }
-})
-
-
-flowPoseRouter.post("/sync", auth, async (req: AuthRequest, res) => {
-    try {
-        const flowPosesList = req.body;
-        const filteredFlowPoses: NewFlowPose[] = [];
-
-        flowPosesList.forEach((flowPose: { pose_id: any; }) => {
-            console.log('[FlowPoseRouter] Received pose_id:', flowPose.pose_id);
-        });
-
-        for (let t of flowPosesList) {
-            const cleaned = {
-                id: t.id,
-                flowId: t.flow_id,
-                poseId: t.pose_id,
-                poseOrder: t.pose_order,
-                // TODO Add transition ID
-                // created_by: t.created_by ?? req.user,
-                // updated_by: req.user,
-                // created_at: new Date(t.created_at),
-                // updated_at: new Date(t.updated_at),
-            };
-
-            filteredFlowPoses.push(cleaned);
+        // Verify user
+        if (!req.user) {
+            console.log('[FlowPoseRouter] Unauthorized user');
+            res.status(401).json({ error: "Unauthorized" });
+            return;
         }
 
-        console.log("[FlowPoseRouter] Syncing", filteredFlowPoses.length, "flow poses");
+        const userId = req.user;
+        const flowPoseList = req.body;
+        console.log('[FlowPoseRouter] Received ${flowPoseList.length} flow poses to add');
 
-        const pushedFlowPoses = await db
+        if (!Array.isArray(flowPoseList) || flowPoseList.length === 0) {
+            res.status(400).json({ error: "Empty flowPose list" });
+            return;
+        }
+
+        const normalized = flowPoseList.map((pose: any) => ({...pose}));
+
+        const inserted = await db
             .insert(flowPosesTable)
-            .values(filteredFlowPoses)
-            .onConflictDoNothing() // Prevent duplicate inserts on retry
+            .values(normalized)
             .returning();
 
-        res.status(201).json(pushedFlowPoses);
+        // Verify flowPose was added
+        if (inserted) {
+            res.status(201).json(inserted);
+        } else {
+            res.status(500).json({ error: "FlowPose not created" });
+        }
+
     } catch (e) {
-        console.error("[FlowPoseRouter] Sync error:", e);
+        console.error("[FlowPoseRouter] Bulk insert error:", e);
+        res.status(500).json({ error: "Failed to insert flow poses" });
+    }
+});
+
+
+// Get poses for all flows for a given user
+flowPoseRouter.get("/", auth, async (req: AuthRequest, res) => {
+    // Verify user
+    if (!req.user) {
+        console.log('[FlowPoseRouter] Unauthorized user');
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const userId = req.user;
+    const adminId = process.env.ADMIN_USER_ID;
+
+    try {
+        // TODO need to verify that this works
+        const query = sql`
+            SELECT flow_pose.*
+            FROM flow_pose
+                     INNER JOIN flows ON flows.id = flow_pose.flow_id
+            WHERE flows.created_by = ${userId}
+               OR flows.created_by = ${adminId}
+            ORDER BY flow_pose.flow_id, flow_pose.pose_order ASC;
+        `;
+
+        const result = await db.execute(query);
+        res.json(result.rows);
+    } catch (e) {
+        console.error("[FlowPoseRouter] Get error:", e);
         res.status(500).json({ error: e });
     }
 });
 
-flowPoseRouter.delete("/delete_all/:flowId", auth, async (req: AuthRequest, res) => {
+
+
+// Delete all flow_poses for a given flowId
+flowPoseRouter.delete("/delete/:flowId", auth, async (req: AuthRequest, res) => {
+    // Verify user
+    if (!req.user) {
+        console.log('[FlowPoseRouter] Unauthorized user');
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const flowId = req.params.flowId;
+
     try {
-        const flowId = req.params.flowId;
-        await db.delete(flowPosesTable).where(eq(flowPosesTable.flowId, flowId));
-        res.status(200).json({ message: "Deleted all flow poses for flowId: " + flowId });
-    } catch (err) {
-        console.error(err);
+        const deleted = await db
+            .delete(flowPosesTable)
+            .where(eq(flowPosesTable.flowId, flowId))
+            .returning();
+
+        if (deleted.length === 0) {
+            console.log('[FlowPoseRouter] FlowPose was not found');
+            res.status(404).json({ error: "FlowPose not found" });
+            return;
+        }
+
+        res.json(true);
+    } catch (e) {
+        console.error("[FlowPoseRouter] Delete error", e);
         res.status(500).json({ error: "Failed to delete flow poses" });
     }
 });
-
-
-// TODO Enable sync
-// flowRouter.post("/sync", auth, async (req: AuthRequest, res) => {
-//   try {
-//     const flowPosesList = req.body;
-//     const filteredFlowPoses: NewFlowPose[] = [];
-
-//     for (let t of flowPosesList) {
-//       t = {
-//         ...t,
-//         createdAt: new Date(t.createdAt),
-//         updatedAt: new Date(t.updatedAt),
-//         createdBy: req.user, // TODO Double check if this is right 
-//       };
-//       filteredFlowPoses.push(t);
-//     }
-
-//     const pushedFlowPoses = await db
-//       .insert(flowPosesTable)
-//       .values(flowPosesList)
-//       .returning();
-
-//     res.status(201).json(pushedFlowPoses);
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({ error: e });
-//   }
-// });
-  
-
-// TODO enable update
-// flowRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
-//   try {
-//     const poseId = req.params.id; // Get the pose ID from the URL
-//     req.body = { ...req.body, uid: req.user };
-//     const updatedPose: NewPose = req.body;
-//     console.log("Updating Pose:", updatedPose);
-
-//     const [pose] = await db
-//       .update(posesTable)
-//       .set(updatedPose) // Use set to update the values
-//       .where(eq(posesTable.id, poseId)) // Use where to target the pose
-//       .returning();
-
-//     if (!pose) {
-//         res.status(404).json({error: "Pose not found"});
-//         return;
-//     }
-
-//     res.status(200).json(pose); // Change status to 200 (OK)
-
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({ error: e });
-//   }
-// });
-
 
 export default flowPoseRouter;

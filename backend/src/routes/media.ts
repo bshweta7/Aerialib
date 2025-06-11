@@ -180,7 +180,8 @@ mediaRouter.delete("/delete/:id", auth, async (req: AuthRequest, res) => {
         }
 
         // Attempt deletion and return deleted rows
-        const deleted = await db.delete(mediaTable)
+        const deleted = await db
+            .delete(mediaTable)
             .where(eq(mediaTable.id, mediaId))
             .returning();
 
