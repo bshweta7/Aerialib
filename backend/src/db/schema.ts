@@ -127,9 +127,8 @@ export type NewTransition = typeof transitionsTable.$inferInsert;
 /* FLOWS */
 export const flowsTable = pgTable("flows", {
     id: uuid("id").primaryKey().defaultRandom(),
+
     name: text("name").notNull(), // NOTE: Give suggestions in frontend (like April Flow) or default to date created
-    // TODO change thumbnail image id
-    thumbnailImageId: uuid("thumbnail_image_id").notNull().references(() => mediaTable.id),
     apparatus: text("apparatus").notNull(), // NOTE: this can be interpreted from poses contained within it, don't need to ask the user to enter it
     level: doublePrecision("level").notNull(),
 
@@ -137,6 +136,10 @@ export const flowsTable = pgTable("flows", {
     teachingCues: text("teaching_cues"),
     safetyCues: text("safety_cues"),
     progressions: text("progressions"),
+    modifications: text("modifications"),
+    commonErrors: text("common_errors"),
+
+    primaryMediaId: uuid("primary_media_id").references(() => mediaTable.id),
 
     createdBy: uuid("created_by").notNull().references(() => usersTable.id, { onDelete: "set default" }), // TODO Figure out what is set default
     updatedBy: uuid("updated_by").references(() => usersTable.id),

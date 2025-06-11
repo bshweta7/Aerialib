@@ -1,3 +1,4 @@
+// src/routes/pose.ts
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
 import { posesTable, NewPose} from "../db/schema";
