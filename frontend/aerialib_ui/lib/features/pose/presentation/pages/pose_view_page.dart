@@ -28,15 +28,13 @@ class PoseViewPage extends StatelessWidget {
     final mediaIcons = [
       MediaIconEntity(
         imageUrl: "/${pose.primaryMediaPath}",
+        type: MediaType.pose,
+        data: pose,
       )
     ];
 
     final posesCubit = context.read<PosesCubit>();
     final transitionsCubit = context.read<TransitionCubit>();
-
-    final poseMap = {
-      for (final p in posesCubit.poses) p.id: p
-    };
 
     return MainScaffold(
       currentIndex: 2,
@@ -133,6 +131,16 @@ class PoseViewPage extends StatelessWidget {
                   final mediaIcons = transitionPosesToMediaIcons(
                     transitions: incoming,
                     poseMap: { for (final p in posesCubit.poses) p.id: p },
+                    onTap: (transition) {
+                      context.goNamed(
+                        'transition-view',
+                        pathParameters: {'transitionId': transition.id},
+                        queryParameters: {'from': 'pose-view'},
+                      ); // TODO when you click back from transition, it goes to pose library
+                    }
+
+
+
                     // onTap: (transition) {
                     //   showModalBottomSheet(
                     //     context: context,
@@ -154,7 +162,7 @@ class PoseViewPage extends StatelessWidget {
               },
             ),
 
-            /// Teaching Notes
+            /// Details
             ExpandableCard(
               title: "Details",
               initiallyExpanded: false,

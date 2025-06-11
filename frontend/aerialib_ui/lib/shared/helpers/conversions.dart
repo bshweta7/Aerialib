@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
 import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
@@ -6,8 +7,10 @@ import 'package:frontend/features/media/domain/entities/media_entity.dart';
 
 import 'package:frontend/features/music/domain/entities/music_entity.dart';
 import 'package:frontend/core/constants/constants.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../features/transitions/domain/transition_entity.dart';
+import '../../features/transitions/presentation/pages/transition_view_page.dart';
 
 List<MediaIconEntity> posesToMediaIcons(
     List<PoseEntity> poses,
@@ -37,12 +40,13 @@ List<MediaIconEntity> transitionPosesToMediaIcons({
       imageUrl: "/${fromPose.primaryMediaPath}",
       title: fromPose.displayName,
       subtitle: transition.name,
-      type: MediaType.pose,
-      data: fromPose,
+      type: MediaType.transition,
+      data: transition,
       onTapFunction: onTap != null ? () => onTap(transition) : null,
     );
   }).whereType<MediaIconEntity>().toList();
 }
+
 
 
 // List<MediaIconEntity> flowsToMediaIcons(List<FlowEntity> flows) {

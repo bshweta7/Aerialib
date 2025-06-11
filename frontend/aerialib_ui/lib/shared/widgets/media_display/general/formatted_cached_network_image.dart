@@ -17,7 +17,7 @@ class FormattedCachedNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fullUrl = '${Constants.mediaUrlPrefix}/$mediaUrl';
-    // log('[FormattedCachedNetworkImage] Loading URL: $fullUrl');
+    log('[FormattedCachedNetworkImage] Loading URL: $fullUrl');
 
     return CachedNetworkImage(
       imageUrl: fullUrl,

@@ -25,4 +25,5 @@ enum MediaType {
   flow,
   media,
   music,
+  transition,
 }
