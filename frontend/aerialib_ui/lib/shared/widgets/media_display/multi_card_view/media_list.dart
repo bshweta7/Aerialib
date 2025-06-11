@@ -32,8 +32,8 @@ class MediaList extends StatelessWidget {
           onTap: () => onMediaTap(mediaItem),
           child: ListCard(
             imageUrl: mediaItem.imageUrl,
-            title: mediaItem.title,
-            subtitle: mediaItem.subtitle,
+            title: mediaItem.title!,
+            subtitle: mediaItem.subtitle!,
             // only show heart if the param is passed and the item has isFavorite set
             isFavorite: mediaItem.isFavorite,
             onFavoriteToggle: onFavoriteToggle != null
