@@ -69,7 +69,7 @@ class TransitionMapper {
   }
 
   /// Create a TransitionDisplayModel from a TransitionEntity and a poseMap
-  static TransitionDisplayModel toDisplayModel({
+  static TransitionDisplayModel entityToDisplayModel({
     required TransitionEntity transition,
     required Map<String, PoseEntity> poseMap,
   }) {
@@ -88,14 +88,14 @@ class TransitionMapper {
   }
 
   /// Bulk conversion of transition entities to display models
-  static List<TransitionDisplayModel> toDisplayModels({
+  static List<TransitionDisplayModel> entitiesToDisplayModels({
     required List<TransitionEntity> transitions,
     required Map<String, PoseEntity> poseMap,
   }) {
     return transitions
         .where((t) =>
     poseMap.containsKey(t.fromPoseId) && poseMap.containsKey(t.toPoseId))
-        .map((t) => toDisplayModel(transition: t, poseMap: poseMap))
+        .map((t) => entityToDisplayModel(transition: t, poseMap: poseMap))
         .toList();
   }
 }

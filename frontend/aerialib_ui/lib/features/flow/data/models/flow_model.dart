@@ -4,8 +4,8 @@ import '../../../../core/constants/constants.dart';
 class FlowModel {
   final String id;
   final String name;
-  final String primaryMediaId;
-  final String primaryMediaPath;
+  final String? primaryMediaId;
+  final String? primaryMediaPath;
   final String apparatus;
   final double level;
 
@@ -26,8 +26,8 @@ class FlowModel {
   const FlowModel({
     required this.id,
     required this.name,
-    required this.primaryMediaId,
-    required this.primaryMediaPath,
+    this.primaryMediaId,
+    this.primaryMediaPath,
     required this.apparatus,
     required this.level,
     this.description,

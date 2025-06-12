@@ -1,92 +1,115 @@
 import 'package:frontend/features/flow/data/models/flow_model.dart';
-import 'package:frontend/features/pose/data/models/pose_model.dart';
-import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
 import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
+
+import '../../../pose/domain/entities/pose_entity.dart';
+import '../../../transitions/domain/transition_entity.dart';
+import '../../../transitions/presentation/transition_display_model.dart';
+import '../../presentation/display_models/flow_display_model.dart';
+import '../../presentation/display_models/flow_pose_display_model.dart';
 import '../entities/flow_pose_entity.dart';
-import 'flow_pose_mapper.dart';
+
 
 class FlowMapper {
-  /// Converts a FlowModel to a FlowEntity with empty poses.
-  static FlowEntity modelToEntityDetailsOnly(FlowModel flowModel) {
+
+  /// Converts a FlowModel to a FlowEntity
+  static FlowEntity modelToEntity(FlowModel model) {
     return FlowEntity(
-      id: flowModel.id,
-      name: flowModel.name,
-      thumbnailImageId: flowModel.thumbnailImageId,
-      thumbnailImagePath: flowModel.thumbnailImagePath,
-      apparatus: flowModel.apparatus,
-      level: flowModel.level,
-      description: flowModel.description,
-      teachingCues: flowModel.teachingCues,
-      safetyCues: flowModel.safetyCues,
-      progressions: flowModel.progressions,
-      poses: [],
-      createdBy: flowModel.createdBy,
-      updatedBy: flowModel.updatedBy,
-      createdAt: flowModel.createdAt,
-      updatedAt: flowModel.updatedAt,
-      isSynced: flowModel.isSynced,
+      id: model.id,
+      name: model.name,
+      apparatus: model.apparatus,
+      level: model.level,
+      description: model.description,
+      teachingCues: model.teachingCues,
+      safetyCues: model.safetyCues,
+      progressions: model.progressions,
+      modifications: model.modifications,
+      commonErrors: model.commonErrors,
+      primaryMediaId: model.primaryMediaId,
+      primaryMediaPath: model.primaryMediaPath,
+      createdBy: model.createdBy,
+      updatedBy: model.updatedBy,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
+      isSynced: model.isSynced,
     );
   }
 
-  /// Converts a FlowModel to a full FlowEntity with ordered pose data.
-  static Future<FlowEntity> modelToFullEntity({
-    required FlowModel flowModel,
-    required List<FlowPoseModel> flowPoseModels,
-    required Future<PoseModel?> Function(String id) getPoseById,
-  }) async {
-    final List<FlowPoseEntity> flowPoseEntities = [];
-
-    for (final model in flowPoseModels) {
-      final poseModel = await getPoseById(model.poseId);
-      if (poseModel != null) {
-        flowPoseEntities.add(
-          FlowPoseMapper.modelToEntity(
-              model: model,
-              poseModel: poseModel,
-              // TODO transitionModel: transitionModel
-          ),
-        );
-      }
-    }
-
-    return FlowEntity(
-      id: flowModel.id,
-      name: flowModel.name,
-      thumbnailImageId: flowModel.thumbnailImageId,
-      thumbnailImagePath: flowModel.thumbnailImagePath,
-      apparatus: flowModel.apparatus,
-      level: flowModel.level,
-      description: flowModel.description,
-      teachingCues: flowModel.teachingCues,
-      safetyCues: flowModel.safetyCues,
-      progressions: flowModel.progressions,
-      poses: flowPoseEntities,
-      createdBy: flowModel.createdBy,
-      updatedBy: flowModel.updatedBy,
-      createdAt: flowModel.createdAt,
-      updatedAt: flowModel.updatedAt,
-      isSynced: flowModel.isSynced,
-    );
+  /// Bulk conversion of FlowModel to FlowEntity
+  static List<FlowEntity> modelsToEntities(List<FlowModel> models) {
+    return models.map(modelToEntity).toList();
   }
 
-  /// Converts a FlowEntity to a FlowModel (metadata only)
+  /// Converts a FlowEntity to a FlowModel
   static FlowModel entityToModel(FlowEntity entity) {
     return FlowModel(
       id: entity.id,
       name: entity.name,
-      thumbnailImageId: entity.thumbnailImageId,
-      thumbnailImagePath: entity.thumbnailImagePath,
       apparatus: entity.apparatus,
       level: entity.level,
       description: entity.description,
       teachingCues: entity.teachingCues,
       safetyCues: entity.safetyCues,
       progressions: entity.progressions,
+      modifications: entity.modifications,
+      commonErrors: entity.commonErrors,
+      primaryMediaId: entity.primaryMediaId,
+      primaryMediaPath: entity.primaryMediaPath,
       createdBy: entity.createdBy,
       updatedBy: entity.updatedBy,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       isSynced: entity.isSynced,
     );
+  }
+
+  /// Bulk conversion: List<FlowEntity> → List<FlowModel>
+  static List<FlowModel> entitiesToModels(List<FlowEntity> entities) {
+    return entities.map(entityToModel).toList();
+  }
+
+  /// Convert FlowEntity + display poses → FlowDisplayModel
+  static FlowDisplayModel entityToDisplayModel({
+    required FlowEntity flow,
+    required List<FlowPoseDisplayModel> flowPoseDisplayModels,
+  }) {
+    return FlowDisplayModel(
+      flow: flow,
+      flowPoses: flowPoseDisplayModels,
+    );
+  }
+
+  /// Convert FlowDisplayModel → FlowEntity and List<FlowPoseEntity>
+  static ({FlowEntity flow, List<FlowPoseEntity> flowPoseEntities}) displayModelToEntity(
+      FlowDisplayModel displayModel,
+      ) {
+    final flow = displayModel.flow;
+    final poses = displayModel.flowPoses.map((d) => d.flowPose).toList();
+
+    return (flow: flow, flowPoseEntities: poses);
+  }
+
+  /// Bulk: Convert list of FlowEntities + poseDisplayMap → FlowDisplayModels
+  static List<FlowDisplayModel> entitiesToDisplayModels({
+    required List<FlowEntity> flows,
+    required Map<String, List<FlowPoseDisplayModel>> poseDisplayMap,
+  }) {
+    return flows.map((flow) {
+      final poses = poseDisplayMap[flow.id] ?? [];
+      return entityToDisplayModel(flow: flow, flowPoseDisplayModels: poses);
+    }).toList();
+  }
+
+  /// Bulk: Convert list of FlowDisplayModels → (List<FlowEntity>, List<FlowPoseEntity>)
+  static ({List<FlowEntity> flows, List<FlowPoseEntity> flowPoseEntities})
+  displayModelsToEntities(List<FlowDisplayModel> displayModels) {
+    final flows = <FlowEntity>[];
+    final flowPoseEntities = <FlowPoseEntity>[];
+
+    for (final model in displayModels) {
+      flows.add(model.flow);
+      flowPoseEntities.addAll(model.flowPoses.map((d) => d.flowPose));
+    }
+
+    return (flows: flows, flowPoseEntities: flowPoseEntities);
   }
 }

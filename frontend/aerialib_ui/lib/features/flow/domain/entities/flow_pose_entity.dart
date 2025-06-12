@@ -1,34 +1,35 @@
-import '../../../pose/domain/entities/pose_entity.dart';
-import '../../../transitions/domain/transition_entity.dart';
-
 class FlowPoseEntity {
   final String id;
   final String flowId;
-  final PoseEntity pose;
+  final String poseId;
   final int poseOrder;
-  final TransitionEntity? transition; // now a full object
+  final String? transitionId;
+  final int isSynced;
 
-  FlowPoseEntity({
+  const FlowPoseEntity({
     required this.id,
     required this.flowId,
-    required this.pose,
+    required this.poseId,
     required this.poseOrder,
-    this.transition,
+    this.transitionId,
+    required this.isSynced,
   });
 
   FlowPoseEntity copyWith({
     String? id,
     String? flowId,
-    PoseEntity? pose,
+    String? poseId,
     int? poseOrder,
-    TransitionEntity? transition,
+    String? transitionId,
+    int? isSynced,
   }) {
     return FlowPoseEntity(
       id: id ?? this.id,
       flowId: flowId ?? this.flowId,
-      pose: pose ?? this.pose,
+      poseId: poseId ?? this.poseId,
       poseOrder: poseOrder ?? this.poseOrder,
-      transition: transition ?? this.transition,
+      transitionId: transitionId ?? this.transitionId,
+      isSynced: isSynced ?? this.isSynced,
     );
   }
 
@@ -39,15 +40,17 @@ class FlowPoseEntity {
               runtimeType == other.runtimeType &&
               id == other.id &&
               flowId == other.flowId &&
-              pose == other.pose &&
+              poseId == other.poseId &&
               poseOrder == other.poseOrder &&
-              transition == other.transition;
+              transitionId == other.transitionId &&
+              isSynced == other.isSynced;
 
   @override
   int get hashCode =>
       id.hashCode ^
       flowId.hashCode ^
-      pose.hashCode ^
+      poseId.hashCode ^
       poseOrder.hashCode ^
-      transition.hashCode;
+      transitionId.hashCode ^
+      isSynced.hashCode;
 }
