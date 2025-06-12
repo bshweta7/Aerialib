@@ -142,9 +142,8 @@ const String flowTable = "flows";
 const String createFlowTable = '''
   CREATE TABLE $flowTable (
     id TEXT PRIMARY KEY,
+    
     name TEXT NOT NULL,
-    thumbnail_image_id TEXT NOT NULL,
-    thumbnail_image_path TEXT NOT NULL,
     apparatus TEXT NOT NULL,
     level REAL NOT NULL,
     
@@ -152,6 +151,11 @@ const String createFlowTable = '''
     teaching_cues TEXT,
     safety_cues TEXT,
     progressions TEXT,
+    modifications TEXT,
+    common_errors TEXT,
+
+    primary_media_id TEXT,
+    primary_media_path TEXT,
     
     created_by TEXT NOT NULL,
     updated_by TEXT, 

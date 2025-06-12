@@ -28,7 +28,7 @@ class FlowPoseModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMapLocal() {
     return {
       'id': id,
       'flow_id': flowId,
@@ -39,8 +39,37 @@ class FlowPoseModel {
     };
   }
 
+  Map<String, dynamic> toMapRemote() {
+    return {
+      'id': id,
+      'flowId': flowId,
+      'poseId': poseId,
+      'poseOrder': poseOrder,
+      if (transitionId != null) 'transitionId': transitionId,
+      'isSynced': isSynced,
+    };
+  }
+
   factory FlowPoseModel.fromJson(String source) =>
       FlowPoseModel.fromMap(json.decode(source));
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMapLocal());
+
+  FlowPoseModel copyWith({
+    String? id,
+    String? flowId,
+    String? poseId,
+    int? poseOrder,
+    String? transitionId,
+    int? isSynced,
+  }) {
+    return FlowPoseModel(
+      id: id ?? this.id,
+      flowId: flowId ?? this.flowId,
+      poseId: poseId ?? this.poseId,
+      poseOrder: poseOrder ?? this.poseOrder,
+      transitionId: transitionId ?? this.transitionId,
+      isSynced: isSynced ?? this.isSynced,
+    );
+  }
 }

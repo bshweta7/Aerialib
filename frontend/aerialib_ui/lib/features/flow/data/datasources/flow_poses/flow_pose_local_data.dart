@@ -1,49 +1,63 @@
+import 'dart:developer';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
 import 'package:frontend/core/services/local_database_service.dart';
+import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
 
 class FlowPoseLocalDataSource {
-  String tableName = 'flow_poses';
+  final String tableName = 'flow_poses';
 
   Future<Database> get database async => DatabaseService.database;
 
-  /// Insert a flow pose into the database
-  Future<void> insertFlowPose(FlowPoseModel flowPose) async {
+  /// Insert a single flow pose
+  Future<void> createFlowPose(FlowPoseModel flowPose) async {
     final db = await database;
-    // TODO decide if upsert or not: await db.delete(tableName, where: 'id = ?', whereArgs: [flowPose.id]);
-    await db.insert(tableName, flowPose.toMap());
+    await db.insert(
+      tableName,
+      flowPose.toMapLocal(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    log('[FlowPoseLocalDataSource] Added flow pose: ${flowPose.id}');
   }
 
-  /// Insert a list of flow poses into the database (bulk insert)
-  Future<void> insertFlowPoses(List<FlowPoseModel> flowPoses) async {
+  /// Insert multiple flow poses
+  Future<void> createFlowPoses(List<FlowPoseModel> flowPoses) async {
     final db = await database;
     final batch = db.batch();
-    for (var flowPose in flowPoses) {
+
+    for (final pose in flowPoses) {
       batch.insert(
         tableName,
-        flowPose.toMap(),
+        pose.toMapLocal(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
+
     await batch.commit(noResult: true);
+    log('[FlowPoseLocalDataSource] Inserted ${flowPoses.length} flow poses');
   }
 
-  Future<List<FlowPoseModel>> getFlowPoses () async {
+  /// Get all flow poses
+  Future<List<FlowPoseModel>> getAllFlowPoses() async {
     final db = await database;
     final result = await db.query(tableName);
 
-    if(result.isNotEmpty) {
-      List<FlowPoseModel> flowPoses = [];
-      for (final elem in result) {
-        flowPoses.add(FlowPoseModel.fromMap(elem));
-      }
-      return flowPoses;
-
-    } else {
-      return [];
-    }
+    return result.map((e) => FlowPoseModel.fromMap(e)).toList();
   }
 
+  /// Get flow poses by flowId
+  Future<List<FlowPoseModel>> getFlowPosesByFlowId(String flowId) async {
+    final db = await database;
+    final result = await db.query(
+      tableName,
+      where: 'flow_id = ?',
+      whereArgs: [flowId],
+      orderBy: 'pose_order ASC',
+    );
+
+    return result.map((e) => FlowPoseModel.fromMap(e)).toList();
+  }
+
+  /// Get unsynced flow poses
   Future<List<FlowPoseModel>> getUnsyncedFlowPoses() async {
     final db = await database;
     final result = await db.query(
@@ -51,18 +65,12 @@ class FlowPoseLocalDataSource {
       where: 'is_synced = ?',
       whereArgs: [0],
     );
-    if (result.isNotEmpty) {
-      List<FlowPoseModel> flowPoses = [];
-      for (final elem in result) {
-        flowPoses.add(FlowPoseModel.fromMap(elem));
-      }
-      return flowPoses;
-    }
 
-    return [];
+    return result.map((e) => FlowPoseModel.fromMap(e)).toList();
   }
 
-  Future<void> setSyncedStatus(String id, int newValue) async {
+  /// Set is_synced status
+  Future<void> updateSyncStatus(String id, int newValue) async {
     final db = await database;
     await db.update(
       tableName,
@@ -72,45 +80,25 @@ class FlowPoseLocalDataSource {
     );
   }
 
-  // Future<void> updateFlowPose(FlowPoseModel flowPose) async {
-  //   final db = await database;
-  //   await db.update(
-  //     tableName,
-  //     flowPose.toMap(),
-  //     where: 'id = ?',
-  //     whereArgs: [flowPose.id],
-  //   );
-  // }
-
-
-  Future<void> deleteFlowPose(String id) async {
+  /// Delete a flow pose by ID
+  Future<void> deleteFlowPoseById(String id) async {
     final db = await database;
     await db.delete(
-        tableName,
-        where: 'id = ?',
-        whereArgs: [id]
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id],
     );
+    log('[FlowPoseLocalDataSource] Deleted flow pose: $id');
   }
 
-  /// Delete all the flow poses for a given flow
-  Future<void> deleteFlowPoseInFlow(String flowId) async {
+  /// Delete all flow poses in a given flow
+  Future<void> deleteFlowPosesByFlowId(String flowId) async {
     final db = await database;
     await db.delete(
       tableName,
       where: 'flow_id = ?',
       whereArgs: [flowId],
     );
-  }
-
-  /// Returns list of FlowPoseModels containing flowPoses with the given flowId
-  Future<List<FlowPoseModel>> getFlowPosesInFlow(String flowId) async {
-    final db = await database;
-    final result = await db.query(
-      tableName,
-      where: 'flow_id = ?',
-      whereArgs: [flowId],
-      orderBy: 'order ASC',
-    );
-    return result.map((e) => FlowPoseModel.fromMap(e)).toList();
+    log('[FlowPoseLocalDataSource] Deleted all poses in flow: $flowId');
   }
 }

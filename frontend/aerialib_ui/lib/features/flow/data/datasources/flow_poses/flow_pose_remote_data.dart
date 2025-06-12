@@ -11,116 +11,107 @@ class FlowPoseRemoteDataSource {
 
   FlowPoseRemoteDataSource({required this.httpService});
 
-  /// Create and return FlowPoseModel
-  Future<FlowPoseModel> createFlowPose({
-    required String flowId,
-    required String poseId,
-    required int poseOrder,
-    String? transitionId,
+  /// Create multiple flow poses and return synced versions
+  Future<List<FlowPoseModel>> createFlowPoses({
+    required List<FlowPoseModel> flowPoses,
     required String token,
   }) async {
-    final body = {
-      'flow_id': flowId,
-      'pose_id': poseId,
-      'pose_order': poseOrder,
-      if (transitionId != null) 'transition_id': transitionId,
-    };
-
     try {
+      final body = flowPoses.map((fp) => fp.toMapRemote()).toList();
+
       final response = await httpService.post(
         path: "/flow_poses",
         token: token,
         body: body,
       );
 
-      return FlowPoseModel.fromJson(response.body);
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList
+          .map((e) => FlowPoseModel.fromMap(e).copyWith(isSynced: 1))
+          .toList();
     } catch (e) {
-      // Fallback: construct a local unsynced FlowPoseModel
-      return FlowPoseModel(
-        id: const Uuid().v6(),
-        flowId: flowId,
-        poseId: poseId,
-        poseOrder: poseOrder,
-        transitionId: transitionId,
-        isSynced: 0,
-      );
+      // Fallback: return original list marked as not synced
+      return flowPoses.map((fp) => fp.copyWith(isSynced: 0)).toList();
     }
   }
 
-  /// Retrieve all FlowPoseModels from remote
-  Future<List<FlowPoseModel>> fetchRemoteFlowPoses({
+  /// Get all flow poses for flows created by the user or admin
+  Future<List<FlowPoseModel>> getRemoteFlowPoses({
     required String token,
   }) async {
-    final response = await httpService.get(
-      path: "/flow_poses",
-      token: token,
-    );
+    try {
+      final response = await httpService.get(
+        path: "/flow_poses",
+        token: token,
+      );
 
-    final List<dynamic> jsonList = jsonDecode(response.body);
-    return jsonList.map((e) => FlowPoseModel.fromMap(e)).toList();
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList
+          .map((e) => FlowPoseModel.fromMap(e).copyWith(isSynced: 1))
+          .toList();
+    } catch (e) {
+      // On failure, return empty list or optionally rethrow
+      return [];
+    }
   }
 
-  /// Delete all the flow poses for a given flowId
-  Future<void> deleteAllFlowPosesInFlow(String flowId, String token) async {
+  /// Delete all flow poses for a given flow ID
+  Future<bool> deleteFlowPosesByFlowId({
+    required String flowId,
+    required String token,
+  }) async {
     final response = await httpService.delete(
-      path: "/flow_poses/delete_all/$flowId",
+      path: "/flow_poses/delete/$flowId",
       token: token,
     );
 
     if (response.statusCode == 200) {
-      log("[FlowPoseRemoteDataSource] Deleted all flow poses for $flowId");
-    } else {
-      throw Exception("Failed to delete remote flow poses for $flowId");
-    }
-  }
-
-  /// Sync local flow poses to remote
-  Future<bool> syncFlowPoses({
-    required String token,
-    required List<FlowPoseModel> flowPoses,
-  }) async {
-    final flowPoseListInMap = flowPoses.map((pose) {
-      final map = pose.toMap();
-      map.remove('is_synced');
-      return map;
-    }).toList();
-
-    // log('[FlowPoseRemoteDataSource] Sync payload:');
-    // for (final map in flowPoseListInMap) {
-    //   log(map.keys);
-    // }
-
-    log("[FlowPoseRemoteDataSource] $flowPoseListInMap");
-
-    final response = await httpService.post(
-      path: "/flow_poses/sync",
-      token: token,
-      body: flowPoseListInMap,
-    );
-
-    log('[FlowPoseRemoteDataSource] Status Code: ${response.statusCode}');
-    log('[FlowPoseRemoteDataSource] Response Body: ${response.body}');
-
-    if (response.statusCode == 201) {
-      log('[FlowPoseRemoteDataSource] Sync successful');
+      log("[FlowPoseRemoteDataSource] Flow poses deleted for flow: $flowId");
       return true;
     } else {
-      log('[FlowPoseRemoteDataSource] Sync failed');
+      log("[FlowPoseRemoteDataSource] Failed to delete flow poses: ${response.statusCode} - ${response.body}");
       return false;
     }
   }
 
-  /// Update a flow pose remotely
-  Future<FlowPoseModel> updateFlowPose({
-    required FlowPoseModel updatedFlowPose,
+  /// Sync flow poses: delete old and insert new for each flow
+  Future<bool> syncFlowPoses({
     required String token,
+    required Map<String, List<FlowPoseModel>> flowPoseMap,
   }) async {
-    final response = await httpService.put(
-      path: "/flow_poses/update/${updatedFlowPose.id}",
-      token: token,
-      body: updatedFlowPose.toJson(),
-    );
+    try {
+      for (final entry in flowPoseMap.entries) {
+        final flowId = entry.key;
+        final poses = entry.value;
 
-    return FlowPoseModel.fromJson(response.body);
+        // Step 1: Delete old flow poses
+        final deleteSuccess = await deleteFlowPosesByFlowId(
+          flowId: flowId,
+          token: token,
+        );
+
+        if (!deleteSuccess) {
+          log('[FlowPoseRemoteDataSource] Failed to delete old flow poses for flow $flowId');
+          return false;
+        }
+
+        // Step 2: Create new flow poses
+        final created = await createFlowPoses(
+          flowPoses: poses,
+          token: token,
+        );
+
+        if (created.length != poses.length) {
+          log('[FlowPoseRemoteDataSource] Mismatch in synced flow poses count for flow $flowId');
+          return false;
+        }
+      }
+
+      log('[FlowPoseRemoteDataSource] All flow poses synced successfully');
+      return true;
+    } catch (e) {
+      log('[FlowPoseRemoteDataSource] Sync error: $e');
+      return false;
+    }
   }
 }

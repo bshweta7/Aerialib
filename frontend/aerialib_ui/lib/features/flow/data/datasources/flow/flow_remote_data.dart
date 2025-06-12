@@ -12,65 +12,27 @@ class FlowRemoteDataSource {
 
   /// Create and return FlowModel
   Future<FlowModel> createFlow({
-    required String name,
-    required String thumbnailImageId,
-    required String thumbnailImagePath,
-    required String apparatus,
-    required double level,
-    String? description,
-    String? teachingCues,
-    String? safetyCues,
-    String? progressions,
-    required String createdBy,
+    required FlowModel flow,
     required String token,
   }) async {
-    final body = {
-      'name': name,
-      'thumbnail_image_id': thumbnailImageId,
-      'apparatus': apparatus,
-      'level': level,
-      if (description != null) 'description': description,
-      if (teachingCues != null) 'teaching_cues': teachingCues,
-      if (safetyCues != null) 'safety_cues': safetyCues,
-      if (progressions != null) 'progressions': progressions,
-      'created_by': createdBy,
-    };
-
     try {
       final response = await httpService.post(
         path: "/flows",
         token: token,
-        body: body,
+        body: flow.toMapRemote(),
       );
 
-      log("[RemoteDataSource] Flow created remotely: ${response.body}");
-      return FlowModel.fromJson(response.body);
+      final createdFlow = FlowModel.fromJson(response.body);
+      return createdFlow.copyWith(isSynced: 1);
+
     } catch (e) {
-      log("[RemoteDataSource] Failed to create flow remotely: $e");
-      log("[RemoteDataSource] Creating local fallback unsynced flow instead.");
-      // Fallback: construct a local unsynced FlowModel
-      return FlowModel(
-        id: const Uuid().v6(),
-        name: name,
-        thumbnailImageId: thumbnailImageId,
-        thumbnailImagePath: thumbnailImagePath,
-        apparatus: apparatus,
-        level: level,
-        description: description,
-        teachingCues: teachingCues,
-        safetyCues: safetyCues,
-        progressions: progressions,
-        createdBy: createdBy,
-        updatedBy: createdBy,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        isSynced: 0,
-      );
+      // Fallback: return original flow marked as not synced
+      return flow.copyWith(isSynced: 0);
     }
   }
 
-  /// Retrieve flows from remote data source and return list of FlowModels
-  Future<List<FlowModel>> fetchRemoteFlows({
+  /// Get all flows from remote database
+  Future<List<FlowModel>> getRemoteFlows({
     required String token,
   }) async {
     final response = await httpService.get(
@@ -79,27 +41,19 @@ class FlowRemoteDataSource {
     );
 
     final List<dynamic> jsonList = jsonDecode(response.body);
-    return jsonList.map((e) => FlowModel.fromMap(e)).toList();
+    return jsonList
+        .map((e) => FlowModel.fromMap(e).copyWith(isSynced: 1))
+        .toList();
   }
 
-  /// Sync local flows to remote data source
+  /// Sync flows from local to remote
   Future<bool> syncFlows({
     required String token,
     required List<FlowModel> flows,
   }) async {
-    final List<Map<String, dynamic>> flowListInMap = flows.map((flow) {
-      final map = flow.toMap();
-      map.remove('is_synced');
-      map.remove('thumbnail_image_path');
-      return map;
-    }).toList();
+    final flowListInMap = flows.map((flow) => flow.toMapRemote()).toList();
 
-    log('[FlowRemoteDataSource] Sync payload: $flowListInMap');
-    // for (final map in flowListInMap) {
-    //   log(map['name']);
-    // }
-
-    // log(flowListInMap);
+    log('[FlowRemoteDataSource] Syncing ${flowListInMap.length} flows...');
 
     final response = await httpService.post(
       path: "/flows/sync",
@@ -107,46 +61,31 @@ class FlowRemoteDataSource {
       body: flowListInMap,
     );
 
-    return response.statusCode == 201;
+    if (response.statusCode == 201) {
+      log('[FlowRemoteDataSource] Sync successful');
+      return true;
+    } else {
+      log('[FlowRemoteDataSource] Sync failed: ${response.statusCode} - ${response.body}');
+      return false;
+    }
   }
 
-  Future<FlowModel> updateFlow({
-    required FlowModel updatedFlow,
+  /// Delete a flow
+  Future<void> deleteFlow({
+    required String flowId,
     required String token,
   }) async {
-    log("[FlowRemoteDataSource] ${jsonEncode(updatedFlow.toMap())}");
-
-    final response = await httpService.put(
-      path: "/flows/update/${updatedFlow.id}",
+    final response = await httpService.delete(
+      path: "/flows/delete/$flowId",
       token: token,
-      body: updatedFlow.toMap(),
     );
-
-    log("[FlowRemoteDataSource] Backend response body: ${response.body}");
-    log("[FlowRemoteDataSource] Backend response status code: ${response.statusCode}");
 
     if (response.statusCode != 200) {
-      log("[FlowRemoteDataSource] Failed to update flow:");
-      log("[FlowRemoteDataSource] Status: ${response.statusCode}");
+      log("[FlowRemoteDataSource] Failed to delete flow, status ${response.statusCode}");
       log("[FlowRemoteDataSource] Body: ${response.body}");
-      throw Exception("[FlowRemoteDataSource] Failed to update flow remotely");
+      throw Exception("[FlowRemoteDataSource] Failed to delete flow remotely");
     }
 
-    final json = jsonDecode(response.body);
-    return FlowModel.fromMap(json);
-  }
-
-  /// Delete all the flow poses for a given flowId
-  Future<void> deleteFlowById(String flowId, String token) async {
-    final response = await httpService.delete(
-      path: "/flows/$flowId",
-      token: token,
-    );
-
-    if (response.statusCode == 200) {
-      log("[FlowRemoteDataSource] Deleted flow with flow ID $flowId");
-    } else {
-      throw Exception("Failed to delete remote flow with ID $flowId");
-    }
+    log("[FlowRemoteDataSource] Flow deleted successfully: $flowId");
   }
 }
