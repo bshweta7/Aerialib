@@ -5,7 +5,7 @@ class FlowEntity {
 
   final String name;
   final String apparatus;
-  final double level;
+  final int? level;
 
   final List<FlowPoseEntity> flowPoses;
 
@@ -30,7 +30,7 @@ class FlowEntity {
     required this.id,
     required this.name,
     required this.apparatus,
-    required this.level,
+    this.level,
     required this.flowPoses,
     this.description,
     this.teachingCues,
@@ -51,7 +51,7 @@ class FlowEntity {
     String? id,
     String? name,
     String? apparatus,
-    double? level,
+    int? level,
     List<FlowPoseEntity>? flowPoses,
     String? description,
     String? teachingCues,

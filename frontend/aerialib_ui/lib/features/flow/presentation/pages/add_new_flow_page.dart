@@ -13,6 +13,12 @@ import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../../../shared/widgets/info_display/expandable_card.dart';
+import '../../../../shared/widgets/input_fields/dropdown_field.dart';
+import '../../../../shared/widgets/input_fields/int_input_field.dart';
+import '../../../../shared/widgets/input_fields/text_input_field.dart';
 
 
 class AddNewFlowPage extends StatefulWidget {
@@ -26,104 +32,106 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
   final formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
+  final apparatusController = TextEditingController();
+  final levelController = TextEditingController();
+
   final descriptionController = TextEditingController();
   final teachingCuesController = TextEditingController();
   final safetyCuesController = TextEditingController();
   final progressionsController = TextEditingController();
-  final apparatusController = TextEditingController();
-  final levelController = TextEditingController();
+  final modificationsController = TextEditingController();
+  final commonErrorsController = TextEditingController();
 
   List<FlowEntity> userFlows = [];
 
   @override
   void initState() {
     super.initState();
+    apparatusController.text = 'lyra';
 
-    final authState = context.read<AuthCubit>().state;
-    final flowsState = context.read<FlowsCubit>().state;
-
-    if (authState is AuthLoggedIn && flowsState is GetFlowsSuccess) {
-      final userId = authState.user.id;
-      userFlows = flowsState.flows
-          .where((flow) => flow.createdBy == userId)
-          .toList();
-    }
+    // final authState = context.read<AuthCubit>().state;
+    // final flowsState = context.read<FlowsCubit>().state;
+    //
+    // if (authState is AuthLoggedIn && flowsState is GetFlowsSuccess) {
+    //   final userId = authState.user.id;
+    //   userFlows = flowsState.flows
+    //       .where((flow) => flow.createdBy == userId)
+    //       .toList();
+    // }
   }
 
   @override
   void dispose() {
     nameController.dispose();
-    descriptionController.dispose();
+    apparatusController.dispose();
+    levelController.dispose();
+
     teachingCuesController.dispose();
     safetyCuesController.dispose();
     progressionsController.dispose();
-    apparatusController.dispose();
-    levelController.dispose();
+    modificationsController.dispose();
+    commonErrorsController.dispose();
     super.dispose();
   }
 
-  Future<void> _onAddFlowPressed() async {
-    if (!formKey.currentState!.validate()) return;
+  Future<void> createNewFlow() async {
+    if (formKey.currentState!.validate()) {
+      final user = context
+          .read<AuthCubit>()
+          .state as AuthLoggedIn;
+      final now = DateTime.now();
 
-    final authState = context.read<AuthCubit>().state;
-    if (authState is! AuthLoggedIn) return;
+      final levelText = levelController.text.trim();
+      final level = int.tryParse(levelText) ?? -1;
 
-    final token = authState.user.token;
-    final userId = authState.user.id;
-    final flowName = nameController.text.trim();
-    final level = double.tryParse(levelController.text.trim());
+      final newFlow = FlowEntity(
+        id: const Uuid().v4(),
+        name: nameController.text.trim(),
+        apparatus: apparatusController.text.trim(),
+        level: level,
+        flowPoses: [],
 
-    if (level == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid level")),
-      );
-      return;
-    }
+        description: descriptionController.text
+            .trim()
+            .isNotEmpty ?
+        descriptionController.text.trim() : null,
+        teachingCues: teachingCuesController.text
+            .trim()
+            .isNotEmpty ?
+        teachingCuesController.text.trim() : null,
+        safetyCues: safetyCuesController.text
+            .trim()
+            .isNotEmpty ?
+        safetyCuesController.text.trim() : null,
+        progressions: progressionsController.text
+            .trim()
+            .isNotEmpty ? progressionsController.text.trim() : null,
+        modifications: modificationsController.text
+            .trim()
+            .isNotEmpty ? modificationsController.text.trim() : null,
+        commonErrors: commonErrorsController.text
+            .trim()
+            .isNotEmpty ? commonErrorsController.text.trim() : null,
 
-    /// Proceed to create new flow
-    final flowEntity = FlowEntity(
-      id: '', // or `null`/`uuid.v4()` depending on how your backend handles it
-      name: flowName,
-      apparatus: apparatusController.text.trim(),
-      description: descriptionController.text.trim(),
-      teachingCues: teachingCuesController.text.trim(),
-      safetyCues: safetyCuesController.text.trim(),
-      progressions: progressionsController.text.trim(),
-      level: level,
-      createdBy: userId,
-      updatedBy: userId,
-      primaryMediaPath: Constants.missingImageId,
-      primaryMediaId: Constants.missingImagePath,
-      isSynced: 0,
-      flowPoses: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      // Add any other required fields or defaults here
-    );
+        primaryMediaId: Constants.missingImageId,
+        primaryMediaPath: Constants.missingImagePath,
 
-    await context.read<FlowsCubit>().createNewFlow(
-      flow: flowEntity,
-      token: token,
-    );
-
-    final state = context.read<FlowsCubit>().state;
-
-    if (state is GetFlowsSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Saved flow information")),
+        createdBy: user.user.id,
+        updatedBy: user.user.id,
+        createdAt: now,
+        updatedAt: now,
+        isSynced: 0,
       );
 
-      // Emit the EditFlowState before navigating
-      context.read<FlowsCubit>().startEditingFlow(flowEntity);
+      await context.read<FlowsCubit>().createNewFlow(
+        flow: newFlow,
+        token: user.user.token,
+      );
 
       context.goNamed(
         'flow-edit-poses',
-        pathParameters: {'flowId': flowEntity.id,},
+        pathParameters: {'flowId': newFlow.id,},
         // queryParameters: {'from': 'add-new-flow'},
-      );
-    } else if (state is FlowError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${state.message}")), // TODO remove errors in snack bar
       );
     }
   }
@@ -134,9 +142,22 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       currentIndex: 1,
       appBar: AppBar(
           leading: const SmartBackButton(),
-          title: const Text("Create New Flow - Details")
+          title: const Text("Create New Flow")
       ),
-      body: BlocBuilder<FlowsCubit, FlowsState>(
+      body: BlocConsumer<FlowsCubit, FlowsState>(
+        listener: (context, state) {
+          if (state is FlowError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text("There was an error adding the flow")),
+            );
+          } else if (state is AddNewFlowSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Flow added successfully")),
+            );
+            context.goNamed('flow-library');
+          }
+        },
         builder: (context, state) {
           if (state is FlowLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -148,88 +169,65 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
               child: Form(
                 key: formKey,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    TextFormField(
-                      controller: nameController,
-                      decoration: const InputDecoration(labelText: 'Flow Name'),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'This field cannot be empty';
-                        }
 
-                        final flowName = value.trim().toLowerCase();
-                        final nameTaken = userFlows.any((f) =>
-                        f.name.trim().toLowerCase() == flowName);
+                    /// Basic Info
+                    ExpandableCard(
+                      title: "Basic Info",
+                      initiallyExpanded: true,
+                      children: [
+                        TextInputField(
+                          "Flow Name",
+                          nameController,
+                          required: true,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'This field is required';
+                            }
 
-                        if (nameTaken) {
-                          return 'You already have a flow with this name';
-                        }
+                            final flowName = value.trim().toLowerCase();
+                            final nameTaken = userFlows.any(
+                                  (f) => f.name.trim().toLowerCase() == flowName,
+                            );
 
-                        return null;
-                      },
+                            if (nameTaken) {
+                              return 'You already have a flow with this name';
+                            }
+
+                            return null;
+                          },
+                        ),
+
+                        DropdownField("Apparatus", apparatusController,
+                            Constants.apparatusOptions),
+                        IntInputField("Level", levelController,),
+                        TextInputField(
+                            "Description", descriptionController, maxLines: 2),
+                        const SizedBox(height: 10),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      value: apparatusController.text.isNotEmpty
-                          ? apparatusController.text
-                          : null,
-                      onChanged: (value) =>
-                          setState(() => apparatusController.text = value ?? ''),
-                      items: Constants.apparatusOptions
-                          .map((value) => DropdownMenuItem(
-                          value: value,
-                          child: Text(capitalizeFirstLetter(value))))
-                          .toList(),
-                      decoration: const InputDecoration(labelText: 'Apparatus'),
-                      validator: requiredFieldValidator,
+
+                    /// Instructor Notes
+                    ExpandableCard(
+                      title: "Instructor Notes",
+                      initiallyExpanded: false,
+                      children: [
+                        TextInputField("Teaching Cues", teachingCuesController,
+                            maxLines: 2),
+                        TextInputField(
+                            "Safety Cues", safetyCuesController, maxLines: 2),
+                        TextInputField("Progressions", progressionsController,
+                            maxLines: 2),
+                        TextInputField("Modifications", modificationsController,
+                            maxLines: 2),
+                        TextInputField("Common Errors", commonErrorsController,
+                            maxLines: 2),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: levelController,
-                      decoration: const InputDecoration(labelText: 'Level'),
-                      keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'This field cannot be empty';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Please enter a valid number';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: descriptionController,
-                      decoration:
-                      const InputDecoration(labelText: 'Description'),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: teachingCuesController,
-                      decoration:
-                      const InputDecoration(labelText: 'Teaching Cues'),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: safetyCuesController,
-                      decoration:
-                      const InputDecoration(labelText: 'Safety Cues'),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: progressionsController,
-                      decoration:
-                      const InputDecoration(labelText: 'Progressions'),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 20),
+
                     ElevatedButton(
-                      onPressed: _onAddFlowPressed,
+                      onPressed: createNewFlow,
                       child: const Text("Add Poses"),
                     ),
                   ],

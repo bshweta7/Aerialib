@@ -7,7 +7,7 @@ class FlowModel {
   final String? primaryMediaId;
   final String? primaryMediaPath;
   final String apparatus;
-  final double level;
+  final int? level;
 
   final String? description;
   final String? teachingCues;
@@ -29,7 +29,7 @@ class FlowModel {
     this.primaryMediaId,
     this.primaryMediaPath,
     required this.apparatus,
-    required this.level,
+    this.level,
     this.description,
     this.teachingCues,
     this.safetyCues,
@@ -50,7 +50,7 @@ class FlowModel {
       primaryMediaId: map['primary_media_id'] ?? map['primaryMediaId'] ?? Constants.missingImageId,
       primaryMediaPath: map['primary_media_path'] ?? map['primaryMediaPath'] ?? Constants.missingImagePath,
       apparatus: map['apparatus'] ?? '',
-      level: (map['level'] is int ? (map['level'] as int).toDouble() : map['level']) ?? -1.0,
+      level: (map['level'] is int ? (map['level'] as int) : map['level']) ?? -1.0,
 
       description: map['description'],
       teachingCues: map['teaching_cues'] ?? map['teachingCues'],
@@ -122,7 +122,7 @@ class FlowModel {
     String? primaryMediaId,
     String? primaryMediaPath,
     String? apparatus,
-    double? level,
+    int? level,
     String? description,
     String? teachingCues,
     String? safetyCues,

@@ -35,16 +35,18 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
   final teachingCuesController = TextEditingController();
   final safetyCuesController = TextEditingController();
   final progressionsController = TextEditingController();
+  final modificationsController = TextEditingController();
+  final commonErrorsController = TextEditingController();
+
   final altNameController = TextEditingController();
   final baseNameController = TextEditingController();
   final prefixController = TextEditingController();
   final suffixController = TextEditingController();
+
   final handPositionController = TextEditingController();
   final legPositionController = TextEditingController();
   final positionInBarController = TextEditingController();
   final poseTypeController = TextEditingController();
-  final modificationsController = TextEditingController();
-  final commonErrorsController = TextEditingController();
 
   String generatedSlug = '';
   bool _baseNameManuallyEdited = false;
@@ -120,7 +122,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
       final now = DateTime.now();
 
       final newPose = PoseEntity(
-        id: const Uuid().v6(),
+        id: const Uuid().v4(),
         slug: generatedSlug,
         displayName: nameController.text.trim(),
         altName: altNameController.text

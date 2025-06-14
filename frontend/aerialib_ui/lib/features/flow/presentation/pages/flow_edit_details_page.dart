@@ -11,6 +11,12 @@ import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../../shared/widgets/confirmation_dialog.dart';
+import '../../../../shared/widgets/info_display/expandable_card.dart';
+import '../../../../shared/widgets/input_fields/dropdown_field.dart';
+import '../../../../shared/widgets/input_fields/int_input_field.dart';
+import '../../../../shared/widgets/input_fields/text_input_field.dart';
+
 class FlowEditDetailsPage extends StatefulWidget {
   final FlowEntity flow;
 
@@ -22,15 +28,17 @@ class FlowEditDetailsPage extends StatefulWidget {
 
 class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
   final formKey = GlobalKey<FormState>();
-  late String? selectedApparatus;
-
+  
   late TextEditingController nameController;
-  late TextEditingController apparatusController;
   late TextEditingController descriptionController;
   late TextEditingController teachingCuesController;
   late TextEditingController safetyCuesController;
   late TextEditingController progressionsController;
-  late double level;
+  late TextEditingController modificationsController;
+  late TextEditingController commonErrorsController;
+
+  late TextEditingController levelController;
+  late TextEditingController apparatusController;
 
   @override
   void initState() {
@@ -40,8 +48,12 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     teachingCuesController = TextEditingController(text: widget.flow.teachingCues);
     safetyCuesController = TextEditingController(text: widget.flow.safetyCues);
     progressionsController = TextEditingController(text: widget.flow.progressions);
-    apparatusController = TextEditingController(text: widget.flow.apparatus.toLowerCase());
-    level = widget.flow.level;
+    modificationsController = TextEditingController(text: widget.flow.modifications);
+    commonErrorsController = TextEditingController(text: widget.flow.commonErrors);
+
+    levelController = TextEditingController(
+        text: widget.flow.level != null ? widget.flow.level.toString() : '');
+    apparatusController = TextEditingController(text: widget.flow.apparatus);
   }
 
   @override
@@ -51,23 +63,29 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     teachingCuesController.dispose();
     safetyCuesController.dispose();
     progressionsController.dispose();
+    modificationsController.dispose();
+    commonErrorsController.dispose();
+
+    levelController.dispose();
     apparatusController.dispose();
     super.dispose();
   }
 
-  Future<void> _saveFlow() async {
+  Future<void> _handleFlowUpdate() async {
     if (!formKey.currentState!.validate()) return;
 
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
 
     final updatedFlow = widget.flow.copyWith(
       name: nameController.text.trim(),
-      description: descriptionController.text.trim(),
-      teachingCues: teachingCuesController.text.trim(),
-      safetyCues: safetyCuesController.text.trim(),
-      progressions: progressionsController.text.trim(),
       apparatus: apparatusController.text.trim(),
-      level: level,
+      level: int.tryParse(levelController.text.trim()),
+      description: descriptionController.text.trim().isNotEmpty ? descriptionController.text.trim() : null,
+      teachingCues: teachingCuesController.text.trim().isNotEmpty ? teachingCuesController.text.trim() : null,
+      safetyCues: safetyCuesController.text.trim().isNotEmpty ? safetyCuesController.text.trim() : null,
+      progressions: progressionsController.text.trim().isNotEmpty ? progressionsController.text.trim() : null,
+      modifications: modificationsController.text.trim().isNotEmpty ? modificationsController.text.trim() : null,
+      commonErrors: commonErrorsController.text.trim().isNotEmpty ? commonErrorsController.text.trim() : null,
       updatedBy: user.user.id,
       updatedAt: DateTime.now(),
       isSynced: 0,
@@ -87,14 +105,50 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
     );
   }
 
+  Future<void> _handleDeleteFlow() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => const ConfirmationDialog(
+        title: "Confirm Delete",
+        content: "Are you sure you want to delete this flow? This action cannot be undone.",
+        confirmText: "Delete",
+        cancelText: "Cancel",
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    final state = context.read<AuthCubit>().state;
+    if (state is! AuthLoggedIn) return;
+
+    try {
+      await context.read<FlowsCubit>().deleteFlow(
+        flowId: widget.flow.id,
+        token: state.user.token,
+      );
+      if (mounted) {
+        context.goNamed('flow-library');
+      }
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to delete pose")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<AuthCubit>().state;
+    bool isOwner = state is AuthLoggedIn && widget.flow.createdBy == state.user.id;
+
     return MainScaffold(
       currentIndex: 1,
       appBar: AppBar(
         leading: const SmartBackButton(),
-        title: const Text('Update Flow'),
+        title: const Text('Edit Flow'),
+        actions: isOwner
+            ? [IconButton(icon: const Icon(Icons.save), onPressed: _handleFlowUpdate)]
+            : null,
         // actions: [
         //   PopupMenuButton<String>(
         //     onSelected: (value) {
@@ -111,96 +165,75 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20),
           child: Form(
             key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Flow Name'),
-                  validator: requiredFieldValidator,
-                ),
-                const SizedBox(height: 10),
+                if (!isOwner)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      "You are viewing a shared pose. You cannot edit this version.",
+                      style: TextStyle(color: Colors.redAccent),
+                    ),
+                  ),
 
-                _dropdownField(
-                  label: "Apparatus",
-                  controller: apparatusController,
-                  options: Constants.apparatusOptions,
+                // TODO edit image
+
+                ExpandableCard(
+                  title: "Basic Info",
+                  initiallyExpanded: true,
+                  children: [
+                    TextInputField("Pose Name", nameController, required: true, enabled: isOwner),
+                    DropdownField("Apparatus", apparatusController, Constants.apparatusOptions, enabled: isOwner),
+                    IntInputField("Level", levelController, enabled: isOwner),
+                    TextInputField("Description", descriptionController, maxLines: 2, enabled: isOwner),
+                  ],
                 ),
 
+                ExpandableCard(
+                  title: "Instructor Notes",
+                  initiallyExpanded: false,
+                  children: [
+                    TextInputField("Teaching Cues", teachingCuesController, maxLines: 2, enabled: isOwner),
+                    TextInputField("Safety Cues", safetyCuesController, maxLines: 2, enabled: isOwner),
+                    TextInputField("Progressions", progressionsController, maxLines: 2, enabled: isOwner),
+                    TextInputField("Modifications", modificationsController, maxLines: 2, enabled: isOwner),
+                    TextInputField("Common Errors", commonErrorsController, maxLines: 2, enabled: isOwner),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
+                if (isOwner)
+                  ElevatedButton(
+                      onPressed: _handleFlowUpdate,
+                      child: Text(
+                          "Save Changes",
+                          style: Theme.of(context).textTheme.labelMedium
+                      )
+                  ),
                 const SizedBox(height: 10),
-                TextFormField(
-                  initialValue: level.toString(),
-                  decoration: const InputDecoration(labelText: 'Level'),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      level = double.tryParse(value) ?? level;
-                    });
-                  },
-                  validator: requiredFieldValidator,
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: teachingCuesController,
-                  decoration: const InputDecoration(labelText: 'Teaching Cues'),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: safetyCuesController,
-                  decoration: const InputDecoration(labelText: 'Safety Cues'),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: progressionsController,
-                  decoration: const InputDecoration(labelText: 'Progressions'),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _saveFlow,
-                  child: const Text('Update Flow'),
-                ),
+                if (isOwner)
+                  ElevatedButton(
+                    onPressed: _handleDeleteFlow,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.red.shade300),
+                      foregroundColor: MaterialStateProperty.all(Colors.red.shade900),
+                    ),
+                    child: Text(
+                        "Delete Pose",
+                        style: Theme.of(context).textTheme.labelMedium
+                    ),
+                  ),
+
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _dropdownField({
-    required String label,
-    required TextEditingController controller,
-    required List<String> options,
-  }) {
-    return DropdownButtonFormField<String>(
-      value: controller.text.isNotEmpty ? controller.text : null,
-      onChanged: (String? newValue) {
-        if (newValue != null) {
-          controller.text = newValue;
-        }
-      },
-      items: options.map((lowerValue) {
-        final displayLabel = lowerValue[0].toUpperCase() + lowerValue.substring(1);
-        return DropdownMenuItem(
-          value: lowerValue, // lowercase value stored in controller
-          child: Text(displayLabel),
-        );
-      }).toList(),
-      decoration: InputDecoration(labelText: label),
-      validator: (value) =>
-      value == null || value.isEmpty ? 'Please select $label' : null,
     );
   }
 }
