@@ -44,7 +44,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
   @override
   void initState() {
     super.initState();
-    poses = List.from(widget.flow.poses);
+    poses = List.from(widget.flow.flowPoses);
     // TODO sync here!!
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FlowsCubit>().startEditingFlow(widget.flow);
@@ -74,10 +74,11 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
   void _addPoseToFlow(PoseEntity pose) {
     final newFlowPose = FlowPoseEntity(
-      id: const Uuid().v6(),
+      id: const Uuid().v4(),
       flowId: widget.flow.id,
       pose: pose,
       poseOrder: poses.length,
+      isSynced: 0,
     );
 
     setState(() {
@@ -88,7 +89,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
   Future<void> _saveFlow() async {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
-    final updatedFlow = widget.flow.copyWith(poses: poses);
+    final updatedFlow = widget.flow.copyWith(flowPoses: poses);
 
     log("[FlowEditPosesPage] Updating flow poses... ");
     context.read<FlowsCubit>().updateFlowPoses(poses);
@@ -100,7 +101,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
     // );
 
 
-    log("[FlowEditPosesPage] Navigating to FlowViewPage with ${updatedFlow.poses.length} poses");
+    log("[FlowEditPosesPage] Navigating to FlowViewPage with ${updatedFlow.flowPoses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
     context.goNamed(
       'flow-view',

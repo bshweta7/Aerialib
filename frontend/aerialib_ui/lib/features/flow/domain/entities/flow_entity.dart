@@ -1,9 +1,13 @@
+import 'flow_pose_entity.dart';
+
 class FlowEntity {
   final String id;
 
   final String name;
   final String apparatus;
   final double level;
+
+  final List<FlowPoseEntity> flowPoses;
 
   final String? description;
   final String? teachingCues;
@@ -27,6 +31,7 @@ class FlowEntity {
     required this.name,
     required this.apparatus,
     required this.level,
+    required this.flowPoses,
     this.description,
     this.teachingCues,
     this.safetyCues,
@@ -47,6 +52,7 @@ class FlowEntity {
     String? name,
     String? apparatus,
     double? level,
+    List<FlowPoseEntity>? flowPoses,
     String? description,
     String? teachingCues,
     String? safetyCues,
@@ -66,6 +72,7 @@ class FlowEntity {
       name: name ?? this.name,
       apparatus: apparatus ?? this.apparatus,
       level: level ?? this.level,
+      flowPoses: flowPoses ?? this.flowPoses,
       description: description ?? this.description,
       teachingCues: teachingCues ?? this.teachingCues,
       safetyCues: safetyCues ?? this.safetyCues,
@@ -91,6 +98,7 @@ class FlowEntity {
               name == other.name &&
               apparatus == other.apparatus &&
               level == other.level &&
+              flowPoses == other.flowPoses &&
               description == other.description &&
               teachingCues == other.teachingCues &&
               safetyCues == other.safetyCues &&
@@ -111,6 +119,7 @@ class FlowEntity {
       name.hashCode ^
       apparatus.hashCode ^
       level.hashCode ^
+      flowPoses.hashCode ^
       description.hashCode ^
       teachingCues.hashCode ^
       safetyCues.hashCode ^

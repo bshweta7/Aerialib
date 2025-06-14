@@ -48,15 +48,9 @@ class TransitionRepository {
 
   /// Fetch all transitions from local DB
   Future<List<TransitionEntity>> getAllTransitions() async {
-    // log('[TransitionsRepository] Fetching TransitionModels from local database... ');
-
     final transitionModels = await localDataSource.getAllTransitions();
-
-    // log('[TransitionsRepository] Converting models to entities');
     final transitionEntitiesList = TransitionMapper.modelsToEntities(transitionModels);
     log('[TransitionsRepository] Got ${transitionModels.length} transition entities from local database');
-    // log('[TransitionsRepository] Conversion complete');
-
     return transitionEntitiesList;
   }
 
@@ -117,13 +111,13 @@ class TransitionRepository {
       log("[TransitionRepository] Updating transition locally...");
       await localDataSource.updateTransition(syncedModel);
     } else {
-      log("[TransitionRepository] Remote sync failed. Transition not updated locally.");
+      log("[TransitionRepository] Remote sync failed. Transition not updated locally."); // TODO shouldn't just fail to update locally...
       throw Exception("Failed to update transition remotely via sync.");
     }
   }
 
   /// Delete Transition
-  Future<void> deleteTransitionRemote({
+  Future<void> deleteTransition({
     required String id,
     required String token,
   }) async {

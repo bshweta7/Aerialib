@@ -15,58 +15,35 @@ class FlowsCubit extends Cubit<FlowsState> {
   final FlowRepository _flowRepository;
   final FlowPoseRepository _flowPoseRepository;
   bool _isSyncing = false;
-  
+
   FlowsCubit(
       this._flowRepository,
       this._flowPoseRepository,
       ) : super(const FlowInitial());
 
-  /// Crud ----------------------------
   /// Create a new flow (metadata only)
-  Future<FlowsState> createNewFlow({
-    required String name,
-    String? description,
-    String? teachingCues,
-    String? safetyCues,
-    String? progressions,
-    required String apparatus,
-    required double level,
-    required String thumbnailImageId,
-    required String thumbnailImagePath,
-    required String createdBy,
+  Future<void> createNewFlow({
+    required FlowEntity flow,
     required String token,
   }) async {
     try {
       emit(const FlowLoading());
 
-      final flow = await _flowRepository.createFlow(
-        name: name,
-        description: description,
-        teachingCues: teachingCues,
-        safetyCues: safetyCues,
-        progressions: progressions,
-        apparatus: apparatus,
-        level: level,
-        thumbnailImageId: thumbnailImageId,
-        thumbnailImagePath: thumbnailImagePath,
-        createdBy: createdBy,
+      final createdFlow = await _flowRepository.createFlow(
+        flow: flow,
         token: token,
       );
 
-      log("[FlowsCubit] Created Flow ");
+      final allFlows = await _flowRepository.getAllFlowDetails();
+      emit(GetFlowsSuccess(allFlows));
 
-      final successState = AddNewFlowSuccess(flow);
-      emit(successState);
-      return successState;
     } catch (e) {
+
       log("[FlowsCubit] Error creating flow: $e");
-      final errorState = FlowError(e.toString());
-      emit(errorState);
-      return errorState;
+      emit(FlowError(e.toString()));
     }
   }
 
-  /// cRud ----------------------------
   /// Fetch all flows (local first)
   Future<void> getAllFlows({required String token}) async {
     try {
@@ -87,7 +64,7 @@ class FlowsCubit extends Cubit<FlowsState> {
       // Step 4: Attach poses to flows
       final List<FlowEntity> enrichedFlows = flows.map((flow) {
         return flow.copyWith(
-          poses: posesByFlowId[flow.id] ?? [], // empty if no poses
+          flowPoses: posesByFlowId[flow.id] ?? [], // empty if no poses
         );
       }).toList();
 
@@ -231,7 +208,7 @@ class FlowsCubit extends Cubit<FlowsState> {
     //   log("↪️ ${p.id}, flowId: ${p.flowId}, poseId: ${p.pose.id}, order: ${p.poseOrder}");
     // }
 
-    final updatedFlow = currentState.flow.copyWith(poses: newPoses);
+    final updatedFlow = currentState.flow.copyWith(flowPoses: newPoses);
 
 
     // 🔍 log AFTER
@@ -252,7 +229,7 @@ class FlowsCubit extends Cubit<FlowsState> {
       final allFlows = await _flowRepository.getAllFlowDetails();
 
       for (final flow in allFlows) {
-        await _flowRepository.deleteFlowLocally(flow.id);
+        await _flowRepository.deleteFlowLocally(flowId: flow.id);
       }
 
       emit(const FlowInitial());
@@ -269,7 +246,7 @@ class FlowsCubit extends Cubit<FlowsState> {
   }) async {
     try {
       log("[FlowsCubit] Deleting flow...");
-      await _flowRepository.deleteFlow(flowId, token);
+      await _flowRepository.deleteFlow(id: flowId, token: token);
     } catch (e) {
       log("[FlowsCubit] Error deleting flow: $e");
       emit(FlowError("Failed to delete flow: $e"));
@@ -297,7 +274,7 @@ class FlowsCubit extends Cubit<FlowsState> {
       await _flowPoseRepository.deleteAllFlowPosesInFlow(currentState.flow.id);
 
       log("[FlowsCubit] Inserting updated poses into flow...");
-      await _flowPoseRepository.insertFlowPoses(currentState.flow.poses);
+      await _flowPoseRepository.createFlowPoses(flowPoses: currentState.flow.flowPoses, token: token);
 
       log("[FlowPoseRepository] Syncing to remote data source...");
       await _flowPoseRepository.syncLocalToRemote(token);

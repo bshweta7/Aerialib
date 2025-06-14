@@ -64,10 +64,10 @@ class _FlowViewPageState extends State<FlowViewPage> {
   Widget build(BuildContext context) {
     final flow = widget.flow;
     log("[FlowViewPage] Flow ID: ${flow.id}, Name: ${flow.name}");
-    log("[FlowViewPage] Thumbnail: ${flow.thumbnailImagePath}");
-    log("[FlowViewPage] Pose count: ${flow.poses.length}");
+    log("[FlowViewPage] Thumbnail: ${flow.primaryMediaPath}");
+    log("[FlowViewPage] Pose count: ${flow.flowPoses.length}");
 
-    final poses = (flow.poses ?? []).map((fp) => fp.pose).toList();
+    final poses = (flow.flowPoses ?? []).map((fp) => fp.pose).toList();
 
     log("[FlowViewPage] Pose names: ${poses.map((p) => p.slug).toList()}");
     log("[FlowViewPage] Pose image paths: ${poses.map((p) => p.primaryMediaPath).toList()}");

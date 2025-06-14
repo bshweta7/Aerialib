@@ -68,34 +68,34 @@ class TransitionMapper {
     return entities.map(entityToModel).toList();
   }
 
-  /// Create a TransitionDisplayModel from a TransitionEntity and a poseMap
-  static TransitionDisplayModel entityToDisplayModel({
-    required TransitionEntity transition,
-    required Map<String, PoseEntity> poseMap,
-  }) {
-    final fromPose = poseMap[transition.fromPoseId];
-    final toPose = poseMap[transition.toPoseId];
-
-    if (fromPose == null || toPose == null) {
-      throw Exception('Missing pose(s) for transition: ${transition.id}');
-    }
-
-    return TransitionDisplayModel(
-      transition: transition,
-      fromPose: fromPose,
-      toPose: toPose,
-    );
-  }
-
-  /// Bulk conversion of transition entities to display models
-  static List<TransitionDisplayModel> entitiesToDisplayModels({
-    required List<TransitionEntity> transitions,
-    required Map<String, PoseEntity> poseMap,
-  }) {
-    return transitions
-        .where((t) =>
-    poseMap.containsKey(t.fromPoseId) && poseMap.containsKey(t.toPoseId))
-        .map((t) => entityToDisplayModel(transition: t, poseMap: poseMap))
-        .toList();
-  }
+  // /// Create a TransitionDisplayModel from a TransitionEntity and a poseMap
+  // static TransitionDisplayModel entityToDisplayModel({
+  //   required TransitionEntity transition,
+  //   required Map<String, PoseEntity> poseMap,
+  // }) {
+  //   final fromPose = poseMap[transition.fromPoseId];
+  //   final toPose = poseMap[transition.toPoseId];
+  //
+  //   if (fromPose == null || toPose == null) {
+  //     throw Exception('Missing pose(s) for transition: ${transition.id}');
+  //   }
+  //
+  //   return TransitionDisplayModel(
+  //     transition: transition,
+  //     fromPose: fromPose,
+  //     toPose: toPose,
+  //   );
+  // }
+  //
+  // /// Bulk conversion of transition entities to display models
+  // static List<TransitionDisplayModel> entitiesToDisplayModels({
+  //   required List<TransitionEntity> transitions,
+  //   required Map<String, PoseEntity> poseMap,
+  // }) {
+  //   return transitions
+  //       .where((t) =>
+  //   poseMap.containsKey(t.fromPoseId) && poseMap.containsKey(t.toPoseId))
+  //       .map((t) => entityToDisplayModel(transition: t, poseMap: poseMap))
+  //       .toList();
+  // }
 }

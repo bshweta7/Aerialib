@@ -118,7 +118,7 @@ class TransitionCubit extends Cubit<TransitionState> {
   }) async {
     try {
       emit(const TransitionLoading());
-      await _transitionRepository.deleteTransitionRemote(id: transitionId, token: token);
+      await _transitionRepository.deleteTransition(id: transitionId, token: token);
       emit(DeleteTransitionSuccess(transitionId));
 
       final allTransitions = await _transitionRepository.getAllTransitions();

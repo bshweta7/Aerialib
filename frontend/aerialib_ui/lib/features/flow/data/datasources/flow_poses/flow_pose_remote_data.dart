@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:uuid/uuid.dart';
 
 import 'package:frontend/features/flow/data/models/flow_pose_model.dart';
 import 'package:frontend/core/services/http_service.dart';
@@ -74,43 +73,48 @@ class FlowPoseRemoteDataSource {
     }
   }
 
+  /// Delete all flow poses for a given flow ID
+  Future<bool> deleteFlowPose({
+    required String flowPoseId,
+    required String token,
+  }) async {
+    final response = await httpService.delete(
+      path: "/flow_poses/delete/pose/$flowPoseId",
+      token: token,
+    );
+
+    if (response.statusCode == 200) {
+      log("[FlowPoseRemoteDataSource] Flow pose deleted: $flowPoseId");
+      return true;
+    } else {
+      log("[FlowPoseRemoteDataSource] Failed to delete flow pose: ${response.statusCode} - ${response.body}");
+      return false;
+    }
+  }
+
   /// Sync flow poses: delete old and insert new for each flow
   Future<bool> syncFlowPoses({
     required String token,
-    required Map<String, List<FlowPoseModel>> flowPoseMap,
+    required List<FlowPoseModel> flowPoses,
   }) async {
-    try {
-      for (final entry in flowPoseMap.entries) {
-        final flowId = entry.key;
-        final poses = entry.value;
+    final flowPoseListInMap = flowPoses.map((flowPose) => flowPose.toMapRemote()).toList();
 
-        // Step 1: Delete old flow poses
-        final deleteSuccess = await deleteFlowPosesByFlowId(
-          flowId: flowId,
-          token: token,
-        );
+    log('[FlowPoseRemoteDataSource] Syncing ${flowPoseListInMap.length} flowPoses...');
+    // for (final map in flowPoseListInMap) {
+    //   log('[FlowPoseRemoteDataSource] Syncing flowPose slug: ${map['slug']}');
+    // }
 
-        if (!deleteSuccess) {
-          log('[FlowPoseRemoteDataSource] Failed to delete old flow poses for flow $flowId');
-          return false;
-        }
+    final response = await httpService.post(
+      path: "/flow_poses/sync",
+      token: token,
+      body: flowPoseListInMap,
+    );
 
-        // Step 2: Create new flow poses
-        final created = await createFlowPoses(
-          flowPoses: poses,
-          token: token,
-        );
-
-        if (created.length != poses.length) {
-          log('[FlowPoseRemoteDataSource] Mismatch in synced flow poses count for flow $flowId');
-          return false;
-        }
-      }
-
-      log('[FlowPoseRemoteDataSource] All flow poses synced successfully');
+    if (response.statusCode == 201) {
+      log('[FlowPoseRemoteDataSource] Sync successful');
       return true;
-    } catch (e) {
-      log('[FlowPoseRemoteDataSource] Sync error: $e');
+    } else {
+      log('[FlowPoseRemoteDataSource] Sync failed: ${response.statusCode} - ${response.body}');
       return false;
     }
   }

@@ -6,20 +6,30 @@ import 'package:frontend/features/transitions/domain/transition_entity.dart';
 
 class FlowPoseMapper {
   /// Model → Entity
-  static FlowPoseEntity modelToEntity(FlowPoseModel model) {
+  static FlowPoseEntity modelToEntity(
+      FlowPoseModel model,
+      PoseEntity poseEntity,
+      TransitionEntity? transitionEntity
+      ) {
     return FlowPoseEntity(
       id: model.id,
       flowId: model.flowId,
-      poseId: model.poseId,
+      pose: poseEntity,
       poseOrder: model.poseOrder,
-      transitionId: model.transitionId,
+      transition: transitionEntity,
       isSynced: model.isSynced,
     );
   }
 
-  /// Bulk: Models → Entities
-  static List<FlowPoseEntity> modelsToEntities(List<FlowPoseModel> models) {
-    return models.map(modelToEntity).toList();
+  /// Bulk Model to Entity
+  static List<FlowPoseEntity> modelsToEntities(
+      List<FlowPoseModel> models,
+      List<PoseEntity> poses,
+      List<TransitionEntity> transitions,
+      ) {
+    return List.generate(models.length, (i) {
+      return modelToEntity(models[i], poses[i], transitions[i]);
+    });
   }
 
   /// Entity → Model
@@ -27,9 +37,9 @@ class FlowPoseMapper {
     return FlowPoseModel(
       id: entity.id,
       flowId: entity.flowId,
-      poseId: entity.poseId,
+      poseId: entity.pose.id,
       poseOrder: entity.poseOrder,
-      transitionId: entity.transitionId,
+      transitionId: entity.transition?.id,
       isSynced: entity.isSynced,
     );
   }
@@ -39,34 +49,34 @@ class FlowPoseMapper {
     return entities.map(entityToModel).toList();
   }
 
-  /// Entity + Pose + Transition → DisplayModel
-  static FlowPoseDisplayModel toDisplayModel({
-    required FlowPoseEntity entity,
-    required PoseEntity pose,
-    TransitionEntity? transition,
-  }) {
-    return FlowPoseDisplayModel(
-      flowPose: entity,
-      pose: pose,
-      transition: transition,
-    );
-  }
-
-  /// Bulk: Map FlowPoseEntity list to FlowPoseDisplayModels using lookup maps
-  static List<FlowPoseDisplayModel> toDisplayModels({
-    required List<FlowPoseEntity> flowPoses,
-    required Map<String, PoseEntity> poseMap,
-    required Map<String, TransitionEntity> transitionMap,
-  }) {
-    return flowPoses.map((fp) {
-      final pose = poseMap[fp.poseId];
-      final transition = fp.transitionId != null ? transitionMap[fp.transitionId!] : null;
-
-      if (pose == null) {
-        throw Exception('[FlowPoseMapper] Missing pose for ID: ${fp.poseId}');
-      }
-
-      return toDisplayModel(entity: fp, pose: pose, transition: transition);
-    }).toList();
-  }
+  // /// Entity + Pose + Transition → DisplayModel
+  // static FlowPoseDisplayModel toDisplayModel({
+  //   required FlowPoseEntity entity,
+  //   required PoseEntity pose,
+  //   TransitionEntity? transition,
+  // }) {
+  //   return FlowPoseDisplayModel(
+  //     flowPose: entity,
+  //     pose: pose,
+  //     transition: transition,
+  //   );
+  // }
+  //
+  // /// Bulk: Map FlowPoseEntity list to FlowPoseDisplayModels using lookup maps
+  // static List<FlowPoseDisplayModel> toDisplayModels({
+  //   required List<FlowPoseEntity> flowPoses,
+  //   required Map<String, PoseEntity> poseMap,
+  //   required Map<String, TransitionEntity> transitionMap,
+  // }) {
+  //   return flowPoses.map((fp) {
+  //     final pose = poseMap[fp.poseId];
+  //     final transition = fp.transitionId != null ? transitionMap[fp.transitionId!] : null;
+  //
+  //     if (pose == null) {
+  //       throw Exception('[FlowPoseMapper] Missing pose for ID: ${fp.poseId}');
+  //     }
+  //
+  //     return toDisplayModel(entity: fp, pose: pose, transition: transition);
+  //   }).toList();
+  // }
 }

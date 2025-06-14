@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:uuid/uuid.dart';
 import 'package:frontend/features/flow/data/models/flow_model.dart';
 import 'package:frontend/core/services/http_service.dart';
 
@@ -72,11 +71,11 @@ class FlowRemoteDataSource {
 
   /// Delete a flow
   Future<void> deleteFlow({
-    required String flowId,
+    required String id,
     required String token,
   }) async {
     final response = await httpService.delete(
-      path: "/flows/delete/$flowId",
+      path: "/flows/delete/$id",
       token: token,
     );
 
@@ -86,6 +85,6 @@ class FlowRemoteDataSource {
       throw Exception("[FlowRemoteDataSource] Failed to delete flow remotely");
     }
 
-    log("[FlowRemoteDataSource] Flow deleted successfully: $flowId");
+    log("[FlowRemoteDataSource] Flow deleted successfully: $id");
   }
 }

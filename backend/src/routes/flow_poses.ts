@@ -138,4 +138,35 @@ flowPoseRouter.delete("/delete/:flowId", auth, async (req: AuthRequest, res) => 
     }
 });
 
+
+// Delete flow_pose for given id
+flowPoseRouter.delete("/delete/pose/:flowPoseId", auth, async (req: AuthRequest, res) => {
+    // Verify user
+    if (!req.user) {
+        console.log('[FlowPoseRouter] Unauthorized user');
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const flowPoseId = req.params.flowPoseId;
+
+    try {
+        const deleted = await db
+            .delete(flowPosesTable)
+            .where(eq(flowPosesTable.id, flowPoseId))
+            .returning();
+
+        if (deleted.length === 0) {
+            console.log('[FlowPoseRouter] FlowPose was not found');
+            res.status(404).json({ error: "FlowPose not found" });
+            return;
+        }
+
+        res.json(true);
+    } catch (e) {
+        console.error("[FlowPoseRouter] Delete error", e);
+        res.status(500).json({ error: "Failed to delete flow pose" });
+    }
+});
+
 export default flowPoseRouter;

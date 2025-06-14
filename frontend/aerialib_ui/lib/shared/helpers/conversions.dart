@@ -68,13 +68,13 @@ List<MediaIconEntity> flowsToMediaIcons(List<FlowEntity> flows) {
     final flow = entry.value;
 
     // If missing, pick an alternating default image
-    final useDefault = flow.thumbnailImagePath == Constants.missingImagePath;
+    final useDefault = flow.primaryMediaPath == Constants.missingImagePath;
     final defaultPath = "/${Constants.defaultFlowThumbnails[index % Constants.defaultFlowThumbnails.length]}";
 
     return MediaIconEntity(
       title: flow.name,
       subtitle: 'Level ${flow.level} | ${capitalizeFirstLetter(flow.apparatus)}',
-      imageUrl: useDefault ? defaultPath : flow.thumbnailImagePath,
+      imageUrl: useDefault ? defaultPath : flow.primaryMediaPath!,
       data: flow,
       type: MediaType.flow,
     );

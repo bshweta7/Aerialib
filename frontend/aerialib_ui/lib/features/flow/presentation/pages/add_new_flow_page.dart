@@ -81,7 +81,8 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
     }
 
     /// Proceed to create new flow
-    final state = await context.read<FlowsCubit>().createNewFlow(
+    final flowEntity = FlowEntity(
+      id: '', // or `null`/`uuid.v4()` depending on how your backend handles it
       name: flowName,
       apparatus: apparatusController.text.trim(),
       description: descriptionController.text.trim(),
@@ -89,23 +90,35 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
       safetyCues: safetyCuesController.text.trim(),
       progressions: progressionsController.text.trim(),
       level: level,
-      token: token,
       createdBy: userId,
-      thumbnailImageId: Constants.missingImageId,
-      thumbnailImagePath: Constants.missingImagePath,
+      updatedBy: userId,
+      primaryMediaPath: Constants.missingImageId,
+      primaryMediaId: Constants.missingImagePath,
+      isSynced: 0,
+      flowPoses: [],
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      // Add any other required fields or defaults here
     );
 
-    if (state is AddNewFlowSuccess) {
+    await context.read<FlowsCubit>().createNewFlow(
+      flow: flowEntity,
+      token: token,
+    );
+
+    final state = context.read<FlowsCubit>().state;
+
+    if (state is GetFlowsSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Saved flow information")),
       );
 
       // Emit the EditFlowState before navigating
-      context.read<FlowsCubit>().startEditingFlow(state.flow);
+      context.read<FlowsCubit>().startEditingFlow(flowEntity);
 
       context.goNamed(
         'flow-edit-poses',
-        pathParameters: {'flowId': state.flow.id,},
+        pathParameters: {'flowId': flowEntity.id,},
         // queryParameters: {'from': 'add-new-flow'},
       );
     } else if (state is FlowError) {
