@@ -7,6 +7,8 @@ import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../home/cubit/home_cubit.dart';
+
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
 
@@ -109,7 +111,14 @@ class _UserProfilePage extends State<UserProfilePage> {
                   // const SizedBox(height: 10,),
 
 
-
+                  // TODO make this a swipe down gesture, and add the manual button in profile advanced settings
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.sync),
+                    label: const Text("Sync Data"),
+                    onPressed: () {
+                      context.read<HomeCubit>().initializeHome(context, force: true);
+                    },
+                  ),
 
 
 

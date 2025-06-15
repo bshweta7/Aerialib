@@ -88,15 +88,6 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 20),
 
-                // TODO make this a swipe down gesture, and add the manual button in profile advanced settings
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.sync),
-                  label: const Text("Sync Data"),
-                  onPressed: () {
-                    context.read<HomeCubit>().initializeHome(context, force: true);
-                  },
-                ),
-
                 ElevatedButton(
                   onPressed: () => context.goNamed('music-library', queryParameters: {'from': 'home'}),
                   child: const Text("Music Library", style: TextStyle(fontSize: 20)),
