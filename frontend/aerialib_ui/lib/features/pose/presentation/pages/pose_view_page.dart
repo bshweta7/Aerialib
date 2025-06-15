@@ -4,6 +4,7 @@ import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/shared/widgets/info_display/expandable_card.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
+import 'package:frontend/shared/widgets/media_display/cards/transition_gallery_card.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../shared/helpers/conversions.dart';
@@ -118,28 +119,6 @@ class PoseViewPage extends StatelessWidget {
             const SizedBox(height: 20),
 
             /// Incoming Poses
-            FutureBuilder(
-              future: transitionsCubit.getIncomingTransitionsForPose(pose.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error loading transitions: ${snapshot.error}');
-                } else {
-                  final incoming = snapshot.data ?? [];
-
-                  final mediaIcons = transitionPosesToMediaIcons(
-                    transitions: incoming,
-                    poseMap: { for (final p in posesCubit.poses) p.id: p },
-                    onTap: (transition) {
-                      context.goNamed(
-                        'transition-view',
-                        pathParameters: {'transitionId': transition.id},
-                        queryParameters: {'from': 'pose-view'},
-                      ); // TODO when you click back from transition, it goes to pose library
-                    }
-
-
 
                     // onTap: (transition) {
                     //   showModalBottomSheet(
@@ -147,19 +126,32 @@ class PoseViewPage extends StatelessWidget {
                     //     builder: (_) => TransitionDetailSheet(transition: transition),
                     //   );
                     // },
-                  );
+            TransitionGalleryCard(
+                poseId: pose.id,
+                height: screenHeight * 0.2,
+                title: 'Poses To ${pose.displayName}',
+                onTap: (transition) {
+                  context.goNamed(
+                    'transition-view',
+                    pathParameters: {'transitionId': transition.id},
+                    queryParameters: {'from': 'pose-view'},
+                  ); // TODO when you click back from transition, it goes to pose library
+                }, isIncoming: true,
+            ),
 
-                  return ExpandableCard(
-                    title: 'Incoming Poses',
-                    children: [
-                      HorizontalScrollGallery(
-                        mediaList: mediaIcons,
-                        height: screenHeight * 0.2,
-                      ),
-                    ]
-                  );
-                }
-              },
+            /// Outgoing Poses (poses after)
+            TransitionGalleryCard(
+                poseId: pose.id,
+                height: screenHeight * 0.2,
+                title: 'Poses From ${pose.displayName}',
+                onTap: (transition) {
+                  context.goNamed(
+                    'transition-view',
+                    pathParameters: {'transitionId': transition.id},
+                    queryParameters: {'from': 'pose-view'},
+                  ); // TODO when you click back from transition, it goes to pose library
+                },
+                isIncoming: false,
             ),
 
             /// Details

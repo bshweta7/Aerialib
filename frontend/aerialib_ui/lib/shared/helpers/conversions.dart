@@ -30,19 +30,21 @@ List<MediaIconEntity> posesToMediaIcons(
 List<MediaIconEntity> transitionPosesToMediaIcons({
   required List<TransitionEntity> transitions,
   required Map<String, PoseEntity> poseMap,
-  void Function(TransitionEntity transition)? onTap,
+  required void Function(TransitionEntity transition) onTap,
+  required bool isIncoming,
 }) {
   return transitions.map((transition) {
-    final fromPose = poseMap[transition.fromPoseId];
-    if (fromPose == null) return null;
+    final poseId = isIncoming ? transition.fromPoseId : transition.toPoseId;
+    final pose = poseMap[poseId];
+    if (pose == null) return null;
 
     return MediaIconEntity(
-      imageUrl: "/${fromPose.primaryMediaPath}",
-      title: fromPose.displayName,
+      imageUrl: pose.primaryMediaPath,
+      title: pose.displayName,
       subtitle: transition.name,
       type: MediaType.transition,
       data: transition,
-      onTapFunction: onTap != null ? () => onTap(transition) : null,
+      onTapFunction: () => onTap(transition),
     );
   }).whereType<MediaIconEntity>().toList();
 }
