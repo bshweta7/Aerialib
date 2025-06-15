@@ -20,6 +20,8 @@ import 'package:frontend/features/flow/presentation/widgets/flow_help_dialog.dar
 import 'package:frontend/shared/features/navigation/widgets/nav_bar.dart';
 import 'package:frontend/features/pose/presentation/widgets/pose_filter_sheet.dart';
 
+import '../widgets/flow_pose_card.dart';
+
 
 class FlowEditPosesPage extends StatefulWidget {
   final FlowEntity flow;
@@ -77,13 +79,58 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
       id: const Uuid().v4(),
       flowId: widget.flow.id,
       pose: pose,
-      poseOrder: poses.length,
+      poseOrder: poses.length, // TODO make it able to add anywhere in flow
       isSynced: 0,
     );
 
     setState(() {
       poses.add(newFlowPose);
       _searchQuery = '';
+    });
+  }
+
+  void _addPoseAtIndex(int index, PoseEntity pose) {
+    final newFlowPose = FlowPoseEntity(
+      id: const Uuid().v4(),
+      flowId: widget.flow.id,
+      pose: pose,
+      poseOrder: poses.length, // temporary; will be fixed below
+      isSynced: 0,
+    );
+
+    setState(() {
+      // Step 1: Add to end
+      poses.add(newFlowPose);
+
+      // Step 2: Remove from end and insert right after the given index
+      final inserted = poses.removeLast();
+      poses.insert(index, inserted);
+
+      // Step 3: Recalculate poseOrder
+      _recalculatePoseOrders();
+
+      // Clear search
+      _searchQuery = '';
+    });
+  }
+
+
+  void _recalculatePoseOrders() {
+    for (int i = 0; i < poses.length; i++) {
+      poses[i] = poses[i].copyWith(poseOrder: i);
+    }
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) newIndex--;
+
+      final item = poses.removeAt(oldIndex);
+      poses.insert(newIndex, item);
+
+      _showSwipeHint = false;
+
+      _recalculatePoseOrders();
     });
   }
 
@@ -163,7 +210,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
               // Search suggestion list
               final List<PoseEntity> sortedFilteredPoses = List<PoseEntity>.from(filteredPoses)
-                ..sort((a, b) => a.slug.toLowerCase().compareTo(b.slug.toLowerCase()));
+                ..sort((a, b) => a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase()));
               // TODO - decide if search list should only show filtered poses or all poses
 
 
@@ -271,25 +318,16 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                   // TODO light bulb on right side of each one that opens the list of poses you can transition to from the current pose (icon only shows up if there are known transitions). if clicked it drops down and creates a horizontal sliding list of images and names.
                   Expanded(
                     child: ReorderableListView(
+                      buildDefaultDragHandles: false,
                       padding: const EdgeInsets.only(bottom: 75), // To avoid FAB overlap
-                      onReorder: (oldIndex, newIndex) {
-                        setState(() {
-                          if (newIndex > oldIndex) newIndex--;
-                          final item = poses.removeAt(oldIndex);
-                          poses.insert(newIndex, item);
-                          _showSwipeHint = false;
-                          for (int i = 0; i < poses.length; i++) {
-                            poses[i] = poses[i].copyWith(poseOrder: i);
-                          }
-                        });
-                      },
+                      onReorder: _onReorder,
                       children: poses.map((flowPose) {
                         return Container(
-                            key: ValueKey(flowPose.id), // ✅ Key for ReorderableListView
+                            key: ValueKey(flowPose.id),
                         child: ReorderableDragStartListener(
-                        index: poses.indexOf(flowPose),
-                        child: Dismissible(
-                        key: ValueKey(flowPose.id), // still needed for Dismissible
+                          index: poses.indexOf(flowPose),
+                          child: Dismissible(
+                          key: ValueKey(flowPose.id),
                             direction: DismissDirection.startToEnd,
                             background: Container(
                               color: Colors.red,
@@ -326,17 +364,23 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                                 ),
                               );
                             },
-                            child: ListCard(
-                              title: flowPose.pose.slug,
-                              subtitle: 'Level ${flowPose.pose.level} | ${capitalizeFirstLetter(flowPose.pose.apparatus)}',
-                              imageUrl: '/${flowPose.pose.primaryMediaPath}',
-                              onTapFunction: () {
-                                PoseViewSheet.show(
-                                  context: context,
-                                  pose: flowPose.pose,
+                            child: FlowPoseCard(
+                              flowPose: flowPose,
+                              searchBarBuilder: (context, index) {
+                                return PoseSearchBarWidget(
+                                  onSearchChanged: _updateSearchQuery,
+                                  suggestionList: sortedFilteredPoses,
+                                  onSuggestionTapped: (pose) => _addPoseAtIndex(index, pose),
+                                  hintText: 'Add new pose',
                                 );
                               },
-                            ),
+                              // PoseSearchBarWidget(
+                              //   onSearchChanged: _updateSearchQuery,
+                              //   suggestionList: sortedFilteredPoses,
+                              //   onSuggestionTapped: _addPoseToFlow,
+                              //   hintText: 'Add new pose',
+                              // ),
+                            )
                           ),
                         )
                         );
