@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
+import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     return MainScaffold(
       currentIndex: 0,
       appBar: AppBar(
-        title: const Text("Aerialib"),
+        title: Text("${capitalizeFirstLetter(currentUsername)}'s Dashboard"),  // TODO use first name if available or username
         actions: [
           IconButton(
             onPressed: () {
@@ -72,9 +73,9 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(15),
             child: Column(
               children: [
-                Text(
-                  "📚 Welcome, ${capitalizeFirstLetter(currentUsername)}!", // TODO use first name if available or username
-                  style: const TextStyle(
+                const Text(
+                  "📚 Welcome to Aerialib, your personal aerial library!",
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
                   ),
@@ -82,22 +83,71 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  "Organize your aerial flows, explore new poses from Joanne's pose flashcard library, and keep track of your favorite poses for Hoopla — all in one place.",
+                  "Select a library to get started.",
                   style: TextStyle(fontSize: 18),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
 
-                ElevatedButton(
-                  onPressed: () => context.goNamed('music-library', queryParameters: {'from': 'home'}),
-                  child: const Text("Music Library", style: TextStyle(fontSize: 20)),
+                // 2x2 Grid for Libraries
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200, // use a softer color for better aesthetics
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    childAspectRatio: 1.5,
+                    children: [
+                      _buildLibraryButton(
+                        context,
+                        icon: Icons.accessibility_new,
+                        label: 'Pose Library',
+                        routeName: 'pose-library',
+                        description: 'Explore poses and learn more about them'
+                      ),
+                      _buildLibraryButton(
+                          context,
+                          icon: Icons.loop,
+                          label: 'Flow Library',
+                          routeName: 'flow-library',
+                          description: 'Create or manage your flows'
+                      ),
+                      _buildLibraryButton(
+                        context,
+                        icon: Icons.sync_alt,
+                        label: 'Transitions Library',
+                        routeName: 'transition-library',
+                        description: 'Find new transitions between poses'
+                      ),
+                      _buildLibraryButton(
+                          context,
+                          icon: Icons.music_note,
+                          label: 'Music Library',
+                          routeName: 'music-library',
+                          description: 'Store song ideas for your next performance'
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () => context.goNamed('media-gallery', queryParameters: {'from': 'home'}),
-                  child: const Text("Media Library", style: TextStyle(fontSize: 20)),
-                ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
+
+                // ElevatedButton(
+                //   onPressed: () => context.goNamed('music-library', queryParameters: {'from': 'home'}),
+                //   child: const Text("Music Library", style: TextStyle(fontSize: 20)),
+                // ),
+                // const SizedBox(height: 30),
+                // ElevatedButton(
+                //   onPressed: () => context.goNamed('media-gallery', queryParameters: {'from': 'home'}),
+                //   child: const Text("Media Library", style: TextStyle(fontSize: 20)),
+                // ),
+                // const SizedBox(height: 30),
 
                 // TODO - maybe switch to modal for everything instead of having textboxes on the dashboard itself... might look cleaner?
                 QuickAddCategoryCard(
@@ -113,6 +163,16 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Developed in collaboration with Uplift Aerial Arts.",
+                  style: TextStyle(fontSize: 22),
+                  textAlign: TextAlign.center,
+                ),
+                
+                const FormattedCachedNetworkImage('default/uplift.jpg'),
+                
+                const SizedBox(height: 20),
               ],
             ),
           );
@@ -124,6 +184,43 @@ class _HomePageState extends State<HomePage> {
 
 
 
+Widget _buildLibraryButton(
+    BuildContext context, {
+      required IconData icon,
+      required String label,
+      required String routeName,
+      required String description,
+    }) {
+  return ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.deepPurple.shade100,
+      foregroundColor: Colors.black,
+      padding: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+    ),
+    onPressed: () => context.goNamed(routeName, queryParameters: {'from': 'home'}),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, size: 36),
+        const SizedBox(height: 10),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 10),
+        Text(
+          description,
+          style: const TextStyle(fontSize: 14),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
+}
 
 
 
