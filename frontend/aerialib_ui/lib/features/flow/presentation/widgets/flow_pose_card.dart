@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';
+import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 
 import '../../../../shared/helpers/formatters.dart';
+import '../../../../shared/widgets/media_display/cards/transition_gallery_card.dart';
 import '../../../../shared/widgets/media_display/general/formatted_cached_network_image.dart';
 import '../../../pose/presentation/pages/pose_view_sheet.dart';
 
@@ -20,7 +22,8 @@ class FlowPoseCard extends StatefulWidget {
 }
 
 class _FlowPoseCardState extends State<FlowPoseCard> {
-  bool _isNextExpanded = false;
+  bool _isFromExpanded = false;
+  bool _isToExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +35,15 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       child: Column(
         children: [
+
+          // Top expansion
+          if (_isFromExpanded) ...[
+            _ExpandedSection(
+              pose: pose,
+              searchBar: widget.searchBarBuilder(context, widget.flowPose.poseOrder),
+              isIncoming: true,),
+          ],
+          
           InkWell(
             onTap: () {
               PoseViewSheet.show(context: context, pose: pose);
@@ -41,7 +53,7 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
               child: Row(
                 children: <Widget>[
                   // Drag handle
-                  Icon(Icons.drag_handle, color: Colors.grey),
+                  const Icon(Icons.drag_handle, color: Colors.grey),
 
                   const SizedBox(width: 8.0),
 
@@ -79,47 +91,43 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
                   ),
                   
                   
-                  // Next Pose Options
-                  IconButton(
-                    icon: Icon(_isNextExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
-                    tooltip: 'Add new pose after this pose',
-                    onPressed: () {
-                      setState(() {
-                        _isNextExpanded = !_isNextExpanded;
-                      });
-                    },
+                  // Expand Arrows
+                  Column(
+                    children: [
+                      // From Pose Options
+                      IconButton(
+                        icon: Icon(_isFromExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up),
+                        tooltip: 'Add new pose before this pose',
+                        onPressed: () {
+                          setState(() {
+                            _isFromExpanded = !_isFromExpanded;
+                          });
+                        },
+                      ),
+
+                      // Next Pose Options
+                      IconButton(
+                        icon: Icon(_isToExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
+                        tooltip: 'Add new pose after this pose',
+                        onPressed: () {
+                          setState(() {
+                            _isToExpanded = !_isToExpanded;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
 
-          if (_isNextExpanded) ...[
-            const Divider(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Suggested next poses:", style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  SizedBox(height: 8.0),
-                  Wrap(
-                    spacing: 8.0,
-                    children: [
-                      // Replace with actual pose suggestions
-                      CircleAvatar(radius: 24, child: Icon(Icons.fitness_center)),
-                      CircleAvatar(radius: 24, child: Icon(Icons.fitness_center)),
-                      CircleAvatar(radius: 24, child: Icon(Icons.fitness_center)),
-                    ],
-                  ),
-                  const SizedBox(height: 12.0),
-                  widget.searchBarBuilder(context, widget.flowPose.poseOrder + 1),
-                  const SizedBox(height: 16.0),
-                ],
-              ),
-            ),
+          // Top expansion
+          if (_isToExpanded) ...[
+            _ExpandedSection(
+              pose: pose,
+              searchBar: widget.searchBarBuilder(context, widget.flowPose.poseOrder + 1),
+              isIncoming: false,),
           ],
         ],
       ),
@@ -139,3 +147,45 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
                   //   )
                   // else if (trailing != null)
                   //   trailing!,
+
+
+
+class _ExpandedSection extends StatelessWidget {
+  final PoseEntity pose;
+  final Widget searchBar;
+  final bool isIncoming; // Incoming --> poses that result in current pose (top)
+
+  const _ExpandedSection({
+    required this.pose,
+    required this.searchBar,
+    required this.isIncoming
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey.shade300,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          // const SizedBox(height: 16.0),
+          // const Align(
+          //   alignment: Alignment.centerLeft,
+          //   child: Text("Select pose:", style: TextStyle(fontWeight: FontWeight.bold)),
+          // ),
+          // const SizedBox(height: 8.0),
+
+          // TODO remove this
+          TransitionGalleryCard(
+            poseId: pose.id,
+            height: 50,
+            title: 'Poses ${isIncoming ? 'To' : 'From'} ${pose.displayName}',
+            isIncoming: true,
+          ),
+
+          searchBar,
+        ],
+      ),
+    );
+  }
+}

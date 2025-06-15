@@ -7,6 +7,7 @@ import 'package:frontend/features/transitions/presentation/cubit/transition_cubi
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../features/pose/domain/entities/pose_entity.dart';
 import '../../../helpers/conversions.dart';
 
 class TransitionGalleryCard extends StatelessWidget {
@@ -15,6 +16,7 @@ class TransitionGalleryCard extends StatelessWidget {
   final bool isIncoming;
   final double height;
   final void Function(TransitionEntity transition)? onTap;
+  final void Function(PoseEntity pose)? onSuggestedPoseSelected;
 
   const TransitionGalleryCard({
     super.key,
@@ -23,6 +25,7 @@ class TransitionGalleryCard extends StatelessWidget {
     required this.isIncoming,
     required this.height,
     this.onTap,
+    this.onSuggestedPoseSelected,
   });
 
   @override
@@ -52,6 +55,7 @@ class TransitionGalleryCard extends StatelessWidget {
                   queryParameters: {'from': 'pose-view'},
                 ); // TODO when you click back from transition, it goes to pose library
               },
+
               isIncoming: isIncoming,
           );
 

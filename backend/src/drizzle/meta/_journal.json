@@ -50,6 +50,27 @@
       "when": 1749673564704,
       "tag": "0006_update_flow_table",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749997336965,
+      "tag": "0007_fix_tables_in_db",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1749997497624,
+      "tag": "0008_add_flow_poses_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1749997685960,
+      "tag": "0009_add_tag_tables",
+      "breakpoints": true
     }
   ]
 }
