@@ -49,6 +49,30 @@ List<MediaIconEntity> transitionPosesToMediaIcons({
   }).whereType<MediaIconEntity>().toList();
 }
 
+// TODO combine with above if possible, or rename both to make it cleaner...
+List<MediaIconEntity> flowPageTransitionPosesToMediaIcons({
+  required List<TransitionEntity> transitions,
+  required Map<String, PoseEntity> poseMap,
+  required void Function(PoseEntity pose, int index) onTap,
+  required bool isIncoming,
+  required int index,
+}) {
+  return transitions.map((transition) {
+    final poseId = isIncoming ? transition.fromPoseId : transition.toPoseId;
+    final pose = poseMap[poseId];
+    if (pose == null) return null;
+
+    return MediaIconEntity(
+      imageUrl: pose.primaryMediaPath,
+      title: pose.displayName,
+      subtitle: transition.name,
+      type: MediaType.transition,
+      data: transition,
+      onTapFunction: () => onTap(pose, index),
+    );
+  }).whereType<MediaIconEntity>().toList();
+}
+
 
 
 // List<MediaIconEntity> flowsToMediaIcons(List<FlowEntity> flows) {

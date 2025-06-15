@@ -374,6 +374,8 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                                   hintText: 'Add new pose',
                                 );
                               },
+                              onSuggestionTapped: (pose, index) => _addPoseAtIndex(index, pose),
+
                               // PoseSearchBarWidget(
                               //   onSearchChanged: _updateSearchQuery,
                               //   suggestionList: sortedFilteredPoses,

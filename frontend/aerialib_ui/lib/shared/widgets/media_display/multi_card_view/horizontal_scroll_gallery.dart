@@ -7,6 +7,7 @@ class HorizontalScrollGallery extends StatefulWidget {
   final double height;
   final int itemsPerPage;
   final bool isFullWidth;
+  final bool? isTextVisible;
 
   const HorizontalScrollGallery({
     super.key,
@@ -14,6 +15,7 @@ class HorizontalScrollGallery extends StatefulWidget {
     this.height = 250,
     this.itemsPerPage = -1,
     this.isFullWidth = false,
+    this.isTextVisible,
   });
 
   @override
@@ -83,6 +85,7 @@ class _HorizontalScrollGalleryState extends State<HorizontalScrollGallery> {
                       subtitle: icon.subtitle,
                       mediaUrl: icon.imageUrl,
                       onTapFunction: icon.onTapFunction,
+                      isTextVisible: widget.isTextVisible,
                     ),
                   ),
                 );

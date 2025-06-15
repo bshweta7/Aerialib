@@ -8,6 +8,7 @@ class MediaGridCard extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final GestureTapCallback? onTapFunction;
+  final bool? isTextVisible;
 
   const MediaGridCard({
     super.key,
@@ -15,12 +16,15 @@ class MediaGridCard extends StatelessWidget {
     this.title,
     this.subtitle,
     this.onTapFunction,
+    this.isTextVisible,
   });
 
   @override
   Widget build(BuildContext context) {
-    final showBottom = (title != null && title!.trim().isNotEmpty) ||
-        (subtitle != null && subtitle!.trim().isNotEmpty);
+    final bool showBottom = isTextVisible == null ?
+      (title != null && title!.trim().isNotEmpty) ||
+        (subtitle != null && subtitle!.trim().isNotEmpty) :
+      isTextVisible!;
 
     return GestureDetector(
       onTap: onTapFunction,
