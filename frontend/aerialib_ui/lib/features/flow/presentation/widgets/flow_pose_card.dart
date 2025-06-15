@@ -254,7 +254,7 @@ class _SuggestedPoseSlider extends StatelessWidget {
           return HorizontalScrollGallery(
             mediaList: mediaIcons,
             height: 150,
-            isTextVisible: false,
+            // isTextVisible: false,
           );
 
         }

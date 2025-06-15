@@ -7,7 +7,7 @@ const appTextTheme = TextTheme(
   bodyLarge: TextStyle(fontSize: 20),
   bodyMedium: TextStyle(fontSize: 16),
   labelLarge: TextStyle(fontSize: 20),
-  labelMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  labelMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
   labelSmall: TextStyle(fontSize: 12, color: Colors.grey), // Subtitle
 
 );

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 
 import '../../user/presentation/cubit/auth_cubit.dart';
 import '../../media/presentation/cubit/media_cubit.dart';
@@ -26,6 +27,7 @@ class HomeCubit extends Cubit<HomeState> {
         context.read<MediaCubit>().syncMedia(token: token),
         context.read<PosesCubit>().syncPoses(token: token),
         context.read<TransitionCubit>().syncTransitions(token: token),
+        context.read<FlowsCubit>().syncFlows(token: token),
       ]);
 
       hasSynced = true;

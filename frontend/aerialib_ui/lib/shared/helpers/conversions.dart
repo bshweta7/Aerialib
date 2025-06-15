@@ -19,7 +19,7 @@ List<MediaIconEntity> posesToMediaIcons(
   return poses.map((pose) => MediaIconEntity(
     imageUrl: "/${pose.primaryMediaPath}",
     title: pose.displayName,
-    subtitle: "Level ${pose.level} | ${capitalizeFirstLetter(pose.apparatus)}", // TODO - adjust the subtitle with tags
+    subtitle: "${pose.level == -1 ? "" : "Level ${pose.level} | "}${capitalizeFirstLetter(pose.apparatus)}", // TODO - adjust the subtitle with tags
     type: MediaType.pose,
     data: pose,
     onTapFunction: onTap != null ? () => onTap(pose) : null,
@@ -99,7 +99,7 @@ List<MediaIconEntity> flowsToMediaIcons(List<FlowEntity> flows) {
 
     return MediaIconEntity(
       title: flow.name,
-      subtitle: 'Level ${flow.level} | ${capitalizeFirstLetter(flow.apparatus)}',
+      subtitle: '${flow.level == -1 ? "" : "Level ${flow.level} | "}${capitalizeFirstLetter(flow.apparatus)}',
       imageUrl: useDefault ? defaultPath : flow.primaryMediaPath!,
       data: flow,
       type: MediaType.flow,
