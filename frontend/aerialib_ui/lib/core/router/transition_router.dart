@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/features/transitions/presentation/pages/transition_library.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/shared/features/navigation/cubit/nav_history_cubit.dart';
 
@@ -11,6 +12,18 @@ import '../../features/transitions/presentation/pages/transition_view_page.dart'
 
 
 List<GoRoute> transitionRoutes = [
+  /// Transition Library Page
+  GoRoute(
+    path: '/transitions',
+    name: 'transition-library',
+    builder: (context, state) {
+      context.read<NavHistoryCubit>().push(
+          state.uri.queryParameters['from']
+      );
+      return const TransitionLibraryPage();
+    },
+  ),
+
   /// Transition View
   GoRoute(
     path: '/transition/:transitionId',
