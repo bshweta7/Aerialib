@@ -3,6 +3,7 @@
 ## Frequent Commands
 - Listing git tags: ```git tag```
 - Push to origin: ```git push --tags origin```
+- Create new tag: ```git tag -a v1.1 -m "First stable release"```
 
 ## Rename an Existing Tag
 1. Find the commit the old tag points to ```git rev-parse v1.0```

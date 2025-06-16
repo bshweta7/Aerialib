@@ -63,7 +63,7 @@ class TransitionGalleryCard extends StatelessWidget {
 
           return ExpandableCard(
             title: title,
-            initiallyExpanded: false,
+            initiallyExpanded: true,
             children: [
               HorizontalScrollGallery(
                 mediaList: mediaIcons,
