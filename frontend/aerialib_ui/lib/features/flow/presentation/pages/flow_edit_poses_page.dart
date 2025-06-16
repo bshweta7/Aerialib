@@ -373,7 +373,6 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                               flowPose: flowPose,
                               onSuggestionTapped: _addPoseAtIndex,
                               suggestionList: sortedFilteredPoses,
-                              onSearchChanged: _updateSearchQuery, // optional if needed
                             ),
 
                             // child: FlowPoseCard(

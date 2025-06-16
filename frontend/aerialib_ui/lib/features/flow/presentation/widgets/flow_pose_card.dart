@@ -18,7 +18,6 @@ class FlowPoseCard extends StatefulWidget {
     required this.flowPose,
     required this.suggestionList,
     required this.onSuggestionTapped,
-    required this.onSearchChanged,
 
     super.key
   });
@@ -26,7 +25,6 @@ class FlowPoseCard extends StatefulWidget {
   final FlowPoseEntity flowPose;
   final List<PoseEntity> suggestionList;
   final Function(int index, PoseEntity pose)? onSuggestionTapped;
-  final Function(String) onSearchChanged;
 
   @override
   State<FlowPoseCard> createState() => _FlowPoseCardState();
@@ -36,7 +34,13 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
 
   bool _isFromExpanded = false;
   bool _isToExpanded = false;
+  String _searchQuery = '';
 
+  void _updateSearchQuery(String query) {
+    setState(() {
+      _searchQuery = query;
+    });
+  }
 
   /// On tapped, close the card and add the pose
   void _handleSuggestionTapped(PoseEntity pose, int index,
@@ -184,7 +188,7 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
 
           // Pose search bar
           PoseSearchBarWidget(
-            onSearchChanged: widget.onSearchChanged,
+            onSearchChanged: _updateSearchQuery,
             suggestionList: widget.suggestionList,
             onSuggestionTapped: (pose) =>
                 _handleSuggestionTapped(pose, insertIndex, fromTop: isIncoming),
