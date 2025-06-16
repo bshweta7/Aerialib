@@ -143,34 +143,20 @@ class FlowPoseRepository {
     final List<FlowPoseModel> unsynced = await localDataSource.getUnsyncedFlowPoses();
     if (unsynced.isEmpty) return;
 
-    log("[FlowPoseRepository] Retrieved unsynced flow poses from local");
+    log("[FlowPoseRepository] Retrieved ${unsynced.length} unsynced flow poses from local");
 
-    final Map<String, List<FlowPoseModel>> grouped = {};
-    for (final pose in unsynced) {
-      grouped.putIfAbsent(pose.flowId, () => []).add(pose);
-    }
+    final success = await remoteDataSource.syncFlowPoses(
+      token: token,
+      flowPoses: unsynced,
+    );
 
-    for (final entry in grouped.entries) {
-      final flowId = entry.key;
-      final poses = entry.value;
-
-      log("[FlowPoseRepository] Syncing flow poses for flowId: $flowId");
-
-      await remoteDataSource.deleteFlowPosesByFlowId(flowId: flowId, token: token);
-
-      final success = await remoteDataSource.syncFlowPoses(
-        token: token,
-        flowPoses: poses,
-      );
-
-      if (success) {
-        for (final pose in poses) {
-          await localDataSource.updateSyncStatus(pose.id, 1);
-        }
-        log("[FlowPoseRepository] Synced and marked poses for flow $flowId");
-      } else {
-        log("[FlowPoseRepository] Failed to sync poses for flow $flowId");
+    if (success) {
+      for (final pose in unsynced) {
+        await localDataSource.updateSyncStatus(pose.id, 1);
       }
+      log("[FlowPoseRepository] All unsynced flow poses synced and marked as synced");
+    } else {
+      log("[FlowPoseRepository] Sync failed for flow poses");
     }
   }
 

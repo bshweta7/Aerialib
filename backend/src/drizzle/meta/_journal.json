@@ -71,6 +71,13 @@
       "when": 1749997685960,
       "tag": "0009_add_tag_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1750090101382,
+      "tag": "0010_update_flow_table_not_null",
+      "breakpoints": true
     }
   ]
 }

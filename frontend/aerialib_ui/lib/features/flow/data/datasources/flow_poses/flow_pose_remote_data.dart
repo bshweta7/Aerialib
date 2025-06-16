@@ -97,24 +97,38 @@ class FlowPoseRemoteDataSource {
     required String token,
     required List<FlowPoseModel> flowPoses,
   }) async {
-    final flowPoseListInMap = flowPoses.map((flowPose) => flowPose.toMapRemote()).toList();
+    final flowPoseListInMap = flowPoses.map((fp) => fp.toMapRemote()).toList();
 
-    log('[FlowPoseRemoteDataSource] Syncing ${flowPoseListInMap.length} flowPoses...');
-    // for (final map in flowPoseListInMap) {
-    //   log('[FlowPoseRemoteDataSource] Syncing flowPose slug: ${map['slug']}');
-    // }
+    // ✅ Collect ALL ids, even if they might not exist on the backend
+    final idsToDelete = flowPoses
+        .map((fp) => fp.id)
+        .where((id) => id.isNotEmpty)
+        .toList();
 
-    final response = await httpService.post(
-      path: "/flow_poses/sync",
+    if (idsToDelete.isNotEmpty) {
+      final deleteResponse = await httpService.delete(
+        path: "/flow_poses",
+        token: token,
+        body: { 'ids': idsToDelete },
+      );
+
+      if (deleteResponse.statusCode != 200) {
+        log('[FlowPoseRemoteDataSource] Delete failed: ${deleteResponse.statusCode} - ${deleteResponse.body}');
+        return false;
+      }
+    }
+
+    final insertResponse = await httpService.post(
+      path: "/flow_poses",
       token: token,
       body: flowPoseListInMap,
     );
 
-    if (response.statusCode == 201) {
+    if (insertResponse.statusCode == 201) {
       log('[FlowPoseRemoteDataSource] Sync successful');
       return true;
     } else {
-      log('[FlowPoseRemoteDataSource] Sync failed: ${response.statusCode} - ${response.body}');
+      log('[FlowPoseRemoteDataSource] Insert failed: ${insertResponse.statusCode} - ${insertResponse.body}');
       return false;
     }
   }

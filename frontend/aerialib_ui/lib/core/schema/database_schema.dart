@@ -145,7 +145,7 @@ const String createFlowTable = '''
     
     name TEXT NOT NULL,
     apparatus TEXT NOT NULL,
-    level REAL NOT NULL,
+    level int NOT NULL,
     
     description TEXT,
     teaching_cues TEXT,

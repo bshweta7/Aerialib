@@ -34,10 +34,12 @@ class HttpService {
   Future<http.Response> delete({
     required String path,
     required String token,
+    dynamic body,
   }) async {
     final res = await http.delete(
       Uri.parse("${Constants.backendUrl}$path"),
       headers: _headers(token),
+      body: jsonEncode(body),
     );
 
     _checkForError(res);

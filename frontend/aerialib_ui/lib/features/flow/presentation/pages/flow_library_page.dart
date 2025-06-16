@@ -52,7 +52,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
     if (!mounted) return;
     await context.read<FlowsCubit>().syncFlows(token: user.user.token);
     if (!mounted) return;
-    context.read<FlowsCubit>().getAllFlows(token: user.user.token);
+    context.read<FlowsCubit>().getAllFlows(token: user.user.token); // TODO remove this if sync can return the flows
   }
 
   @override

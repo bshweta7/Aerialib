@@ -74,10 +74,17 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const Text(
-                  "📚 Welcome to Aerialib, your personal aerial library!",
+                  "📚 Welcome to Aerialib",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const Text(
+                  "Your Personal Aerial Library",
+                  style: TextStyle(
+                    fontSize: 20,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -191,36 +198,46 @@ Widget _buildLibraryButton(
       required String routeName,
       required String description,
     }) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.deepPurple.shade100,
-      foregroundColor: Colors.black,
-      padding: const EdgeInsets.all(16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-    ),
-    onPressed: () => context.goNamed(routeName, queryParameters: {'from': 'home'}),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, size: 36),
-        const SizedBox(height: 10),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          textAlign: TextAlign.center,
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      // Example threshold: Show full content if width > 160
+      final bool showText = constraints.maxWidth > 200;
+
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple.shade100,
+          foregroundColor: Colors.black,
+          padding: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        const SizedBox(height: 10),
-        Text(
-          description,
-          style: const TextStyle(fontSize: 14),
-          textAlign: TextAlign.center,
+        onPressed: () => context.goNamed(routeName, queryParameters: {'from': 'home'}),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 36),
+            if (showText) ...[
+              const SizedBox(height: 10),
+              Text(
+                label,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                description,
+                style: const TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ],
         ),
-      ],
-    ),
+      );
+    },
   );
 }
+
 
 
 

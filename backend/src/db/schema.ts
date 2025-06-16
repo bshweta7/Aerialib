@@ -129,8 +129,8 @@ export const flowsTable = pgTable("flows", {
     id: uuid("id").primaryKey().defaultRandom(),
 
     name: text("name").notNull(), // NOTE: Give suggestions in frontend (like April Flow) or default to date created
-    apparatus: text("apparatus").notNull(), // NOTE: this can be interpreted from poses contained within it, don't need to ask the user to enter it
-    level: doublePrecision("level").notNull(),
+    apparatus: text("apparatus"), // NOTE: this can be interpreted from poses contained within it, don't need to ask the user to enter it
+    level: integer("level"),
 
     description: text("description"),
     teachingCues: text("teaching_cues"),

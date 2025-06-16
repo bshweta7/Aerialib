@@ -88,6 +88,8 @@ class FlowsCubit extends Cubit<FlowsState> {
       log('[FlowsCubit] Syncing flow details remote to local...');
       await _flowRepository.syncRemoteToLocal(token);
 
+      // final allPoses = await _flowRepository.getAllFlowDetails();
+      // emit(GetPosesSuccess(allPoses));
     } catch (e) {
       log('[FlowsCubit] Sync error for flow details: $e');
       emit(FlowError('[FlowsCubit] Sync error for flow details: $e'));
