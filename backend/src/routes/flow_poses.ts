@@ -165,8 +165,8 @@ flowPoseRouter.delete("/delete/flow/:flowId", auth, async (req: AuthRequest, res
             .returning();
 
         if (deleted.length === 0) {
-            console.log('[FlowPoseRouter] FlowPose was not found');
-            res.status(404).json({ error: "FlowPose not found" });
+            console.log(`[FlowPoseRouter] No flow poses found for flow ${flowId}`);
+            res.status(200).json([]); // ✅ not 404
             return;
         }
 

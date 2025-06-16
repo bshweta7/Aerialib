@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../shared/helpers/conversions.dart';
 import '../../../../shared/helpers/formatters.dart';
-import '../../../../shared/widgets/media_display/cards/transition_gallery_card.dart';
 import '../../../../shared/widgets/media_display/general/formatted_cached_network_image.dart';
 import '../../../../shared/widgets/media_display/multi_card_view/horizontal_scroll_gallery.dart';
 import '../../../pose/presentation/cubit/poses_cubit.dart';

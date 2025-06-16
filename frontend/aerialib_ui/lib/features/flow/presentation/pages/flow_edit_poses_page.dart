@@ -210,110 +210,116 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
               final List<PoseEntity> sortedFilteredPoses = List<PoseEntity>.from(filteredPoses)
                 ..sort((a, b) => a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase()));
               // TODO - decide if search list should only show filtered poses or all poses
+              // TODO allow multiselect from pose library
 
+              // TODO figure out where to add this back in... maybe on the multi-pose select page
+              // TODO move this whole filter thing to a widget
+              // Filter Icon Button
+              // IconButton(
+              //   icon: const Icon(Icons.filter_alt_outlined),
+              //   tooltip: 'Show filters',
+              //   onPressed: () {
+              //     PoseFiltersSheet.showFilterSheet(
+              //       context: context,
+              //       selectedApparatus: selectedApparatus,
+              //       selectedLevels: selectedLevels,
+              //       onApparatusChanged: _updateApparatusFilter,
+              //       onLevelsChanged: _updateLevelsFilter,
+              //     );
+              //   },
+              // ),
+              // /// Active filters
+              // if (selectedApparatus.length < Constants.apparatusOptions.length ||
+              //     selectedLevels.length < Constants.levelOptions.length)
+              //   Padding(
+              //     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //       children: [
+              //         Tooltip(
+              //           message: '${selectedApparatus.length} Apparatus, ${selectedLevels.length} Levels',
+              //           child: Text(
+              //             'Filters: ${selectedApparatus.length + selectedLevels.length} Active',
+              //             style: Theme.of(context).textTheme.bodyMedium,
+              //           ),
+              //         ),
+              //         TextButton(
+              //           onPressed: () {
+              //             setState(() {
+              //               selectedApparatus = Constants.apparatusOptions;
+              //               selectedLevels = Constants.levelOptions;
+              //             });
+              //           },
+              //           child: const Text('Clear All'),
+              //         )
+              //       ],
+              //     ),
+              //   ),
 
               return Column(
                 children: [
-                  // TODO allow multiselect from pose library
-
-                  // /// Search Bar
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                  //   child: PoseSearchBarWidget(
-                  //     onSearchChanged: _updateSearchQuery,
-                  //     suggestionList: availablePoses,
-                  //     onSuggestionTapped: _addPoseToFlow,
-                  //     hintText: 'Add new pose',
-                  //     // fromPage: 'flow-edit-poses', // TODO may need to be null, or pop if needed? Otherwise, this isn't a problem if the search bar shows pop up modal - might need a second option to show the modal and not the full page?
-                  //   ),
-                  // ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                    child: Row(
-                      children: [
-
-                        // Search Bar
-                        Expanded(
-                          child: PoseSearchBarWidget(
-                            onSearchChanged: _updateSearchQuery,
-                            suggestionList: sortedFilteredPoses,
-                            onSuggestionTapped: _addPoseToFlow,
-                            hintText: 'Add new pose',
-                          ),
-                        ),
-
-                        const SizedBox(width: 10),
-
-                        // Filter Icon Button
-                        IconButton(
-                          icon: const Icon(Icons.filter_alt_outlined),
-                          tooltip: 'Show filters',
-                          onPressed: () {
-                            PoseFiltersSheet.showFilterSheet(
-                              context: context,
-                              selectedApparatus: selectedApparatus,
-                              selectedLevels: selectedLevels,
-                              onApparatusChanged: _updateApparatusFilter,
-                              onLevelsChanged: _updateLevelsFilter,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  /// Active filters
-                  if (selectedApparatus.length < Constants.apparatusOptions.length ||
-                      selectedLevels.length < Constants.levelOptions.length)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Tooltip(
-                            message: '${selectedApparatus.length} Apparatus, ${selectedLevels.length} Levels',
-                            child: Text(
-                              'Filters: ${selectedApparatus.length + selectedLevels.length} Active',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedApparatus = Constants.apparatusOptions;
-                                selectedLevels = Constants.levelOptions;
-                              });
-                            },
-                            child: const Text('Clear All'),
-                          )
-                        ],
-                      ),
-                    ),
-
                   if (poses.isEmpty)
-                    const Center(
+                    Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                        child: Row(
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                        child: Column(
                           children: [
-                            Icon(Icons.info_outline, size: 20, color: Colors.grey),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Add poses using the search bar. \n'
-                                    'Tap the icon in the top right for help.',
-                                style: TextStyle(color: Colors.grey),
+                            const Text(
+                              "Add your first pose using the search bar",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.grey),
+                            ),
+
+                            const SizedBox(height: 5),
+
+                            // Search Bar
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                              child: PoseSearchBarWidget(
+                                onSearchChanged: _updateSearchQuery,
+                                suggestionList: sortedFilteredPoses,
+                                onSuggestionTapped: _addPoseToFlow,
+                                hintText: 'Add new pose',
                               ),
                             ),
+
+                            const SizedBox(height: 12),
+
+                            TextButton.icon(
+                              onPressed: () => FlowHelpDialog.show(context),
+                              icon: const Icon(Icons.info_outline, size: 20, color: Colors.grey),
+                              label: const Text(
+                                'Tap the icon in the top right for instructions.',
+                                style: TextStyle(color: Colors.grey, fontSize: 14),
+                              ),
+                            ),
+
                           ],
                         ),
                       ),
                     ),
 
-                  // TODO add filter or better add flow mechanism
+                  if (poses.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      child: Column(
+                        children: [
+                          Text(
+                            "Press the arrows to add a pose above or below an existing pose",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          // SizedBox(height: 8),
+                          // Text(
+                          //   "Drag to reorder or swipe left to delete",
+                          //   textAlign: TextAlign.center,
+                          //   style: TextStyle(color: Colors.grey),
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ],
 
-                  // TODO light bulb on right side of each one that opens the list of poses you can transition to from the current pose (icon only shows up if there are known transitions). if clicked it drops down and creates a horizontal sliding list of images and names.
                   Expanded(
                     child: ReorderableListView(
                       buildDefaultDragHandles: false,
@@ -373,13 +379,6 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                                 );
                               },
                               onSuggestionTapped: (pose, index) => _addPoseAtIndex(index, pose),
-
-                              // PoseSearchBarWidget(
-                              //   onSearchChanged: _updateSearchQuery,
-                              //   suggestionList: sortedFilteredPoses,
-                              //   onSuggestionTapped: _addPoseToFlow,
-                              //   hintText: 'Add new pose',
-                              // ),
                             )
                           ),
                         )

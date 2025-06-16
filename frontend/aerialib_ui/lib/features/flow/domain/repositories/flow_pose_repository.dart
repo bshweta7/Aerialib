@@ -181,11 +181,14 @@ class FlowPoseRepository {
     required String flowId,
     required String token,
   }) async {
+    log("1------");
     await remoteDataSource.deleteFlowPosesByFlowId(
       flowId: flowId,
       token: token
     );
+    log("2------");
     await localDataSource.deleteFlowPosesByFlowId(flowId);
+    log("3------");
   }
 
 
