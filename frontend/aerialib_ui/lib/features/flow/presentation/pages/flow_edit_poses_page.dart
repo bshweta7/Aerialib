@@ -353,7 +353,7 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('${removedPose.pose.slug} removed'),
+                                  content: Text('${removedPose.pose.displayName} removed'),
                                   action: SnackBarAction(
                                     label: 'Undo',
                                     onPressed: () {

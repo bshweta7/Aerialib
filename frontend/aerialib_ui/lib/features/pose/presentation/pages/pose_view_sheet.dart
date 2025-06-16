@@ -94,7 +94,7 @@ class PoseViewSheet extends StatelessWidget {
           ),
         ),
         Text(
-          pose.slug,
+          pose.displayName,
           style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
