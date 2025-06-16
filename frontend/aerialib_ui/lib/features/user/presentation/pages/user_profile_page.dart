@@ -7,6 +7,7 @@ import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../../shared/widgets/info_display/expandable_card.dart';
 import '../../../home/cubit/home_cubit.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -110,25 +111,9 @@ class _UserProfilePage extends State<UserProfilePage> {
                   // ),
                   // const SizedBox(height: 10,),
 
-
-                  // TODO make this a swipe down gesture, and add the manual button in profile advanced settings
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.sync),
-                    label: const Text("Sync Data"),
-                    onPressed: () {
-                      context.read<HomeCubit>().initializeHome(context, force: true);
-                    },
-                  ),
-
-
-
-
-
-
-                  const Divider(),
                   const SizedBox(height: 15,),
                   const Text(
-                    "Have an idea or found a bug? We'd love to hear from you!",
+                    "Have an idea or found a bug?",
                     style: TextStyle(
                       // fontWeight: FontWeight.bold,
                       // color: Colors.black,
@@ -150,7 +135,29 @@ class _UserProfilePage extends State<UserProfilePage> {
                           )
                       )
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(height: 20,),
+
+                  // TODO make this a swipe down gesture, and add the manual button in profile advanced settings
+                  ExpandableCard(
+                    title: 'Advanced Settings',
+                    children: [
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.sync),
+                        label: const Text("Sync Data", style: TextStyle(
+                          fontSize: 20,
+                        )),
+                        onPressed: () {
+                          context.read<HomeCubit>().initializeHome(context, force: true);
+                        },
+                      ),
+                    ]
+                  ),
+
+
+
+
+
+
 
                   // // TODO move this to an advanced settings section
                   // const SizedBox(height: 30),

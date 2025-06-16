@@ -4,19 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/transitions/domain/transition_entity.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/shared/helpers/conversions.dart';
-
-import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
-import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.dart';
-
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
-import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
-import 'package:frontend/features/pose/presentation/widgets/pose_filter_sheet.dart';
-import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
-import 'package:frontend/shared/widgets/media_display/multi_card_view/media_list.dart';
-import 'package:frontend/features/pose/presentation/widgets/pose_search_bar.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
@@ -52,10 +41,23 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Transitions")),
-      body:
-      BlocBuilder<PosesCubit, PosesState>(
+    return MainScaffold(
+      currentIndex: 2, // TODO what do do here?
+      appBar: AppBar(
+          leading: const SmartBackButton(),
+          title: const Text("Transitions"),
+          //   TODO make an "add transition" button
+          //      actions: [
+          //   IconButton(
+          //   icon: const Icon(Icons.add),
+          //   onPressed: () {
+          //     context.goNamed('add-new-pose',);
+          //   },
+          //   tooltip: 'Add a new pose',
+          // ),
+
+      ),
+      body: BlocBuilder<PosesCubit, PosesState>(
         builder: (context, poseState) {
           return BlocBuilder<TransitionCubit, TransitionState>(
             builder: (context, transitionState) {

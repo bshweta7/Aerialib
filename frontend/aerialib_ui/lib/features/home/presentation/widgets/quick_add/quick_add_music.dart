@@ -52,7 +52,7 @@ class _QuickAddMusicCardState extends State<QuickAddMusicCard> {
                 onPressed: () {
                   setState(() => _isExpanded = !_isExpanded);
                 },
-                tooltip: _isExpanded ? "Collapse" : "Expand",
+                tooltip: _isExpanded ? "Collapse details" : "Expand details",
               ),
               Expanded(
                 child: TextField(
@@ -65,7 +65,7 @@ class _QuickAddMusicCardState extends State<QuickAddMusicCard> {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.add),
+                icon: const Icon(Icons.send),
                 tooltip: 'Quick add song',
                 onPressed: _handleSubmit,
               ),

@@ -203,35 +203,40 @@ Widget _buildLibraryButton(
       // Example threshold: Show full content if width > 160
       final bool showText = constraints.maxWidth > 200;
 
-      return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.deepPurple.shade100,
-          foregroundColor: Colors.black,
-          padding: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+      return Tooltip(
+        message: '$label\n$description',
+        textAlign: TextAlign.center,
+        waitDuration: const Duration(milliseconds: 300),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.deepPurple.shade100,
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
-        ),
-        onPressed: () => context.goNamed(routeName, queryParameters: {'from': 'home'}),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 36),
-            if (showText) ...[
-              const SizedBox(height: 10),
-              Text(
-                label,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                description,
-                style: const TextStyle(fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
+          onPressed: () => context.goNamed(routeName, queryParameters: {'from': 'home'}),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 36),
+              if (showText) ...[
+                const SizedBox(height: 10),
+                Text(
+                  label,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  description,
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       );
     },
