@@ -177,7 +177,11 @@ class _HomePageState extends State<HomePage> {
                   textAlign: TextAlign.center,
                 ),
                 
-                const FormattedCachedNetworkImage('default/uplift.jpg'),
+                SizedBox(
+                    width: 250,
+                    height: 150,
+                    child: ClipRRect(borderRadius: BorderRadius.circular(8.0), child: const FormattedCachedNetworkImage('default/uplift.jpg'))
+                ),
                 
                 const SizedBox(height: 20),
               ],
