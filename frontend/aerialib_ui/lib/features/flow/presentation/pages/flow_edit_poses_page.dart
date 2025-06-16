@@ -368,18 +368,26 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                                 ),
                               );
                             },
+                            // TODO add scroll to top on this page (see flow view page)
                             child: FlowPoseCard(
                               flowPose: flowPose,
-                              searchBarBuilder: (context, index) {
-                                return PoseSearchBarWidget(
-                                  onSearchChanged: _updateSearchQuery,
-                                  suggestionList: sortedFilteredPoses,
-                                  onSuggestionTapped: (pose) => _addPoseAtIndex(index, pose),
-                                  hintText: 'Add new pose',
-                                );
-                              },
-                              onSuggestionTapped: (pose, index) => _addPoseAtIndex(index, pose),
-                            )
+                              onSuggestionTapped: _addPoseAtIndex,
+                              suggestionList: sortedFilteredPoses,
+                              onSearchChanged: _updateSearchQuery, // optional if needed
+                            ),
+
+                            // child: FlowPoseCard(
+                            //   flowPose: flowPose,
+                            //   searchBarBuilder: (context, index) {
+                            //     return PoseSearchBarWidget(
+                            //       onSearchChanged: _updateSearchQuery,
+                            //       suggestionList: sortedFilteredPoses,
+                            //       onSuggestionTapped: (pose) => _addPoseAtIndex(index, pose),
+                            //       hintText: 'Add new pose',
+                            //     );
+                            //   },
+                            //   onSuggestionTapped: (pose, index) => _addPoseAtIndex(index, pose),
+                            // )
                           ),
                         )
                         );

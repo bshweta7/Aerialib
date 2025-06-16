@@ -9,28 +9,48 @@ import '../../../../shared/widgets/media_display/general/formatted_cached_networ
 import '../../../../shared/widgets/media_display/multi_card_view/horizontal_scroll_gallery.dart';
 import '../../../pose/presentation/cubit/poses_cubit.dart';
 import '../../../pose/presentation/pages/pose_view_sheet.dart';
+import '../../../pose/presentation/widgets/pose_search_bar.dart';
 import '../../../transitions/domain/transition_entity.dart';
 import '../../../transitions/presentation/cubit/transition_cubit.dart';
 
 class FlowPoseCard extends StatefulWidget {
   const FlowPoseCard({
     required this.flowPose,
-    required this.searchBarBuilder,
+    required this.suggestionList,
     required this.onSuggestionTapped,
+    required this.onSearchChanged,
+
     super.key
   });
 
   final FlowPoseEntity flowPose;
-  final Widget Function(BuildContext context, int index) searchBarBuilder;
-  final Function(PoseEntity pose, int index)? onSuggestionTapped;
+  final List<PoseEntity> suggestionList;
+  final Function(int index, PoseEntity pose)? onSuggestionTapped;
+  final Function(String) onSearchChanged;
 
   @override
   State<FlowPoseCard> createState() => _FlowPoseCardState();
 }
 
 class _FlowPoseCardState extends State<FlowPoseCard> {
+
   bool _isFromExpanded = false;
   bool _isToExpanded = false;
+
+
+  /// On tapped, close the card and add the pose
+  void _handleSuggestionTapped(PoseEntity pose, int index,
+      {required bool fromTop}) {
+    widget.onSuggestionTapped?.call(index, pose);
+    setState(() {
+      if (fromTop) {
+        _isFromExpanded = false;
+      } else {
+        _isToExpanded = false;
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +65,11 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
 
           // Top expansion
           if (_isFromExpanded) ...[
-            _ExpandedSection(
-              pose: pose,
-              searchBar: widget.searchBarBuilder(context, widget.flowPose.poseOrder),
+            _expandedSection(
               isIncoming: true,
-              poseLocation: widget.flowPose.poseOrder,
-              onSuggestionTapped: (pose, index) => widget.onSuggestionTapped?.call(pose, index),
             ),
           ],
-          
+
           InkWell(
             onTap: () {
               PoseViewSheet.show(context: context, pose: pose);
@@ -92,22 +108,25 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
                         ),
                         const SizedBox(height: 4.0),
                         Text(
-                          'Level ${pose.level} | ${capitalizeFirstLetter(pose.apparatus)}',
+                          'Level ${pose.level} | ${capitalizeFirstLetter(pose
+                              .apparatus)}',
                           style: const TextStyle(fontSize: 14.0),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
                   ),
-                  
-                  
+
+
                   // Expand Arrows
                   Column(
                     children: [
                       // From Pose Options
                       IconButton(
-                        icon: Icon(_isFromExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up),
-                        tooltip: 'Add new pose before this pose',
+                        icon: Icon(
+                            _isFromExpanded ? Icons.keyboard_arrow_down : Icons
+                                .keyboard_arrow_up),
+                        tooltip: _isFromExpanded ? 'Collapse box' : 'Add new pose before this pose',
                         onPressed: () {
                           setState(() {
                             _isFromExpanded = !_isFromExpanded;
@@ -117,8 +136,10 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
 
                       // Next Pose Options
                       IconButton(
-                        icon: Icon(_isToExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
-                        tooltip: 'Add new pose after this pose',
+                        icon: Icon(
+                            _isToExpanded ? Icons.keyboard_arrow_up : Icons
+                                .keyboard_arrow_down),
+                        tooltip: _isToExpanded ? 'Collapse box' : 'Add new pose after this pose',
                         onPressed: () {
                           setState(() {
                             _isToExpanded = !_isToExpanded;
@@ -134,129 +155,101 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
 
           // Top expansion
           if (_isToExpanded) ...[
-            _ExpandedSection(
-              pose: pose,
-              searchBar: widget.searchBarBuilder(context, widget.flowPose.poseOrder + 1),
+            _expandedSection(
               isIncoming: false,
-              onSuggestionTapped: (pose, index) => widget.onSuggestionTapped?.call(pose, index),
-              poseLocation: widget.flowPose.poseOrder,
             ),
           ],
         ],
       ),
     );
   }
-}
 
+  Widget _expandedSection({required bool isIncoming}) {
+    final poseLocation = widget.flowPose.poseOrder;
+    final insertIndex = isIncoming ? poseLocation : poseLocation + 1;
 
-                  // TODO Use favorite logic for "locking" poses
-                  // if (isFavorite != null)
-                  //   IconButton(
-                  //     icon: Icon(
-                  //       isFavorite! ? Icons.favorite : Icons.favorite_border,
-                  //       color: isFavorite! ? Colors.red : Colors.grey,
-                  //     ),
-                  //     onPressed: onFavoriteToggle,
-                  //   )
-                  // else if (trailing != null)
-                  //   trailing!,
-
-
-
-class _ExpandedSection extends StatelessWidget {
-  final PoseEntity pose;
-  final Widget searchBar;
-  final bool isIncoming; // Incoming --> poses that result in current pose (top)
-  final int poseLocation;
-  final Function(PoseEntity pose, int index)? onSuggestionTapped;
-
-  const _ExpandedSection({
-    required this.pose,
-    required this.searchBar,
-    required this.isIncoming,
-    required this.poseLocation,
-    required this.onSuggestionTapped,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
       color: Colors.grey.shade300,
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          _SuggestedPoseSlider(
-            pose: pose,
+
+          // Suggested poses from transitions
+          _suggestedPoseSlider(
             isIncoming: isIncoming,
-            index: poseLocation + (isIncoming ? 0 : 1),
-            onSuggestionTapped: (pose, index) => onSuggestionTapped?.call(pose, index),
+            index: insertIndex,
+            onSuggestionTapped: (pose, index) =>
+                _handleSuggestionTapped(pose, index, fromTop: isIncoming),
           ),
 
-          // const SizedBox(height: 16.0),
-          // const Align(
-          //   alignment: Alignment.centerLeft,
-          //   child: Text("Select pose:", style: TextStyle(fontWeight: FontWeight.bold)),
-          // ),
-          // const SizedBox(height: 8.0),
-
-          // TODO remove this
-
-
-          searchBar,
+          // Pose search bar
+          PoseSearchBarWidget(
+            onSearchChanged: widget.onSearchChanged,
+            suggestionList: widget.suggestionList,
+            onSuggestionTapped: (pose) =>
+                _handleSuggestionTapped(pose, insertIndex, fromTop: isIncoming),
+            hintText: 'Add new pose',
+          ),
         ],
       ),
     );
   }
-}
 
+  Widget _suggestedPoseSlider({
+    required bool isIncoming,
+    required int index,
+    required Function (PoseEntity pose, int index)? onSuggestionTapped,
+  }) {
+    final pose = widget.flowPose.pose;
 
-class _SuggestedPoseSlider extends StatelessWidget {
-  final PoseEntity pose;
-  final bool isIncoming;
-  final int index;
-  final Function (PoseEntity pose, int index)? onSuggestionTapped;
-
-  const _SuggestedPoseSlider({
-    required this.pose,
-    required this.isIncoming,
-    required this.index,
-    required this.onSuggestionTapped,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+    // TODO there must be a cleaner way than to call the cubits...
     final transitionsCubit = context.read<TransitionCubit>();
     final posesCubit = context.read<PosesCubit>();
+
     return FutureBuilder<List<TransitionEntity>>(
         future: isIncoming
-        ? transitionsCubit.getIncomingTransitionsForPose(pose.id)
-        : transitionsCubit.getOutgoingTransitionsForPose(pose.id),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error loading transitions: ${snapshot.error}');
-        } else {
-          final transitions = snapshot.data ?? [];
+            ? transitionsCubit.getIncomingTransitionsForPose(pose.id)
+            : transitionsCubit.getOutgoingTransitionsForPose(pose.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error loading transitions: ${snapshot.error}');
+          } else {
+            final transitions = snapshot.data ?? [];
 
-          final mediaIcons = flowPageTransitionPosesToMediaIcons(
-            transitions: transitions,
-            poseMap: { for (final p in posesCubit.poses) p.id: p},
-            onTap: (pose, index) => onSuggestionTapped?.call(pose, index),
-            isIncoming: isIncoming,
-            index: index,
-          );
+            final mediaIcons = flowPageTransitionPosesToMediaIcons(
+              transitions: transitions,
+              poseMap: { for (final p in posesCubit.poses) p.id: p},
+              onTap: (pose, index) => onSuggestionTapped?.call(pose, index),
+              isIncoming: isIncoming,
+              index: index,
+            );
 
-          if (mediaIcons.isEmpty) return const SizedBox();
+            if (mediaIcons.isEmpty) return const SizedBox();
 
-          return HorizontalScrollGallery(
-            mediaList: mediaIcons,
-            height: 150,
-            // isTextVisible: false,
-          );
-
+            return HorizontalScrollGallery(
+              mediaList: mediaIcons,
+              height: 150,
+              // isTextVisible: false,
+            );
+          }
         }
-      }
     );
+
   }
 }
+
+
+// TODO Use favorite logic for "locking" poses
+// if (isFavorite != null)
+//   IconButton(
+//     icon: Icon(
+//       isFavorite! ? Icons.favorite : Icons.favorite_border,
+//       color: isFavorite! ? Colors.red : Colors.grey,
+//     ),
+//     onPressed: onFavoriteToggle,
+//   )
+// else if (trailing != null)
+//   trailing!,
+
