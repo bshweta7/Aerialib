@@ -30,6 +30,11 @@ List<GoRoute> transitionRoutes = [
     name: 'transition-view',
     builder: (context, state) {
 
+      // Update Navigation History
+      context.read<NavHistoryCubit>().push(
+          state.uri.queryParameters['from']
+      );
+
       // Get transition entity from transition ID
       final transitionId = state.pathParameters['transitionId']!;
       final transitionsState = context.read<TransitionCubit>().state;

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/features/transitions/domain/transition_entity.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
@@ -38,6 +39,15 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
     setState(() {
       _searchQuery = query;
     });
+  }
+
+  // Navigation
+  void _navigateToTransitionPage(TransitionEntity transition) {
+    context.goNamed(
+      'transition-view',
+      pathParameters: {'transitionId': transition.id},
+      queryParameters: {'from': 'transition-library'},
+    );
   }
 
   @override
@@ -78,6 +88,7 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                     transition: t,
                     fromPose: fromPose!,
                     toPose: toPose!,
+                    onTap: () => _navigateToTransitionPage(t),
                   );
                 },
               );

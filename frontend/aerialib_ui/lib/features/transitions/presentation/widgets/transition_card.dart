@@ -8,42 +8,48 @@ import '../../domain/transition_entity.dart';
 
 class TransitionCard extends StatelessWidget {
   final TransitionEntity transition;
-  final PoseEntity fromPose;
+  final PoseEntity fromPose; // TODO wont need this after trans entity stores pose entity
   final PoseEntity toPose;
+  final VoidCallback? onTap;
 
   const TransitionCard({
     super.key,
     required this.transition,
-    required this.fromPose,
+    required this.fromPose, 
     required this.toPose,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final transitionName = transition.name ?? 'Unnamed Transition';
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                transitionName, // TODO can add other qualifiers here (like apparatus, level)
-                style: Theme.of(context).textTheme.titleMedium,
-                textAlign: TextAlign.end,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  transitionName, // TODO can add other qualifiers here (like apparatus, level)
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.end,
+                ),
               ),
-            ),
-            Row(
-              children: [
-                _PosePreview(pose: fromPose, label: "From"),
-                const Icon(Icons.arrow_forward, size: 28),
-                _PosePreview(pose: toPose, label: "To"),
-              ],
-            ),
-          ],
+              Row(
+                children: [
+                  _PosePreview(pose: fromPose, label: "From"),
+                  const Icon(Icons.arrow_forward, size: 28),
+                  _PosePreview(pose: toPose, label: "To"),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

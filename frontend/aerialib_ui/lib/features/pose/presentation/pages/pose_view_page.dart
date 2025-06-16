@@ -136,7 +136,8 @@ class PoseViewPage extends StatelessWidget {
                     pathParameters: {'transitionId': transition.id},
                     queryParameters: {'from': 'pose-view'},
                   ); // TODO when you click back from transition, it goes to pose library
-                }, isIncoming: true,
+                },
+                isIncoming: true,
             ),
 
             /// Outgoing Poses (poses after)
