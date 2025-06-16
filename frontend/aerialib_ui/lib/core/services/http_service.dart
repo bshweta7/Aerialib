@@ -36,11 +36,12 @@ class HttpService {
     required String token,
     dynamic body,
   }) async {
-    final res = await http.delete(
-      Uri.parse("${Constants.backendUrl}$path"),
-      headers: _headers(token),
-      body: jsonEncode(body),
-    );
+    final headers = _headers(token);
+    final uri = Uri.parse("${Constants.backendUrl}$path");
+
+    final res = body == null
+        ? await http.delete(uri, headers: headers)
+        : await http.delete(uri, headers: headers, body: jsonEncode(body));
 
     _checkForError(res);
     return res;

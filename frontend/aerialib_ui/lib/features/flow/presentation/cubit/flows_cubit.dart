@@ -175,24 +175,6 @@ class FlowsCubit extends Cubit<FlowsState> {
   //   emit(currentState.copyWith(flow: updatedFlow));
   // }
 
-  /// Update flow info (both local and remote)
-  Future<void> saveFlowDetails({
-    required FlowEntity updatedFlow,
-    required String token,
-  }) async {
-    try {
-      emit(const FlowLoading());
-      await _flowRepository.updateFlow(
-        updatedFlow: updatedFlow,
-        token: token,
-      );
-      emit(UpdateFlowSuccess(updatedFlow));
-    } catch (e) {
-      log("[FlowsCubit] ${e.toString()}");
-      emit(FlowError(e.toString()));
-    }
-  }
-
   /// Sets flow.poses to the new set of poses
   void updateFlowPoses(List<FlowPoseEntity> newPoses) {
     log("[FlowsCubit] Updating flow poses... ");
@@ -224,9 +206,58 @@ class FlowsCubit extends Cubit<FlowsState> {
     emit(currentState.copyWith(flow: updatedFlow));
   }
 
-  /// cruD ----------------------------
+
+  /// Update flow info (both local and remote)
+  Future<void> saveFlowDetails({
+    required FlowEntity updatedFlow,
+    required String token,
+  }) async {
+    try {
+      emit(const FlowLoading());
+      await _flowRepository.updateFlow(
+        updatedFlow: updatedFlow,
+        token: token,
+      );
+      emit(UpdateFlowSuccess(updatedFlow));
+    } catch (e) {
+      log("[FlowsCubit] ${e.toString()}");
+      emit(FlowError(e.toString()));
+    }
+  }
+
+
+  /// Save the flows poses (local + remote)
+  Future<void> saveFlowPoses({required String token}) async {
+    if (state is! EditFlowState) return;
+
+    final currentState = state as EditFlowState;
+    final flowId = currentState.flow.id;
+    final flowPoses = currentState.flow.flowPoses;
+
+    try {
+      log("[FlowsCubit] Deleting existing flow poses from local and remote...");
+      await _flowPoseRepository.deleteAllFlowPosesInFlow(
+        flowId: flowId,
+        token: token
+      );
+
+      log("[FlowsCubit] Creating new flow poses locally and remotely...");
+      await _flowPoseRepository.createFlowPoses(
+        flowPoses: flowPoses,
+        token: token,
+      );
+
+      log("[FlowsCubit] Refreshing flow list...");
+      await getAllFlows(token: token);
+    } catch (e) {
+      log("[FlowsCubit] Error while saving flow poses: $e");
+      emit(const FlowError("Failed to save updated flow poses"));
+    }
+  }
+
+
   /// Delete local flows (e.g. logging out)
-  Future<void> clearLocalFlows() async {
+  Future<void> clearLocalFlows() async { // TODO verify this function
     try {
       final allFlows = await _flowRepository.getAllFlowDetails();
 
@@ -242,7 +273,7 @@ class FlowsCubit extends Cubit<FlowsState> {
   }
 
   /// Delete flow locally and in remote db
-  Future<void> deleteFlow({
+  Future<void> deleteFlow({ // TODO verify this function
     required String flowId,
     required String token
   }) async {
@@ -255,50 +286,5 @@ class FlowsCubit extends Cubit<FlowsState> {
     }
   }
 
-  /// Save the flows poses (local + remote)
-  Future<void> saveFlowPoses({required String token}) async {
-    // log("[FlowCubit] State is $state");
-    if (state is! EditFlowState) {
-      log("[FlowsCubit] State is not EditFlowState, returning without update...");
-      return;
-    }
-    final currentState = state as EditFlowState;
 
-    emit(currentState.copyWith(isSaving: true));
-
-    try {
-      // log("[FlowsCubit] Updating flow details...");
-      // await _flowRepository.updateFlow(
-      //   updatedFlow: currentState.flow,
-      //   token: token,
-      // );
-      log("[FlowsCubit] Deleting all flow poses in flow ${currentState.flow.name}, ${currentState.flow.id}");
-      await _flowPoseRepository.deleteAllFlowPosesInFlow(currentState.flow.id);
-
-      log("[FlowsCubit] Inserting updated poses into flow...");
-      await _flowPoseRepository.createFlowPoses(flowPoses: currentState.flow.flowPoses, token: token);
-
-      log("[FlowPoseRepository] Syncing to remote data source...");
-      await _flowPoseRepository.syncLocalToRemote(token);
-      log("[FlowPoseRepository] Synced to remote successfully.");
-
-
-
-
-      // log("[FlowsCubit] Updating flow poses in flow...");
-      // await _flowPoseRepository.replaceFlowPosesInFlow(
-      //   flowId: currentState.flow.id,
-      //   newPoses: currentState.flow.poses,
-      //   token: token,
-      // );
-      emit(currentState.copyWith(isSaving: false, saveSuccess: true));
-    } catch (e) {
-      log("[FlowsCubit] Error saving flow: $e");
-      emit(currentState.copyWith(
-        isSaving: false,
-        errorMessage: e.toString(),
-        flow: currentState.flow,
-      ));
-    }
-  }
 }

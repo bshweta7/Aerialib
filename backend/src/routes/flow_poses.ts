@@ -148,7 +148,7 @@ flowPoseRouter.delete("/", auth, async (req: AuthRequest, res) => {
 
 
 // Delete all flow_poses for a given flowId
-flowPoseRouter.delete("/delete/:flowId", auth, async (req: AuthRequest, res) => {
+flowPoseRouter.delete("/delete/flow/:flowId", auth, async (req: AuthRequest, res) => {
     // Verify user
     if (!req.user) {
         console.log('[FlowPoseRouter] Unauthorized user');

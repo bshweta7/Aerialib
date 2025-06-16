@@ -60,7 +60,7 @@ class FlowPoseRemoteDataSource {
     required String token,
   }) async {
     final response = await httpService.delete(
-      path: "/flow_poses/delete/$flowId",
+      path: "/flow_poses/delete/flow/$flowId",
       token: token,
     );
 

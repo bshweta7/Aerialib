@@ -136,24 +136,22 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
   Future<void> _saveFlow() async {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
-    final updatedFlow = widget.flow.copyWith(flowPoses: poses);
 
-    log("[FlowEditPosesPage] Updating flow poses... ");
+    log("[FlowEditPosesPage] Saving flow poses...");
+
+    // 1. Update cubit with new poses
     context.read<FlowsCubit>().updateFlowPoses(poses);
-    await context.read<FlowsCubit>().saveFlowPoses(token: user.user.token);
-    await context.read<FlowsCubit>().getAllFlows(token: user.user.token);
 
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text('Saving flow...')),
-    // );
+    // 2. Delete existing + insert new flow poses
+    await context.read<FlowsCubit>().saveFlowPoses(
+      token: user.user.token,
+    );
 
-
-    log("[FlowEditPosesPage] Navigating to FlowViewPage with ${updatedFlow.flowPoses.length} poses");
+    log("[FlowEditPosesPage] Navigating to FlowViewPage with ${poses.length} poses");
     await Future.delayed(const Duration(milliseconds: 200));
     context.goNamed(
       'flow-view',
-      pathParameters: {'flowId': updatedFlow.id},
-      // queryParameters: {'from': 'flow-edit-poses'},
+      pathParameters: {'flowId': widget.flow.id},
     );
   }
 

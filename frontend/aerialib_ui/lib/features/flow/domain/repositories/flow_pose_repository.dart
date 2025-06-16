@@ -160,13 +160,31 @@ class FlowPoseRepository {
     }
   }
 
+
+  /// Delete Flow Pose by ID(remote first, then local)
+  Future<void> deleteFlowPose({
+    required String flowPoseId,
+    required String token,
+  }) async {
+    await remoteDataSource.deleteFlowPose(flowPoseId: flowPoseId, token: token);
+    await localDataSource.deleteFlowPoseById(flowPoseId);
+    log('[FlowPoseRepository] Flow pose $flowPoseId deleted from both remote and local.');
+  }
+
   /// Delete locally
-  Future<void> deleteFlowPose(String id) async {
+  Future<void> deleteFlowPoseLocally(String id) async {
     await localDataSource.deleteFlowPoseById(id);
   }
 
   /// Delete all flow poses associated with a flow ID
-  Future<void> deleteAllFlowPosesInFlow(String flowId) async {
+  Future<void> deleteAllFlowPosesInFlow({
+    required String flowId,
+    required String token,
+  }) async {
+    await remoteDataSource.deleteFlowPosesByFlowId(
+      flowId: flowId,
+      token: token
+    );
     await localDataSource.deleteFlowPosesByFlowId(flowId);
   }
 
