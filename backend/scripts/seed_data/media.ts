@@ -3,7 +3,6 @@ import path from "path";
 import { parse } from "csv-parse/sync";
 import { db } from "../../src/db";
 import { eq } from "drizzle-orm";
-import {isEqual} from "lodash";
 import { dataPath, normalizeValue, printDiff } from "../../src/seed_utils";
 import { mediaTable } from "../../src/db/schema";
 
@@ -48,10 +47,8 @@ async function seedMedia() {
 
         if (existing.length > 0) {
             const existingRow = existing[0];
-            const hasChanged = !isEqual(
-                { ...existingRow, createdAt: null, updatedAt: null },
-                { ...parsedRow, createdAt: null, updatedAt: null }
-            );
+            const hasChanged = JSON.stringify({ ...existingRow, createdAt: null, updatedAt: null }) !==
+                JSON.stringify({ ...parsedRow, createdAt: null, updatedAt: null });
 
             if (hasChanged) {
                 await db.update(mediaTable).set(parsedRow).where(eq(mediaTable.id, parsedRow.id));
