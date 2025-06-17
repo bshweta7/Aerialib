@@ -3,13 +3,11 @@ import path from "path";
 import { parse } from "csv-parse/sync";
 import { db } from "../../src/db";
 import { eq } from "drizzle-orm";
-import { mediaTable } from "../../src/db/schema";
 import {isEqual} from "lodash";
-
+import { dataPath, normalizeValue, printDiff } from "../../src/seed_utils";
+import { mediaTable } from "../../src/db/schema";
 
 // Load and parse CSV
-const dataPath = "../../data/data_preparation/csv/"
-
 const csvPath = path.join(__dirname, `${dataPath}/media.csv`);
 const csvData = fs.readFileSync(csvPath, "utf8");
 const rows = parse(csvData, {
@@ -18,11 +16,7 @@ const rows = parse(csvData, {
 });
 
 
-function normalizeValue(value: any) {
-    return typeof value === "string" && value.trim() === "" ? null : value;
-}
-
-function castRow(row: any) {
+function castMediaRow(row: any) {
     return {
         id: row.id,
         mediaPath: row.media_path,
@@ -43,21 +37,9 @@ function castRow(row: any) {
     };
 }
 
-function printDiff(oldRow: any, newRow: any) {
-    for (const key in newRow) {
-        const oldVal = oldRow[key];
-        const newVal = newRow[key];
-        if (String(oldVal) !== String(newVal)) {
-            console.log(`  • ${key}:`);
-            console.log(`    - before: ${oldVal}`);
-            console.log(`    + after:  ${newVal}`);
-        }
-    }
-}
-
 async function seedMedia() {
     for (const row of rows) {
-        const parsedRow = castRow(row);
+        const parsedRow = castMediaRow(row);
         const existing = await db
             .select()
             .from(mediaTable)

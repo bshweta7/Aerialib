@@ -91,19 +91,30 @@ class UserRepository {
   }
 
   /// Retrieves the currently logged-in user's data. Tries the local data source first, then falls back to the remote.
-  Future<UserEntity?> getUser() async {
+  /// If [allowRemoteFallback] is false, will not attempt a remote fetch.
+  Future<UserEntity?> getUser({bool allowRemoteFallback = true}) async {
     log("[UserRepository] Getting user from local...");
     final localUser = await localDataSource.getUser();
-    // log("[UserRepository] Done, ${localUser}");
 
     if (localUser != null) {
       return _userModelToEntity(localUser);
     }
-    final remoteUser = await remoteDataSource.getUserData();
-    if (remoteUser != null) {
-      await localDataSource.insertUser(remoteUser);
-      return _userModelToEntity(remoteUser);
+
+    if (!allowRemoteFallback) {
+      log("[UserRepository] No local user and remote fetch disabled");
+      return null;
     }
+
+    try {
+      final remoteUser = await remoteDataSource.getUserData();
+      if (remoteUser != null) {
+        await localDataSource.insertUser(remoteUser);
+        return _userModelToEntity(remoteUser);
+      }
+    } catch (e) {
+      log("[UserRepository] Remote user fetch failed: $e");
+    }
+
     return null;
   }
 

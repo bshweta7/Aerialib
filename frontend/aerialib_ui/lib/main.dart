@@ -152,6 +152,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     // log("[Main] Build ran");
     final authCubit = context.read<AuthCubit>(); // Get AuthCubit instance
+    // authCubit.getUserData();
 
     return MaterialApp.router(
       routerConfig: createRouter(authCubit), // Use MaterialApp.router and pass authCubit

@@ -19,7 +19,8 @@ class AuthCubit extends Cubit<AuthState> {
   void getUserData() async {
     try {
       emit(const AuthLoading());
-      final user = await _userRepository.getUser();
+      log('[AuthCubit] Getting user data... ');
+      final user = await _userRepository.getUser(allowRemoteFallback: false);
 
       if (user == null) {
         log('[AuthCubit] No user found, logging out');
@@ -29,7 +30,11 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthLoggedIn(user));
       }
     } catch (e, st) {
-      log('[AuthCubit] getUserFromLocal error: $e, $st');
+      if (e is FormatException) {
+        log('[AuthCubit] FormatException (likely HTML response instead of JSON): $e');
+      } else {
+        log('[AuthCubit] getUserFromLocal error: $e');
+      }
       emit(const AuthLoggedOut());
     }
   }
