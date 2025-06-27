@@ -48,9 +48,10 @@
 4. Run ```docker compose exec db psql -U postgres -d aerialib```
 5. Verify that the migration ran successfully (with ```\dt``` or ```SELECT * FROM <table_name>;```)
 
-## Add Data from CSV
-1. Update the csv 
-2. Run ```docker compose exec backend npx ts-node scripts/seed_data/```
+# Add Data from CSV
+1. Update the csv in Google Sheet
+2. Download and remove unneeded columns and row
+3. Run ```docker compose exec backend npx ts-node scripts/seed_data/<file_name>```
    1. Media: ```media.ts```
    2. Poses: ```poses.ts```
    3. Transitions: ```transitions.ts```

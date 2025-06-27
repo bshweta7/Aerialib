@@ -9,6 +9,7 @@ import flowPoseRouter from "./routes/flow_poses";
 import feedbackRouter from "./routes/feedback";
 import musicRouter from "./routes/music";
 import tagRouter from "./routes/tags";
+import adminRouter from "./routes/admin";
 
 // Load values from .env file
 import 'dotenv/config'
@@ -34,6 +35,7 @@ app.use("/feedback", feedbackRouter);
 app.use("/music", musicRouter);
 app.use("/tags", tagRouter);
 app.use("/transitions", transitionRouter);
+app.use("/admin", adminRouter);
 
 // create rest api
 app.get("/", (req, res) => {
