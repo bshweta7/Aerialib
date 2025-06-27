@@ -41,6 +41,48 @@ class _HomePageState extends State<HomePage> {
     String? userToken;
     String userId = "";
 
+    final buttonConfigs = [
+      (
+        icon: Icons.accessibility_new,
+        label: 'Pose Library',
+        routeName: 'pose-library',
+        description: 'Explore poses and learn more about them',
+      ),
+      (
+        icon: Icons.loop,
+        label: 'Flow Library',
+        routeName: 'flow-library',
+        description: 'Create or manage your flows',
+      ),
+      (
+        icon: Icons.sync_alt,
+        label: 'Transitions Library',
+        routeName: 'transition-library',
+        description: 'Find new transitions between poses',
+      ),
+      (
+        icon: Icons.music_note,
+        label: 'Music Library',
+        routeName: 'music-library',
+        description: 'Store song ideas for your next performance',
+      ),
+    ];
+
+    final adminButtonConfigs = [
+      (
+        icon: Icons.people,
+        label: 'Admin Users Dashboard',
+        routeName: 'admin-users',
+        description: 'See all user info',
+      ),
+      (
+        icon: Icons.loop,
+        label: 'Admin Flows Dashboard',
+        routeName: 'admin-flows',
+        description: 'See all flows',
+      ),
+    ];
+
     if (authState is AuthLoggedIn) {
       currentUsername = authState.user.username;
       userToken = authState.user.token;
@@ -96,67 +138,57 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 20),
 
-                // 2x2 Grid for Libraries
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200, // use a softer color for better aesthetics
-                    borderRadius: BorderRadius.circular(20),
-                  ),
 
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 15,
-                    crossAxisSpacing: 15,
-                    childAspectRatio: 1.5,
-                    children: [
-                      _buildLibraryButton(
-                        context,
-                        icon: Icons.accessibility_new,
-                        label: 'Pose Library',
-                        routeName: 'pose-library',
-                        description: 'Explore poses and learn more about them'
-                      ),
-                      _buildLibraryButton(
-                          context,
-                          icon: Icons.loop,
-                          label: 'Flow Library',
-                          routeName: 'flow-library',
-                          description: 'Create or manage your flows'
-                      ),
-                      _buildLibraryButton(
-                        context,
-                        icon: Icons.sync_alt,
-                        label: 'Transitions Library',
-                        routeName: 'transition-library',
-                        description: 'Find new transitions between poses'
-                      ),
-                      _buildLibraryButton(
-                          context,
-                          icon: Icons.music_note,
-                          label: 'Music Library',
-                          routeName: 'music-library',
-                          description: 'Store song ideas for your next performance'
-                      ),
-                    ],
-                  ),
+                // List of Buttons for Libraries
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  itemCount: buttonConfigs.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final button = buttonConfigs[index];
+                    return _buildLibraryButton(
+                      context,
+                      icon: button.icon,
+                      label: button.label,
+                      routeName: button.routeName,
+                      description: button.description,
+                    );
+                  },
                 ),
-                const SizedBox(height: 10),
-
-                // ElevatedButton(
-                //   onPressed: () => context.goNamed('music-library', queryParameters: {'from': 'home'}),
-                //   child: const Text("Music Library", style: TextStyle(fontSize: 20)),
-                // ),
-                // const SizedBox(height: 30),
-                // ElevatedButton(
-                //   onPressed: () => context.goNamed('media-gallery', queryParameters: {'from': 'home'}),
-                //   child: const Text("Media Library", style: TextStyle(fontSize: 20)),
-                // ),
-                // const SizedBox(height: 30),
 
                 if (currentUsername == 'admin') ...[
+                  const SizedBox(height: 10),
+                  const Divider(),
+
+                  const Text(
+                    "🔐 Admin Dashboards",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(16),
+                    itemCount: adminButtonConfigs.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final button = adminButtonConfigs[index];
+                      return _buildLibraryButton(
+                        context,
+                        icon: button.icon,
+                        label: button.label,
+                        routeName: button.routeName,
+                        description: button.description,
+                      );
+                    },
+                  ),
+
                   ElevatedButton.icon(
                     onPressed: () {
                       context.go('/admin/users');
@@ -173,6 +205,18 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
 
+                const SizedBox(height: 10),
+                const Divider(),
+
+                const Text(
+                  "⏱️ Quick Add",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
                 // TODO - maybe switch to modal for everything instead of having textboxes on the dashboard itself... might look cleaner?
                 QuickAddCategoryCard(
                   onMusicSubmit: (name, description, isFavorite) async {
@@ -187,13 +231,17 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+
+
+
+                const SizedBox(height: 10),
+                const Divider(),
                 const Text(
                   "Developed in collaboration with Uplift Aerial Arts.",
                   style: TextStyle(fontSize: 22),
                   textAlign: TextAlign.center,
                 ),
-                
+                const SizedBox(height: 10),
                 SizedBox(
                     width: 250,
                     height: 150,
@@ -221,8 +269,7 @@ Widget _buildLibraryButton(
     }) {
   return LayoutBuilder(
     builder: (context, constraints) {
-      // Example threshold: Show full content if width > 160
-      final bool showText = constraints.maxWidth > 200;
+      final bool showDescription = constraints.maxWidth > 300; // You can tweak this threshold
 
       return Tooltip(
         message: '$label\n$description',
@@ -232,30 +279,36 @@ Widget _buildLibraryButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.deepPurple.shade100,
             foregroundColor: Colors.black,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
           ),
           onPressed: () => context.goNamed(routeName, queryParameters: {'from': 'home'}),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, size: 36),
-              if (showText) ...[
-                const SizedBox(height: 10),
-                Text(
-                  label,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center,
+              Icon(icon, size: 28),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (showDescription)
+                      Text(
+                        description,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  description,
-                  style: const TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
             ],
           ),
         ),

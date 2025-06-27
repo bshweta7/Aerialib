@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/services/http_service.dart';
 import 'package:frontend/features/user/data/models/user_model.dart';
 import 'package:frontend/shared/widgets/info_display/expandable_card.dart';
+import '../../shared/features/navigation/widgets/smart_back_button.dart';
 import '../../shared/widgets/info_display/info_row.dart';
 import '../../shared/widgets/main_scaffold.dart';
 import '../user/presentation/cubit/auth_cubit.dart';
@@ -45,6 +46,7 @@ class _AdminFlowsDashboardPageState extends State<AdminFlowsDashboardPage> {
     return MainScaffold(
       currentIndex: 3,
       appBar: AppBar(
+          leading: const SmartBackButton(),
           title: const Text("Admin Flows Dashboard")
       ),
       body: FutureBuilder<List<AdminFlowModel>>(
