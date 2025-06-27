@@ -62,7 +62,12 @@ ThemeData getLightTheme() {
         ),
       ),
     ),
-
+    scrollbarTheme: ScrollbarThemeData(
+      thumbColor: WidgetStateProperty.all(const Color(0x8CA59FC6)),
+      crossAxisMargin: 4,
+      thickness: WidgetStateProperty.all(16),
+      radius: const Radius.circular(6),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.all(20),
       filled: true,

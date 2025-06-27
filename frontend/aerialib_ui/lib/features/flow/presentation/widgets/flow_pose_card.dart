@@ -234,7 +234,7 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
 
             return HorizontalScrollGallery(
               mediaList: mediaIcons,
-              height: 150,
+              height: 175,
               // isTextVisible: false,
             );
           }

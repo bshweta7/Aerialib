@@ -263,11 +263,11 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text(
-                              "Add your first pose using the search bar",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey),
+                            const _HelpItem(
+                              icon: Icons.help_outline,
+                              text: 'Tap the icon in the top right for instructions',
                             ),
 
                             const SizedBox(height: 5),
@@ -285,116 +285,137 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
 
                             const SizedBox(height: 12),
 
-                            TextButton.icon(
-                              onPressed: () => FlowHelpDialog.show(context),
-                              icon: const Icon(Icons.info_outline, size: 20, color: Colors.grey),
-                              label: const Text(
-                                'Tap the icon in the top right for instructions.',
-                                style: TextStyle(color: Colors.grey, fontSize: 14),
-                              ),
+                            const _HelpItem(
+                              icon: Icons.search,
+                              text: 'Add your first pose using the search bar',
                             ),
-
+                            const _HelpItem(
+                              icon: Icons.search,
+                              text: 'Tap up or down arrows to add poses',
+                            ),
+                            // const _HelpItem(
+                            //   icon: Icons.info_outline,
+                            //   text: 'Select a suggested pose or search for your own',
+                            // ),
+                            const _HelpItem(
+                              icon: Icons.drag_handle,
+                              text: 'Drag poses up/down to reorder them',
+                            ),
+                            const _HelpItem(
+                              icon: Icons.swipe,
+                              text: 'Swipe right to remove a pose',
+                            ),
+                            const _HelpItem(
+                              icon: Icons.save,
+                              text: 'Tap "Save Changes" to update the flow.',
+                            ),
                           ],
                         ),
                       ),
                     ),
 
                   if (poses.isNotEmpty) ...[
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                      child: Column(
-                        children: [
-                          Text(
-                            "Press the arrows to add a pose above or below an existing pose",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          // SizedBox(height: 8),
-                          // Text(
-                          //   "Drag to reorder or swipe left to delete",
-                          //   textAlign: TextAlign.center,
-                          //   style: TextStyle(color: Colors.grey),
-                          // ),
-                        ],
-                      ),
-                    ),
+                    const SizedBox(height: 10,)
+                  //   const Padding(
+                  //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  //     child: Column(
+                  //       children: [
+                  //         Text(
+                  //           "Tap arrows to add poses above or below",
+                  //           textAlign: TextAlign.center,
+                  //           style: TextStyle(color: Colors.grey),
+                  //         ),
+                  //         // SizedBox(height: 8),
+                  //         // Text(
+                  //         //   "Drag to reorder or swipe left to delete",
+                  //         //   textAlign: TextAlign.center,
+                  //         //   style: TextStyle(color: Colors.grey),
+                  //         // ),
+                  //       ],
+                  //     ),
+                  //   ),
                   ],
 
                   Expanded(
-                    child: ReorderableListView(
-                      buildDefaultDragHandles: false,
-                      padding: const EdgeInsets.only(bottom: 75), // To avoid FAB overlap
-                      onReorder: _onReorder,
-                      children: poses.map((flowPose) {
-                        return Container(
+                    child: Scrollbar(
+                      thumbVisibility: true, // always show scrollbar (optional)
+                      trackVisibility: true, // optional for large screens
+                      interactive: true,
+                      child: ReorderableListView(
+                        buildDefaultDragHandles: false,
+                        padding: const EdgeInsets.only(bottom: 100), // To avoid FAB overlap
+                        onReorder: _onReorder,
+                        children: poses.map((flowPose) {
+                          return Container(
+                              key: ValueKey(flowPose.id),
+                          child: ReorderableDragStartListener(
+                            index: poses.indexOf(flowPose),
+                            child: Dismissible(
                             key: ValueKey(flowPose.id),
-                        child: ReorderableDragStartListener(
-                          index: poses.indexOf(flowPose),
-                          child: Dismissible(
-                          key: ValueKey(flowPose.id),
-                            direction: DismissDirection.startToEnd,
-                            background: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: const Icon(Icons.delete, color: Colors.white),
-                            ),
-                            onDismissed: (direction) {
-                              final removedPose = flowPose;
-                              final removedIndex = poses.indexWhere((p) => p.id == removedPose.id);
+                              direction: DismissDirection.startToEnd,
+                              background: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: const Icon(Icons.delete, color: Colors.white),
+                              ),
+                              onDismissed: (direction) {
+                                final removedPose = flowPose;
+                                final removedIndex = poses.indexWhere((p) => p.id == removedPose.id);
 
-                              setState(() {
-                                poses.removeAt(removedIndex);
-                                _showSwipeHint = false;
-                                for (int i = 0; i < poses.length; i++) {
-                                  poses[i] = poses[i].copyWith(poseOrder: i);
-                                }
-                              });
+                                setState(() {
+                                  poses.removeAt(removedIndex);
+                                  _showSwipeHint = false;
+                                  for (int i = 0; i < poses.length; i++) {
+                                    poses[i] = poses[i].copyWith(poseOrder: i);
+                                  }
+                                });
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('${removedPose.pose.displayName} removed'),
-                                  action: SnackBarAction(
-                                    label: 'Undo',
-                                    onPressed: () {
-                                      setState(() {
-                                        poses.insert(removedIndex, removedPose);
-                                        for (int i = 0; i < poses.length; i++) {
-                                          poses[i] = poses[i].copyWith(poseOrder: i);
-                                        }
-                                      });
-                                    },
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${removedPose.pose.displayName} removed'),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () {
+                                        setState(() {
+                                          poses.insert(removedIndex, removedPose);
+                                          for (int i = 0; i < poses.length; i++) {
+                                            poses[i] = poses[i].copyWith(poseOrder: i);
+                                          }
+                                        });
+                                      },
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            // TODO add scroll to top on this page (see flow view page)
-                            child: FlowPoseCard(
-                              flowPose: flowPose,
-                              onSuggestionTapped: _addPoseAtIndex,
-                              suggestionList: sortedFilteredPoses,
-                            ),
+                                );
+                              },
+                              // TODO add scroll to top on this page (see flow view page)
+                              child: FlowPoseCard(
+                                flowPose: flowPose,
+                                onSuggestionTapped: _addPoseAtIndex,
+                                suggestionList: sortedFilteredPoses,
+                              ),
 
-                            // child: FlowPoseCard(
-                            //   flowPose: flowPose,
-                            //   searchBarBuilder: (context, index) {
-                            //     return PoseSearchBarWidget(
-                            //       onSearchChanged: _updateSearchQuery,
-                            //       suggestionList: sortedFilteredPoses,
-                            //       onSuggestionTapped: (pose) => _addPoseAtIndex(index, pose),
-                            //       hintText: 'Add new pose',
-                            //     );
-                            //   },
-                            //   onSuggestionTapped: (pose, index) => _addPoseAtIndex(index, pose),
-                            // )
-                          ),
-                        )
-                        );
-                      }).toList(),
+                              // child: FlowPoseCard(
+                              //   flowPose: flowPose,
+                              //   searchBarBuilder: (context, index) {
+                              //     return PoseSearchBarWidget(
+                              //       onSearchChanged: _updateSearchQuery,
+                              //       suggestionList: sortedFilteredPoses,
+                              //       onSuggestionTapped: (pose) => _addPoseAtIndex(index, pose),
+                              //       hintText: 'Add new pose',
+                              //     );
+                              //   },
+                              //   onSuggestionTapped: (pose, index) => _addPoseAtIndex(index, pose),
+                              // )
+                            ),
+                          )
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
 
-                  const SizedBox(height: 10), // for FAB padding
+                  const SizedBox(height: 25), // for FAB padding
                 ],
               );
             }
@@ -414,6 +435,33 @@ class _FlowEditPosesPageState extends State<FlowEditPosesPage> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: const NavBar(currentIndex: 1),
+      ),
+    );
+  }
+}
+
+class _HelpItem extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  const _HelpItem({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20, color: Colors.deepPurple),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+        ],
       ),
     );
   }

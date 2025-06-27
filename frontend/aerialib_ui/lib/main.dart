@@ -161,9 +161,17 @@ class _MyAppState extends State<MyApp> {
       darkTheme: getDarkTheme(),
       themeMode: ThemeMode.light, // TODO fix dark theme (especially flow details modal)
       builder: (context, child) {
-        return SmartBackWrapper(
-          fallbackRoute: 'home',
-          child: child ?? const SizedBox(),
+        final mediaQuery = MediaQuery.of(context);
+        final scale = mediaQuery.textScaler.scale(1.0);
+        final clampedScale = scale.clamp(1.0, 1.2);
+        final clampedTextScaler = TextScaler.linear(clampedScale);
+
+        return MediaQuery(
+          data: mediaQuery.copyWith(textScaler: clampedTextScaler),
+          child: SmartBackWrapper(
+            fallbackRoute: 'home',
+            child: child ?? const SizedBox(),
+          ),
         );
       },
     );
