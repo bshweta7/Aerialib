@@ -8,6 +8,7 @@ import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
 import '../../../../shared/widgets/info_display/expandable_card.dart';
+import '../../../../shared/widgets/info_display/info_row.dart';
 import '../../../home/cubit/home_cubit.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -76,6 +77,10 @@ class _UserProfilePage extends State<UserProfilePage> {
 
                   const SizedBox(height: 30),
 
+                  InfoRow("First Name", user.firstName),
+                  InfoRow("Last Name", user.lastName),
+                  InfoRow("Bio", user.bio),
+
                   // Logout button
                   ElevatedButton.icon(
                     onPressed: () {
@@ -88,14 +93,14 @@ class _UserProfilePage extends State<UserProfilePage> {
                       style: TextStyle(fontSize: 18),
                     ),
                     style: ElevatedButton.styleFrom(
-                      // backgroundColor: Colors.purple,
+                      backgroundColor: const Color(0xFFD68686),
                       // foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
                   ),
 
+                  const SizedBox(height: 20,),
                   const Divider(),
-                  const SizedBox(height: 15,),
 
                   // // Tag Management Navigation
                   // ElevatedButton(
@@ -111,7 +116,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                   // ),
                   // const SizedBox(height: 10,),
 
-                  const SizedBox(height: 15,),
+                  const SizedBox(height: 10,),
                   const Text(
                     "Have an idea or found a bug?",
                     style: TextStyle(
@@ -137,25 +142,32 @@ class _UserProfilePage extends State<UserProfilePage> {
                   ),
                   const SizedBox(height: 20,),
 
-                  // TODO make this a swipe down gesture, and add the manual button in profile advanced settings
-                  ExpandableCard(
-                    title: 'Advanced Settings',
-                    children: [
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.sync),
-                        label: const Text("Sync Data", style: TextStyle(
-                          fontSize: 20,
-                        )),
-                        onPressed: () {
-                          context.read<HomeCubit>().initializeHome(context, force: true);
-                        },
-                      ),
-                    ]
+                  const Divider(),
+                  const SizedBox(height: 10,),
+                  const Text(
+                    "Advanced Settings",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      // color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 10,),
 
+                  // Sync Data Button
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.sync),
+                    label: const Text("Sync Data", style: TextStyle(
+                      fontSize: 20,
+                    )),
+                    onPressed: () {
+                      context.read<HomeCubit>().initializeHome(context, force: true);
+                    },
+                  ),
+                  const SizedBox(height: 20,),
 
-
-
+                  // TODO make this a swipe down gesture, and add the manual button in profile advanced settings
 
 
 

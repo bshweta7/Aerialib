@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/features/flow/domain/entities/flow_pose_entity.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 
+import '../../../../core/constants/constants.dart';
 import '../../../../shared/helpers/conversions.dart';
 import '../../../../shared/helpers/formatters.dart';
 import '../../../../shared/widgets/media_display/general/formatted_cached_network_image.dart';
@@ -234,7 +235,7 @@ class _FlowPoseCardState extends State<FlowPoseCard> {
 
             return HorizontalScrollGallery(
               mediaList: mediaIcons,
-              height: 175,
+              height: Constants.poseCardHeight,
               // isTextVisible: false,
             );
           }

@@ -153,12 +153,17 @@ class FlowDetailsSheet extends StatelessWidget {
         const SizedBox(height: 16),
 
         InfoRow("Apparatus:", capitalizeFirstLetter(flow.apparatus)),
-        InfoRow("Level:", "Level ${flow.level}"),
+        InfoRow("Level:", flow.level!=-1 ?
+            "Level ${flow.level}" :
+            "None"
+        ),
         const Divider(),
         InfoRow("Description:", flow.description),
         InfoRow("Teaching Cues:", flow.teachingCues),
         InfoRow("Safety Cues:", flow.safetyCues),
         InfoRow("Progressions:", flow.progressions),
+        InfoRow("Created At:", formatDate(flow.createdAt)),
+        InfoRow("Updated At:", formatDate(flow.updatedAt)),
         // TODO add thumbnail picture
 
         const SizedBox(height: 20),
@@ -170,21 +175,6 @@ class FlowDetailsSheet extends StatelessWidget {
               label: const Text("Edit Flow Details"),
             ),
           ),
-
-        const SizedBox(height: 16),
-
-        Center(
-          child: ElevatedButton.icon(
-            onPressed: () => _confirmDeleteFlow(context),
-            icon: const Icon(Icons.delete),
-            label: const Text("Delete This Flow"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade300,
-              foregroundColor: Colors.white,
-            ),
-          ),
-        ),
-
       ],
     );
   }

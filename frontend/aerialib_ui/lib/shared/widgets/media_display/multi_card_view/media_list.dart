@@ -22,27 +22,31 @@ class MediaList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return Scrollbar(
       controller: scrollController,
-      itemCount: mediaItems.length,
-      itemBuilder: (context, index) {
-        final mediaItem = mediaItems[index];
+      interactive: true,
+      child: ListView.builder(
+        controller: scrollController,
+        itemCount: mediaItems.length,
+        itemBuilder: (context, index) {
+          final mediaItem = mediaItems[index];
 
-        return GestureDetector(
-          onTap: () => onMediaTap(mediaItem),
-          child: ListCard(
-            imageUrl: mediaItem.imageUrl,
-            title: mediaItem.title!,
-            subtitle: mediaItem.subtitle!,
-            // only show heart if the param is passed and the item has isFavorite set
-            isFavorite: mediaItem.isFavorite,
-            onFavoriteToggle: onFavoriteToggle != null
-                ? () => onFavoriteToggle!(mediaItem)
-                : null,
-          ),
-        );
-      },
-      cacheExtent: 600.0, // preload a bit offscreen
+          return GestureDetector(
+            onTap: () => onMediaTap(mediaItem),
+            child: ListCard(
+              imageUrl: mediaItem.imageUrl,
+              title: mediaItem.title!,
+              subtitle: mediaItem.subtitle!,
+              // only show heart if the param is passed and the item has isFavorite set
+              isFavorite: mediaItem.isFavorite,
+              onFavoriteToggle: onFavoriteToggle != null
+                  ? () => onFavoriteToggle!(mediaItem)
+                  : null,
+            ),
+          );
+        },
+        cacheExtent: 600.0, // preload a bit offscreen
+      ),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:frontend/shared/features/navigation/widgets/smart_back_button.da
 import 'package:frontend/shared/widgets/media_display/cards/transition_gallery_card.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/constants.dart';
 import '../../../../shared/helpers/conversions.dart';
 import '../../../../shared/widgets/info_display/info_chip.dart';
 import '../../../../shared/widgets/info_display/info_row.dart';
@@ -128,7 +129,7 @@ class PoseViewPage extends StatelessWidget {
                     // },
             TransitionGalleryCard(
                 poseId: pose.id,
-                height: screenHeight * 0.2,
+                height: Constants.poseCardHeight,
                 title: 'Poses To ${pose.displayName}',
                 onTap: (transition) {
                   context.goNamed(
@@ -143,7 +144,7 @@ class PoseViewPage extends StatelessWidget {
             /// Outgoing Poses (poses after)
             TransitionGalleryCard(
                 poseId: pose.id,
-                height: screenHeight * 0.2,
+                height: Constants.poseCardHeight,
                 title: 'Poses From ${pose.displayName}',
                 onTap: (transition) {
                   context.goNamed(

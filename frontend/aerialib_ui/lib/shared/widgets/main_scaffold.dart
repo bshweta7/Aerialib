@@ -10,7 +10,8 @@ class MainScaffold extends StatelessWidget {
   final int currentIndex;
   final PreferredSizeWidget? appBar;
   final FloatingActionButton? floatingActionButton;
-  final bool showScrollbar;
+  final bool isScrollable;
+  final bool isScrollbarVisible;
 
   const MainScaffold({
     super.key,
@@ -18,18 +19,18 @@ class MainScaffold extends StatelessWidget {
     required this.currentIndex,
     this.appBar,
     this.floatingActionButton,
-    this.showScrollbar = true,
+    this.isScrollable = true,
+    this.isScrollbarVisible = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final scrollableBody = showScrollbar
+    final scrollableBody = isScrollable
         ? Scrollbar(
-      thumbVisibility: true,
+      thumbVisibility: isScrollbarVisible,
       interactive: true,
-      // child: body
       child: Padding(
-        padding: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.only(right: 1),
         child: body,
       ),
     )

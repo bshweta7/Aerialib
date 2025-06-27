@@ -2,6 +2,9 @@ import 'dart:ui';
 
 class ThemeColors {
 
+  static Color transparentPurple = const Color(0x8CC0A8DA);
+  // static Color transparentTeal = const Color(0x8C80F0FF);
+
   static Color lavender = const Color(0xFFB39DDB);
   static Color lavenderLight = const Color(0xFFEDE7F6);
   static Color deepPlum = const Color(0xFF3A2E58);

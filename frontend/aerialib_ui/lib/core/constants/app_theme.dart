@@ -1,5 +1,6 @@
 // lib/core/theme/app_theme.dart
 import 'package:flutter/material.dart';
+import 'package:frontend/core/constants/theme_colors.dart';
 
 const appTextTheme = TextTheme(
   headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -36,6 +37,10 @@ ThemeData getLightTheme() {
       ),
       iconTheme: IconThemeData(color: Colors.white),
     ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: ThemeColors.transparentPurple,
+      foregroundColor: ThemeColors.backgroundOffWhite,
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFFE3DFF5),
@@ -63,7 +68,7 @@ ThemeData getLightTheme() {
       ),
     ),
     scrollbarTheme: ScrollbarThemeData(
-      thumbColor: WidgetStateProperty.all(const Color(0x8CA59FC6)),
+      thumbColor: WidgetStateProperty.all(ThemeColors.transparentPurple),
       crossAxisMargin: 4,
       thickness: WidgetStateProperty.all(16),
       radius: const Radius.circular(6),

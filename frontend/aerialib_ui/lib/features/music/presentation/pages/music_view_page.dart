@@ -21,7 +21,7 @@ class MusicViewPage extends StatelessWidget {
         title: const Text("Song Details"),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               context.goNamed(
                 'music-edit',

@@ -9,6 +9,10 @@ class Constants {
   static final String backendUrl = _getBackendUrl();
   static final String mediaUrlPrefix = "$backendUrl/media/data";
 
+  //
+  static const double poseCardHeight = 175;
+
+
   static String _getBackendUrl() {
     if (kReleaseMode) {
       return "https://aerialib.com/api";

@@ -120,6 +120,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
+        isScrollable: false,
         currentIndex: 2,
         appBar: AppBar(
           leading: const SmartBackButton(),
@@ -260,11 +261,21 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             ),
                           )
                         else
-                          MediaList(
-                            mediaItems: filteredMediaIcons,
-                            onMediaTap: _navigateToPosePage,
-                            scrollController: _scrollController,
+
+                          // TODO update Media List to have scrollbar in it.
+                          Padding(
+                            padding: const EdgeInsets.only(right: 1), // optional: gives scrollbar space
+                            child: MediaList(
+                              mediaItems: filteredMediaIcons,
+                              onMediaTap: _navigateToPosePage,
+                              scrollController: _scrollController,
+                            ),
                           ),
+                          // MediaList(
+                          //   mediaItems: filteredMediaIcons,
+                          //   onMediaTap: _navigateToPosePage,
+                          //   scrollController: _scrollController,
+                          // ),
 
                         // Scroll to top floating button
                         ScrollToTopButton(scrollController: _scrollController), // Add the button

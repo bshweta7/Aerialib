@@ -94,6 +94,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
+      isScrollable: false,
       currentIndex: 1,
       appBar: AppBar(
         leading: const SmartBackButton(),
@@ -226,11 +227,15 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                         )
                       else
 
-                        MediaList(
-                          mediaItems: mediaIcons,
-                          onMediaTap: _navigateToFlowPage,
-                          scrollController: _scrollController,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 1), // optional: gives scrollbar space
+                          child: MediaList(
+                            mediaItems: mediaIcons,
+                            onMediaTap: _navigateToFlowPage,
+                            scrollController: _scrollController,
+                          ),
                         ),
+
                       ScrollToTopButton(scrollController: _scrollController),
                     ],
                   ),
