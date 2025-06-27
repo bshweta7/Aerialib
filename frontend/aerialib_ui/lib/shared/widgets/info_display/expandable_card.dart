@@ -74,7 +74,10 @@ class _ExpandableCardState extends State<ExpandableCard> {
               firstChild: const SizedBox.shrink(),
               secondChild: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Column(children: widget.children),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // TODO pass in align with start as default.
+                  children: widget.children,
+                ),
               ),
               crossFadeState: isExpanded
                   ? CrossFadeState.showSecond

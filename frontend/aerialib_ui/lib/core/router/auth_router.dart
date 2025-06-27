@@ -4,6 +4,9 @@ import 'package:frontend/features/user/presentation/pages/login_page.dart';
 import 'package:frontend/features/user/presentation/pages/signup_page.dart';
 import 'package:frontend/features/user/presentation/pages/user_profile_page.dart';
 
+import '../../features/admin/admin_flows_dashboard_page.dart';
+import '../../features/admin/admin_users_dashboard_page.dart';
+
 
 List<GoRoute> authRoutes = [
   GoRoute(
@@ -21,4 +24,6 @@ List<GoRoute> authRoutes = [
     name: 'user-profile',
     builder: (context, state) => const UserProfilePage(),
   ),
+
+
 ];

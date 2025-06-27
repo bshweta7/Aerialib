@@ -11,6 +11,9 @@ import 'package:frontend/core/router/media_router.dart';
 import 'package:frontend/core/router/music_router.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
+import '../../features/admin/admin_flows_dashboard_page.dart';
+import '../../features/admin/admin_users_dashboard_page.dart';
+
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -37,6 +40,14 @@ GoRouter createRouter(AuthCubit authCubit) {
       ...poseRoutes,
       ...tagRoutes,
       ...transitionRoutes,
+      GoRoute(
+        path: '/admin/flows',
+        builder: (context, state) => const AdminFlowsDashboardPage(),
+      ),
+      GoRoute(
+        path: '/admin/users',
+        builder: (context, state) => const AdminUsersDashboardPage(),
+      ),
     ],
     redirect: (context, state) {
       final authState = authCubit.state;

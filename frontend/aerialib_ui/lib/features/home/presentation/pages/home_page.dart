@@ -156,6 +156,23 @@ class _HomePageState extends State<HomePage> {
                 // ),
                 // const SizedBox(height: 30),
 
+                if (currentUsername == 'admin') ...[
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      context.go('/admin/users');
+                    },
+                    icon: const Icon(Icons.admin_panel_settings),
+                    label: const Text('Admin Users Dashboard'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      context.go('/admin/flows');
+                    },
+                    icon: const Icon(Icons.admin_panel_settings),
+                    label: const Text('Admin Flows Dashboard'),
+                  ),
+                ],
+
                 // TODO - maybe switch to modal for everything instead of having textboxes on the dashboard itself... might look cleaner?
                 QuickAddCategoryCard(
                   onMusicSubmit: (name, description, isFavorite) async {
