@@ -128,4 +128,26 @@ class UserRemoteDataSource {
       return null;
     }
   }
+
+  Future<bool> tokenIsValid(String token) async {
+    final tokenIsValidResponse = await httpService.post(
+      path: '/auth/tokenIsValid',
+      token: token,
+      body: '',
+    );
+
+    return tokenIsValidResponse.statusCode == 200 && tokenIsValidResponse.body == 'true';
+  }
+
+  Future<String?> resetPassword({required String token, required String newPassword}) async {
+    final res = await httpService.post(
+      path: '/auth/reset-password',
+      token: token,
+      body: jsonEncode({'token': token, 'newPassword': newPassword}),
+    );
+
+    if (res.statusCode == 200) return null;
+    return jsonDecode(res.body)['error'] ?? 'Something went wrong';
+  }
+
 }

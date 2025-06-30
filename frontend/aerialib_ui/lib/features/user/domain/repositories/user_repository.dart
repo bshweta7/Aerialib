@@ -122,4 +122,9 @@ class UserRepository {
   Future<void> clearUser() async {
     await localDataSource.clearUser();
   }
+
+  Future<bool> tokenIsValid(String token) => remoteDataSource.tokenIsValid(token);
+
+  Future<String?> resetPassword(String token, String newPassword) =>
+      remoteDataSource.resetPassword(token: token, newPassword: newPassword);
 }

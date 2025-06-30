@@ -104,4 +104,6 @@ class AuthCubit extends Cubit<AuthState> {
   void reInitialize() {
     emit(const AuthInitial());
   }
+
+
 }
