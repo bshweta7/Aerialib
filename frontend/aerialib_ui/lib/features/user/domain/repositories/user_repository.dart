@@ -127,4 +127,7 @@ class UserRepository {
 
   Future<String?> resetPassword(String token, String newPassword) =>
       remoteDataSource.resetPassword(token: token, newPassword: newPassword);
+
+  Future<String?> sendForgotPasswordEmail(String email) =>
+      remoteDataSource.sendForgotPasswordEmail(email: email);
 }

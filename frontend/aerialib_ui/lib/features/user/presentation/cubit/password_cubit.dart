@@ -10,6 +10,16 @@ class PasswordCubit extends Cubit<PasswordState> {
 
   PasswordCubit(this._userRepository) : super(PasswordInitial());
 
+  Future<void> sendForgotPasswordEmail(String email) async {
+    emit(PasswordLoading());
+    final error = await _userRepository.sendForgotPasswordEmail(email);
+    if (error == null) {
+      emit(PasswordResetSuccess());
+    } else {
+      emit(PasswordError(error));
+    }
+  }
+
   Future<void> checkToken(String token) async {
     emit(PasswordLoading());
     final valid = await _userRepository.tokenIsValid(token);

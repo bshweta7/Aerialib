@@ -1,40 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:convert';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
+import 'package:frontend/features/user/presentation/cubit/password_cubit.dart';
 import 'package:frontend/shared/widgets/input_fields/password_field.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final usernameController = TextEditingController();
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  late String token;
 
   @override
   void dispose() {
-    usernameController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void logInUser() {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final uri = Uri.base;
+  //   token = uri.queryParameters['token'] ?? '';
+  //   context.read<AuthCubit>().checkToken(token);
+  //
+  // }
+
+  Future<void> resetPassword() async {
     if (formKey.currentState!.validate()) {
-      context.read<AuthCubit>().login(
-        username: usernameController.text.trim(),
-        password: passwordController.text.trim(),
+      context.read<PasswordCubit>().resetPassword(
+          token,
+          passwordController.text.trim(),
       );
     }
-  }
-
-  void resetPage() {
-    context.read<AuthCubit>().reInitialize();
   }
 
   @override
@@ -53,20 +60,20 @@ class _LoginPageState extends State<LoginPage> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: BlocConsumer<AuthCubit, AuthState>(
+        child: BlocConsumer<PasswordCubit, PasswordState>(
           listener: (context, state) {
-            if (state is AuthError) {
+            if (state is PasswordError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
               );
-              resetPage();
-            } else if (state is AuthLoggedIn) {
-              context.goNamed('home');
             }
           },
           builder: (context, state) {
-            if (state is AuthLoading) {
+            if (state is PasswordLoading) {
               return const Center(child: CircularProgressIndicator());
+            } else if (state is PasswordError) {
+              const Center(child: Text("Invalid or missing reset token."));
+            // TODO add a button to resend link
             }
 
             return Center(
@@ -76,8 +83,8 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        "Welcome Back",
+                      const Text( // TODO make a template (like MainScaffold) for these kinds of pages...
+                        "Reset Password",
                         style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
@@ -86,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        "Log in to continue",
+                        "Enter a new password",
                         style: TextStyle(
                           fontSize: 18,
                           color: Color(0xFF334155),
@@ -94,45 +101,33 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 32),
 
-                      // Username field
-                      TextFormField(
-                        controller: usernameController,
-                        decoration: const InputDecoration(
-                          hintText: 'Username',
-                          border: OutlineInputBorder(),
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Username field cannot be empty!";
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 16),
-
                       // Password field
                       PasswordField(
                         controller: passwordController,
                         label: "Password",
                       ),
+                      const SizedBox(height: 16),
+
+                      // Confirm Password Field
+                      PasswordField(
+                        controller: confirmPasswordController,
+                        label: "Confirm Password",
+                      ),
                       const SizedBox(height: 24),
+
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: logInUser,
+                          onPressed: resetPassword,
                           child: const Text(
-                            'LOG IN',
+                            'RESET',
                             style: TextStyle(fontSize: 18),
                           ),
                         ),
                       ),
                       const SizedBox(height: 16),
 
-                      // TODO More prominent Sign Up prompt
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -147,33 +142,6 @@ class _LoginPageState extends State<LoginPage> {
                             onTap: () => context.goNamed('signup'),
                             child: const Text(
                               "Sign Up",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1e293b),
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Forgot your username/password? ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF334155),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => context.goNamed('forgot'),
-                            child: const Text(
-                              "Click Here",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

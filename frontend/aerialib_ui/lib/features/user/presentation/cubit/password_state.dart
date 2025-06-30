@@ -15,9 +15,9 @@ class PasswordTokenValid extends PasswordState {}
 class PasswordResetSuccess extends PasswordState {}
 
 class PasswordError extends PasswordState {
-  final String message;
-  const PasswordError(this.message);
+  final String error;
+  const PasswordError(this.error);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [error];
 }

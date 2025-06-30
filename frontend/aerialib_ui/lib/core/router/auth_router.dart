@@ -1,3 +1,4 @@
+import 'package:frontend/features/user/presentation/pages/forgot_password_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/user/presentation/pages/login_page.dart';
@@ -19,6 +20,12 @@ List<GoRoute> authRoutes = [
     path: '/profile', // TODO add username in profile ----> Updated path with username parameter
     name: 'user-profile',
     builder: (context, state) => const UserProfilePage(),
+  ),
+
+  GoRoute(
+    path: '/forgot', // TODO add username in profile ----> Updated path with username parameter
+    name: 'forgot',
+    builder: (context, state) => const ForgotPasswordPage(),
   ),
 
 
