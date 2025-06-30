@@ -7,6 +7,10 @@ import jwt from "jsonwebtoken";
 import { auth, AuthRequest } from "../middleware/auth";
 import dotenv from "dotenv";
 import {jsonb, text, timestamp, uuid} from "drizzle-orm/pg-core";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
+import { sendPasswordResetEmail } from "../utils/email";
+
 dotenv.config();
 
 const authRouter = Router();
@@ -238,6 +242,50 @@ authRouter.get("/profile/:id", async (req: Request<{ id: string }>, res) => {
             eq(usersTable.id, id)
         );
     res.json(user);
+});
+
+
+authRouter.post("/forgot-password", async (req: Request, res: Response) => {
+    const { email } = req.body;
+
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.email, email));
+    if (!user) {
+        res.status(200).json({ message: "If this email is registered, you'll receive reset instructions." });
+        return;
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: "15m" });
+
+    const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+
+    try {
+        const info = await sendPasswordResetEmail(email, resetLink);
+        console.log('Email sent successfully:', info.messageId);
+    } catch (error) {
+        console.error('Email sending failed:', error);
+        // Still return success to prevent email enumeration
+    }
+
+    res.status(200).json({ message: "If this email is registered, you'll receive reset instructions." });
+});
+
+
+authRouter.post("/reset-password", async (req: Request, res: Response) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+        const hashedPassword = await bcryptjs.hash(newPassword, 8);
+
+        await db
+            .update(usersTable)
+            .set({ password: hashedPassword })
+            .where(eq(usersTable.id, decoded.id));
+
+        res.status(200).json({ message: "Password reset successful." });
+    } catch (e) {
+        res.status(400).json({ error: "Invalid or expired token." });
+    }
 });
 
 
