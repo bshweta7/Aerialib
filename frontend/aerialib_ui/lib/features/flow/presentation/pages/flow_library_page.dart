@@ -15,9 +15,10 @@ import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/features/flow/presentation/widgets/flow_filter_sheet.dart';
 import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/shared/widgets/media_display/multi_card_view/media_list.dart';
-import 'package:frontend/features/flow/presentation/widgets/flow_search_bar.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
+
+import '../../../../shared/widgets/search_bar.dart';
 
 
 class FlowLibraryPage extends StatefulWidget {
@@ -78,10 +79,6 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
       selectedShareStatus = newShareStatuses;
     });
   }
-  
-  void _updateSearchQuery(String newQuery) {
-    setState(() {_searchQuery = newQuery;});
-  }
 
   void _navigateToFlowPage(MediaIconEntity mediaItem) {
     context.goNamed(
@@ -126,19 +123,17 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
             _allFlows = state.flows;
 
             // Filtering
-            List<FlowEntity> filteredFlows = state.flows.where(
-                  (elem) =>
-              selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase()) &&
-                  selectedLevels.contains(elem.level?.floor()) ||
-                  (selectedLevels.contains(-1) && !Constants.levelOptions.contains(elem.level?.floor())),
-            ).toList();
+            List<FlowEntity> filteredFlows = state.flows.where((elem) {
+              final matchesApparatus = selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase());
+              final matchesQuery = elem.name.toLowerCase().contains(_searchQuery.toLowerCase());
+              final matchesLevel = selectedLevels.contains(elem.level?.floor() ?? -1);
+              return matchesApparatus && matchesQuery && matchesLevel;
+            }).toList();
+
             // TODO filter share status here too? might need to add a column in flows local db after creating the shareTable remotely (join remotely and then send).
 
             final List<MediaIconEntity> mediaIcons = flowsToMediaIcons(filteredFlows);
 
-            // Search suggestion list
-            final List<FlowEntity> sortedFlows = List.from(state.flows)
-              ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
             // TODO - add sort by
 
             return Column(
@@ -151,10 +146,11 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
                       // Search Bar
                       Expanded(
-                        child: FlowSearchBarWidget(
+                        child: LibrarySearchBar<FlowEntity>(
                           hintText: 'Search Flows',
-                          onSearchChanged: _updateSearchQuery,
-                          suggestionList: sortedFlows,
+                          suggestions: filteredFlows,
+                          getDisplayText: (flow) => flow.name,
+                          onSearchChanged: (query) => setState(() => _searchQuery = query),
                         ),
                       ),
 
