@@ -57,46 +57,100 @@ class LandingPage extends StatelessWidget {
                       // TODO add signup / login right aligned
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () => context.goNamed('login'),
-                        icon: const Icon(Icons.info_outline, size: 0, color: Colors.grey),
-                        label: const Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 20,
-                            // fontWeight: FontWeight.bold,
-                            color: Color(0xfff4f4f4),
-                            // color: Color(0xFF1e293b),
-                          ),
-                        ),
+
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () => context.goNamed('login'),
+                      child: const Text(
+                        'LOG IN',
+                        style: TextStyle(fontSize: 18),
                       ),
-                      const Text(
-                        "/",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xfff4f4f4),
-                          // color: Color(0xFF1e293b),
-                        ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () => context.goNamed('signup'),
+                      child: const Text(
+                        'SIGN UP',
+                        style: TextStyle(fontSize: 18),
                       ),
-                      TextButton.icon(
-                        onPressed: () => context.goNamed('signup'),
-                        icon: const Icon(Icons.info_outline, size: 0, color: Colors.grey),
-                        label: const Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 20,
-                            // fontWeight: FontWeight.bold,
-                            color: Color(0xfff4f4f4),
-                            // color: Color(0xFF1e293b),
-                          ),
-                        ),
-                      ),
-                    ]
-                  )
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     SizedBox(
+                  //       width: 100,
+                  //       height: 48,
+                  //       child: ElevatedButton(
+                  //         onPressed: () => context.goNamed('login'),
+                  //         child: const Text(
+                  //           'LOG IN',
+                  //           style: TextStyle(fontSize: 18),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 16),
+                  //
+                  //     SizedBox(
+                  //       width: double.infinity,
+                  //       height: 48,
+                  //       child: ElevatedButton(
+                  //       onPressed: () => context.goNamed('signup'),
+                  //         child: const Text(
+                  //           'LOG IN',
+                  //           style: TextStyle(fontSize: 18),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     const SizedBox(height: 16),
+                  //
+                  //     // TextButton.icon(
+                  //     //   onPressed: () => context.goNamed('login'),
+                  //     //   icon: const Icon(Icons.info_outline, size: 0, color: Colors.grey),
+                  //     //   label: const Text(
+                  //     //     'Login',
+                  //     //     style: TextStyle(
+                  //     //       fontSize: 20,
+                  //     //       // fontWeight: FontWeight.bold,
+                  //     //       color: Color(0xfff4f4f4),
+                  //     //       // color: Color(0xFF1e293b),
+                  //     //     ),
+                  //     //   ),
+                  //     // ),
+                  //     // const Text(
+                  //     //   "/",
+                  //     //   style: TextStyle(
+                  //     //     fontSize: 20,
+                  //     //     fontWeight: FontWeight.bold,
+                  //     //     color: Color(0xfff4f4f4),
+                  //     //     // color: Color(0xFF1e293b),
+                  //     //   ),
+                  //     // ),
+                  //     // TextButton.icon(
+                  //     //   onPressed: () => context.goNamed('signup'),
+                  //     //   icon: const Icon(Icons.info_outline, size: 0, color: Colors.grey),
+                  //     //   label: const Text(
+                  //     //     'Sign Up',
+                  //     //     style: TextStyle(
+                  //     //       fontSize: 20,
+                  //     //       // fontWeight: FontWeight.bold,
+                  //     //       color: Color(0xfff4f4f4),
+                  //     //       // color: Color(0xFF1e293b),
+                  //     //     ),
+                  //     //   ),
+                  //     // ),
+                  //   ]
+                  // )
 
                 ],
               ),

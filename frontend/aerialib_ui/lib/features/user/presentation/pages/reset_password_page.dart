@@ -26,14 +26,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.dispose();
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final uri = Uri.base;
-  //   token = uri.queryParameters['token'] ?? '';
-  //   context.read<AuthCubit>().checkToken(token);
-  //
-  // }
+  @override
+  void initState() {
+    super.initState();
+    final uri = Uri.base;
+    final extractedToken = uri.queryParameters['token'] ?? '';
+    token = extractedToken;
+
+    debugPrint('[ResetPasswordPage] Extracted token: $token');
+  }
+
 
   Future<void> resetPassword() async {
     if (formKey.currentState!.validate()) {

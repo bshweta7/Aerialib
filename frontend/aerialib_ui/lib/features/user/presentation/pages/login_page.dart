@@ -158,32 +158,47 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
 
-                      const SizedBox(height: 20),
+                      // TODO
+                      //  const SizedBox(height: 20),
+                      //
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     const Text(
+                      //       "Forgot your username/password? ",
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         color: Color(0xFF334155),
+                      //       ),
+                      //     ),
+                      //     GestureDetector(
+                      //       onTap: () => context.goNamed('forgot'),
+                      //       child: const Text(
+                      //         "Click Here",
+                      //         style: TextStyle(
+                      //           fontSize: 16,
+                      //           fontWeight: FontWeight.bold,
+                      //           color: Color(0xFF1e293b),
+                      //           decoration: TextDecoration.underline,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Forgot your username/password? ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF334155),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => context.goNamed('forgot'),
-                            child: const Text(
-                              "Click Here",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1e293b),
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+
+                      // GestureDetector(
+                      //   onTap: () => context.goNamed('reset-password'),
+                      //   child: const Text(
+                      //     "RESET PASSWORD",
+                      //     style: TextStyle(
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.bold,
+                      //       color: Color(0xFF1e293b),
+                      //       decoration: TextDecoration.underline,
+                      //     ),
+                      //   ),
+                      // ),
 
                       const SizedBox(height: 50),
 

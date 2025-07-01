@@ -160,4 +160,14 @@ class UserRemoteDataSource {
     return jsonDecode(res.body)['error'] ?? 'Something went wrong';
   }
 
+  Future<String?> sendForgotUsernameEmail({required String email}) async {
+    final res = await httpService.postInit(
+      path: '/auth/forgot-username',
+      body: jsonEncode({'email': email}),
+    );
+
+    if (res.statusCode == 200) return null;
+    return jsonDecode(res.body)['error'] ?? 'Something went wrong';
+  }
+
 }

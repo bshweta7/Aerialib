@@ -130,4 +130,7 @@ class UserRepository {
 
   Future<String?> sendForgotPasswordEmail(String email) =>
       remoteDataSource.sendForgotPasswordEmail(email: email);
+
+  Future<String?> sendForgotUsernameEmail(String email) =>
+      remoteDataSource.sendForgotUsernameEmail(email: email);
 }

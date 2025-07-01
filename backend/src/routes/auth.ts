@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 import {jsonb, text, timestamp, uuid} from "drizzle-orm/pg-core";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
-import { sendPasswordResetEmail } from "../utils/email";
+import {sendForgotUsernameEmail, sendPasswordResetEmail} from "../utils/email";
 
 dotenv.config();
 
@@ -268,6 +268,31 @@ authRouter.post("/forgot-password", async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "If this email is registered, you'll receive reset instructions." });
 });
+
+authRouter.post("/forgot-username", async (req: Request, res: Response) => {
+    const { email } = req.body;
+
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.email, email));
+    if (!user) {
+        res.status(200).json({ message: "If this email is registered, you'll receive reset instructions." });
+        return;
+    }
+
+    // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, { expiresIn: "15m" });
+
+    // const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+
+    try {
+        const info = await sendForgotUsernameEmail(email, user.username);
+        console.log('Email sent successfully:', info.messageId);
+    } catch (error) {
+        console.error('Email sending failed:', error);
+        // Still return success to prevent email enumeration
+    }
+
+    res.status(200).json({ message: "If this email is registered, you'll receive reset instructions." });
+});
+
 
 
 authRouter.post("/reset-password", async (req: Request, res: Response) => {

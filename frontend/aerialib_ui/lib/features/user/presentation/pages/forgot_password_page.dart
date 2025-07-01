@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/shared/widgets/input_fields/password_field.dart';
 
+import '../../../../shared/widgets/input_fields/email_field.dart';
 import '../cubit/password_cubit.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -33,6 +34,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     if (!isFormValid) return;
 
     context.read<PasswordCubit>().sendForgotPasswordEmail(
+        emailController.text.trim()
+    );
+  }
+
+  void sendForgotUsernameEmail() {
+    final isFormValid = formKey.currentState!.validate();
+
+    if (!isFormValid) return;
+
+    context.read<PasswordCubit>().sendForgotUsernameEmail(
         emailController.text.trim()
     );
   }
@@ -70,119 +81,105 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
             return Center(
               child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "Forgot your password? ",
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1e293b),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-
-                    TextFormField(
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                        hintText: 'Email',
-                        border: OutlineInputBorder(),
-                        fillColor: Colors.white,
-                        filled: true,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "Email field cannot be empty!";
-                        }
-                        if (!value.contains('@')) {
-                          return "Email is invalid!";
-                        }
-                        return null;
-                      },
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: sendResetPasswordEmail,
-                        child: const Text(
-                          'Reset your password',
-                          style: TextStyle(fontSize: 18),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "Forgot your password? ",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1e293b),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 8),
 
-                    // const Text(
-                    //   "Forgot your username? ",
-                    //   style: TextStyle(
-                    //     fontSize: 40,
-                    //     fontWeight: FontWeight.bold,
-                    //     color: Color(0xFF1e293b),
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 8),
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   height: 48,
-                    //   child: ElevatedButton(
-                    //     onPressed: logInUser,
-                    //     child: const Text(
-                    //       'Retrieve your username',
-                    //       style: TextStyle(fontSize: 18),
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 16),
+                      EmailField(controller: emailController),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Don't have an account? ",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color(0xFF334155),
+                      const SizedBox(height: 16),
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: sendResetPasswordEmail,
+                          child: const Text(
+                            'Reset your password',
+                            style: TextStyle(fontSize: 18),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () => context.goNamed('signup'),
+                      ),
+                      const SizedBox(height: 16),
+
+                      const Text(
+                        "Forgot your username? ",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1e293b),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: sendForgotUsernameEmail,
                           child: const Text(
-                            "Sign Up",
+                            'Retrieve your username',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Don't have an account? ",
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1e293b),
-                              decoration: TextDecoration.underline,
+                              color: Color(0xFF334155),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                          GestureDetector(
+                            onTap: () => context.goNamed('signup'),
+                            child: const Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1e293b),
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
 
-                    const SizedBox(height: 50),
+                      const SizedBox(height: 50),
 
-                    // Back button
-                    Align(
-                      alignment: Alignment.center,
-                      child: TextButton.icon(
-                        onPressed: () => context.go('/'),
-                        icon: const Icon(Icons.arrow_back, color: Color(0xFF1e293b)),
-                        label: const Text(
-                          "Back to Landing Page",
-                          style: TextStyle(color: Color(0xFF1e293b)),
-                        ),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Color(0xFF1e293b), // for consistency on hover/tap
+                      // Back button
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton.icon(
+                          onPressed: () => context.go('/'),
+                          icon: const Icon(Icons.arrow_back, color: Color(0xFF1e293b)),
+                          label: const Text(
+                            "Back to Landing Page",
+                            style: TextStyle(color: Color(0xFF1e293b)),
+                          ),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Color(0xFF1e293b), // for consistency on hover/tap
+                          ),
                         ),
                       ),
-                    ),
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
