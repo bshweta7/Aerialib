@@ -1,5 +1,7 @@
+.idea/
 db_backups/
 db_postgres/
 backend/node_modules/
-.idea/
 backend/.env
+backend/data/uplift
+frontend/aerialib_ui/android/app/.cxx/Debug
