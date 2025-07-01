@@ -22,31 +22,44 @@ class MediaList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
+    final listView = ListView.builder(
       controller: scrollController,
-      interactive: true,
-      child: ListView.builder(
-        controller: scrollController,
-        itemCount: mediaItems.length,
-        itemBuilder: (context, index) {
-          final mediaItem = mediaItems[index];
+      itemCount: mediaItems.length,
+      itemBuilder: (context, index) {
+        final mediaItem = mediaItems[index];
 
-          return GestureDetector(
-            onTap: () => onMediaTap(mediaItem),
-            child: ListCard(
-              imageUrl: mediaItem.imageUrl,
-              title: mediaItem.title!,
-              subtitle: mediaItem.subtitle!,
-              // only show heart if the param is passed and the item has isFavorite set
-              isFavorite: mediaItem.isFavorite,
-              onFavoriteToggle: onFavoriteToggle != null
-                  ? () => onFavoriteToggle!(mediaItem)
-                  : null,
-            ),
-          );
-        },
-        cacheExtent: 600.0, // preload a bit offscreen
-      ),
+        return GestureDetector(
+          onTap: () => onMediaTap(mediaItem),
+          child: ListCard(
+            imageUrl: mediaItem.imageUrl,
+            title: mediaItem.title!,
+            subtitle: mediaItem.subtitle!,
+            // only show heart if the param is passed and the item has isFavorite set
+            isFavorite: mediaItem.isFavorite,
+            onFavoriteToggle: onFavoriteToggle != null
+                ? () => onFavoriteToggle!(mediaItem)
+                : null,
+          ),
+        );
+      },
+      cacheExtent: 600.0,
+      // preload a bit offscreen
+      shrinkWrap: scrollController == null,
+      // important: allows ListView to work inside another scroll view
+      physics: scrollController == null
+          ? const NeverScrollableScrollPhysics()
+          : const AlwaysScrollableScrollPhysics(),
     );
+
+    if (scrollController != null) {
+      return Scrollbar(
+        controller: scrollController,
+        interactive: true,
+        thumbVisibility: true,
+        child: listView,
+      );
+    }
+
+    return listView;
   }
 }

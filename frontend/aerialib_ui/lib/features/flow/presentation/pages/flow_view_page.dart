@@ -1,6 +1,3 @@
-// TODO still
-
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -13,7 +10,6 @@ import 'package:frontend/features/flow/domain/entities/flow_entity.dart';
 import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.dart';
 
 import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
-import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/shared/widgets/media_display/multi_card_view/media_list.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
@@ -71,13 +67,15 @@ class _FlowViewPageState extends State<FlowViewPage> {
     final List<MediaIconEntity> mediaIcons = posesToMediaIcons(poses);
 
     return MainScaffold(
-      isScrollable: false,
       currentIndex: 1,
+      isScrollable: true,
+      isScrollToTopVisible: true,
+      scrollController: _scrollController,
       appBar: AppBar(
         leading: const SmartBackButton(),
         title: Text(flow.name),
         actions: [
-          IconButton(
+          IconButton( // TODO Switch this to a help button
             icon: const Icon(Icons.info_outline),
             tooltip: 'View flow details',
             onPressed: () {
@@ -98,9 +96,6 @@ class _FlowViewPageState extends State<FlowViewPage> {
       ),
       body: BlocBuilder<FlowsCubit, FlowsState>(
         builder: (context, state) {
-
-
-
           if (state is FlowLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -110,13 +105,12 @@ class _FlowViewPageState extends State<FlowViewPage> {
           }
 
           if (state is GetFlowsSuccess) {
-            return Column(
-              children: [
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                  child: ExpandableCard(
-                    title: "Details",
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+              child: Column(
+                children: [
+                  ExpandableCard(
+                    title: "Flow Details",
                     initiallyExpanded: false,
                     children: [
                       InfoRow("Apparatus:", capitalizeFirstLetter(flow.apparatus)),
@@ -127,44 +121,61 @@ class _FlowViewPageState extends State<FlowViewPage> {
                       InfoRow("Safety Cues:", flow.safetyCues),
                       InfoRow("Progressions:", flow.progressions),
                       const Divider(),
-                      InfoRow("Created At:", formatDate(flow.createdAt)),
-                      InfoRow("Updated At:", formatDate(flow.updatedAt)),
+                      InfoRow("Created:", formatDate(flow.createdAt)),
+                      InfoRow("Updated:", formatDate(flow.updatedAt)),
                     ],
                   ),
-                ),
 
-                Expanded(
-                  child: Stack(
+                  const Divider(),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (mediaIcons.isEmpty)
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 40),
-                            child: Text( // TODO move this to Media List?
-                              "No poses in this flow\nAdd poses by clicking 'Edit Poses'",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black38),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        )
-                      else
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10), // optional: gives scrollbar space
-                          child: MediaList(
-                            mediaItems: mediaIcons,
-                            onMediaTap: (item) => _navigateToPosePage(context, item),
-                            scrollController: _scrollController,
-                          ),
-                        ),
-
-                      ScrollToTopButton(scrollController: _scrollController),
-                    ],
+                      const Text(
+                        "Poses in Flow",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          context.goNamed(
+                            'flow-edit-poses',
+                            pathParameters: {'flowId': flow.id,},
+                            queryParameters: {'from': 'flow-view'},
+                          );
+                        },
+                        icon: const Icon(Icons.edit)
+                      )
+                    ]
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 10),
+
+
+                  if (mediaIcons.isEmpty) ...[
+                    const Text(
+                      "There are no poses in this flow.",
+                      style: TextStyle(fontSize: 16, color: Colors.black38),
+                      textAlign: TextAlign.center,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.goNamed(
+                          'flow-edit-poses',
+                          pathParameters: {'flowId': flow.id,},
+                          queryParameters: {'from': 'flow-view'},
+                        );
+                      },
+                      child: const Text("Add poses"))
+                  ]
+                  else
+                    MediaList(
+                      mediaItems: mediaIcons,
+                      onMediaTap: (item) => _navigateToPosePage(context, item),
+                    ),
+
+                  const SizedBox(height: 80), // leave space for FAB
+                ],
+              ),
             );
           }
 
