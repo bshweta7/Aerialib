@@ -26,13 +26,10 @@ class TransitionLibraryPage extends StatefulWidget {
 class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
   final ScrollController _scrollController = ScrollController();
   String _searchQuery = '';
+  String _searchMode = 'All';
   String _filterMode = 'All'; // All | From | To | Name
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
-
-  void _updateSearchQuery(String query) {
-    setState(() => _searchQuery = query);
-  }
 
   void _navigateToTransitionPage(TransitionEntity transition) {
     context.goNamed(
@@ -116,31 +113,11 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                             hintText: 'Search transitions...',
                             suggestions: filteredTransitions, // for internal match logic (can be empty if not using suggestions)
                             getDisplayText: (t) => t.name ?? "Unnamed Transition",
-                            onSearchChanged: _updateSearchQuery,
+                            onSearchChanged: (query) => setState(() => _searchQuery = query),
+                            dropdownOptions: ["All", "From", "To", "Name"],
+                            onDropdownChanged: (val) => setState(() => _searchMode = val),
                             // showSuggestions: false,
                           )
-
-                          // child: TextField(
-                          //   onChanged: _updateSearchQuery,
-                          //   decoration: InputDecoration(
-                          //     hintText: 'Search transitions...',
-                          //     prefixIcon: const Icon(Icons.search),
-                          //     suffixIcon: DropdownButton<String>(
-                          //       value: _filterMode,
-                          //       onChanged: (value) => setState(() => _filterMode = value!),
-                          //       underline: const SizedBox(),
-                          //       items: ['All', 'From', 'To', 'Name']
-                          //           .map((mode) => DropdownMenuItem(value: mode, child: Text(mode)))
-                          //           .toList(),
-                          //     ),
-                          //     filled: true,
-                          //     fillColor: Colors.grey.shade100,
-                          //     border: OutlineInputBorder(
-                          //       borderRadius: BorderRadius.circular(25),
-                          //       borderSide: BorderSide.none,
-                          //     ),
-                          //   ),
-                          // ),
                         ),
                         const SizedBox(width: 10),
                         IconButton(

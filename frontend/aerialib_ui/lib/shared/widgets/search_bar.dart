@@ -13,6 +13,8 @@ class LibrarySearchBar<T> extends StatefulWidget {
   final String? Function(T)? getRouteParam;
   final String? fromPage;
   final bool showSuggestions;
+  final List<String>? dropdownOptions; // e.g., ["All", "From", "To"]
+  final void Function(String)? onDropdownChanged;
 
   const LibrarySearchBar({
     super.key,
@@ -25,6 +27,8 @@ class LibrarySearchBar<T> extends StatefulWidget {
     this.getRouteParam,
     this.fromPage,
     this.showSuggestions = false,
+    this.dropdownOptions,
+    this.onDropdownChanged,
   });
 
   @override
@@ -33,41 +37,82 @@ class LibrarySearchBar<T> extends StatefulWidget {
 
 class _LibrarySearchBarState<T> extends State<LibrarySearchBar<T>> {
   final _searchController = SearchController();
+  String? _selectedDropdown;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDropdown = widget.dropdownOptions?.first;
+  }
+
+  Widget _buildDropdown() {
+    return widget.dropdownOptions != null
+        ? DropdownButton<String>(
+      value: _selectedDropdown,
+      onChanged: (value) {
+        setState(() {
+          _selectedDropdown = value;
+        });
+        if (value != null && widget.onDropdownChanged != null) {
+          widget.onDropdownChanged!(value);
+        }
+      },
+      underline: const SizedBox(),
+      items: widget.dropdownOptions!
+          .map((option) => DropdownMenuItem(
+        value: option,
+        child: Text(option),
+      ))
+          .toList(),
+    )
+        : const SizedBox();
+  }
 
   @override
   Widget build(BuildContext context) {
     if (!widget.showSuggestions) {
-      // Simple search bar that filters external list as you type
-      return TextField(
-        onChanged: widget.onSearchChanged,
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          prefixIcon: const Icon(Icons.search),
-          filled: true,
-          fillColor: Colors.grey.shade100,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
-            borderSide: BorderSide.none,
+      return Material(
+        borderRadius: BorderRadius.circular(50),
+        color: Colors.transparent,
+        child: TextField(
+          onChanged: widget.onSearchChanged,
+          decoration: InputDecoration(
+            hintText: widget.hintText,
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: _buildDropdown(),
+            filled: true,
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
+            fillColor: Colors.grey.shade100,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(40),
+              borderSide: BorderSide.none,
+            ),
           ),
         ),
       );
     }
 
-    // Suggestion-enabled search bar using SearchAnchor
     return SearchAnchor(
       builder: (BuildContext context, SearchController controller) {
-        return SearchBar(
+        return TextField(
           controller: controller,
-          hintText: widget.hintText,
-          padding: const WidgetStatePropertyAll<EdgeInsets>(
-            EdgeInsets.symmetric(horizontal: 16.0),
-          ),
-          onTap: () => controller.openView(),
           onChanged: (value) {
             widget.onSearchChanged(value);
             controller.openView();
           },
-          leading: const Icon(Icons.search),
+          onTap: () => controller.openView(),
+          decoration: InputDecoration(
+            hintText: widget.hintText,
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: _buildDropdown(),
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: BorderSide.none,
+            ),
+          ),
         );
       },
       suggestionsBuilder: (BuildContext context, SearchController controller) {
@@ -93,15 +138,10 @@ class _LibrarySearchBarState<T> extends State<LibrarySearchBar<T>> {
               } else if (widget.routeName != null && widget.getRouteParam != null) {
                 final id = widget.getRouteParam!(item);
                 if (id != null) {
-                  final queryParams = <String, String>{};
-                  if (widget.fromPage != null) {
-                    queryParams['from'] = widget.fromPage!;
-                  }
-
                   context.goNamed(
                     widget.routeName!,
-                    pathParameters: {'poseId': id}, // Customize as needed
-                    queryParameters: queryParams,
+                    pathParameters: {'poseId': id},
+                    queryParameters: widget.fromPage != null ? {'from': widget.fromPage!} : {},
                   );
                 }
               }
