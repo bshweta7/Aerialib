@@ -14,6 +14,8 @@ import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../../shared/widgets/search_bar.dart';
+
 class TransitionLibraryPage extends StatefulWidget {
   const TransitionLibraryPage({super.key});
 
@@ -110,27 +112,35 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextField(
-                            onChanged: _updateSearchQuery,
-                            decoration: InputDecoration(
-                              hintText: 'Search transitions...',
-                              prefixIcon: const Icon(Icons.search),
-                              suffixIcon: DropdownButton<String>(
-                                value: _filterMode,
-                                onChanged: (value) => setState(() => _filterMode = value!),
-                                underline: const SizedBox(),
-                                items: ['All', 'From', 'To', 'Name']
-                                    .map((mode) => DropdownMenuItem(value: mode, child: Text(mode)))
-                                    .toList(),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey.shade100,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
+                          child: LibrarySearchBar<TransitionEntity>(
+                            hintText: 'Search transitions...',
+                            suggestions: filteredTransitions, // for internal match logic (can be empty if not using suggestions)
+                            getDisplayText: (t) => t.name ?? "Unnamed Transition",
+                            onSearchChanged: _updateSearchQuery,
+                            // showSuggestions: false,
+                          )
+
+                          // child: TextField(
+                          //   onChanged: _updateSearchQuery,
+                          //   decoration: InputDecoration(
+                          //     hintText: 'Search transitions...',
+                          //     prefixIcon: const Icon(Icons.search),
+                          //     suffixIcon: DropdownButton<String>(
+                          //       value: _filterMode,
+                          //       onChanged: (value) => setState(() => _filterMode = value!),
+                          //       underline: const SizedBox(),
+                          //       items: ['All', 'From', 'To', 'Name']
+                          //           .map((mode) => DropdownMenuItem(value: mode, child: Text(mode)))
+                          //           .toList(),
+                          //     ),
+                          //     filled: true,
+                          //     fillColor: Colors.grey.shade100,
+                          //     border: OutlineInputBorder(
+                          //       borderRadius: BorderRadius.circular(25),
+                          //       borderSide: BorderSide.none,
+                          //     ),
+                          //   ),
+                          // ),
                         ),
                         const SizedBox(width: 10),
                         IconButton(
