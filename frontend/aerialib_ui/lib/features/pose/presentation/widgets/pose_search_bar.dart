@@ -1,3 +1,5 @@
+// TODO Delete this page
+
 import 'package:flutter/material.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/pose/presentation/pages/pose_view_page.dart';

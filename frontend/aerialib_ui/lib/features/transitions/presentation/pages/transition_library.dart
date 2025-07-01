@@ -110,7 +110,7 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                       children: [
                         Expanded(
                           child: LibrarySearchBar<TransitionEntity>(
-                            hintText: 'Search transitions...',
+                            hintText: 'Search Transitions',
                             suggestions: filteredTransitions, // for internal match logic (can be empty if not using suggestions)
                             getDisplayText: (t) => t.name ?? "Unnamed Transition",
                             onSearchChanged: (query) => setState(() => _searchQuery = query),

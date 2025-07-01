@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// TODO make a version of this WITH search suggestions
 /// A generic and reusable search bar for Aerialib library pages.
 /// Supports optional suggestion dropdown, generic types, and custom tap behavior.
 class LibrarySearchBar<T> extends StatefulWidget {
@@ -36,7 +37,7 @@ class LibrarySearchBar<T> extends StatefulWidget {
 }
 
 class _LibrarySearchBarState<T> extends State<LibrarySearchBar<T>> {
-  final _searchController = SearchController();
+  final SearchController _searchController = SearchController();
   String? _selectedDropdown;
 
   @override
@@ -45,92 +46,79 @@ class _LibrarySearchBarState<T> extends State<LibrarySearchBar<T>> {
     _selectedDropdown = widget.dropdownOptions?.first;
   }
 
-  Widget _buildDropdown() {
-    return widget.dropdownOptions != null
-        ? DropdownButton<String>(
-      value: _selectedDropdown,
-      onChanged: (value) {
-        setState(() {
-          _selectedDropdown = value;
-        });
-        if (value != null && widget.onDropdownChanged != null) {
-          widget.onDropdownChanged!(value);
-        }
-      },
-      underline: const SizedBox(),
-      items: widget.dropdownOptions!
-          .map((option) => DropdownMenuItem(
-        value: option,
-        child: Text(option),
-      ))
-          .toList(),
-    )
-        : const SizedBox();
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!widget.showSuggestions) {
-      return Material(
-        borderRadius: BorderRadius.circular(50),
-        color: Colors.transparent,
-        child: TextField(
-          onChanged: widget.onSearchChanged,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: _buildDropdown(),
-            filled: true,
-            isDense: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(40),
-              borderSide: BorderSide.none,
-            ),
+      // TextField version
+      return TextField(
+        onChanged: widget.onSearchChanged,
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: _buildDropdown(),
+          filled: true,
+          fillColor: Colors.grey.shade100,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide.none,
           ),
         ),
       );
     }
 
+    // ✅ SearchBar with preserved controller
     return SearchAnchor(
-      builder: (BuildContext context, SearchController controller) {
-        return TextField(
-          controller: controller,
+      builder: (context, controller) {
+        return SearchBar(
+          controller: _searchController,
+          hintText: widget.hintText,
+          padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16.0)),
+          shape: MaterialStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          ),
+          backgroundColor: MaterialStatePropertyAll(Colors.grey.shade100),
+          leading: const Icon(Icons.search),
+          trailing: widget.dropdownOptions != null
+              ? [
+            const SizedBox(width: 10),
+            DropdownButton<String>(
+              value: _selectedDropdown,
+              onChanged: (value) {
+                setState(() => _selectedDropdown = value);
+                if (value != null && widget.onDropdownChanged != null) {
+                  widget.onDropdownChanged!(value);
+                }
+              },
+              underline: const SizedBox(),
+              items: widget.dropdownOptions!
+                  .map((option) => DropdownMenuItem(value: option, child: Text(option)))
+                  .toList(),
+            ),
+          ]
+              : null,
+          onTap: () => _searchController.openView(),
           onChanged: (value) {
             widget.onSearchChanged(value);
-            controller.openView();
+            _searchController.openView();
           },
-          onTap: () => controller.openView(),
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: _buildDropdown(),
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide.none,
-            ),
-          ),
         );
       },
-      suggestionsBuilder: (BuildContext context, SearchController controller) {
-        final text = controller.text.toLowerCase();
+      suggestionsBuilder: (context, controller) {
+        final query = _searchController.text.toLowerCase();
         final matches = widget.suggestions
-            .where((item) => widget.getDisplayText(item).toLowerCase().contains(text))
+            .where((item) => widget.getDisplayText(item).toLowerCase().contains(query))
             .toList();
 
         return List<ListTile>.generate(matches.length, (index) {
           final item = matches[index];
-          final displayText = widget.getDisplayText(item);
+          final label = widget.getDisplayText(item);
 
           return ListTile(
-            title: Text(displayText),
+            title: Text(label),
             onTap: () {
               setState(() {
-                controller.clear();
-                controller.closeView("");
+                _searchController.clear();
+                _searchController.closeView("");
               });
 
               if (widget.onSuggestionTapped != null) {
@@ -151,4 +139,32 @@ class _LibrarySearchBarState<T> extends State<LibrarySearchBar<T>> {
       },
     );
   }
+
+  Widget _buildDropdown() {
+    if (widget.dropdownOptions == null || widget.dropdownOptions!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        value: _selectedDropdown,
+        icon: const Icon(Icons.arrow_drop_down),
+        onChanged: (value) {
+          setState(() => _selectedDropdown = value);
+          if (value != null && widget.onDropdownChanged != null) {
+            widget.onDropdownChanged!(value);
+          }
+        },
+        items: widget.dropdownOptions!
+            .map((option) => DropdownMenuItem<String>(
+          value: option,
+          child: Text(option),
+        ))
+            .toList(),
+        style: Theme.of(context).textTheme.bodyMedium,
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+  }
+
 }

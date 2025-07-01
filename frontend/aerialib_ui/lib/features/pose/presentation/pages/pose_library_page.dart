@@ -19,6 +19,8 @@ import 'package:frontend/features/pose/presentation/widgets/pose_search_bar.dart
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../../shared/widgets/search_bar.dart';
+
 
 class PoseLibraryPage extends StatefulWidget {
   const PoseLibraryPage({super.key});
@@ -82,14 +84,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   void _updateLevelsFilter(List<int> newLevels) {
     setState(() {
       selectedLevels = newLevels;
-    });
-  }
-
-  // Search Bar
-  void _updateSearchQuery(String newQuery) {
-    log("[PoseLibraryPage] $newQuery");
-    setState(() {
-      _searchQuery = newQuery;
     });
   }
 
@@ -167,18 +161,20 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
             if (state is GetPosesSuccess) {
 
               // Filtering
-              List<PoseEntity> filteredPoses = state.poses.where(
-                    (elem) =>
-                selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase())
-                    // selectedLevels.contains(elem.level.floor()),
-              ).toList();
+              List<PoseEntity> filteredPoses = state.poses.where((elem) {
+                final matchesApparatus = selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase());
+                final matchesQuery = elem.displayName.toLowerCase().contains(_searchQuery.toLowerCase());
+                return matchesApparatus && matchesQuery;
+                // final matchesLevel = selectedLevels.contains(elem.level?.floor() ?? -1);
+                // return matchesApparatus && matchesQuery && matchesLevel;
+              }).toList();
 
               List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
 
-              // Search suggestion list
-              final List<PoseEntity> sortedPoses = List<PoseEntity>.from(state.poses)
-                ..sort((a, b) => a.slug.toLowerCase().compareTo(b.slug.toLowerCase()));
-              // TODO - decide if search list should only show filtered poses or all poses
+              // // Search suggestion list
+              // final List<PoseEntity> sortedPoses = List<PoseEntity>.from(state.poses)
+              //   ..sort((a, b) => a.slug.toLowerCase().compareTo(b.slug.toLowerCase()));
+              // // TODO - decide if search list should only show filtered poses or all poses
 
               return Column(
                 children: [
@@ -190,11 +186,11 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                         // Search Bar
                         Expanded(
-                          child: PoseSearchBarWidget(
+                          child: LibrarySearchBar<PoseEntity>(
                             hintText: 'Search Poses',
-                            onSearchChanged: _updateSearchQuery,
-                            suggestionList: sortedPoses,
-                            fromPage: 'pose-library',
+                            suggestions: filteredPoses,
+                            getDisplayText: (pose) => pose.displayName,
+                            onSearchChanged: (query) => setState(() => _searchQuery = query),
                           ),
                         ),
 
