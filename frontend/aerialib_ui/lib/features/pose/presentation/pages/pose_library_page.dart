@@ -19,6 +19,7 @@ import 'package:frontend/features/pose/presentation/widgets/pose_search_bar.dart
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../../shared/widgets/filter_sheet.dart';
 import '../../../../shared/widgets/search_bar.dart';
 
 
@@ -164,9 +165,8 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
               List<PoseEntity> filteredPoses = state.poses.where((elem) {
                 final matchesApparatus = selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase());
                 final matchesQuery = elem.displayName.toLowerCase().contains(_searchQuery.toLowerCase());
-                return matchesApparatus && matchesQuery;
-                // final matchesLevel = selectedLevels.contains(elem.level?.floor() ?? -1);
-                // return matchesApparatus && matchesQuery && matchesLevel;
+                final matchesLevel = selectedLevels.contains(elem.level?.floor() ?? -1);
+                return matchesApparatus && matchesQuery && matchesLevel;
               }).toList();
 
               List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
@@ -201,13 +201,42 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                           icon: const Icon(Icons.filter_alt_outlined),
                           tooltip: 'Show filters',
                           onPressed: () {
-                            PoseFiltersSheet.showFilterSheet(
+                            FiltersSheet.show<String>(
                               context: context,
-                              selectedApparatus: selectedApparatus,
-                              selectedLevels: selectedLevels,
-                              onApparatusChanged: _updateApparatusFilter,
-                              onLevelsChanged: _updateLevelsFilter,
+                              filterOptions: {
+                                'Apparatus': Constants.apparatusOptions,
+                                'Level': Constants.levelOptions.map((e) => e.toString()).toList(),
+                              },
+                              selectedFilters: {
+                                'Apparatus': selectedApparatus,
+                                'Level': selectedLevels.map((e) => e.toString()).toList(),
+                              },
+                              onFilterChanged: (category, values) {
+                                setState(() {
+                                  if (category == 'Apparatus') {
+                                    selectedApparatus = values;
+                                  } else if (category == 'Level') {
+                                    selectedLevels = values.map(int.parse).toList();
+                                  }
+                                });
+                              },
+                              labelBuilder: (category, value) {
+                                if (category == 'Level') {
+                                  final intVal = int.tryParse(value) ?? -1;
+                                  if (intVal == 0) return 'Intro';
+                                  if (intVal == -1) return 'Other';
+                                  return 'Level $intVal';
+                                }
+                                return value;
+                              },
                             );
+                            // PoseFiltersSheet.showFilterSheet(
+                            //   context: context,
+                            //   selectedApparatus: selectedApparatus,
+                            //   selectedLevels: selectedLevels,
+                            //   onApparatusChanged: _updateApparatusFilter,
+                            //   onLevelsChanged: _updateLevelsFilter,
+                            // );
                           },
                         ),
                       ],
