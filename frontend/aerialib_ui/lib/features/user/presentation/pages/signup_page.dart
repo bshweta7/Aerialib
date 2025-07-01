@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import 'package:frontend/shared/widgets/input_fields/password_field.dart';
 
+import '../../../../shared/widgets/scaffolds/general_scaffold.dart';
+
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
@@ -89,207 +91,195 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFEDE7F6),
-              Color(0xFFBAAEC8),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
-            if (state is AuthError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
-              resetPage();
-            } else if (state is AuthLoggedIn) { // TODO eventually, emit a different state authSignedUp so that it will go to the tutorial on how to use it.
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Account created! Welcome!"),
-                ),
-              );
-              context.goNamed('home');
-            }
-          },
-          builder: (context, state) {
-            if (state is AuthLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return GeneralScaffold(
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error)),
+            );
+            resetPage();
+          } else if (state is AuthLoggedIn) { // TODO eventually, emit a different state authSignedUp so that it will go to the tutorial on how to use it.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Account created! Welcome!"),
+              ),
+            );
+            context.goNamed('home');
+          }
+        },
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            return Center(
-              child: SingleChildScrollView(
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        "Create Account",
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1e293b),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        "Sign up to get started",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xFF334155),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      TextFormField(
-                        controller: usernameController,
-                        decoration: const InputDecoration(
-                          hintText: 'Username',
-                          border: OutlineInputBorder(),
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Username field cannot be empty!";
-                          }
-                          if (isUsernameTaken) {
-                            return "Username is already taken!";
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      TextFormField(
-                        controller: emailController,
-                        decoration: const InputDecoration(
-                          hintText: 'Email',
-                          border: OutlineInputBorder(),
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Email field cannot be empty!";
-                          }
-                          if (!value.contains('@')) {
-                            return "Email is invalid!";
-                          }
-                          if (isEmailTaken) {
-                            return "Email is already taken!";
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      PasswordField(
-                        controller: passwordController,
-                        label: "Password",
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: ElevatedButton(
-                          onPressed: signUpUser,
-                          child: const Text(
-                            'SIGN UP',
-                            style: TextStyle(fontSize: 18),
+          return Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      right: 20,
+                      left: 20,
+                      top: 40,
+                      bottom: 20,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          "Create Account",
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1e293b),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 24),
 
-                      const SizedBox(height: 16),
+                        TextFormField(
+                          controller: usernameController,
+                          decoration: const InputDecoration(
+                            hintText: 'Username',
+                            border: OutlineInputBorder(),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Username field cannot be empty!";
+                            }
+                            if (isUsernameTaken) {
+                              return "Username is already taken!";
+                            }
+                            return null;
+                          },
+                        ),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Already have an account? ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF334155),
+                        const SizedBox(height: 16),
+
+                        TextFormField(
+                          controller: emailController,
+                          decoration: const InputDecoration(
+                            hintText: 'Email',
+                            border: OutlineInputBorder(),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Email field cannot be empty!";
+                            }
+                            if (!value.contains('@')) {
+                              return "Email is invalid!";
+                            }
+                            if (isEmailTaken) {
+                              return "Email is already taken!";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        PasswordField(
+                          controller: passwordController,
+                          label: "Password",
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: signUpUser,
+                            child: const Text(
+                              'SIGN UP',
+                              style: TextStyle(fontSize: 18),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () => context.goNamed('login'),
-                            child: const Text(
-                              "Log In",
+                        ),
+                        const SizedBox(height: 16),
+
+                        Wrap(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Already have an account? ",
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1e293b),
-                                decoration: TextDecoration.underline,
+                                fontSize: 18,
+                                color: Color(0xFF334155),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                            GestureDetector(
+                              onTap: () => context.goNamed('login'),
+                              child: const Text(
+                                "Log In",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1e293b),
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
 
-                      // const SizedBox(height: 20),
-                      //
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     const Text(
-                      //       "Forgot your username/password? ",
-                      //       style: TextStyle(
-                      //         fontSize: 16,
-                      //         color: Color(0xFF334155),
-                      //       ),
-                      //     ),
-                      //     GestureDetector(
-                      //       onTap: () => context.goNamed('forgot'),
-                      //       child: const Text(
-                      //         "Click Here",
-                      //         style: TextStyle(
-                      //           fontSize: 16,
-                      //           fontWeight: FontWeight.bold,
-                      //           color: Color(0xFF1e293b),
-                      //           decoration: TextDecoration.underline,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
+                        // const SizedBox(height: 20),
+                        //
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     const Text(
+                        //       "Forgot your username/password? ",
+                        //       style: TextStyle(
+                        //         fontSize: 16,
+                        //         color: Color(0xFF334155),
+                        //       ),
+                        //     ),
+                        //     GestureDetector(
+                        //       onTap: () => context.goNamed('forgot'),
+                        //       child: const Text(
+                        //         "Click Here",
+                        //         style: TextStyle(
+                        //           fontSize: 16,
+                        //           fontWeight: FontWeight.bold,
+                        //           color: Color(0xFF1e293b),
+                        //           decoration: TextDecoration.underline,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
 
-                      const SizedBox(height: 50),
+                        const SizedBox(height: 50),
 
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextButton.icon(
-                          onPressed: () => context.go('/'),
-                          icon: const Icon(Icons.arrow_back, color: Color(0xFF1e293b)),
-                          label: const Text(
-                            "Back to Landing Page",
-                            style: TextStyle(color: Color(0xFF1e293b)),
-                          ),
-                          style: TextButton.styleFrom(
-                            foregroundColor: Color(0xFF1e293b),
+                        // Back button
+                        Align(
+                          alignment: Alignment.center,
+                          child: TextButton.icon(
+                            onPressed: () => context.go('/'),
+                            icon: const Icon(Icons.arrow_back, color: Color(0xFF1e293b)),
+                            label: const Text(
+                              "Back to Landing Page",
+                              style: TextStyle(color: Color(0xFF1e293b)),
+                            ),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Color(0xFF1e293b),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

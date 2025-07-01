@@ -49,7 +49,6 @@ class _LibrarySearchBarState<T> extends State<LibrarySearchBar<T>> {
   @override
   Widget build(BuildContext context) {
     if (!widget.showSuggestions) {
-      // TextField version
       return TextField(
         onChanged: widget.onSearchChanged,
         decoration: InputDecoration(
@@ -66,7 +65,6 @@ class _LibrarySearchBarState<T> extends State<LibrarySearchBar<T>> {
       );
     }
 
-    // ✅ SearchBar with preserved controller
     return SearchAnchor(
       builder: (context, controller) {
         return SearchBar(
