@@ -86,16 +86,17 @@ class _FiltersSheetState<T> extends State<FiltersSheet<T>> {
   }
 
   String _defaultLabel(String category, T value) {
-    if (category.toLowerCase() == 'apparatus') {
-      return capitalizeFirstLetter(value as String);
-    }
+    // if (category.toLowerCase() == 'apparatus') {
+    //   return capitalizeFirstLetter(value as String);
+    // }
     if (category.toLowerCase() == 'level') {
       final intVal = int.tryParse(value as String) ?? -1;
       if (intVal == 0) return 'Intro';
       if (intVal == -1) return 'Other';
       return 'Level $intVal';
     }
-    return value.toString();
+    // return value.toString();
+    return capitalizeFirstLetter(value as String);
   }
 
   @override
@@ -110,7 +111,7 @@ class _FiltersSheetState<T> extends State<FiltersSheet<T>> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Filters", style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+              Text("Filters", style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
               IconButton(icon: const Icon(Icons.refresh), onPressed: _resetFilters),
             ],
           ),
@@ -127,7 +128,7 @@ class _FiltersSheetState<T> extends State<FiltersSheet<T>> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(category, style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500)),
+                Text(category, style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w500)),
                 const SizedBox(height: 6),
                 FilterMultiSelect<T>(
                   options: options,

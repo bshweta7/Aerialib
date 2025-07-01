@@ -15,6 +15,8 @@ import 'package:frontend/shared/features/navigation/widgets/smart_back_button.da
 
 import 'package:frontend/shared/helpers/conversions.dart';
 
+import '../../../../shared/widgets/search_bar.dart';
+
 class MusicLibraryPage extends StatefulWidget {
   const MusicLibraryPage({super.key});
 
@@ -25,6 +27,7 @@ class MusicLibraryPage extends StatefulWidget {
 class _MusicLibraryPageState extends State<MusicLibraryPage> {
   final ScrollController _scrollController = ScrollController();
   List<MusicEntity> _allMusic = [];
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -59,10 +62,11 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
     final userToken = (userState is AuthLoggedIn) ? userState.user.token : null;
 
     return MainScaffold(
+      isScrollable: false,
       currentIndex: 0, // TODO move this to a "media" tab instead of home
       appBar: AppBar(
         leading: const SmartBackButton(),
-        title: const Text("My Music Ideas"),
+        title: const Text("Music Ideas"),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -88,42 +92,68 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
 
           if (state is GetMusicSuccess) {
             _allMusic = state.musicList;
-            final mediaIcons = musicToMediaIcons(_allMusic);
 
-            return Stack(
+            /// Filter Entities
+            List<MusicEntity> filteredMusic = state.musicList.where((elem) {
+              final matchesQuery = elem.name.toLowerCase().contains(_searchQuery.toLowerCase());
+              return matchesQuery;
+            }).toList();
+
+            final List<MediaIconEntity> mediaIcons = musicToMediaIcons(filteredMusic);
+
+            return Column(
               children: [
-                if (mediaIcons.isEmpty)
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 40),
-                      child: Text(
-                        "No songs yet, try adding one!",
-                        style: TextStyle(fontSize: 16, color: Colors.black38),
-                      ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                  child: Expanded(
+                    child: LibrarySearchBar<MusicEntity>(
+                      hintText: 'Search Songs',
+                      suggestions: filteredMusic,
+                      getDisplayText: (song) => song.name,
+                      onSearchChanged: (query) => setState(() => _searchQuery = query),
                     ),
-                  )
-                else
-                  MediaList(
-                    mediaItems: mediaIcons,
-                    onMediaTap: _navigateToMusicPage,
-                    scrollController: _scrollController,
-                    onFavoriteToggle: (mediaItem) async {
-                      if (mediaItem.type == MediaType.music &&
-                          mediaItem.data is MusicEntity &&
-                          userToken != null) {
-                        final music = mediaItem.data as MusicEntity;
-
-                        await context.read<MusicCubit>().toggleFavorite(
-                          music: music,
-                          token: userToken,
-                        );
-
-                        // Re-fetch updated list to reflect favorite state
-                        await context.read<MusicCubit>().getAllMusic(token: userToken);
-                      }
-                    },
                   ),
-                ScrollToTopButton(scrollController: _scrollController),
+                ),
+
+                Expanded(
+                  child: Stack(
+                    children: [
+                      if (mediaIcons.isEmpty)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: Text(
+                              "No songs yet, try adding one!",
+                              style: TextStyle(fontSize: 16, color: Colors.black38),
+                            ),
+                          ),
+                        )
+                      else
+                        MediaList(
+                          mediaItems: mediaIcons,
+                          onMediaTap: _navigateToMusicPage,
+                          scrollController: _scrollController,
+                          onFavoriteToggle: (mediaItem) async {
+                            if (mediaItem.type == MediaType.music &&
+                                mediaItem.data is MusicEntity &&
+                                userToken != null) {
+                              final music = mediaItem.data as MusicEntity;
+
+                              await context.read<MusicCubit>().toggleFavorite(
+                                music: music,
+                                token: userToken,
+                              );
+
+                              // Re-fetch updated list to reflect favorite state
+                              await context.read<MusicCubit>().getAllMusic(token: userToken);
+                            }
+                          },
+                        ),
+                      ScrollToTopButton(scrollController: _scrollController),
+                    ],
+                  ),
+                ),
               ],
             );
           }

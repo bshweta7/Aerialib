@@ -45,13 +45,13 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
       appBar: AppBar(
         leading: const SmartBackButton(),
         title: const Text("Transitions"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => context.goNamed('add-new-transition'),
-            tooltip: 'Add new transition',
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.add),
+        //     onPressed: () => context.goNamed('add-new-transition'),
+        //     tooltip: 'Add new transition',
+        //   ),
+        // ],
       ),
       body: BlocBuilder<PosesCubit, PosesState>(
         builder: (context, poseState) {
