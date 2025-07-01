@@ -86,13 +86,14 @@ class _FiltersSheetState<T> extends State<FiltersSheet<T>> {
   }
 
   String _defaultLabel(String category, T value) {
-    if (category.toLowerCase() == 'apparatus') {
-      return capitalizeFirstLetter(value as String);
-    } // TODO this isnt capitalizing...
+    // if (category.toLowerCase() == 'apparatus') {
+    //   return capitalizeFirstLetter(value as String);
+    // } // TODO this isnt capitalizing...
     if (category.toLowerCase() == 'level') {
-      if (value == 0) return 'Intro';
-      if (value == -1) return 'Other';
-      return 'Level $value';
+      final intVal = int.tryParse(value as String) ?? -1;
+      if (intVal == 0) return 'Intro';
+      if (intVal == -1) return 'Other';
+      return 'Level $intVal';
     }
     return value.toString();
   }

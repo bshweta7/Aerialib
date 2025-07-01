@@ -220,15 +220,14 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                   }
                                 });
                               },
-                              labelBuilder: (category, value) {
-                                if (category == 'Level') {
-                                  final intVal = int.tryParse(value) ?? -1;
-                                  if (intVal == 0) return 'Intro';
-                                  if (intVal == -1) return 'Other';
-                                  return 'Level $intVal';
-                                }
-                                return value;
-                              },
+                              // labelBuilder: (category, value) {
+                              //   if (category == 'Level') {
+                              //     final intVal = int.tryParse(value) ?? -1;
+                              //     if (intVal == 0) return 'Intro';
+                              //     if (intVal == -1) return 'Other';
+                              //     return 'Level $intVal';
+                              //   }
+                              //   return value;
                             );
                             // PoseFiltersSheet.showFilterSheet(
                             //   context: context,
