@@ -24,10 +24,10 @@ class GetTransitionsSuccess extends TransitionState {
   List<Object?> get props => [transitions];
 }
 
-class CreateTransitionSuccess extends TransitionState {
+class AddNewTransitionSuccess extends TransitionState {
   final TransitionEntity transition;
 
-  const CreateTransitionSuccess(this.transition);
+  const AddNewTransitionSuccess(this.transition);
 
   @override
   List<Object?> get props => [transition];

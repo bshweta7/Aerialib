@@ -27,6 +27,7 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
   List<String> selectedFilterMode = ['From', 'To'];
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
+  List<String> selectedType = Constants.transitionTypeOptions;
 
   void _navigateToTransitionPage(TransitionEntity transition) {
     context.goNamed(
@@ -44,13 +45,13 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
       appBar: AppBar(
         leading: const SmartBackButton(),
         title: const Text("Transitions"),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.add),
-        //     onPressed: () => context.goNamed('add-new-transition'),
-        //     tooltip: 'Add new transition',
-        //   ),
-        // ],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => context.goNamed('add-new-transition'),
+            tooltip: 'Add new transition',
+          ),
+        ],
       ),
       body: BlocBuilder<PosesCubit, PosesState>(
         builder: (context, poseState) {
@@ -70,19 +71,24 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                 if (from == null || to == null) return false;
 
                 final targetPose = selectedFilterMode == 'From' ? from : to;
+
                 if (!selectedApparatus.contains(targetPose.apparatus)) return false;
                 if (!selectedLevels.contains(targetPose.level?.floor())) return false;
+
+                final selectedTypesNormalized = selectedType.map((e) => e.toLowerCase()).toList();
+                if (!selectedType.contains((t.transitionType ?? 'unspecified').toLowerCase())) return false;
 
                 final query = _searchQuery.toLowerCase();
                 final matchesFrom = from.displayName.toLowerCase().contains(query);
                 final matchesTo = to.displayName.toLowerCase().contains(query);
                 final matchesName = t.name?.toLowerCase().contains(query) ?? false;
+                final matchesType = t.transitionType?.toLowerCase().contains(query) ?? false;
 
                 switch (_searchMode) {
                   case 'From': return matchesFrom;
                   case 'To': return matchesTo;
                   case 'Name': return matchesName;
-                  default: return matchesFrom || matchesTo || matchesName;
+                  default: return matchesFrom || matchesTo || matchesName || matchesType;
                 }
               }).toList();
 
@@ -100,7 +106,7 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                             suggestions: filteredTransitions,
                             getDisplayText: (t) => t.name ?? "Unnamed Transition",
                             onSearchChanged: (query) => setState(() => _searchQuery = query),
-                            dropdownOptions: ["All", "From", "To", "Name"],
+                            dropdownOptions: const ["All", "From", "To", "Name"],
                             onDropdownChanged: (val) => setState(() => _searchMode = val),
                           ),
                         ),
@@ -116,12 +122,14 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                               context: context,
                               filterOptions: {
                                 'Apply To': ['From', 'To'],
-                                'Apparatus': Constants.apparatusOptions,
                                 'Level': Constants.levelOptions.map((e) => e.toString()).toList(),
+                                'Apparatus': Constants.apparatusOptions,
+                                'Transition Type': Constants.transitionTypeOptions,
                               },
                               selectedFilters: {
                                 'Apply To': selectedFilterMode,
                                 'Apparatus': selectedApparatus,
+                                'Transition Type': selectedType,
                                 'Level': selectedLevels.map((e) => e.toString()).toList(),
                               },
                               onFilterChanged: (category, values) {
@@ -132,6 +140,8 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                                     selectedLevels = values.map(int.parse).toList();
                                   } else if (category == 'Apply To' && values.isNotEmpty) {
                                     selectedFilterMode = values;
+                                  } else if (category == 'Transition Type' && values.isNotEmpty) {
+                                    selectedType = values;
                                   }
                                 });
                               },
@@ -144,7 +154,10 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
 
                   /// Show Active Filters
                   if (selectedApparatus.length < Constants.apparatusOptions.length ||
-                      selectedLevels.length < Constants.levelOptions.length)
+                      selectedLevels.length < Constants.levelOptions.length ||
+                      selectedType.length < Constants.transitionTypeOptions.length ||
+                      selectedFilterMode.length < 2
+                  )
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
                       child: Row(
@@ -163,6 +176,7 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                                 selectedApparatus = Constants.apparatusOptions;
                                 selectedLevels = Constants.levelOptions;
                                 selectedFilterMode = ['From', 'To'];
+                                selectedType = Constants.transitionTypeOptions;
                               });
                             },
                             child: const Text('Clear All'),
