@@ -22,14 +22,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
-
     // Call HomeCubit initialization once when the page loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HomeCubit>().initializeHome(context);
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -91,6 +98,9 @@ class _HomePageState extends State<HomePage> {
 
     return MainScaffold(
       currentIndex: 0,
+      scrollController: _scrollController,
+      isScrollable: true,
+      isScrollbarVisible: false,
       appBar: AppBar(
         title: Text("${capitalizeFirstLetter(currentUsername)}'s Dashboard"),  // TODO use first name if available or username
         actions: [

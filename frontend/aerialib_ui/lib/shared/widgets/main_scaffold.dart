@@ -12,6 +12,7 @@ class MainScaffold extends StatelessWidget {
   final FloatingActionButton? floatingActionButton;
   final bool isScrollable;
   final bool isScrollbarVisible;
+  final ScrollController? scrollController;
 
   const MainScaffold({
     super.key,
@@ -21,20 +22,28 @@ class MainScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.isScrollable = true,
     this.isScrollbarVisible = false,
+    this.scrollController,
   });
 
   @override
   Widget build(BuildContext context) {
-    final scrollableBody = isScrollable
-        ? Scrollbar(
-      thumbVisibility: isScrollbarVisible,
-      interactive: true,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 1),
-        child: body,
-      ),
-    )
-        : body;
+    Widget scrollableBody;
+
+    if (isScrollable) {
+      scrollableBody = Scrollbar(
+        controller: scrollController,
+        thumbVisibility: isScrollbarVisible,
+        interactive: true,
+        child: SingleChildScrollView(
+          controller: scrollController,
+          primary: scrollController == null, // fallback to Primary if not passed
+          padding: const EdgeInsets.only(right: 1),
+          child: body,
+        ),
+      );
+    } else {
+      scrollableBody = body;
+    }
 
     return Scaffold(
       appBar: appBar,
