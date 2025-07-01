@@ -1,19 +1,16 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/constants/constants.dart';
-import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/transitions/domain/transition_entity.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/features/transitions/presentation/cubit/transition_cubit.dart';
 import 'package:frontend/features/transitions/presentation/widgets/transition_card.dart';
-import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../../shared/widgets/filter_sheet.dart';
 import '../../../../shared/widgets/search_bar.dart';
 
 class TransitionLibraryPage extends StatefulWidget {
@@ -27,7 +24,7 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
   final ScrollController _scrollController = ScrollController();
   String _searchQuery = '';
   String _searchMode = 'All';
-  String _filterMode = 'All'; // All | From | To | Name
+  List<String> selectedFilterMode = ['From', 'To'];
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
 
@@ -44,19 +41,16 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
     return MainScaffold(
       currentIndex: 2,
       isScrollable: false,
-      // scrollController: _scrollController,
-      // isScrollToTopVisible: true,
-      // isScrollbarVisible: true,
       appBar: AppBar(
         leading: const SmartBackButton(),
         title: const Text("Transitions"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => context.goNamed('add-new-transition'),
-            tooltip: 'Add new transition',
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.add),
+        //     onPressed: () => context.goNamed('add-new-transition'),
+        //     tooltip: 'Add new transition',
+        //   ),
+        // ],
       ),
       body: BlocBuilder<PosesCubit, PosesState>(
         builder: (context, poseState) {
@@ -69,35 +63,25 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
               final poses = poseState.poses;
               final poseMap = { for (final p in poses) p.id: p };
 
+              /// Filter Entities
               List<TransitionEntity> filteredTransitions = transitionState.transitions.where((t) {
                 final from = poseMap[t.fromPoseId];
                 final to = poseMap[t.toPoseId];
                 if (from == null || to == null) return false;
 
-                // Apply apparatus/level filters
-                final targetPose = _filterMode == 'To'
-                    ? to
-                    : _filterMode == 'From'
-                    ? from
-                    : null;
-
-                if (targetPose != null) {
-                  if (!selectedApparatus.contains(targetPose.apparatus)) return false;
-                  if (!selectedLevels.contains(targetPose.level?.floor())) return false;
-                }
+                final targetPose = selectedFilterMode == 'From' ? from : to;
+                if (!selectedApparatus.contains(targetPose.apparatus)) return false;
+                if (!selectedLevels.contains(targetPose.level?.floor())) return false;
 
                 final query = _searchQuery.toLowerCase();
                 final matchesFrom = from.displayName.toLowerCase().contains(query);
                 final matchesTo = to.displayName.toLowerCase().contains(query);
-                final matchesName = t.name != null ?
-                  t.name!.toLowerCase().contains(query) :
-                  false;
+                final matchesName = t.name?.toLowerCase().contains(query) ?? false;
 
-                switch (_filterMode) {
+                switch (_searchMode) {
                   case 'From': return matchesFrom;
                   case 'To': return matchesTo;
                   case 'Name': return matchesName;
-                  case 'All':
                   default: return matchesFrom || matchesTo || matchesName;
                 }
               }).toList();
@@ -108,34 +92,101 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                     child: Row(
                       children: [
+                        
+                        /// Search Bar
                         Expanded(
                           child: LibrarySearchBar<TransitionEntity>(
                             hintText: 'Search Transitions',
-                            suggestions: filteredTransitions, // for internal match logic (can be empty if not using suggestions)
+                            suggestions: filteredTransitions,
                             getDisplayText: (t) => t.name ?? "Unnamed Transition",
                             onSearchChanged: (query) => setState(() => _searchQuery = query),
                             dropdownOptions: ["All", "From", "To", "Name"],
                             onDropdownChanged: (val) => setState(() => _searchMode = val),
-                            // showSuggestions: false,
-                          )
+                          ),
                         ),
+                        
                         const SizedBox(width: 10),
+
+                        /// Filter Icon Button
                         IconButton(
                           icon: const Icon(Icons.filter_alt_outlined),
-                          tooltip: 'Filter',
+                          tooltip: 'Show filters',
                           onPressed: () {
-                            // TODO: open filter bottom sheet
+                            FiltersSheet.show<String>(
+                              context: context,
+                              filterOptions: {
+                                'Apply To': ['From', 'To'],
+                                'Apparatus': Constants.apparatusOptions,
+                                'Level': Constants.levelOptions.map((e) => e.toString()).toList(),
+                              },
+                              selectedFilters: {
+                                'Apply To': selectedFilterMode,
+                                'Apparatus': selectedApparatus,
+                                'Level': selectedLevels.map((e) => e.toString()).toList(),
+                              },
+                              onFilterChanged: (category, values) {
+                                setState(() {
+                                  if (category == 'Apparatus') {
+                                    selectedApparatus = values;
+                                  } else if (category == 'Level') {
+                                    selectedLevels = values.map(int.parse).toList();
+                                  } else if (category == 'Apply To' && values.isNotEmpty) {
+                                    selectedFilterMode = values;
+                                  }
+                                });
+                              },
+                            );
                           },
                         ),
                       ],
                     ),
                   ),
 
+                  /// Show Active Filters
+                  if (selectedApparatus.length < Constants.apparatusOptions.length ||
+                      selectedLevels.length < Constants.levelOptions.length)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Tooltip(
+                            message: '${selectedApparatus.length} Apparatus, ${selectedLevels.length} Levels',
+                            child: Text(
+                              'Filters: ${selectedApparatus.length + selectedLevels.length} Active',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedApparatus = Constants.apparatusOptions;
+                                selectedLevels = Constants.levelOptions;
+                                selectedFilterMode = ['From', 'To'];
+                              });
+                            },
+                            child: const Text('Clear All'),
+                          ),
+                        ],
+                      ),
+                    ),
+
                   Expanded(
                     child: Stack(
                       children: [
                         if (filteredTransitions.isEmpty)
-                          const Center(child: Text("No transitions match your filters."))
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 40),
+                              child: Text(
+                                "No transitions match your filters",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                            ),
+                          )
                         else
                           ListView.builder(
                             controller: _scrollController,
@@ -152,7 +203,6 @@ class _TransitionLibraryPageState extends State<TransitionLibraryPage> {
                               );
                             },
                           ),
-                        // ScrollToTopButton(scrollController: _scrollController),
                       ],
                     ),
                   ),

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,10 +11,8 @@ import 'package:frontend/shared/widgets/media_display/general/media_icon_entity.
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
-import 'package:frontend/features/pose/presentation/widgets/pose_filter_sheet.dart';
 import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/shared/widgets/media_display/multi_card_view/media_list.dart';
-import 'package:frontend/features/pose/presentation/widgets/pose_search_bar.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
@@ -40,7 +37,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   // final _formKey = GlobalKey<FormState>(); // TODO is this able to be handled with cubit?
 
   // Filtering
-  final bool _showFilters = false;
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
 
@@ -74,34 +70,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   //     _gridSize;
   //   });
   // }
-
-  // Filtering
-  void _updateApparatusFilter(List<String> newApparatus) {
-    setState(() {
-      selectedApparatus = newApparatus;
-    });
-  }
-
-  void _updateLevelsFilter(List<int> newLevels) {
-    setState(() {
-      selectedLevels = newLevels;
-    });
-  }
-
-  // TODO Search should result in multiple options that show up as filtered poses (low priority) Also fix flows library page
-  // List<MediaIconEntity> _filterPosesBySearch(List<PoseEntity> allPoses, String query) {
-  //   if (query.isEmpty) {
-  //     return posesToMediaIcons(allPoses);
-  //   }
-  //   final lowerCaseQuery = query.toLowerCase();
-  //   final filtered = allPoses.where((pose) {
-  //     return pose.name.toLowerCase().contains(lowerCaseQuery) ||
-  //         (pose.description?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
-  //         pose.apparatus.toLowerCase().contains(lowerCaseQuery);
-  //   }).toList();
-  //   return posesToMediaIcons(filtered);
-  // }
-
 
   // Navigation
   void _navigateToPosePage(MediaIconEntity mediaItem) {
@@ -171,11 +139,6 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
               List<MediaIconEntity> filteredMediaIcons = posesToMediaIcons(filteredPoses);
 
-              // // Search suggestion list
-              // final List<PoseEntity> sortedPoses = List<PoseEntity>.from(state.poses)
-              //   ..sort((a, b) => a.slug.toLowerCase().compareTo(b.slug.toLowerCase()));
-              // // TODO - decide if search list should only show filtered poses or all poses
-
               return Column(
                 children: [
 
@@ -184,7 +147,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                     child: Row(
                       children: [
 
-                        // Search Bar
+                        /// Search Bar
                         Expanded(
                           child: LibrarySearchBar<PoseEntity>(
                             hintText: 'Search Poses',
@@ -196,7 +159,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
 
                         const SizedBox(width: 10),
 
-                        // Filter Icon Button
+                        /// Filter Icon Button
                         IconButton(
                           icon: const Icon(Icons.filter_alt_outlined),
                           tooltip: 'Show filters',
@@ -204,12 +167,12 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             FiltersSheet.show<String>(
                               context: context,
                               filterOptions: {
-                                'Apparatus': Constants.apparatusOptions,
                                 'Level': Constants.levelOptions.map((e) => e.toString()).toList(),
+                                'Apparatus': Constants.apparatusOptions,
                               },
                               selectedFilters: {
-                                'Apparatus': selectedApparatus,
                                 'Level': selectedLevels.map((e) => e.toString()).toList(),
+                                'Apparatus': selectedApparatus,
                               },
                               onFilterChanged: (category, values) {
                                 setState(() {
@@ -220,28 +183,14 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                                   }
                                 });
                               },
-                              // labelBuilder: (category, value) {
-                              //   if (category == 'Level') {
-                              //     final intVal = int.tryParse(value) ?? -1;
-                              //     if (intVal == 0) return 'Intro';
-                              //     if (intVal == -1) return 'Other';
-                              //     return 'Level $intVal';
-                              //   }
-                              //   return value;
                             );
-                            // PoseFiltersSheet.showFilterSheet(
-                            //   context: context,
-                            //   selectedApparatus: selectedApparatus,
-                            //   selectedLevels: selectedLevels,
-                            //   onApparatusChanged: _updateApparatusFilter,
-                            //   onLevelsChanged: _updateLevelsFilter,
-                            // );
                           },
                         ),
                       ],
                     ),
                   ),
 
+                  /// Show Active Filters
                   if (selectedApparatus.length < Constants.apparatusOptions.length ||
                       selectedLevels.length < Constants.levelOptions.length)
                     Padding(
@@ -279,14 +228,13 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 40,horizontal: 20),
                               child: Text(
-                                "No poses, try changing the filters",
+                                "No poses match your filters",
                                 style: Theme.of(context).textTheme.bodyMedium
                               ),
                             ),
                           )
                         else
 
-                          // TODO update Media List to have scrollbar in it.
                           Padding(
                             padding: const EdgeInsets.only(right: 1), // optional: gives scrollbar space
                             child: MediaList(

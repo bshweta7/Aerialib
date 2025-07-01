@@ -12,12 +12,12 @@ import 'package:frontend/features/flow/presentation/cubit/flows_cubit.dart';
 import 'package:frontend/features/pose/presentation/cubit/poses_cubit.dart';
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 
-import 'package:frontend/features/flow/presentation/widgets/flow_filter_sheet.dart';
 import 'package:frontend/shared/widgets/functional_buttons/scroll_to_top.dart';
 import 'package:frontend/shared/widgets/media_display/multi_card_view/media_list.dart';
 import 'package:frontend/shared/widgets/main_scaffold.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 
+import '../../../../shared/widgets/filter_sheet.dart';
 import '../../../../shared/widgets/search_bar.dart';
 
 
@@ -33,7 +33,6 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   List<FlowEntity> _allFlows = [];
 
   // Filtering
-  final bool _showFilters = false;
   List<String> selectedApparatus = Constants.apparatusOptions;
   List<int> selectedLevels = Constants.levelOptions;
   List<String> selectedShareStatus = Constants.shareStatusOptions;
@@ -60,24 +59,6 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _updateApparatusFilter(List<String> newApparatus) {
-    setState(() {
-      selectedApparatus = newApparatus;
-    });
-  }
-
-  void _updateLevelsFilter(List<int> newLevels) {
-    setState(() {
-      selectedLevels = newLevels;
-    });
-  }
-
-  void _updateShareStatusFilter(List<String> newShareStatuses) {
-    setState(() {
-      selectedShareStatus = newShareStatuses;
-    });
   }
 
   void _navigateToFlowPage(MediaIconEntity mediaItem) {
@@ -122,7 +103,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
           if (state is GetFlowsSuccess) {
             _allFlows = state.flows;
 
-            // Filtering
+            /// Filter Entities
             List<FlowEntity> filteredFlows = state.flows.where((elem) {
               final matchesApparatus = selectedApparatus.map((e) => e.toLowerCase()).contains(elem.apparatus.toLowerCase());
               final matchesQuery = elem.name.toLowerCase().contains(_searchQuery.toLowerCase());
@@ -144,7 +125,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                   child: Row(
                     children: [
 
-                      // Search Bar
+                      /// Search Bar
                       Expanded(
                         child: LibrarySearchBar<FlowEntity>(
                           hintText: 'Search Flows',
@@ -156,19 +137,30 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
                       const SizedBox(width: 10),
 
-                      // Filter Icon Button
+                      /// Filter Icon Button
                       IconButton(
                         icon: const Icon(Icons.filter_alt_outlined),
                         tooltip: 'Show filters',
                         onPressed: () {
-                          FlowFiltersSheet.showFilterSheet(
+                          FiltersSheet.show<String>(
                             context: context,
-                            selectedApparatus: selectedApparatus,
-                            selectedLevels: selectedLevels,
-                            selectedShareStatus: selectedShareStatus,
-                            onApparatusChanged: _updateApparatusFilter,
-                            onLevelsChanged: _updateLevelsFilter,
-                            onShareStatusChanged: _updateShareStatusFilter,
+                            filterOptions: {
+                              'Level': Constants.levelOptions.map((e) => e.toString()).toList(),
+                              'Apparatus': Constants.apparatusOptions,
+                            },
+                            selectedFilters: {
+                              'Level': selectedLevels.map((e) => e.toString()).toList(),
+                              'Apparatus': selectedApparatus,
+                            },
+                            onFilterChanged: (category, values) {
+                              setState(() {
+                                if (category == 'Apparatus') {
+                                  selectedApparatus = values;
+                                } else if (category == 'Level') {
+                                  selectedLevels = values.map(int.parse).toList();
+                                }
+                              });
+                            },
                           );
                         },
                       ),
@@ -176,11 +168,10 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                   ),
                 ),
 
-                // TODO move this part to a separate widget or to the flowFilterSheet page
-                // Show active filters if any filters selected
+
                 if (selectedApparatus.length < Constants.apparatusOptions.length ||
                     selectedLevels.length < Constants.levelOptions.length)
-                  // TODO add share status here
+                  // TODO room for optimization here
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4),
                     child: Row(
@@ -214,7 +205,7 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
                           child: Padding(
                             padding: EdgeInsets.only(top: 40),
                             child: Text( // TODO move this to Media List?
-                              "No flows, try changing the filters!",
+                              "No flows match your filters",
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black38),
