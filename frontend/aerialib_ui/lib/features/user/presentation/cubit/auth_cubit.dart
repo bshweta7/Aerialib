@@ -93,7 +93,7 @@ class AuthCubit extends Cubit<AuthState> {
   void logout() async {
     try {
       emit(const AuthLoading());
-      await DatabaseService.clearLocalDatabase(); // Clears everything
+      await DatabaseService.clearTables(); // Clears everything
       // TODO verify if there are any unsynced flows/poses before logging out, store separately or something idk....
       emit(const AuthLoggedOut());
     } catch (e) {

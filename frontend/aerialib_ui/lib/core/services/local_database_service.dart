@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:path/path.dart';
-// import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:flutter/foundation.dart';
 import 'package:frontend/core/schema/database_schema.dart';
+import 'package:synchronized/synchronized.dart';
 
 
 String _getDatabaseFileName() {
@@ -28,10 +28,14 @@ String _getDatabaseFileName() {
 class DatabaseService {
   static Database? _db;
 
+  static final _lock = Lock();
+
   static Future<Database> get database async {
-    if (_db != null) return _db!;
-    _db = await _initDb();
-    return _db!;
+    return await _lock.synchronized(() async {
+      if (_db != null) return _db!;
+      _db = await _initDb();
+      return _db!;
+    });
   }
 
   static Future<Database> _initDb() async {
@@ -162,15 +166,47 @@ class DatabaseService {
     }
   }
 
-  /// Clears the entire local database by deleting the file and resetting the instance
-  static Future<void> clearLocalDatabase() async {
-    final path = kIsWeb ? 'aerialib_web.db' : join(await getDatabasesPath(), _getDatabaseFileName());
-    try {
-      await databaseFactory.deleteDatabase(path);
-      _db = null;
-      log('[DatabaseService] Local database deleted successfully');
-    } catch (e, st) {
-      log('[DatabaseService] Failed to delete local database: $e, $st');
+  /// Clears the entire local database by dropping all tables
+  static Future<void> clearTables() async {
+    final db = await database;
+
+    // Helper to check if a table exists
+    Future<bool> tableExists(String tableName) async {
+      final result = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+        [tableName],
+      );
+      return result.isNotEmpty;
+    }
+
+    final tables = [
+      'user',
+      'media',
+      'pose',
+      'transition',
+      'flow',
+      'flow_pose',
+      'music',
+      // Add tags later
+    ];
+
+    for (final table in tables) {
+      final exists = await tableExists(table);
+      if (exists) {
+        await db.delete(table);
+        log('[DatabaseService] Cleared table: $table');
+      } else {
+        log('[DatabaseService] Skipped clearing $table (does not exist)');
+      }
     }
   }
+  //   final path = kIsWeb ? 'aerialib_web.db' : join(await getDatabasesPath(), _getDatabaseFileName());
+  //   try {
+  //     await databaseFactory.deleteDatabase(path);
+  //     _db = null;
+  //     log('[DatabaseService] Local database deleted successfully');
+  //   } catch (e, st) {
+  //     log('[DatabaseService] Failed to delete local database: $e, $st');
+  //   }
+  // }
 }
