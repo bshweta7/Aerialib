@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../shared/helpers/formatters.dart';
 import '../../../pose/domain/entities/pose_entity.dart';
 import '../../domain/transition_entity.dart';
 
@@ -23,6 +24,8 @@ class TransitionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final transitionName = transition.name ?? 'Unnamed Transition';
+    final transitionType = transition.transitionType == null ? '' : "Type: ${capitalizeFirstLetter(transition.transitionType!)}";
+    final transitionLevel = transition.level == null ? '' : formatLevel(transition.level!);
 
     return InkWell(
       onTap: onTap,
@@ -36,9 +39,27 @@ class TransitionCard extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  transitionName, // TODO can add other qualifiers here (like apparatus, level)
+                  transitionName,
                   style: Theme.of(context).textTheme.titleMedium,
                   textAlign: TextAlign.end,
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  children: [
+                    // TODO can add other qualifiers here (like apparatus, level) in row with pill indicators
+                    Text(
+                      transitionType,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      // textAlign: TextAlign.end,
+                    ),
+                    // Text(
+                    //   transitionLevel,
+                    //   style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    //   // textAlign: TextAlign.end,
+                    // ),
+                  ],
                 ),
               ),
               Row(
@@ -87,6 +108,12 @@ class _PosePreview extends StatelessWidget {
             pose.displayName,
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 12),
+            softWrap: true,
+          ),
+          Text(
+            formatLevel(pose.level!),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
             softWrap: true,
           ),
         ],

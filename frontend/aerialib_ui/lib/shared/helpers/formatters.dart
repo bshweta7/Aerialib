@@ -23,6 +23,16 @@ String capitalizeFirstLetter(String text) {
       text.substring(1);
 }
 
+String formatLevel(int level) {
+  if (level == 0) {
+    return "Intro";
+  }
+  else if (level == -1) {
+    return "Other";
+  }
+  return "Level $level";
+}
+
 String formatNameFromPath(String path) {
   // TODO capitalize Each Word (not just first one)
   // Replace - with spaces:
