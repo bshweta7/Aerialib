@@ -24,10 +24,10 @@ class HomeCubit extends Cubit<HomeState> {
       final token = user.token;
 
       await Future.wait([
-        context.read<MediaCubit>().syncMedia(token: token),
-        context.read<PosesCubit>().syncPoses(token: token),
-        context.read<TransitionCubit>().syncTransitions(token: token),
-        context.read<FlowsCubit>().syncFlows(token: token),
+        _safeSync(() => context.read<MediaCubit>().syncMedia(token: token), 'Media'),
+        _safeSync(() => context.read<PosesCubit>().syncPoses(token: token), 'Poses'),
+        _safeSync(() => context.read<TransitionCubit>().syncTransitions(token: token), 'Transitions'),
+        _safeSync(() => context.read<FlowsCubit>().syncFlows(token: token), 'Flows'),
       ]);
 
       hasSynced = true;
@@ -36,6 +36,16 @@ class HomeCubit extends Cubit<HomeState> {
       emit(HomeError('Home sync failed: $e'));
     }
   }
+
+  Future<void> _safeSync(Future<void> Function() fn, String label) async {
+    try {
+      await fn();
+    } catch (e, st) {
+      debugPrint('❌ $label sync failed: $e\n$st');
+      rethrow;
+    }
+  }
+
 }
 
 // TODO Initialization service if later you need Background syncs, Multi-role logic (e.g., admin vs user startup logic), Headless tests for app boot
