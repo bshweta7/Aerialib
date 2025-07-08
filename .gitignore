@@ -5,3 +5,6 @@ backend/node_modules/
 backend/.env
 backend/data/uplift
 frontend/aerialib_ui/android/app/.cxx/Debug
+backend/data/data_preparation/csv/.~lock.media.csv\#
+backend/data/data_preparation/csv/.~lock.media.csv\#
+backend/data/data_preparation/csv/.~lock.transitions.csv\#
