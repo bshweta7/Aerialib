@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/shared/widgets/info_display/info_chip.dart';
 import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
 
 import '../../../../core/constants/constants.dart';
@@ -23,8 +24,8 @@ class TransitionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final transitionName = transition.name ?? 'Unnamed Transition';
-    final transitionType = transition.transitionType == null ? '' : "Type: ${capitalizeFirstLetter(transition.transitionType!)}";
+    final transitionName = transition.name ?? '${fromPose.displayName} → ${toPose.displayName}';
+    final transitionType = transition.transitionType == null ? '' : "| Type: ${capitalizeFirstLetter(transition.transitionType!)}";
     final transitionLevel = transition.level == null ? '' : formatLevel(transition.level!);
 
     return InkWell(
@@ -50,8 +51,8 @@ class TransitionCard extends StatelessWidget {
                   children: [
                     // TODO can add other qualifiers here (like apparatus, level) in row with pill indicators
                     Text(
-                      transitionType,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      '$transitionLevel $transitionType',
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
                       // textAlign: TextAlign.end,
                     ),
                     // Text(
