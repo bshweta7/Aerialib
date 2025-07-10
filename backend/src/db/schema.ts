@@ -24,6 +24,25 @@ export type User = typeof usersTable.$inferSelect;
 export type NewUser = typeof usersTable.$inferInsert;
 
 
+/* USER ROLES */
+export const userRolesTable = pgTable("user_roles", {
+    id: uuid("id").primaryKey().defaultRandom(),
+
+    userId: uuid("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    // studio: text("studio").notNull(),             // Name or slug of studio - add this later when it is relevant, along with a studio table (stores payment option, studio info, etc)
+    role: text("role").notNull(),                 // 'admin', 'instructor', 'student'
+
+    apparatus: text("apparatus"),                 // 'lyra', 'hammock', etc.
+    level: integer("level"),                      // Nullable, used for students/instructors
+
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type UserRole = typeof userRolesTable.$inferSelect;
+export type NewUserRole = typeof userRolesTable.$inferInsert;
+
+
 /* MEDIA */
 export const mediaTable = pgTable("media", {
     id: uuid("id").primaryKey().defaultRandom(),

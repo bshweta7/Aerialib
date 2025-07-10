@@ -10,11 +10,11 @@ import feedbackRouter from "./routes/feedback";
 import musicRouter from "./routes/music";
 import tagRouter from "./routes/tags";
 import adminRouter from "./routes/admin";
+import transitionRouter from "./routes/transitions";
+import userRouter from "./routes/users";
 
 // Load values from .env file
 import 'dotenv/config'
-import transitionRouter from "./routes/transitions";
-
 
 const app = express(); // TODO should this be let instead of const
 
@@ -36,10 +36,11 @@ app.use("/music", musicRouter);
 app.use("/tags", tagRouter);
 app.use("/transitions", transitionRouter);
 app.use("/admin", adminRouter);
+app.use("/users", userRouter);
 
 // create rest api
 app.get("/", (req, res) => {
-    res.send("Welcome to Aerialib ");
+    res.send("Welcome to Aerialib");
 });
 
 // start server
