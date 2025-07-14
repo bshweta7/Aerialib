@@ -35,7 +35,7 @@ const flowPoseRouter = Router();
 //     }
 // });
 
-// Create multiple flow poses
+/// Create multiple flow poses
 flowPoseRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user
@@ -75,7 +75,7 @@ flowPoseRouter.post("/", auth, async (req: AuthRequest, res) => {
 });
 
 
-// Get poses for all flows for a given user
+/// Get poses for all flows for a given user
 flowPoseRouter.get("/", auth, async (req: AuthRequest, res) => {
     // Verify user
     if (!req.user) {
@@ -147,7 +147,8 @@ flowPoseRouter.delete("/", auth, async (req: AuthRequest, res) => {
 });
 
 
-// Delete all flow_poses for a given flowId
+/// Delete all flow_poses for a given flowId
+// TODO change the route (maybe just deleteFlow/:flowId)
 flowPoseRouter.delete("/delete/flow/:flowId", auth, async (req: AuthRequest, res) => {
     // Verify user
     if (!req.user) {
@@ -178,7 +179,8 @@ flowPoseRouter.delete("/delete/flow/:flowId", auth, async (req: AuthRequest, res
 });
 
 
-// Delete flow_pose for given id
+/// Delete flow_pose for given id
+// TODO remove this, just use default delete / function
 flowPoseRouter.delete("/delete/pose/:flowPoseId", auth, async (req: AuthRequest, res) => {
     // Verify user
     if (!req.user) {

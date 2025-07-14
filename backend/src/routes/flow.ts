@@ -7,7 +7,7 @@ import { eq, sql } from "drizzle-orm";
 
 const flowRouter = Router();
 
-/// Create new pose (add metadata)
+/// Create new flow (add metadata)
 flowRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user
@@ -41,6 +41,7 @@ flowRouter.post("/", auth, async (req: AuthRequest, res) => {
 
 
 /// Get all flows for user and admin
+// TODO: make it check against shared flows and not include admin flows by default
 flowRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user

@@ -29,7 +29,7 @@ export const userRolesTable = pgTable("user_roles", {
     id: uuid("id").primaryKey().defaultRandom(),
 
     userId: uuid("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
-    // studio: text("studio").notNull(),             // Name or slug of studio - add this later when it is relevant, along with a studio table (stores payment option, studio info, etc)
+    // studio: text("studio").notNull(),             // Name or slug of studio - TODO add this later when it is relevant, along with a studio table (stores payment option, studio info, etc)
     role: text("role").notNull(),                 // 'admin', 'instructor', 'student'
 
     apparatus: text("apparatus"),                 // 'lyra', 'hammock', etc.

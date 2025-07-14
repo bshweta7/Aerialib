@@ -1,12 +1,16 @@
-// src/routes/transitions.ts
+// src/routes/admin.ts
+
 import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
 import { db } from "../db";
-import { usersTable, flowsTable, flowPosesTable } from "../db/schema";
+import {usersTable, flowsTable, flowPosesTable, userRolesTable, posesTable, NewPose, NewUserRole} from "../db/schema";
 import { eq, sql } from "drizzle-orm";
+import {getUserRoles, hasRole, isInstructorOrAdmin, isRootAdmin, isAuthorizedAddNewUserRole} from "../utils/rbac";
+import poseRouter from "./pose";
 
 const adminRouter = Router();
 
+// TODO remove this and replace with just roster (below)
 /// Get user info
 adminRouter.get("/users", auth, async (req: AuthRequest, res) => {
     try {
@@ -39,9 +43,42 @@ adminRouter.get("/users", auth, async (req: AuthRequest, res) => {
     }
 });
 
+/// Get all users' info
+adminRouter.get("/studentRoster", auth, async (req: AuthRequest, res) => {
+    try {
+        // Verify user is staff (admin or instructor)
+
+        const isStaff = await isInstructorOrAdmin(req.user!);
+        if (!isStaff && req.user !== process.env.ADMIN_USER_ID) { // TODO update this to check if user's roles contain root, admin, instructor
+            res.status(403).json({ error: "Unauthorized" });
+            return
+        }
+
+        // Get all users
+        const allUsers = await db.select().from(usersTable); // TODO filter by studio
+
+        const usersFormatted = allUsers.map((user) => ({
+            token: "",
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            bio: user.bio,
+        }));
+        // TODO add user roles on to each user in return
+
+        res.json(usersFormatted);
+
+    } catch (e) {
+        console.error("[AdminRouter] Get error", e);
+        res.status(500).json({ error: e });
+    }
+});
 
 
-/// Get all flows
+// TODO remove this after the "share status" is implemented for flows
+/// Get all users' flows
 adminRouter.get("/flows", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user is admin user
@@ -50,7 +87,6 @@ adminRouter.get("/flows", auth, async (req: AuthRequest, res) => {
             res.status(401).json({ error: "Unauthorized" });
             return;
         }
-        // TODO add "user_roles" and make a function in auth.ts that verifies if user is admin, instead of verifying against the one known admin
 
         // Get all flows with pose count
         const query = sql`
@@ -90,6 +126,52 @@ adminRouter.get("/flows", auth, async (req: AuthRequest, res) => {
 
     } catch (e) {
         console.error("[AdminRouter] Get error", e);
+        res.status(500).json({ error: e });
+    }
+});
+
+
+/// Add new user role
+adminRouter.post("/userRole", auth, async (req: AuthRequest, res) => {
+    try {
+        // // TODO apparatus and level are nullable
+        // if (!userId || !role || !apparatus || !level) {
+        //     res.status(400).json({ error: "Missing required fields" });
+        //     return;
+        // }
+
+        // TODO add function to validate the role
+        // Validate role
+        // if (!process.env.VALID_USER_ROLES.includes(role)) {
+        //     res.status(400).json({ error: "Invalid role" });
+        //     return;
+        // }
+
+        const isAuthorized = isAuthorizedAddNewUserRole(req.user!, req.body.role);
+
+        if (!isAuthorized) {
+            res.status(403).json({ error: "Unauthorized" });
+            return;
+        }
+
+        const newUserRole: NewUserRole = {
+            ...req.body,
+            createdAt: new Date(req.body.createdAt),
+            updatedAt: new Date(req.body.updatedAt),
+        };
+        console.log(newUserRole);
+
+        const [userRole] = await db.insert(userRolesTable).values(newUserRole).returning();
+
+        // Verify userRole was added
+        if (userRole) {
+            res.status(201).json(userRole);
+        } else {
+            res.status(500).json({ error: "User role was not created" });
+        }
+
+    } catch (e) {
+        console.error("[AdminRouter] Add user role error", e);
         res.status(500).json({ error: e });
     }
 });

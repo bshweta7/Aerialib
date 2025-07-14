@@ -6,7 +6,7 @@ import { eq, sql } from "drizzle-orm";
 
 const musicRouter = Router();
 
-// Create a new music entry
+/// Create a new music entry
 musicRouter.post("/", auth, async (req: AuthRequest, res) => {
     try {
         const newMusic: NewMusic = {
@@ -24,7 +24,7 @@ musicRouter.post("/", auth, async (req: AuthRequest, res) => {
     }
 });
 
-// Get all music for the user (and admin)
+/// Get all music for the user (and admin)
 musicRouter.get("/", auth, async (req: AuthRequest, res) => {
     try {
         const userId = req.user;
@@ -41,7 +41,7 @@ musicRouter.get("/", auth, async (req: AuthRequest, res) => {
     }
 });
 
-// Delete a music entry
+/// Delete a music entry
 musicRouter.delete("/", auth, async (req: AuthRequest, res) => {
     try {
         const { musicId }: { musicId: string } = req.body;
@@ -60,7 +60,7 @@ musicRouter.delete("/", auth, async (req: AuthRequest, res) => {
     }
 });
 
-// Update music by ID
+/// Update music by ID
 musicRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
     try {
         const id = req.params.id;

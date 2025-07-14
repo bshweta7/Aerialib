@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { Router, Request, Response } from "express";
-import { NewUser, usersTable } from "../db/schema";
+import { NewUser, usersTable, userRolesTable } from "../db/schema";
 import { db } from "../db";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -26,71 +26,12 @@ interface LoginBody {
     password: string,
 }
 
-// signup route
-authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Response) => {
-    try {
-        // get request body
-        const { username, email, password } = req.body;
+interface ForgotBody {
+    email: string,
+}
 
-        // check if a user with the same email already exists
-        const existingEmailUser = await db
-            .select()
-            .from(usersTable)
-            .where(eq(usersTable.email, email));
-
-        // also ensure that a user with the same username doesn't exist
-        const existingUsernameUser = await db
-            .select()
-            .from(usersTable)
-            .where(eq(usersTable.username, username));
-
-        if (existingEmailUser.length) {
-            res
-                .status(400)
-                .json({ error: "User with the same email already exists. Did you forget your password?" });
-        }
-
-        if (existingUsernameUser.length) {
-            res
-                .status(400)
-                .json({ error: "User with the same username already exists. Please choose a different username." });
-        }
-
-        // hash the password
-        const hashedPassword = await bcryptjs.hash(password, 8);
-
-        // create a new user and store in db
-        const newUser: NewUser = {
-            username,
-            email,
-            password: hashedPassword
-        }
-
-        // insert new user into db
-        const [user] = await db.insert(usersTable).values(newUser).returning()
-
-        // send info to the frontend
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
-
-        res.status(201).json({
-            token: token,
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            bio: user.bio,
-        });
-
-    } catch (e) {
-        console.log(e)
-        res.status(500).json({ error: e })
-    }
-});
-// TODO also include a "forgot password" button to send an email with updated token
-
-// check existing users
-authRouter.post("/check", async (req: Request<{}, {}, SignUpBody>, res: Response) => {
+/// Check if username or email already exists in db
+authRouter.post("/validate", async (req: Request<{}, {}, SignUpBody>, res: Response) => {
     try {
         // get request body
         const { username, email } = req.body;
@@ -129,8 +70,69 @@ authRouter.post("/check", async (req: Request<{}, {}, SignUpBody>, res: Response
     }
 });
 
+/// Signup new user
+authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Response) => {
+    try {
+        // get request body
+        const { username, email, password } = req.body;
 
-// login route
+        // check if a user with the same email already exists
+        const existingEmailUser = await db
+            .select()
+            .from(usersTable)
+            .where(eq(usersTable.email, email));
+
+        // also ensure that a user with the same username doesn't exist
+        const existingUsernameUser = await db
+            .select()
+            .from(usersTable)
+            .where(eq(usersTable.username, username));
+
+        if (existingEmailUser.length) {
+            res.status(400).json({ error: "User with this email already exists." });
+            // TODO if this error, then offer forgot password in snackbar
+            return;
+        }
+
+        if (existingUsernameUser.length) {
+            res.status(400).json({ error: "User with this username already exists." });
+            // TODO if this error, then offer forgot password in snackbar
+            return;
+        }
+
+        // hash the password
+        const hashedPassword = await bcryptjs.hash(password, 8);
+
+        // create a new user and store in db
+        const newUser: NewUser = {
+            username,
+            email,
+            password: hashedPassword
+        }
+
+        // insert new user into db
+        const [user] = await db.insert(usersTable).values(newUser).returning()
+
+        // send info to the frontend
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
+
+        res.status(201).json({
+            token: token,
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            bio: user.bio,
+        });
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({ error: e })
+    }
+});
+
+/// Login user
 authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response) => {
     try {
         // get request body
@@ -174,12 +176,11 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
     }
 });
 
-
-// check if the token stored on the user's device is valid
+/// Check if the token stored on the user's device is valid
 authRouter.post("/tokenIsValid", async (req, res) => {
     try {
         // get the header (to get token)
-        const token = req.header("x-auth-token");
+        const token = req.header("x-auth-token"); // TODO rename x-auth-token
 
         if (!token) {
             res.json(false);
@@ -215,37 +216,8 @@ authRouter.post("/tokenIsValid", async (req, res) => {
     }
 });
 
-// TODO pose search can use the query string: authRouter.post("/profile?level=1", async (req: Request<{}, {level}, ProfileBody>, res: Response) => {
-
-authRouter.get("/", auth, async (req: AuthRequest, res) => {
-    try {
-        if (!req.user) {
-            res.status(401).json({ error: "User not found!" });
-            return;
-        }
-
-        const [user] = await db.select().from(usersTable).where(eq(usersTable.id, req.user));
-
-        res.json({ ...user, token: req.token })
-    } catch (e) {
-        res.status(500).json(false);
-    }
-});
-
-
-authRouter.get("/profile/:id", async (req: Request<{ id: string }>, res) => {
-    const { id } = req.params;
-    const [user] = await db
-        .select()
-        .from(usersTable)
-        .where(
-            eq(usersTable.id, id)
-        );
-    res.json(user);
-});
-
-
-authRouter.post("/forgot-password", async (req: Request, res: Response) => {
+/// Send email with a link to reset password
+authRouter.post("/forgotPassword", async (req: Request<{}, {}, ForgotBody>, res: Response) => {
     const { email } = req.body;
 
     const [user] = await db.select().from(usersTable).where(eq(usersTable.email, email));
@@ -269,7 +241,8 @@ authRouter.post("/forgot-password", async (req: Request, res: Response) => {
     res.status(200).json({ message: "If this email is registered, you'll receive reset instructions." });
 });
 
-authRouter.post("/forgot-username", async (req: Request, res: Response) => {
+/// Send email with the username associated with the email
+authRouter.post("/forgotUsername", async (req: Request<{}, {}, ForgotBody>, res: Response) => {
     const { email } = req.body;
 
     const [user] = await db.select().from(usersTable).where(eq(usersTable.email, email));
@@ -293,9 +266,8 @@ authRouter.post("/forgot-username", async (req: Request, res: Response) => {
     res.status(200).json({ message: "If this email is registered, you'll receive reset instructions." });
 });
 
-
-
-authRouter.post("/reset-password", async (req: Request, res: Response) => {
+/// Update user info with new password
+authRouter.post("/resetPassword", async (req: Request, res: Response) => {
     const { token, newPassword } = req.body;
 
     try {

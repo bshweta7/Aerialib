@@ -89,6 +89,7 @@ tagRouter.put("/update/:id", auth, async (req: AuthRequest, res) => {
 
 // ------------------------------
 // Assign tag to pose
+// TODO move to pose route?
 tagRouter.post("/pose", auth, async (req: AuthRequest, res) => {
     try {
         const { poseId, tagId }: { poseId: string; tagId: string } = req.body;
@@ -109,6 +110,7 @@ tagRouter.post("/pose", auth, async (req: AuthRequest, res) => {
 
 // ------------------------------
 // Remove tag from pose
+// TODO move to pose route?
 tagRouter.delete("/pose", auth, async (req: AuthRequest, res) => {
     try {
         const { poseId, tagId }: { poseId: string; tagId: string } = req.body;
@@ -130,6 +132,7 @@ tagRouter.delete("/pose", auth, async (req: AuthRequest, res) => {
 
 // ------------------------------
 // Assign tag to flow
+// TODO move to flow route?
 tagRouter.post("/flow", auth, async (req: AuthRequest, res) => {
     try {
         const { flowId, tagId }: { flowId: string; tagId: string } = req.body;
@@ -150,6 +153,7 @@ tagRouter.post("/flow", auth, async (req: AuthRequest, res) => {
 
 // ------------------------------
 // Remove tag from flow
+// TODO move to flow route?
 tagRouter.delete("/flow", auth, async (req: AuthRequest, res) => {
     try {
         const { flowId, tagId }: { flowId: string; tagId: string } = req.body;

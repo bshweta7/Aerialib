@@ -48,7 +48,7 @@ class UserRemoteDataSource {
     };
 
     final response = await httpService.postInit(
-      path: '/auth/check',
+      path: '/auth/validate',
       body: body,
     );
 
@@ -109,7 +109,7 @@ class UserRemoteDataSource {
     }
 
     final userResponse = await httpService.get(
-      path: '/auth',
+      path: '/users/me', // TODO may be able to use /users/:id instead, and remove the /me route altogether
       token: token,
     );
 
@@ -141,7 +141,7 @@ class UserRemoteDataSource {
 
   Future<String?> resetPassword({required String token, required String newPassword}) async {
     final res = await httpService.post(
-      path: '/auth/reset-password',
+      path: '/auth/resetPassword',
       token: token,
       body: jsonEncode({'token': token, 'newPassword': newPassword}),
     );
@@ -152,7 +152,7 @@ class UserRemoteDataSource {
 
   Future<String?> sendForgotPasswordEmail({required String email}) async {
     final res = await httpService.postInit(
-      path: '/auth/forgot-password',
+      path: '/auth/forgotPassword',
       body: jsonEncode({'email': email}),
     );
 
@@ -162,7 +162,7 @@ class UserRemoteDataSource {
 
   Future<String?> sendForgotUsernameEmail({required String email}) async {
     final res = await httpService.postInit(
-      path: '/auth/forgot-username',
+      path: '/auth/forgotUsername',
       body: jsonEncode({'email': email}),
     );
 

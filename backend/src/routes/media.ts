@@ -148,6 +148,8 @@ mediaRouter.get("/", auth, async (req: AuthRequest, res) => {
 });
 
 // TODO test this
+// TODO change route to just /:id
+/// Delete media by media id
 mediaRouter.delete("/delete/:id", auth, async (req: AuthRequest, res) => {
     // Verify user
     if (!req.user) {
@@ -198,6 +200,7 @@ mediaRouter.delete("/delete/:id", auth, async (req: AuthRequest, res) => {
     }
 })
 
+/// Sync media
 mediaRouter.post("/sync", auth, async (req: AuthRequest, res) => {
     try {
         if (!req.user) {

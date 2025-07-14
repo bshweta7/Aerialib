@@ -11,7 +11,7 @@ List<GoRoute> adminRoutes = [
     builder: (context, state) => const AdminFlowsDashboardPage(),
   ),
   GoRoute(
-    path: '/admin/users',
+    path: '/admin/roster',
     name: 'admin-users',
     builder: (context, state) => const AdminUsersDashboardPage(),
   ),
