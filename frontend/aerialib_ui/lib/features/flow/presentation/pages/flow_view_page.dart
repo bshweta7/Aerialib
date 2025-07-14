@@ -172,8 +172,9 @@ class _FlowViewPageState extends State<FlowViewPage> {
 
 
                   if (mediaIcons.isEmpty) ...[
+                    const Divider(),
                     const Text(
-                      "There are no poses in this flow.\n",
+                      "There are no poses in this flow yet.\n",
                       style: TextStyle(fontSize: 16, color: Colors.black38),
                       textAlign: TextAlign.center,
                     ),
