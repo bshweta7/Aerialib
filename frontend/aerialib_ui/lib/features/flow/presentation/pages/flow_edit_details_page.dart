@@ -131,7 +131,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
       }
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to delete pose")),
+        const SnackBar(content: Text("Failed to delete flow")),
       );
     }
   }
@@ -175,7 +175,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                   const Padding(
                     padding: EdgeInsets.only(bottom: 12),
                     child: Text(
-                      "You are viewing a shared pose. You cannot edit this version.",
+                      "You are viewing a shared flow. You cannot edit this version.",
                       style: TextStyle(color: Colors.redAccent),
                     ),
                   ),
@@ -186,7 +186,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                   title: "Basic Info",
                   initiallyExpanded: true,
                   children: [
-                    TextInputField("Pose Name", nameController, required: true, enabled: isOwner),
+                    TextInputField("Flow Name", nameController, required: true, enabled: isOwner),
                     DropdownField("Apparatus", apparatusController, Constants.apparatusOptions, enabled: isOwner),
                     IntInputField("Level", levelController, enabled: isOwner),
                     TextInputField("Description", descriptionController, maxLines: 2, enabled: isOwner),
@@ -224,7 +224,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
                       foregroundColor: MaterialStateProperty.all(Colors.red.shade900),
                     ),
                     child: Text(
-                        "Delete Pose",
+                        "Delete Flow",
                         style: Theme.of(context).textTheme.labelMedium
                     ),
                   ),
