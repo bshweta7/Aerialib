@@ -180,12 +180,12 @@ class DatabaseService {
     }
 
     final tables = [
-      'user',
+      'users', // TODO may not need to remove this one...
       'media',
-      'pose',
-      'transition',
-      'flow',
-      'flow_pose',
+      'poses',
+      'transitions',
+      'flows',
+      'flow_poses',
       'music',
       // Add tags later
     ];
