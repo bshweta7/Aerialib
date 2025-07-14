@@ -218,34 +218,34 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10),
                 const Divider(),
 
-                const Text(
-                  "⏱️ Quick Add",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                // TODO - maybe switch to modal for everything instead of having textboxes on the dashboard itself... might look cleaner?
-                QuickAddCategoryCard(
-                  onMusicSubmit: (name, description, isFavorite) async {
-                    if (authState is! AuthLoggedIn) return;
-                    final user = authState.user;
-                    await context.read<MusicCubit>().createNewMusic(
-                      name: name,
-                      performanceNotes: description,
-                      favorite: isFavorite,
-                      token: user.token,
-                      userId: user.id,
-                    );
-                  },
-                ),
-
-
-
-                const SizedBox(height: 10),
-                const Divider(),
+                // const Text(
+                //   "⏱️ Quick Add",
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.bold,
+                //     fontSize: 24,
+                //   ),
+                //   textAlign: TextAlign.center,
+                // ),
+                //
+                // // TODO - maybe switch to modal for everything instead of having textboxes on the dashboard itself... might look cleaner?
+                // QuickAddCategoryCard(
+                //   onMusicSubmit: (name, description, isFavorite) async {
+                //     if (authState is! AuthLoggedIn) return;
+                //     final user = authState.user;
+                //     await context.read<MusicCubit>().createNewMusic(
+                //       name: name,
+                //       performanceNotes: description,
+                //       favorite: isFavorite,
+                //       token: user.token,
+                //       userId: user.id,
+                //     );
+                //   },
+                // ),
+                //
+                //
+                //
+                // const SizedBox(height: 10),
+                // const Divider(),
                 const Text(
                   "Developed in collaboration with Uplift Aerial Arts.",
                   style: TextStyle(fontSize: 22),
