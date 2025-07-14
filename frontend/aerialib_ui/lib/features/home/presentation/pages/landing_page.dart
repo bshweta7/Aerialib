@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
+import 'package:frontend/shared/widgets/media_display/general/formatted_image.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // TODO add google fonts
@@ -42,7 +42,7 @@ class LandingPage extends StatelessWidget {
                       SizedBox(
                           height: 36,
                           width: 36,
-                          child: FormattedCachedNetworkImage(
+                          child: FormattedImage(
                               'default/aerialib_logo_v1.png')
                       ),
                       SizedBox(width: 10),
@@ -335,7 +335,7 @@ class LandingPage extends StatelessWidget {
                         const SizedBox(
                             height: 150,
                             width: 200,
-                            child: FormattedCachedNetworkImage('default/uplift.jpg')
+                            child: FormattedImage('default/uplift.jpg')
                         ),
                         TextButton(
                           onPressed: () => context.pushNamed('install'),

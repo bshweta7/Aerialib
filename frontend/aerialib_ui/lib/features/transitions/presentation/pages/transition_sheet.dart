@@ -9,7 +9,7 @@ import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
 import '../../../../shared/widgets/info_display/expandable_card.dart';
 import '../../../../shared/widgets/info_display/info_chip.dart';
 import '../../../../shared/widgets/info_display/info_row.dart';
-import '../../../../shared/widgets/media_display/general/formatted_cached_network_image.dart';
+import '../../../../shared/widgets/media_display/general/formatted_image.dart';
 import '../../../../shared/widgets/media_display/general/media_icon_entity.dart';
 import '../../../../shared/widgets/media_display/multi_card_view/horizontal_scroll_gallery.dart';
 import '../../../pose/domain/entities/pose_entity.dart';
@@ -198,7 +198,7 @@ class TransitionSheet extends StatelessWidget {
       height: width,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: FormattedCachedNetworkImage(mediaUrl),
+        child: FormattedImage(mediaUrl),
       ),
     );
   }

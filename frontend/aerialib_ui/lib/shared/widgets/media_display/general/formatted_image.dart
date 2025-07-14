@@ -4,11 +4,11 @@ import 'package:extended_image/extended_image.dart';
 import 'package:frontend/core/constants/constants.dart';
 import 'package:shimmer/shimmer.dart';
 
-class FormattedCachedNetworkImage extends StatelessWidget {
+class FormattedImage extends StatelessWidget {
   final String mediaUrl;
   final BoxFit fit;
 
-  const FormattedCachedNetworkImage(
+  const FormattedImage(
       this.mediaUrl, {
         super.key,
         this.fit = BoxFit.cover,

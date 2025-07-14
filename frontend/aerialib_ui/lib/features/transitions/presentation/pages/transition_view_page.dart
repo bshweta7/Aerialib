@@ -10,7 +10,7 @@ import '../../../../shared/features/navigation/widgets/smart_back_button.dart';
 import '../../../../shared/widgets/info_display/expandable_card.dart';
 import '../../../../shared/widgets/info_display/info_chip.dart';
 import '../../../../shared/widgets/main_scaffold.dart';
-import '../../../../shared/widgets/media_display/general/formatted_cached_network_image.dart';
+import '../../../../shared/widgets/media_display/general/formatted_image.dart';
 import '../../../../shared/widgets/media_display/multi_card_view/horizontal_scroll_gallery.dart';
 import '../../../pose/presentation/cubit/poses_cubit.dart';
 
@@ -164,7 +164,7 @@ class TransitionViewPage extends StatelessWidget {
           height: width,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: FormattedCachedNetworkImage(mediaUrl)
+            child: FormattedImage(mediaUrl)
           ),
         ),
         // const SizedBox(height: 4),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
+import 'package:frontend/shared/widgets/media_display/general/formatted_image.dart';
 
 import '../../../../core/constants/app_theme.dart';
 
@@ -40,7 +40,7 @@ class MediaGridCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 1,
-              child: FormattedCachedNetworkImage(mediaUrl),
+              child: FormattedImage(mediaUrl),
 
               // TODO verify if it's a video and do formatted video instead (ref below):
               // HorizontalScrollGallery(

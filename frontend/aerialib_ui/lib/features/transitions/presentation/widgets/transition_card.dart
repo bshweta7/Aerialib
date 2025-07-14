@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/shared/widgets/info_display/info_chip.dart';
-import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
+import 'package:frontend/shared/widgets/media_display/general/formatted_image.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../shared/helpers/formatters.dart';
@@ -101,7 +101,7 @@ class _PosePreview extends StatelessWidget {
             height: 60,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: FormattedCachedNetworkImage(pose.primaryMediaPath),
+              child: FormattedImage(pose.primaryMediaPath),
             ),
           ),
           const SizedBox(height: 4),

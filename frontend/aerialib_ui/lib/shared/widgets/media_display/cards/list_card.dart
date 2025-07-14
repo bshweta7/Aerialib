@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../general/formatted_cached_network_image.dart';
+import '../general/formatted_image.dart';
 
 class ListCard extends StatelessWidget {
   // Creates tappable list with image, name, subtitle
@@ -43,7 +43,7 @@ class ListCard extends StatelessWidget {
                 height: 80.0,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: FormattedCachedNetworkImage(imageUrl),
+                  child: FormattedImage(imageUrl),
                 ),
               ),
               const SizedBox(width: 16.0),

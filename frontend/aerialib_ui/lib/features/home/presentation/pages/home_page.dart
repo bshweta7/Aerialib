@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/shared/helpers/formatters.dart';
-import 'package:frontend/shared/widgets/media_display/general/formatted_cached_network_image.dart';
+import 'package:frontend/shared/widgets/media_display/general/formatted_image.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                     width: 250,
                     height: 150,
-                    child: ClipRRect(borderRadius: BorderRadius.circular(8.0), child: const FormattedCachedNetworkImage('default/uplift.jpg'))
+                    child: ClipRRect(borderRadius: BorderRadius.circular(8.0), child: const FormattedImage('default/uplift.jpg'))
                 ),
                 
                 const SizedBox(height: 20),
