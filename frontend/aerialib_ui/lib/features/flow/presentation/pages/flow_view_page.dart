@@ -109,51 +109,71 @@ class _FlowViewPageState extends State<FlowViewPage> {
               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Column(
                 children: [
-                  ExpandableCard(
-                    title: "Flow Details",
-                    initiallyExpanded: false,
+                  // ExpandableCard(
+                  //   title: "Flow Details",
+                  //   initiallyExpanded: false,
+                  //   children: [
+                  //     InfoRow("Apparatus:", capitalizeFirstLetter(flow.apparatus)),
+                  //     InfoRow("Level:", flow.level != -1 ? "Level ${flow.level}" : "None"),
+                  //     const Divider(),
+                  //     InfoRow("Description:", flow.description),
+                  //     InfoRow("Teaching Cues:", flow.teachingCues),
+                  //     InfoRow("Safety Cues:", flow.safetyCues),
+                  //     InfoRow("Progressions:", flow.progressions),
+                  //     const Divider(),
+                  //     InfoRow("Created:", formatDate(flow.createdAt)),
+                  //     InfoRow("Updated:", formatDate(flow.updatedAt)),
+                  //   ],
+                  // ),
+                  //
+                  // const Divider(),
+
+                  // TODO maybe move this to the bottom of the page, but always visible (so hover above) - need to make sure it moves for scroll to top button
+                  Row(
                     children: [
-                      InfoRow("Apparatus:", capitalizeFirstLetter(flow.apparatus)),
-                      InfoRow("Level:", flow.level != -1 ? "Level ${flow.level}" : "None"),
-                      const Divider(),
-                      InfoRow("Description:", flow.description),
-                      InfoRow("Teaching Cues:", flow.teachingCues),
-                      InfoRow("Safety Cues:", flow.safetyCues),
-                      InfoRow("Progressions:", flow.progressions),
-                      const Divider(),
-                      InfoRow("Created:", formatDate(flow.createdAt)),
-                      InfoRow("Updated:", formatDate(flow.updatedAt)),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            FlowDetailsSheet.show(
+                              context: context,
+                              flow: flow,
+                              onEdit: () {
+                                context.goNamed(
+                                  'flow-edit-details',
+                                  pathParameters: {'flowId': flow.id},
+                                  queryParameters: {'from': 'flow-view'},
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.info_outline),
+                          label: const Text("Details"),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            context.goNamed(
+                              'flow-edit-poses',
+                              pathParameters: {'flowId': flow.id},
+                              queryParameters: {'from': 'flow-view'},
+                            );
+                          },
+                          icon: const Icon(Icons.edit),
+                          label: const Text("Edit Poses"),
+                        ),
+                      ),
                     ],
                   ),
 
-                  const Divider(),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Poses in Flow",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          context.goNamed(
-                            'flow-edit-poses',
-                            pathParameters: {'flowId': flow.id,},
-                            queryParameters: {'from': 'flow-view'},
-                          );
-                        },
-                        icon: const Icon(Icons.edit)
-                      )
-                    ]
-                  ),
 
                   const SizedBox(height: 10),
 
 
                   if (mediaIcons.isEmpty) ...[
                     const Text(
-                      "There are no poses in this flow.",
+                      "There are no poses in this flow.\n",
                       style: TextStyle(fontSize: 16, color: Colors.black38),
                       textAlign: TextAlign.center,
                     ),
@@ -165,7 +185,8 @@ class _FlowViewPageState extends State<FlowViewPage> {
                           queryParameters: {'from': 'flow-view'},
                         );
                       },
-                      child: const Text("Add poses"))
+                      child: const Text("Add poses")
+                    )
                   ]
                   else
                     MediaList(
@@ -264,7 +285,7 @@ class _FlowViewPageState extends State<FlowViewPage> {
 //     }
 //   }
 //
-
+//
 //
 //   @override
 //   Widget build(BuildContext context) {
