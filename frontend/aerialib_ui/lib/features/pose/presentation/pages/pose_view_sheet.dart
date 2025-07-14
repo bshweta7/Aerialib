@@ -112,7 +112,7 @@ class PoseViewSheet extends StatelessWidget {
               minHeight: 20,
             ),
             width: double.infinity,
-            child: FormattedImage("/${pose.primaryMediaPath}"),
+            child: FormattedImage("/${pose.primaryMediaPath}", zoomEnabled: true),
           ),
         ),
         const SizedBox(height: 20),

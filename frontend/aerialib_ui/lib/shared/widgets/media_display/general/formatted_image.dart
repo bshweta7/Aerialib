@@ -7,23 +7,35 @@ import 'package:shimmer/shimmer.dart';
 class FormattedImage extends StatelessWidget {
   final String mediaUrl;
   final BoxFit fit;
+  final bool zoomEnabled;
 
   const FormattedImage(
       this.mediaUrl, {
         super.key,
         this.fit = BoxFit.cover,
+        this.zoomEnabled = false,
       });
 
   @override
   Widget build(BuildContext context) {
     final fullUrl = '${Constants.mediaUrlPrefix}/$mediaUrl';
-    log('[FormattedCachedNetworkImage] Loading URL: $fullUrl');
-
     final imageProvider = ExtendedNetworkImageProvider(fullUrl, cache: true);
+    // log('[FormattedCachedNetworkImage] Loading URL: $fullUrl');
 
     return ExtendedImage(
       image: imageProvider,
       fit: fit,
+      mode: zoomEnabled ? ExtendedImageMode.gesture : ExtendedImageMode.none,
+      initGestureConfigHandler: zoomEnabled
+          ? (state) => GestureConfig(
+        minScale: 1.0,
+        maxScale: 4.0,
+        speed: 1.0,
+        inertialSpeed: 100.0,
+        initialScale: 1.0,
+        inPageView: false,
+      )
+          : null,
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:
@@ -42,7 +54,7 @@ class FormattedImage extends StatelessWidget {
                 children: [
                   Icon(Icons.refresh, color: Colors.grey),
                   SizedBox(height: 8),
-                  Text("Tap to retry", style: TextStyle(color: Colors.grey)),
+                  Center(child: Text("Tap to retry", style: TextStyle(color: Colors.grey))),
                 ],
               ),
             );
