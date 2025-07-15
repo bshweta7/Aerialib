@@ -17,7 +17,6 @@ export const usersTable = pgTable("users", {
 
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
-    lastLogin: timestamp("last_login").defaultNow(),
 });
 
 export type User = typeof usersTable.$inferSelect;
@@ -193,7 +192,8 @@ export type FlowPose = typeof flowPosesTable.$inferSelect;
 export type NewFlowPose = typeof flowPosesTable.$inferInsert;
 
 
-/* FEEDBACK */
+// TODO remove this table, replace with event logs
+//  /* FEEDBACK */
 export const feedbackTable = pgTable("feedback", {
     id: uuid("id").primaryKey().defaultRandom(),
 
@@ -210,6 +210,21 @@ export const feedbackTable = pgTable("feedback", {
 
 export type Feedback = typeof feedbackTable.$inferSelect;
 export type NewFeedback = typeof feedbackTable.$inferInsert;
+
+
+/* EVENT LOGS */
+export const eventsTable = pgTable("events", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    eventType: text("event_type").notNull(),
+    userId: uuid("user_id").references(() => usersTable.id, {
+        onDelete: "set null",
+    }),
+    time: timestamp("time").defaultNow(),
+    note: text("note").notNull(),
+});
+
+export type Login = typeof eventsTable.$inferSelect;
+export type NewLogin = typeof eventsTable.$inferInsert;
 
 
 /* MUSIC */
