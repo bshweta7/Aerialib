@@ -1,6 +1,6 @@
 import { eq, and } from "drizzle-orm";
 import { Router, Request, Response } from "express";
-import { NewUser, usersTable, userRolesTable } from "../db/schema";
+import {NewUser, usersTable, userRolesTable, eventsTable} from "../db/schema";
 import { db } from "../db";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -113,6 +113,14 @@ authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Respons
         // insert new user into db
         const [user] = await db.insert(usersTable).values(newUser).returning()
 
+        // insert signup event into events table
+        await db.insert(eventsTable).values({
+            eventType: "signup",
+            userId: user.id,
+            time: new Date(),
+            note: user.username,
+        });
+
         // send info to the frontend
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
 
@@ -138,7 +146,7 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
         // get request body
         const { username, password } = req.body;
 
-        //check if a user doesn't exist
+        //check if a user exists
         const [existingUser] = await db
             .select()
             .from(usersTable)
@@ -151,7 +159,7 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
             return
         }
 
-        // hash the password
+        // check password
         const isMatch = await bcryptjs.compare(password, existingUser.password);
         if (!isMatch) {
             res.status(400).json({ error: "Incorrect password. Please try again." })
@@ -160,6 +168,15 @@ authRouter.post("/login", async (req: Request<{}, {}, LoginBody>, res: Response)
 
         const token = jwt.sign({ id: existingUser.id }, process.env.JWT_SECRET!);
 
+        // insert login event
+        await db.insert(eventsTable).values({
+            eventType: "login",
+            userId: existingUser.id,
+            note: existingUser.username,
+            time: new Date(),
+        });
+
+        // respond with user info and token
         res.json({
             token: token,
             id: existingUser.id,

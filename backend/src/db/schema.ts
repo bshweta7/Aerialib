@@ -220,7 +220,7 @@ export const eventsTable = pgTable("events", {
         onDelete: "set null",
     }),
     time: timestamp("time").defaultNow(),
-    note: text("note").notNull(),
+    note: text("note").notNull(), // TODO make nullable MIGRATION
 });
 
 export type Login = typeof eventsTable.$inferSelect;
