@@ -7,7 +7,6 @@ class UserEntity {
   final String? bio;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final DateTime lastLogin;
   final String token;
 
   const UserEntity({
@@ -19,7 +18,6 @@ class UserEntity {
     this.bio,
     required this.createdAt,
     required this.updatedAt,
-    required this.lastLogin,
     required this.token,
   });
 
@@ -36,7 +34,6 @@ class UserEntity {
               bio == other.bio &&
               createdAt == other.createdAt &&
               updatedAt == other.updatedAt &&
-              lastLogin == other.lastLogin &&
               token == other.token;
 
   @override
@@ -49,6 +46,5 @@ class UserEntity {
       bio.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode ^
-      lastLogin.hashCode ^
       token.hashCode;
 }

@@ -9,7 +9,6 @@ class UserModel {
   final String? bio;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final DateTime lastLogin;
   final String token;
 
   const UserModel({
@@ -21,7 +20,6 @@ class UserModel {
     this.bio,
     required this.createdAt,
     required this.updatedAt,
-    required this.lastLogin,
     required this.token,
   });
 
@@ -46,7 +44,6 @@ class UserModel {
       bio: bio ?? this.bio,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      lastLogin: lastLogin ?? this.lastLogin,
       token: token ?? this.token,
     );
   }
@@ -61,7 +58,6 @@ class UserModel {
       'bio': bio,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
-      'last_login': lastLogin.toIso8601String(),
       'token': token,
     };
   }
@@ -76,7 +72,6 @@ class UserModel {
       bio: map['bio'],
       createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : DateTime.now(),
       updatedAt: map['updated_at'] != null ? DateTime.parse(map['updated_at']) : DateTime.now(),
-      lastLogin: map['last_login'] != null ? DateTime.parse(map['last_login']) : DateTime.now(),
       token: map['token'] ?? '',
     );
   }
@@ -88,7 +83,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, username: $username, email: $email, firstName: $firstName, lastName: $lastName, bio: $bio, createdAt: $createdAt, updatedAt: $updatedAt, lastLogin: $lastLogin, token: $token)';
+    return 'UserModel(id: $id, username: $username, email: $email, firstName: $firstName, lastName: $lastName, bio: $bio, createdAt: $createdAt, updatedAt: $updatedAt, token: $token)';
   }
 
   @override
@@ -103,7 +98,6 @@ class UserModel {
         other.bio == bio &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
-        other.lastLogin == lastLogin &&
         other.token == token;
   }
 
@@ -117,7 +111,6 @@ class UserModel {
     bio.hashCode ^
     createdAt.hashCode ^
     updatedAt.hashCode ^
-    lastLogin.hashCode ^
     token.hashCode;
   }
 }

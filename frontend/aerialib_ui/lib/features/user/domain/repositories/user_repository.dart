@@ -25,7 +25,6 @@ class UserRepository {
       bio: userModel.bio,
       createdAt: userModel.createdAt,
       updatedAt: userModel.updatedAt,
-      lastLogin: userModel.lastLogin,
       token: userModel.token,
     );
   }
@@ -41,7 +40,6 @@ class UserRepository {
       bio: userEntity.bio,
       createdAt: userEntity.createdAt,
       updatedAt: userEntity.updatedAt,
-      lastLogin: userEntity.lastLogin,
       token: userEntity.token,
     );
   }
