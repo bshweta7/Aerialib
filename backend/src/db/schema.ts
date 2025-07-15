@@ -2,18 +2,31 @@
 
 import {doublePrecision, integer, jsonb, pgTable, text, timestamp, uuid} from "drizzle-orm/pg-core";
 
+/* STUDIOS */
+export const studiosTable = pgTable("studios", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type Studio = typeof studiosTable.$inferSelect;
+export type NewStudio = typeof studiosTable.$inferInsert;
+
 
 /* USERS */
 export const usersTable = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
 
     username: text("username").notNull().unique(),
-    email: text("email").notNull().unique(),
     password: text("password").notNull(),
+    email: text("email").unique(),
 
     firstName: text("first_name"),
     lastName: text("last_name"),
     bio: text("bio"),
+
+    isActive: integer("is_active").notNull(),                 // 0 if user was added by the owner, 1 if the user has activated their account
+    termsVersion: doublePrecision("terms_version").notNull(),
 
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
@@ -23,12 +36,12 @@ export type User = typeof usersTable.$inferSelect;
 export type NewUser = typeof usersTable.$inferInsert;
 
 
-/* USER ROLES */
+/* USER ROLES CONNECTOR */
 export const userRolesTable = pgTable("user_roles", {
     id: uuid("id").primaryKey().defaultRandom(),
 
     userId: uuid("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
-    // studio: text("studio").notNull(),             // Name or slug of studio - TODO add this later when it is relevant, along with a studio table (stores payment option, studio info, etc)
+    studioId: uuid("studio_id").notNull().references(() => studiosTable.id, { onDelete: "cascade" }),
     role: text("role").notNull(),                 // 'admin', 'instructor', 'student'
 
     apparatus: text("apparatus"),                 // 'lyra', 'hammock', etc.
@@ -40,6 +53,9 @@ export const userRolesTable = pgTable("user_roles", {
 
 export type UserRole = typeof userRolesTable.$inferSelect;
 export type NewUserRole = typeof userRolesTable.$inferInsert;
+
+
+
 
 
 /* MEDIA */
@@ -192,26 +208,6 @@ export type FlowPose = typeof flowPosesTable.$inferSelect;
 export type NewFlowPose = typeof flowPosesTable.$inferInsert;
 
 
-// TODO remove this table, replace with event logs
-//  /* FEEDBACK */
-export const feedbackTable = pgTable("feedback", {
-    id: uuid("id").primaryKey().defaultRandom(),
-
-    type: text("type").notNull(), // e.g., 'bug', 'feature', 'other'
-    message: text("message").notNull(),
-    email: text("email"), // Optional contact
-
-    userId: uuid("user_id").references(() => usersTable.id, {
-        onDelete: "set null",
-    }),
-
-    createdAt: timestamp("created_at").defaultNow(),
-});
-
-export type Feedback = typeof feedbackTable.$inferSelect;
-export type NewFeedback = typeof feedbackTable.$inferInsert;
-
-
 /* EVENT LOGS */
 export const eventsTable = pgTable("events", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -220,7 +216,7 @@ export const eventsTable = pgTable("events", {
         onDelete: "set null",
     }),
     time: timestamp("time").defaultNow(),
-    note: text("note").notNull(), // TODO make nullable MIGRATION
+    note: text("note"),
 });
 
 export type Login = typeof eventsTable.$inferSelect;
