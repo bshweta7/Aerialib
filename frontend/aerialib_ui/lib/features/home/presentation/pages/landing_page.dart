@@ -73,17 +73,17 @@ class LandingPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: () => context.goNamed('signup'),
-                      child: const Text(
-                        'SIGN UP',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   height: 48,
+                  //   child: ElevatedButton(
+                  //     onPressed: () => context.goNamed('signup'),
+                  //     child: const Text(
+                  //       'SIGN UP',
+                  //       style: TextStyle(fontSize: 18),
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 16),
 
                   // Row(
@@ -230,7 +230,7 @@ class LandingPage extends StatelessWidget {
                     width: 200,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () => context.goNamed('signup'),
+                      onPressed: () => context.goNamed('login'), // TODO change this back to sign up or demo
                       style: ElevatedButton.styleFrom(
                       //   backgroundColor: const Color(0xFF9383B6), // soft purple
                       //   foregroundColor: Colors.black,
