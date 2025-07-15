@@ -2,37 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/core/services/http_service.dart';
 import 'package:frontend/features/user/data/models/user_model.dart';
-import 'package:frontend/shared/features/navigation/widgets/smart_back_button.dart';
 import 'package:frontend/shared/widgets/info_display/expandable_card.dart';
-import '../../shared/widgets/info_display/info_row.dart';
-import '../../shared/widgets/main_scaffold.dart';
-import '../user/presentation/cubit/auth_cubit.dart';
-import 'admin_repository.dart';
+import '../../../shared/features/navigation/widgets/smart_back_button.dart';
+import '../../../shared/widgets/info_display/info_row.dart';
+import '../../../shared/widgets/main_scaffold.dart';
+import '../../user/presentation/cubit/auth_cubit.dart';
+import '../data/admin_flow_model.dart';
+import '../data/admin_repository.dart';
 
-class AdminUsersDashboardPage extends StatefulWidget {
-  const AdminUsersDashboardPage({super.key});
+class AdminFlowsDashboardPage extends StatefulWidget {
+  const AdminFlowsDashboardPage({super.key});
 
   @override
-  State<AdminUsersDashboardPage> createState() => _AdminUsersDashboardPageState();
+  State<AdminFlowsDashboardPage> createState() => _AdminFlowsDashboardPageState();
 }
 
-class _AdminUsersDashboardPageState extends State<AdminUsersDashboardPage> {
+class _AdminFlowsDashboardPageState extends State<AdminFlowsDashboardPage> {
   final ScrollController _scrollController = ScrollController();
   late final AdminRepository _repo;
-  late Future<List<UserModel>> _dashboardFuture;
+  late Future<List<AdminFlowModel>> _dashboardFuture;
 
   @override
   void initState() {
     super.initState();
     _repo = AdminRepository(httpService: HttpService());
-    final adminUser = context.read<AuthCubit>().state as AuthLoggedIn;
+    final adminFlow = context.read<AuthCubit>().state as AuthLoggedIn;
 
-    _dashboardFuture = _loadData(adminUser.user.token);
+    _dashboardFuture = _loadData(adminFlow.user.token);
   }
 
-  Future<List<UserModel>> _loadData(String token) async {
-    final users = await _repo.getAllUsers(token: token);
-    return users;
+  Future<List<AdminFlowModel>> _loadData(String token) async {
+    return await _repo.getAllFlows(token: token);
   }
 
   @override
@@ -46,10 +46,10 @@ class _AdminUsersDashboardPageState extends State<AdminUsersDashboardPage> {
     return MainScaffold(
       currentIndex: 3,
       appBar: AppBar(
-        leading: const SmartBackButton(),
-        title: const Text("Admin Users Dashboard")
+          leading: const SmartBackButton(),
+          title: const Text("Admin Flows Dashboard")
       ),
-      body: FutureBuilder<List<UserModel>>(
+      body: FutureBuilder<List<AdminFlowModel>>(
         future: _dashboardFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -60,20 +60,20 @@ class _AdminUsersDashboardPageState extends State<AdminUsersDashboardPage> {
             return const Center(child: Text("No data"));
           }
 
-          final users = snapshot.data!;
+          final flows = snapshot.data!;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: users.map((u) => Padding(
+              children: flows.map((f) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: ExpandableCard(
-                  title: u.username ?? "Unknown",
+                  title: "${f.createdBy ?? "Unknown"} | ${f.name ?? "Unknown"}",
                   children: [
-                    InfoRow("Email:", u.email),
-                    InfoRow("Name:", "${u.firstName} ${u.lastName}"),
-                    InfoRow("Last login:", "${u.lastLogin ?? 'Never'}"),
+                    InfoRow("Number of Poses:", "${f.numPoses}"),
+                    InfoRow("Apparatus:", f.apparatus),
+                    // InfoRow("Id:", f.id),
                     // if (u.isAdmin == true) const Text("Admin", style: TextStyle(color: Colors.deepPurple)),
                   ],
                 ),

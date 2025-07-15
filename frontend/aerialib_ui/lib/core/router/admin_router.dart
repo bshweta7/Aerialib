@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 
-import '../../features/admin/admin_flows_dashboard_page.dart';
-import '../../features/admin/admin_users_dashboard_page.dart';
+import '../../features/admin/presentation/admin_flows_dashboard_page.dart';
+import '../../features/admin/presentation/admin_users_dashboard_page.dart';
 
 
 List<GoRoute> adminRoutes = [
