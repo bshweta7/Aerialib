@@ -85,6 +85,13 @@
       "when": 1752182413400,
       "tag": "0011_add_user_roles_table",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1752601096823,
+      "tag": "0012_create_event_log_table",
+      "breakpoints": true
     }
   ]
 }
