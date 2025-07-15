@@ -67,12 +67,12 @@ class _HomePageState extends State<HomePage> {
         routeName: 'transition-library',
         description: 'Find new transitions between poses',
       ),
-      (
-        icon: Icons.music_note,
-        label: 'Music Library',
-        routeName: 'music-library',
-        description: 'Store song ideas for your next performance',
-      ),
+      // (
+      //   icon: Icons.music_note,
+      //   label: 'Music Library',
+      //   routeName: 'music-library',
+      //   description: 'Store song ideas for your next performance',
+      // ),
     ];
 
     final adminButtonConfigs = [
@@ -140,12 +140,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Select a library to get started.",
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
+                // const SizedBox(height: 10),
+                // const Text(
+                //   "Select a library to get started.",
+                //   style: TextStyle(fontSize: 18),
+                //   textAlign: TextAlign.center,
+                // ),
                 const SizedBox(height: 20),
 
 
@@ -199,20 +199,20 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
 
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      context.go('/admin/users');
-                    },
-                    icon: const Icon(Icons.admin_panel_settings),
-                    label: const Text('Admin Users Dashboard'),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      context.go('/admin/flows');
-                    },
-                    icon: const Icon(Icons.admin_panel_settings),
-                    label: const Text('Admin Flows Dashboard'),
-                  ),
+                  // ElevatedButton.icon(
+                  //   onPressed: () {
+                  //     context.go('/admin/users');
+                  //   },
+                  //   icon: const Icon(Icons.admin_panel_settings),
+                  //   label: const Text('Admin Users Dashboard'),
+                  // ),
+                  // ElevatedButton.icon(
+                  //   onPressed: () {
+                  //     context.go('/admin/flows');
+                  //   },
+                  //   icon: const Icon(Icons.admin_panel_settings),
+                  //   label: const Text('Admin Flows Dashboard'),
+                  // ),
                 ],
 
                 const SizedBox(height: 10),
