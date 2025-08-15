@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final approvedUsernames = ['admin', 'test', '3Josie3'];
+  final approvedUsernames = ['admin', 'test', '3Josie3', 'shweta', 'clee', 'morganf24', 'hoopster'];
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();

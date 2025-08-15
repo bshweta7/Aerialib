@@ -4,7 +4,7 @@ import { Router } from "express";
 import { auth, AuthRequest } from "../middleware/auth";
 import { db } from "../db";
 import {usersTable, flowsTable, flowPosesTable, userRolesTable, posesTable, NewPose, NewUserRole} from "../db/schema";
-import { eq, sql } from "drizzle-orm";
+import {and, eq, sql} from "drizzle-orm";
 import {getUserRoles, hasRole, isInstructorOrAdmin, isRootAdmin, isAuthorizedAddNewUserRole} from "../utils/rbac";
 import poseRouter from "./pose";
 
@@ -47,29 +47,66 @@ adminRouter.get("/users", auth, async (req: AuthRequest, res) => {
 adminRouter.get("/studentRoster", auth, async (req: AuthRequest, res) => {
     try {
         // Verify user is staff (admin or instructor)
-
         const isStaff = await isInstructorOrAdmin(req.user!);
         if (!isStaff && req.user !== process.env.ADMIN_USER_ID) { // TODO update this to check if user's roles contain root, admin, instructor
             res.status(403).json({ error: "Unauthorized" });
             return
         }
 
-        // Get all users
-        const allUsers = await db.select().from(usersTable); // TODO filter by studio
+        // Step 1: Get studio_id of requesting user
+        const requesterRoles = await db
+            .select({
+                studioId: userRolesTable.studioId,
+            })
+            .from(userRolesTable)
+            .where(eq(userRolesTable.userId, req.user!));
 
-        const usersFormatted = allUsers.map((user) => ({
+        if (!requesterRoles.length || !requesterRoles[0].studioId) {
+            res.status(400).json({ error: "Requesting user has no studio assigned" });
+            return;
+        }
+
+        const studioId = requesterRoles[0].studioId;
+
+        // Step 2: Join and filter by studio + student role
+        const usersWithRoles = await db
+            .select({
+                id: usersTable.id,
+                username: usersTable.username,
+                email: usersTable.email,
+                firstName: usersTable.firstName,
+                lastName: usersTable.lastName,
+                bio: usersTable.bio,
+                role: userRolesTable.role,
+                apparatus: userRolesTable.apparatus,
+                level: userRolesTable.level,
+            })
+            .from(usersTable)
+            .leftJoin(
+                userRolesTable,
+                eq(usersTable.id, userRolesTable.userId)
+            )
+            .where(
+                and(
+                    eq(userRolesTable.studioId, studioId),
+                    eq(userRolesTable.role, "student")
+                )
+            );
+
+        const usersFormatted = usersWithRoles.map((entry) => ({
             token: "",
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            bio: user.bio,
+            id: entry.id,
+            username: entry.username,
+            email: entry.email,
+            firstName: entry.firstName,
+            lastName: entry.lastName,
+            bio: entry.bio,
+            role: entry.role,
+            apparatus: entry.apparatus,
+            level: entry.level,
         }));
-        // TODO add user roles on to each user in return
 
         res.json(usersFormatted);
-
     } catch (e) {
         console.error("[AdminRouter] Get error", e);
         res.status(500).json({ error: e });

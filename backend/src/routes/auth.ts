@@ -107,7 +107,9 @@ authRouter.post("/signup", async (req: Request<{}, {}, SignUpBody>, res: Respons
         const newUser: NewUser = {
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            isActive: 0,
+            termsVersion: 0
         }
 
         // insert new user into db

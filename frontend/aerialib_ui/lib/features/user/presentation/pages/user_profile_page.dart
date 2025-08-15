@@ -102,6 +102,25 @@ class _UserProfilePage extends State<UserProfilePage> {
                   const SizedBox(height: 20,),
                   const Divider(),
 
+                  // Privacy Policy button
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      context.goNamed('privacy');
+                    },
+                    icon: const Icon(Icons.logout),
+                    label: const Text(
+                      'Privacy Policy',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD68686),
+                      // foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20,),
+                  const Divider(),
                   // // Tag Management Navigation
                   // ElevatedButton(
                   //     onPressed: () {
@@ -116,31 +135,35 @@ class _UserProfilePage extends State<UserProfilePage> {
                   // ),
                   // const SizedBox(height: 10,),
 
-                  const SizedBox(height: 10,),
-                  const Text(
-                    "Have an idea or found a bug?",
-                    style: TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      // color: Colors.black,
-                      fontSize: 18,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 10,),
 
-                  // Feedback Form Navigation
-                  ElevatedButton(
-                      onPressed: () {
-                        context.pushNamed('feedback');
-                      },
-                      child: const Text(
-                          "Submit Feedback",
-                          style: TextStyle(
-                            fontSize: 20,
-                          )
-                      )
-                  ),
-                  const SizedBox(height: 20,),
+
+
+
+                  // const SizedBox(height: 10,),
+                  // const Text(
+                  //   "Have an idea or found a bug?",
+                  //   style: TextStyle(
+                  //     // fontWeight: FontWeight.bold,
+                  //     // color: Colors.black,
+                  //     fontSize: 18,
+                  //   ),
+                  //   textAlign: TextAlign.center,
+                  // ),
+                  // const SizedBox(height: 10,),
+                  //
+                  // // Feedback Form Navigation
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //       context.pushNamed('feedback');
+                  //     },
+                  //     child: const Text(
+                  //         "Submit Feedback",
+                  //         style: TextStyle(
+                  //           fontSize: 20,
+                  //         )
+                  //     )
+                  // ),
+                  // const SizedBox(height: 20,),
 
                   const Divider(),
                   const SizedBox(height: 10,),
