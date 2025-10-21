@@ -31,7 +31,11 @@ services:
       POSTGRES_PASSWORD: aerialib_postgres_secret_password
     ports:
       - "5432:5432"
-    volumes: 
-      - ./db_postgres:/var/lib/postgresql/data 
-      - ./db_backups:/db_backups 
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db_backups:/db_backups:rw
+
+volumes:
+  db_data:
+
 
