@@ -12,6 +12,7 @@ class UserLocalDataSource {
 
   /// Inserts a new user into the local database, replacing if a user with the same ID already exists.
   Future<void> insertUser(UserModel userModel) async {
+    log("[UserLocalData] Inserting User: ${userModel.toMap()}");
     final db = await database;
     await db.insert(
       tableName,

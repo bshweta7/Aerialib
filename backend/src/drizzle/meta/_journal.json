@@ -92,6 +92,13 @@
       "when": 1752601096823,
       "tag": "0012_create_event_log_table",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1755220906261,
+      "tag": "0013_add_studio_tables",
+      "breakpoints": true
     }
   ]
 }

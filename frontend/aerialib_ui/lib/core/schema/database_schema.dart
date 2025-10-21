@@ -14,7 +14,6 @@ const String createUserTable = '''
     
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    last_login TEXT NOT NULL,
     
     token TEXT NOT NULL
   )

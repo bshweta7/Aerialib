@@ -20,7 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(const AuthLoading());
       log('[AuthCubit] Getting user data... ');
-      final user = await _userRepository.getUser(allowRemoteFallback: false);
+      final user = await _userRepository.getUser(allowRemoteFallback: true);
 
       if (user == null) {
         log('[AuthCubit] No user found, logging out');

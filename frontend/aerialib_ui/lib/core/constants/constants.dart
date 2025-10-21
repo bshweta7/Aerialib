@@ -26,6 +26,7 @@ class Constants {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
       case TargetPlatform.iOS:
+        // return "http://localhost:8000";
         return "http://10.20.30.203:8000";
       case TargetPlatform.fuchsia:
       case TargetPlatform.macOS:
