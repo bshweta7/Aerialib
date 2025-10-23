@@ -55,6 +55,15 @@ export type UserRole = typeof userRolesTable.$inferSelect;
 export type NewUserRole = typeof userRolesTable.$inferInsert;
 
 
+/* STUDENTS */
+export const studentsTable = pgTable("students", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name"),
+    // TODO other details about student
+});
+
+export type Student = typeof userRolesTable.$inferSelect;
+export type NewStudent = typeof userRolesTable.$inferInsert;
 
 
 
