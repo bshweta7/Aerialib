@@ -210,6 +210,19 @@ const String createMusicTable = '''
 
 const String dropMusicTable = 'DROP TABLE IF EXISTS $musicTable';
 
+/* STUDENTS */
+const String studentsTable = "students";
+
+const String createStudentsTable = '''
+  CREATE TABLE $studentsTable (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    is_synced INTEGER NOT NULL
+  )
+''';
+
+const String dropStudentsTable = 'DROP TABLE IF EXISTS $studentsTable';
+
 
 // /* TAGS */
 // const String tagsTable = "tags";

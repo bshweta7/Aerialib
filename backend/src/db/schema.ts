@@ -58,7 +58,7 @@ export type NewUserRole = typeof userRolesTable.$inferInsert;
 /* STUDENTS */
 export const studentsTable = pgTable("students", {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: text("name"),
+    name: text("name"), // TODO should be not null
     // TODO other details about student
 });
 
