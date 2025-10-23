@@ -1,3 +1,21 @@
+# General
+* To enter docker ```docker compose exec db psql -U postgres -d aerialib```
+* List tables ```\dt```
+* Get all from a table ```SELECT * FROM <table_name>;```
+* 
+
+
+
+
+
+
+
+
+
+
+
+
+# Old
 docker compose -f docker-compose.dev.yaml up --build  --> run docker
 
 npm install {package} --> (in terminal) to install new package

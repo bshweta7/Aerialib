@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/router/student_router.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/core/router/auth_router.dart';
@@ -37,6 +38,7 @@ GoRouter createRouter(AuthCubit authCubit) {
       ...mediaRoutes,
       ...musicRoutes,
       ...poseRoutes,
+      ...studentRoutes,
       ...tagRoutes,
       ...transitionRoutes,
       ...adminRoutes,

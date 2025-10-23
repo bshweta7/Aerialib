@@ -1,3 +1,5 @@
+// TODO WIP
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -59,26 +61,13 @@ class _StudentLibraryPageState extends State<StudentLibraryPage> {
   @override
   Widget build(BuildContext context) {
     final userState = context.read<AuthCubit>().state;
-    final userToken = (userState is AuthLoggedIn) ? userState.user.token : null;
 
     return MainScaffold(
       isScrollable: false,
-      currentIndex: 0, // TODO move this to a "media" tab instead of home
+      currentIndex: 0,
       appBar: AppBar(
         leading: const SmartBackButton(),
-        title: const Text("Student Ideas"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              context.goNamed(
-                'add-new-student',
-                queryParameters: {'from': 'student-library'},
-              );
-            },
-            tooltip: 'Add new song',
-          ),
-        ],
+        title: const Text("Students"),
       ),
       body: BlocBuilder<StudentsCubit, StudentsState>(
         builder: (context, state) {
@@ -93,37 +82,39 @@ class _StudentLibraryPageState extends State<StudentLibraryPage> {
           if (state is GetStudentsSuccess) {
             _allStudent = state.students;
 
-            return Column(
+            return Stack(
               children: [
+                if (_allStudent.isEmpty)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40),
+                      child: Text(
+                        "No students yet, try adding one!",
+                        style: TextStyle(fontSize: 16, color: Colors.black38),
+                      ),
+                    ),
+                  )
+                else
+                  ListView.builder(
+                    controller: _scrollController,
+                    itemCount: _allStudent.length,
+                    itemBuilder: (context, index) {
+                      final student = _allStudent[index];
 
-                Expanded(
-                  child: Stack(
-                    children: [
-                      if (_allStudent.isEmpty)
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 40),
-                            child: Text(
-                              "No students yet, try adding one!",
-                              style: TextStyle(fontSize: 16, color: Colors.black38),
-                            ),
-                          ),
-                        )
-                      else
-                        ListView.builder(
-                          // controller: scrollController,
-                          itemCount: _allStudent.length,
-                          itemBuilder: (context, index) {
-                            final student = _allStudent[index];
-
-                            Text(student.name);
-
-                          },
-                          cacheExtent: 600.0,
-                        )
-                    ],
-                  ),
-                ),
+                      return ListTile(
+                        title: Text(student.name),
+                        onTap: () {
+                          // navigate using student id
+                          context.goNamed(
+                            'student-view',
+                            pathParameters: {'studentId': student.id},
+                            queryParameters: {'from': 'student-library'},
+                          );
+                        },
+                      );
+                    },
+                    cacheExtent: 600.0,
+                  )
               ],
             );
           }

@@ -67,6 +67,12 @@ class _HomePageState extends State<HomePage> {
         routeName: 'transition-library',
         description: 'Find new transitions between poses',
       ),
+      (
+        icon: Icons.sync_alt,
+        label: 'Students',
+        routeName: 'student-library',
+        description: 'Students',
+      ),
       // (
       //   icon: Icons.music_note,
       //   label: 'Music Library',
