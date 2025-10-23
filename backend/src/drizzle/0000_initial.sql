@@ -1,2 +1,0 @@
--- drizzle/0000_skip_initial.sql
--- This is an empty migration to record the initial sync point.
