@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,6 @@ import 'package:frontend/features/user/presentation/cubit/password_cubit.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:frontend/core/services/repository_providers.dart';
 import 'package:frontend/core/constants/app_theme.dart';
 import 'package:frontend/core/router/app_router.dart';
 
@@ -48,9 +48,14 @@ import 'package:frontend/shared/features/navigation/cubit/nav_history_cubit.dart
 
 import 'features/music/data/datasources/music_local_data.dart';
 import 'features/music/data/datasources/music_remote_data.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
 
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.linux) {
     await windowManager.ensureInitialized();
