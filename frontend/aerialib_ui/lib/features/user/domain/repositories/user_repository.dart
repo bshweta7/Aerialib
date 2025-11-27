@@ -17,7 +17,7 @@ class UserRepository {
   /// Converts a UserModel to a UserEntity.
   UserEntity _userModelToEntity(UserModel userModel) {
     return UserEntity(
-      id: userModel.id,
+      uid: userModel.id,
       username: userModel.username,
       email: userModel.email,
       firstName: userModel.firstName,
@@ -32,7 +32,7 @@ class UserRepository {
   /// Converts a UserEntity to a UserModel.
   UserModel _userEntityToModel(UserEntity userEntity) {
     return UserModel(
-      id: userEntity.id,
+      id: userEntity.uid,
       username: userEntity.username,
       email: userEntity.email,
       firstName: userEntity.firstName,

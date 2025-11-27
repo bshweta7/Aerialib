@@ -1,5 +1,5 @@
 class UserEntity {
-  final String id;
+  final String uid;
   final String username;
   final String email;
   final String? firstName;
@@ -10,7 +10,7 @@ class UserEntity {
   final String token;
 
   const UserEntity({
-    required this.id,
+    required this.uid,
     required this.username,
     required this.email,
     this.firstName,
@@ -21,12 +21,39 @@ class UserEntity {
     required this.token,
   });
 
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'uid': uid,
+      'username': username,
+      'email': email,
+      'first_name': firstName,
+      'last_name': lastName,
+      'bio': bio,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
+
+  factory UserEntity.fromMap(Map<String, dynamic> map) {
+    return UserEntity(
+      uid: map['uid'] ?? '',
+      username: map['username'] ?? '',
+      email: map['email'] ?? '',
+      firstName: map['first_name'],
+      lastName: map['last_name'],
+      bio: map['bio'],
+      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : DateTime.now(),
+      updatedAt: map['updated_at'] != null ? DateTime.parse(map['updated_at']) : DateTime.now(),
+      token: map['token'] ?? '',
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
           other is UserEntity &&
               runtimeType == other.runtimeType &&
-              id == other.id &&
+              uid == other.uid &&
               username == other.username &&
               email == other.email &&
               firstName == other.firstName &&
@@ -38,7 +65,7 @@ class UserEntity {
 
   @override
   int get hashCode =>
-      id.hashCode ^
+      uid.hashCode ^
       username.hashCode ^
       email.hashCode ^
       firstName.hashCode ^

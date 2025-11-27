@@ -51,7 +51,7 @@ class _MusicLibraryPageState extends State<MusicLibraryPage> {
   void _navigateToMusicPage(MediaIconEntity mediaItem) {
     context.goNamed(
       'music-view',
-      pathParameters: {'musicId': mediaItem.data.id},
+      pathParameters: {'musicId': mediaItem.data.uid},
       queryParameters: {'from': 'music-library'},
     );
   }

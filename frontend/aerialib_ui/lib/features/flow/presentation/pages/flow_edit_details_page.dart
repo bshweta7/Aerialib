@@ -86,7 +86,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
       progressions: progressionsController.text.trim().isNotEmpty ? progressionsController.text.trim() : null,
       modifications: modificationsController.text.trim().isNotEmpty ? modificationsController.text.trim() : null,
       commonErrors: commonErrorsController.text.trim().isNotEmpty ? commonErrorsController.text.trim() : null,
-      updatedBy: user.user.id,
+      updatedBy: user.user.uid,
       updatedAt: DateTime.now(),
       isSynced: 0,
     );
@@ -139,7 +139,7 @@ class _FlowEditDetailsPageState extends State<FlowEditDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthCubit>().state;
-    bool isOwner = state is AuthLoggedIn && widget.flow.createdBy == state.user.id;
+    bool isOwner = state is AuthLoggedIn && widget.flow.createdBy == state.user.uid;
 
     return MainScaffold(
       currentIndex: 1,

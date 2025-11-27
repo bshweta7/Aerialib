@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
     if (authState is AuthLoggedIn) {
       currentUsername = authState.user.username;
       userToken = authState.user.token;
-      userId = authState.user.id;
+      userId = authState.user.uid;
     }
 
     return MainScaffold(

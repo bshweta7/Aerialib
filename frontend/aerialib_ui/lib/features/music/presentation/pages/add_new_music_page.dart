@@ -44,7 +44,7 @@ class _AddNewMusicPageState extends State<AddNewMusicPage> {
         tempoBpm: tempo,
         durationSec: duration,
         favorite: isFavorite,
-        userId: user.user.id,
+        userId: user.user.uid,
         token: user.user.token,
       );
     }

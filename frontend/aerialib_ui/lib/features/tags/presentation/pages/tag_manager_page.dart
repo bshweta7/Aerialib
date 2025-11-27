@@ -154,7 +154,7 @@ class TagManagerPage extends StatelessWidget {
                 final newTag = TagEntity(
                   id: '', // backend will assign
                   name: name,
-                  userId: user.user.id,
+                  userId: user.user.uid,
                   color: null,
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now(),

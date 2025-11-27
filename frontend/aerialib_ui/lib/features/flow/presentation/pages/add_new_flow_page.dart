@@ -116,8 +116,8 @@ class _AddNewFlowPageState extends State<AddNewFlowPage> {
         primaryMediaId: Constants.missingImageId,
         primaryMediaPath: Constants.missingImagePath,
 
-        createdBy: user.user.id,
-        updatedBy: user.user.id,
+        createdBy: user.user.uid,
+        updatedBy: user.user.uid,
         createdAt: now,
         updatedAt: now,
         isSynced: 0,

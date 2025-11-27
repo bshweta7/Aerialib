@@ -75,7 +75,7 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   void _navigateToPosePage(MediaIconEntity mediaItem) {
     context.goNamed(
       'pose-view',
-      pathParameters: {'poseId': mediaItem.data.id},
+      pathParameters: {'poseId': mediaItem.data.uid},
       queryParameters: {'from': 'pose-library'},
     );
   }

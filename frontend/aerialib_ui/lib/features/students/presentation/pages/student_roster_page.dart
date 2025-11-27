@@ -53,7 +53,7 @@ class _StudentLibraryPageState extends State<StudentLibraryPage> {
   void _navigateToStudentPage(MediaIconEntity mediaItem) {
     context.goNamed(
       'student-view',
-      pathParameters: {'studentId': mediaItem.data.id},
+      pathParameters: {'studentId': mediaItem.data.uid},
       queryParameters: {'from': 'student-library'},
     );
   }
