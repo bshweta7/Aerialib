@@ -85,11 +85,11 @@ class UserRepository {
 
   /// Logs in an existing user given email and password
   Future<UserEntity> login({
-    required String username,
+    required String email,
     required String password,
   }) async {
     final user = await authMethods.loginUser(
-      email: username,
+      email: email,
       password: password,
     );
 

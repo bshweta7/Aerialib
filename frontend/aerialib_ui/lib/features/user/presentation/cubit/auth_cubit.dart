@@ -74,13 +74,13 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void login({
-    required String username,
+    required String email,
     required String password,
   }) async {
     try {
       emit(const AuthLoading());
       final userEntity = await _userRepository.login(
-        username: username,
+        email: email,
         password: password,
       );
       emit(AuthLoggedIn(userEntity));

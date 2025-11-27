@@ -16,13 +16,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final approvedUsernames = ['admin', 'test', '3Josie3', 'shweta', 'clee', 'morganf24', 'hoopster', 't@t.com'];
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -30,42 +30,11 @@ class _LoginPageState extends State<LoginPage> {
   void logInUser() {
     if (formKey.currentState!.validate()) {
       context.read<AuthCubit>().login(
-        username: usernameController.text.trim(),
+        email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
     }
   }
-  //
-  // // TODO temporarily disabled for unapproved users
-  // void logInUser() {
-  //   final username = usernameController.text.trim();
-  //
-  //   if (!approvedUsernames.contains(username)) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (context) => AlertDialog(
-  //         title: const Text("Access Restricted"),
-  //         content: const Text("Aerialib is temporarily suspended.\nPlease contact Shweta for access."),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () => Navigator.of(context).pop(),
-  //             child: const Text("OK"),
-  //           )
-  //         ],
-  //       ),
-  //     );
-  //     return;
-  //   }
-  //
-  //   if (formKey.currentState!.validate()) {
-  //     context.read<AuthCubit>().login(
-  //       username: username,
-  //       password: passwordController.text.trim(),
-  //     );
-  //   }
-  // }
-
-
 
   void resetPage() {
     context.read<AuthCubit>().reInitialize();
@@ -123,18 +92,18 @@ class _LoginPageState extends State<LoginPage> {
                           // ),
                           const SizedBox(height: 24),
 
-                          // Username field
+                          // Email field
                           TextFormField(
-                            controller: usernameController,
+                            controller: emailController,
                             decoration: const InputDecoration(
-                              hintText: 'Username',
+                              hintText: 'Email',
                               border: OutlineInputBorder(),
                               fillColor: Colors.white,
                               filled: true,
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return "Username field cannot be empty!";
+                                return "Email field cannot be empty";
                               }
                               return null;
                             },
