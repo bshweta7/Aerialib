@@ -12,6 +12,7 @@ import 'package:frontend/features/tags/presentation/cubit/tag_cubit.dart';
 import 'package:frontend/features/transitions/data/transition_remote_data.dart';
 import 'package:frontend/features/transitions/domain/transition_repository.dart';
 import 'package:frontend/features/transitions/presentation/cubit/transition_cubit.dart';
+import 'package:frontend/features/user/data/auth_methods.dart';
 import 'package:frontend/features/user/presentation/cubit/password_cubit.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
@@ -75,6 +76,7 @@ Future<void> main() async {
   final userRepo = UserRepository(
     localDataSource: UserLocalDataSource(),
     remoteDataSource: UserRemoteDataSource(httpService: HttpService()),
+    authMethods: AuthMethods(),
   );
 
   final poseRepo = PoseRepository(

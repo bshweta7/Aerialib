@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:frontend/features/user/data/auth_methods.dart';
 import 'package:frontend/features/user/domain/entities/user_entity.dart';
 import 'package:frontend/features/user/data/datasources/user_local_data.dart';
 import 'package:frontend/features/user/data/datasources/user_remote_data.dart';
@@ -8,10 +9,12 @@ import 'package:frontend/features/user/data/models/user_model.dart';
 class UserRepository {
   final UserLocalDataSource localDataSource;
   final UserRemoteDataSource remoteDataSource;
+  final AuthMethods authMethods;
 
   UserRepository({
     required this.localDataSource,
     required this.remoteDataSource,
+    required this.authMethods
   });
 
   /// Converts a UserModel to a UserEntity.
@@ -44,21 +47,26 @@ class UserRepository {
     );
   }
 
-  /// Signs up a new user via the remote data source and saves the user locally upon success.
+  /// Sign up user with email and password in Firebase
   Future<UserEntity> signUp({
     required String username,
     required String email,
     required String password,
   }) async {
-    // TODO get existing users, check emails and usernames HERE before sending to backend
-    final userModel = await remoteDataSource.signUp(
+
+    // Create user in firebase with AuthMethods
+    final userEntity = await authMethods.signUpUser(
       username: username,
       email: email,
       password: password,
     );
-    await localDataSource.insertUser(userModel);
-    return _userModelToEntity(userModel);
+
+    // TODO Add to local db
+    // await localDataSource.insertUser(userEntity);
+
+    return userEntity;
   }
+
 
   /// Checks if the username and email are taken
   Future<Map<String, bool>> checkTaken({
