@@ -83,17 +83,20 @@ class UserRepository {
   }
 
 
-  /// Logs in an existing user via the remote data source and saves the user locally upon success.
+  /// Logs in an existing user given email and password
   Future<UserEntity> login({
     required String username,
     required String password,
   }) async {
-    final userModel = await remoteDataSource.login(
-      username: username,
+    final user = await authMethods.loginUser(
+      email: username,
       password: password,
     );
-    await localDataSource.insertUser(userModel);
-    return _userModelToEntity(userModel);
+
+    // TODO cache locally
+    // await localDataSource.insertUser(user);
+
+    return user;
   }
 
   /// Retrieves the currently logged-in user's data. Tries the local data source first, then falls back to the remote.

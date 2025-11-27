@@ -80,4 +80,45 @@ class AuthMethods {
         return e.message ?? 'Authentication error: ${e.code}';
     }
   }
+
+
+  Future<UserEntity> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      // 1. Sign in with FirebaseAuth
+      final cred = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final uid = cred.user!.uid;
+
+      // 2. Fetch the user doc from Firestore
+      final doc =
+      await _firestore.collection('users').doc(uid).get();
+
+      if (!doc.exists) {
+        throw Exception('User profile not found in Firestore.');
+      }
+
+      final data = doc.data() as Map<String, dynamic>;
+
+      // 3. Build UserEntity from Firestore data
+      final user = UserEntity.fromMap({
+        ...data,
+        'uid': uid,      // ensure uid is present
+        'token': '',     // TODO legacy field, unused in Firebase world
+      });
+
+      return user;
+    } on FirebaseAuthException catch (e) {
+      // TODO Map codes if you want nicer messages
+      throw Exception(_mapAuthErrorToMessage(e));
+    } catch (e) {
+      throw Exception('Failed to log in: $e');
+    }
+  }
+
 }

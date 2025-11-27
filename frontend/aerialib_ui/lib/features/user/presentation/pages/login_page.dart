@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final approvedUsernames = ['admin', 'test', '3Josie3', 'shweta', 'clee', 'morganf24', 'hoopster'];
+  final approvedUsernames = ['admin', 'test', '3Josie3', 'shweta', 'clee', 'morganf24', 'hoopster', 't@t.com'];
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -27,43 +27,43 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  // void logInUser() {
-  //   if (formKey.currentState!.validate()) {
-  //     context.read<AuthCubit>().login(
-  //       username: usernameController.text.trim(),
-  //       password: passwordController.text.trim(),
-  //     );
-  //   }
-  // }
-
-  // TODO temporarily disabled for unapproved users
   void logInUser() {
-    final username = usernameController.text.trim();
-
-    if (!approvedUsernames.contains(username)) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Access Restricted"),
-          content: const Text("Aerialib is temporarily suspended.\nPlease contact Shweta for access."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("OK"),
-            )
-          ],
-        ),
-      );
-      return;
-    }
-
     if (formKey.currentState!.validate()) {
       context.read<AuthCubit>().login(
-        username: username,
+        username: usernameController.text.trim(),
         password: passwordController.text.trim(),
       );
     }
   }
+  //
+  // // TODO temporarily disabled for unapproved users
+  // void logInUser() {
+  //   final username = usernameController.text.trim();
+  //
+  //   if (!approvedUsernames.contains(username)) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) => AlertDialog(
+  //         title: const Text("Access Restricted"),
+  //         content: const Text("Aerialib is temporarily suspended.\nPlease contact Shweta for access."),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () => Navigator.of(context).pop(),
+  //             child: const Text("OK"),
+  //           )
+  //         ],
+  //       ),
+  //     );
+  //     return;
+  //   }
+  //
+  //   if (formKey.currentState!.validate()) {
+  //     context.read<AuthCubit>().login(
+  //       username: username,
+  //       password: passwordController.text.trim(),
+  //     );
+  //   }
+  // }
 
 
 
