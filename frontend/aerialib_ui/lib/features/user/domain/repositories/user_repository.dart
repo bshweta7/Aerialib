@@ -1,51 +1,35 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frontend/features/user/data/auth_methods.dart';
 import 'package:frontend/features/user/domain/entities/user_entity.dart';
 import 'package:frontend/features/user/data/datasources/user_local_data.dart';
 import 'package:frontend/features/user/data/datasources/user_remote_data.dart';
-import 'package:frontend/features/user/data/models/user_model.dart';
 
 class UserRepository {
   final UserLocalDataSource localDataSource;
   final UserRemoteDataSource remoteDataSource;
   final AuthMethods authMethods;
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+
+  // UserRepository(this._auth, this._firestore, {
+  //   required this.localDataSource,
+  //   required this.remoteDataSource,
+  //   required this.authMethods,
+  //
+  // });
 
   UserRepository({
     required this.localDataSource,
     required this.remoteDataSource,
-    required this.authMethods
-  });
+    required this.authMethods,
+    FirebaseAuth? firebaseAuth,
+    FirebaseFirestore? firestore,
+  })  : _auth = firebaseAuth ?? FirebaseAuth.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance; // TODO see if this should be moved to main.dart
 
-  /// Converts a UserModel to a UserEntity.
-  UserEntity _userModelToEntity(UserModel userModel) {
-    return UserEntity(
-      uid: userModel.id,
-      username: userModel.username,
-      email: userModel.email,
-      firstName: userModel.firstName,
-      lastName: userModel.lastName,
-      bio: userModel.bio,
-      createdAt: userModel.createdAt,
-      updatedAt: userModel.updatedAt,
-      token: userModel.token,
-    );
-  }
-
-  /// Converts a UserEntity to a UserModel.
-  UserModel _userEntityToModel(UserEntity userEntity) {
-    return UserModel(
-      id: userEntity.uid,
-      username: userEntity.username,
-      email: userEntity.email,
-      firstName: userEntity.firstName,
-      lastName: userEntity.lastName,
-      bio: userEntity.bio,
-      createdAt: userEntity.createdAt,
-      updatedAt: userEntity.updatedAt,
-      token: userEntity.token,
-    );
-  }
 
   /// Sign up user with email and password in Firebase
   Future<UserEntity> signUp({
@@ -67,22 +51,6 @@ class UserRepository {
     return userEntity;
   }
 
-
-  /// Checks if the username and email are taken
-  Future<Map<String, bool>> checkTaken({
-    required String username,
-    required String email,
-  }) async {
-    // TODO get existing users, check emails and usernames HERE before sending to backend
-    final takenStatus = await remoteDataSource.checkTaken(
-      username: username,
-      email: email,
-    );
-
-    return takenStatus;
-  }
-
-
   /// Logs in an existing user given email and password
   Future<UserEntity> login({
     required String email,
@@ -102,29 +70,68 @@ class UserRepository {
   /// Retrieves the currently logged-in user's data. Tries the local data source first, then falls back to the remote.
   /// If [allowRemoteFallback] is false, will not attempt a remote fetch.
   Future<UserEntity?> getUser({bool allowRemoteFallback = true}) async {
-    log("[UserRepository] Getting user from local...");
-    final localUser = await localDataSource.getUser();
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        log('[UserRepository] getUser: no Firebase currentUser');
+        return null;
+      }
 
-    if (localUser != null) {
-      return _userModelToEntity(localUser);
-    }
+      final uid = currentUser.uid;
 
-    if (!allowRemoteFallback) {
-      log("[UserRepository] No local user and remote fetch disabled");
+      // TODO try local cache first later
+      // if (localDataSource != null) {
+      //   final localUser = await localDataSource.getUser(uid);
+      //   if (localUser != null) {
+      //     log('[UserRepository] getUser: returning local cached user');
+      //     return localUser;
+      //   }
+      // }
+
+      if (!allowRemoteFallback) {
+        return null;
+      }
+
+      final doc =
+      await _firestore.collection('users').doc(uid).get();
+
+      if (!doc.exists) {
+        log('[UserRepository] getUser: Firestore user doc not found for $uid');
+        return null;
+      }
+
+      final data = doc.data() as Map<String, dynamic>;
+
+      final user = UserEntity.fromMap({
+        ...data,
+        'uid': uid,
+        'token': '', // legacy field; not stored in Firestore
+      });
+
+      // TODO refresh cache later
+      // await localDataSource.insertUser(user);
+
+      return user;
+    } catch (e, st) {
+      log('[UserRepository] getUser error: $e', stackTrace: st);
       return null;
     }
+  }
 
-    try {
-      final remoteUser = await remoteDataSource.getUserData();
-      if (remoteUser != null) {
-        await localDataSource.insertUser(remoteUser);
-        return _userModelToEntity(remoteUser);
-      }
-    } catch (e) {
-      log("[UserRepository] Remote user fetch failed: $e");
-    }
+  // TODO below this line ------------------------------------------------------
 
-    return null;
+  /// Checks if the username and email are taken
+  Future<Map<String, bool>> checkTaken({
+    required String username,
+    required String email,
+  }) async {
+    // TODO get existing users, check emails and usernames HERE before sending to backend
+    final takenStatus = await remoteDataSource.checkTaken(
+      username: username,
+      email: email,
+    );
+
+    return takenStatus;
   }
 
   /// Clears the locally stored user data.
