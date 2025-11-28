@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/router/instructor_router.dart';
 import 'package:frontend/core/router/student_router.dart';
 import 'package:go_router/go_router.dart';
 
@@ -42,6 +43,7 @@ GoRouter createRouter(AuthCubit authCubit) {
       ...tagRoutes,
       ...transitionRoutes,
       ...adminRoutes,
+      ...instructorRoutes
 
     ],
     redirect: (context, state) {

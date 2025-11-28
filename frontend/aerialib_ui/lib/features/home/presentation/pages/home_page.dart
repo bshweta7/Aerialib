@@ -62,10 +62,10 @@ class _HomePageState extends State<HomePage> {
         description: 'Create or manage your flows',
       ),
       (
-        icon: Icons.sync_alt,
-        label: 'Transitions Library',
-        routeName: 'transition-library',
-        description: 'Find new transitions between poses',
+        icon: Icons.star,
+        label: 'Instructors',
+        routeName: 'instructor-home',
+        description: 'INSTRUCTOR',
       ),
       (
         icon: Icons.sync_alt,
