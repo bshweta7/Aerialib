@@ -48,8 +48,8 @@ class _FlowLibraryPageState extends State<FlowLibraryPage> {
 
   Future<void> _initSync() async {
     final user = context.read<AuthCubit>().state as AuthLoggedIn;
-    await context.read<PosesCubit>().syncPoses(token: user.user.token);
-    if (!mounted) return;
+    // await context.read<PosesCubit>().syncPoses(token: user.user.token);
+    // if (!mounted) return;
     await context.read<FlowsCubit>().syncFlows(token: user.user.token);
     if (!mounted) return;
     context.read<FlowsCubit>().getAllFlows(token: user.user.token); // TODO remove this if sync can return the flows

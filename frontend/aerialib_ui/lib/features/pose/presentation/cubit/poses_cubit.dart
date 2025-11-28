@@ -9,7 +9,6 @@ part 'poses_state.dart';
 
 class PosesCubit extends Cubit<PosesState> {
   final PoseRepository _poseRepository;
-  bool _isSyncing = false;
 
   PosesCubit(this._poseRepository) : super(const PoseInitial());
 
@@ -43,7 +42,7 @@ class PosesCubit extends Cubit<PosesState> {
     }
   }
 
-  /// Fetch all poses (from local storage or remote if needed)
+  /// Fetch all poses
   Future<void> getAllPoses({required String token}) async {
     try {
       log('[PosesCubit] Fetching poses...');
@@ -56,30 +55,6 @@ class PosesCubit extends Cubit<PosesState> {
     } catch (e) {
       log('[PosesCubit] GetAllPoses failed: $e');
       emit(PoseError(e.toString()));
-    }
-  }
-
-  /// Run a one-time sync of poses when network is available (sync the unsynced local poses with remote)
-  Future<void> syncPoses({required String token}) async {
-    if (_isSyncing) return;
-    _isSyncing = true;
-
-    // log("[PosesCubit] Starting one-shot sync...");
-
-    try {
-      await _poseRepository.syncLocalToRemote(token);
-      // log('[PosesCubit] Synced local to remote.');
-
-      await _poseRepository.syncRemoteToLocal(token);
-      // log('[PosesCubit] Synced remote to local.');
-
-      final allPoses = await _poseRepository.getAllPoses();
-      emit(GetPosesSuccess(allPoses));
-    } catch (e) {
-      log('[PosesCubit] Sync error: $e');
-      emit(PoseError('[PosesCubit] Sync error: $e'));
-    } finally {
-      _isSyncing = false;
     }
   }
 
@@ -119,26 +94,6 @@ class PosesCubit extends Cubit<PosesState> {
     } catch (e) {
       log('[PosesCubit] Deleting error: $e');
       emit(PoseError('[PosesCubit] Deleting error: $e'));
-    }
-  }
-
-
-  Future<void> refresh({required String token}) async {
-    try {
-      emit(const PoseLoading());
-      final allPoses = await _poseRepository.getAllPoses();
-      emit(GetPosesSuccess(allPoses));
-    } catch (e) {
-      emit(PoseError('Refresh error: ${e.toString()}'));
-    }
-  }
-
-  Future<void> refreshLocalOnly() async {
-    try {
-      final allPoses = await _poseRepository.getAllPoses();
-      emit(GetPosesSuccess(allPoses));
-    } catch (e) {
-      emit(PoseError('Local refresh error: ${e.toString()}'));
     }
   }
 

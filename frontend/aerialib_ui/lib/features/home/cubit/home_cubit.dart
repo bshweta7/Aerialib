@@ -25,7 +25,7 @@ class HomeCubit extends Cubit<HomeState> {
 
       await Future.wait([
         _safeSync(() => context.read<MediaCubit>().syncMedia(token: token), 'Media'),
-        _safeSync(() => context.read<PosesCubit>().syncPoses(token: token), 'Poses'),
+        // _safeSync(() => context.read<PosesCubit>().syncPoses(token: token), 'Poses'),
         _safeSync(() => context.read<TransitionCubit>().syncTransitions(token: token), 'Transitions'),
         _safeSync(() => context.read<FlowsCubit>().syncFlows(token: token), 'Flows'),
       ]);

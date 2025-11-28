@@ -32,7 +32,7 @@ class ConnectivityService {
     _subscription = Connectivity().onConnectivityChanged.listen((resultList) async {
       if (_isConnected(resultList)) {
         log('[ConnectivityService] Connected, triggering sync...');
-        await posesCubit.syncPoses(token: token);
+        // await posesCubit.syncPoses(token: token);
         await flowsCubit.syncFlows(token: token);
         // TODO add other syncs
       } else {

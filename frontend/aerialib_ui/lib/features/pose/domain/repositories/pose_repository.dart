@@ -6,7 +6,6 @@ import 'package:frontend/features/pose/domain/mappers/pose_mapper.dart';
 
 import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dart';
 import 'package:frontend/features/pose/data/datasources/pose/pose_remote_data.dart';
-import 'package:frontend/features/pose/data/models/pose_model.dart';
 import 'package:uuid/uuid.dart';
 
 
@@ -53,53 +52,23 @@ class PoseRepository {
 
   /// Fetch all poses from local DB
   Future<List<PoseEntity>> getAllPoses() async {
-    // log('[PosesRepository] Fetching PoseModels from local database... ');
-
-    final poseModels = await localDataSource.getAllPoses();
-
-    // log('[PosesRepository] Converting models to entities');
-    final poseEntitiesList = PoseMapper.modelsToEntities(poseModels);
-    log('[PosesRepository] Got ${poseModels.length} pose entities from local database');
-    // log('[PosesRepository] Conversion complete');
-
-    return poseEntitiesList;
-  }
-
-  // TODO get all poses - try to sync and if not possible, return local poses with note that its local only (or last synced time)
-
-  /// Fetch all poses from remote API and save locally
-  Future<void> syncRemoteToLocal(String token) async {
     try {
-      final poseModels = await remoteDataSource.getRemotePoses(token: token);
-      await localDataSource.createPoses(poseModels);
-      log('[PoseRepository] Synced ${poseModels.length} remote poses to local.');
-    } catch (e) {
-      log('[PoseRepository] Failed syncing remote poses to local: $e');
+      log('[PoseRepository] Fetching poses from Firestore...');
+
+      final query = await _firestore
+          .collection('poses')
+          .orderBy('displayName')
+          .get();
+
+      final poses = query.docs
+          .map((doc) => PoseEntity.fromMap(doc.data()))
+          .toList();
+
+      log('[PoseRepository] Got ${poses.length} poses from Firestore');
+      return poses;
+    } catch (e, st) {
+      log('[PoseRepository] getAllPoses error: $e', stackTrace: st);
       rethrow;
-    }
-  }
-
-  /// Send unsynced local poses to remote, and mark them as synced
-  Future<void> syncLocalToRemote(String token) async {
-    final List<PoseModel> unsynced = await localDataSource.getUnsyncedPoses();
-    if (unsynced.isEmpty) {
-      log("[PoseRepository] No unsynced poses found.");
-      return;
-    }
-
-    log("[PoseRepository] Attempting to sync ${unsynced.length} poses to remote...");
-    final success = await remoteDataSource.syncPoses(
-      token: token,
-      poses: unsynced,
-    );
-
-    if (success) {
-      for (final pose in unsynced) {
-        await localDataSource.updateSyncStatus(pose.id, 1);
-      }
-      log("[PoseRepository] Successfully updated sync status locally.");
-    } else {
-      log("[PoseRepository] Remote sync failed. Sync status not updated.");
     }
   }
 
