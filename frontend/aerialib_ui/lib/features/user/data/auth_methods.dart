@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:frontend/features/user/domain/entities/user_entity.dart';
+import 'package:frontend/features/user/domain/user_entity.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth;

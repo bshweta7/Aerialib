@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:frontend/features/flow/data/models/flow_model.dart';
 import 'package:frontend/core/services/http_service.dart';
 
-import '../../user/data/models/user_model.dart';
+import '../../user/legacy/user_model.dart';
 import 'admin_flow_model.dart';
 
 class AdminRepository {

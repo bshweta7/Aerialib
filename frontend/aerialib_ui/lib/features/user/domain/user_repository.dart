@@ -3,20 +3,16 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frontend/features/user/data/auth_methods.dart';
-import 'package:frontend/features/user/domain/entities/user_entity.dart';
-// import 'package:frontend/features/user/data/datasources/user_local_data.dart';
-import 'package:frontend/features/user/data/datasources/user_remote_data.dart';
+import 'package:frontend/features/user/domain/user_entity.dart';
 
 class UserRepository {
   // final UserLocalDataSource localDataSource;
-  final UserRemoteDataSource remoteDataSource;
   final AuthMethods authMethods;
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
 
   UserRepository({
     // required this.localDataSource,
-    required this.remoteDataSource,
     required this.authMethods,
     FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firestore,

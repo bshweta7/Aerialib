@@ -1,51 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:convert';
 import 'package:go_router/go_router.dart';
 
-import 'package:frontend/features/user/presentation/cubit/auth_cubit.dart';
+import 'package:frontend/features/user/legacy/password_cubit.dart';
 import 'package:frontend/shared/widgets/input_fields/password_field.dart';
 
-import '../../../../shared/widgets/input_fields/email_field.dart';
-import '../cubit/password_cubit.dart';
-
-class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final isPasswordEmailSent = false;
-  final isUsernameEmailSent = false;
-  final emailController = TextEditingController();
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-
+  late String token;
 
   @override
   void dispose() {
-    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void sendResetPasswordEmail() {
-    final isFormValid = formKey.currentState!.validate();
+  @override
+  void initState() {
+    super.initState();
+    final uri = Uri.base;
+    final extractedToken = uri.queryParameters['token'] ?? '';
+    token = extractedToken;
 
-    if (!isFormValid) return;
-
-    // context.read<PasswordCubit>().sendForgotPasswordEmail(
-    //     emailController.text.trim()
-    // );
+    debugPrint('[ResetPasswordPage] Extracted token: $token');
   }
 
-  void sendForgotUsernameEmail() {
-    final isFormValid = formKey.currentState!.validate();
 
-    if (!isFormValid) return;
-
-    // context.read<PasswordCubit>().sendForgotUsernameEmail(
-    //     emailController.text.trim()
-    // );
+  Future<void> resetPassword() async {
+    if (formKey.currentState!.validate()) {
+      // context.read<PasswordCubit>().resetPassword(
+      //     token,
+      //     passwordController.text.trim(),
+      // );
+    }
   }
 
   @override
@@ -64,30 +62,31 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
-            if (state is AuthError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
-            } else if (state is AuthLoggedIn) {
-              context.goNamed('home');
-            }
-          },
-          builder: (context, state) {
-            if (state is AuthLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            return Center(
+        // child: BlocConsumer<PasswordCubit, PasswordState>(
+        //   listener: (context, state) {
+        //     if (state is PasswordError) {
+        //       ScaffoldMessenger.of(context).showSnackBar(
+        //         SnackBar(content: Text(state.error)),
+        //       );
+        //     }
+        //   },
+        //   builder: (context, state) {
+        //     if (state is PasswordLoading) {
+        //       return const Center(child: CircularProgressIndicator());
+        //     } else if (state is PasswordError) {
+        //       const Center(child: Text("Invalid or missing reset token."));
+        //     // TODO add a button to resend link
+        //     }
+        //
+        //     return Center(
               child: SingleChildScrollView(
                 child: Form(
                   key: formKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        "Forgot your password? ",
+                      const Text( // TODO make a template (like MainScaffold) for these kinds of pages...
+                        "Reset Password",
                         style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
@@ -95,40 +94,36 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         ),
                       ),
                       const SizedBox(height: 8),
-
-                      EmailField(controller: emailController),
-
-                      const SizedBox(height: 16),
-
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: ElevatedButton(
-                          onPressed: sendResetPasswordEmail,
-                          child: const Text(
-                            'Reset your password',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
                       const Text(
-                        "Forgot your username? ",
+                        "Enter a new password",
                         style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1e293b),
+                          fontSize: 18,
+                          color: Color(0xFF334155),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 32),
+
+                      // Password field
+                      PasswordField(
+                        controller: passwordController,
+                        label: "Password",
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Confirm Password Field
+                      PasswordField(
+                        controller: confirmPasswordController,
+                        label: "Confirm Password",
+                      ),
+                      const SizedBox(height: 24),
+
                       SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: sendForgotUsernameEmail,
+                          onPressed: resetPassword,
                           child: const Text(
-                            'Retrieve your username',
+                            'RESET',
                             style: TextStyle(fontSize: 18),
                           ),
                         ),
@@ -182,10 +177,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
-            );
-          },
-        ),
-      ),
-    );
+            ));
+        //   },
+        // ),
+      // ),
+    // );
   }
 }

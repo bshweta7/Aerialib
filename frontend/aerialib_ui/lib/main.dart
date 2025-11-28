@@ -24,7 +24,6 @@ import 'package:frontend/core/services/http_service.dart';
 
 import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dart';
 import 'package:frontend/features/pose/data/datasources/pose/pose_remote_data.dart';
-import 'package:frontend/features/user/data/datasources/user_remote_data.dart';
 import 'package:frontend/features/transitions/data/transition_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow/flow_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow_poses/flow_pose_local_data.dart';
@@ -34,7 +33,7 @@ import 'package:frontend/features/media/data/datasources/media_local_data.dart';
 import 'package:frontend/features/media/data/datasources/media_remote_data.dart';
 
 import 'package:frontend/features/pose/domain/repositories/pose_repository.dart';
-import 'package:frontend/features/user/domain/repositories/user_repository.dart';
+import 'package:frontend/features/user/domain/user_repository.dart';
 import 'package:frontend/features/flow/domain/repositories/flow_pose_repository.dart';
 import 'package:frontend/features/flow/domain/repositories/flow_repository.dart';
 import 'package:frontend/features/media/domain/repositories/media_repository.dart';
@@ -72,8 +71,6 @@ Future<void> main() async {
 
   // Set up Repos
   final userRepo = UserRepository(
-    // localDataSource: UserLocalDataSource(),
-    remoteDataSource: UserRemoteDataSource(httpService: HttpService()),
     authMethods: AuthMethods(),
   );
 

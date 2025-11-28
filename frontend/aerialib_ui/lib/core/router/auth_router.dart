@@ -1,5 +1,5 @@
-import 'package:frontend/features/user/presentation/pages/forgot_password_page.dart';
-import 'package:frontend/features/user/presentation/pages/reset_password_page.dart';
+import 'package:frontend/features/user/legacy/forgot_password_page.dart';
+import 'package:frontend/features/user/legacy/reset_password_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:frontend/features/user/presentation/pages/login_page.dart';
