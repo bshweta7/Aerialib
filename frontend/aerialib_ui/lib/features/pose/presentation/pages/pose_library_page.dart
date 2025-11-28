@@ -46,14 +46,11 @@ class _PoseLibraryPageState extends State<PoseLibraryPage> {
   @override
   void initState() {
     super.initState();
-    // _initSync();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<PosesCubit>().getAllPoses();
+    });
   }
 
-  // Future<void> _initSync() async {
-  //   final user = context.read<AuthCubit>().state as AuthLoggedIn;
-  //   await context.read<PosesCubit>().syncPoses(token: user.user.token);
-  //   if (!mounted) return;
-  // }
 
   @override
   void dispose() {
