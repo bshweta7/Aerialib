@@ -185,6 +185,72 @@ class PoseEntity {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'displayName': displayName,
+
+      'apparatus': apparatus,
+      'level': level,
+      'description': description,
+      'primaryMediaId': primaryMediaId, // TODO remove & update
+      'primaryMediaPath': primaryMediaPath,
+      'createdBy': createdBy,
+      'updatedBy': updatedBy,
+
+      // TODO switch to DateTime instead of ISO strings
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
+  }
+
+  factory PoseEntity.fromMap(Map<String, dynamic> map) {
+    final displayName = (map['displayName'] as String?) ?? '';
+
+    final baseName = displayName;
+    final slug = displayName;
+
+    return PoseEntity(
+      id: (map['id'] as String?) ?? '',
+      slug: slug,
+      displayName: displayName,
+      altName: map['altName'] as String?, // will be null with current toMap
+
+      baseName: baseName,
+      prefix: map['prefix'] as String?,
+      suffix: map['suffix'] as String?,
+      handPosition: map['handPosition'] as String?,
+      legPosition: map['legPosition'] as String?,
+      positionInBar: map['positionInBar'] as String?,
+
+      apparatus: (map['apparatus'] as String?) ?? '',
+      level: map['level'] is int ? map['level'] as int? : null,
+      poseType: map['poseType'] as String?,
+
+      description: map['description'] as String?,
+      teachingCues: map['teachingCues'] as String?,
+      safetyCues: map['safetyCues'] as String?,
+      progressions: map['progressions'] as String?,
+      modifications: map['modifications'] as String?,
+      commonErrors: map['commonErrors'] as String?,
+
+      primaryMediaId: (map['primaryMediaId'] as String?) ?? '',
+      primaryMediaPath: (map['primaryMediaPath'] as String?) ?? '',
+
+      createdBy: (map['createdBy'] as String?) ?? '',
+      updatedBy: map['updatedBy'] as String?,
+
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'] as String)
+          : DateTime.now(),
+      updatedAt: map['updatedAt'] != null
+          ? DateTime.parse(map['updatedAt'] as String)
+          : DateTime.now(),
+
+      isSynced: (map['isSynced'] as int?) ?? 1,
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
