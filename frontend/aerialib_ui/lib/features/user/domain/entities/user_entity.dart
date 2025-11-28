@@ -26,11 +26,11 @@ class UserEntity {
       'uid': uid,
       'username': username,
       'email': email,
-      'first_name': firstName,
-      'last_name': lastName,
+      'firstName': firstName,
+      'lastName': lastName,
       'bio': bio,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
@@ -39,11 +39,11 @@ class UserEntity {
       uid: map['uid'] ?? '',
       username: map['username'] ?? '',
       email: map['email'] ?? '',
-      firstName: map['first_name'],
-      lastName: map['last_name'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
       bio: map['bio'],
-      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : DateTime.now(),
-      updatedAt: map['updated_at'] != null ? DateTime.parse(map['updated_at']) : DateTime.now(),
+      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : DateTime.now(),
+      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : DateTime.now(),
       token: map['token'] ?? '',
     );
   }
