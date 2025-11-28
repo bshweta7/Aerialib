@@ -13,7 +13,6 @@ import 'package:frontend/features/transitions/data/transition_remote_data.dart';
 import 'package:frontend/features/transitions/domain/transition_repository.dart';
 import 'package:frontend/features/transitions/presentation/cubit/transition_cubit.dart';
 import 'package:frontend/features/user/data/auth_methods.dart';
-import 'package:frontend/features/user/presentation/cubit/password_cubit.dart';
 import 'package:frontend/shared/features/navigation/widgets/smart_back_wrapper.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -25,7 +24,6 @@ import 'package:frontend/core/services/http_service.dart';
 
 import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dart';
 import 'package:frontend/features/pose/data/datasources/pose/pose_remote_data.dart';
-import 'package:frontend/features/user/data/datasources/user_local_data.dart';
 import 'package:frontend/features/user/data/datasources/user_remote_data.dart';
 import 'package:frontend/features/transitions/data/transition_local_data.dart';
 import 'package:frontend/features/flow/data/datasources/flow/flow_local_data.dart';
@@ -128,7 +126,6 @@ Future<void> main() async {
       BlocProvider(create: (_) => MusicCubit(musicRepo)),
       BlocProvider(create: (_) => TagCubit(tagRepository: tagRepo)), // TODO make this match format of others (positional)
       BlocProvider(create: (_) => HomeCubit()),
-      BlocProvider(create: (_) => PasswordCubit(userRepo)),
     ],
     child: const MyApp(),
   ));

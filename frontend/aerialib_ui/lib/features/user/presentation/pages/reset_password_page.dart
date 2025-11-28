@@ -39,10 +39,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   Future<void> resetPassword() async {
     if (formKey.currentState!.validate()) {
-      context.read<PasswordCubit>().resetPassword(
-          token,
-          passwordController.text.trim(),
-      );
+      // context.read<PasswordCubit>().resetPassword(
+      //     token,
+      //     passwordController.text.trim(),
+      // );
     }
   }
 
@@ -62,23 +62,23 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: BlocConsumer<PasswordCubit, PasswordState>(
-          listener: (context, state) {
-            if (state is PasswordError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is PasswordLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is PasswordError) {
-              const Center(child: Text("Invalid or missing reset token."));
-            // TODO add a button to resend link
-            }
-
-            return Center(
+        // child: BlocConsumer<PasswordCubit, PasswordState>(
+        //   listener: (context, state) {
+        //     if (state is PasswordError) {
+        //       ScaffoldMessenger.of(context).showSnackBar(
+        //         SnackBar(content: Text(state.error)),
+        //       );
+        //     }
+        //   },
+        //   builder: (context, state) {
+        //     if (state is PasswordLoading) {
+        //       return const Center(child: CircularProgressIndicator());
+        //     } else if (state is PasswordError) {
+        //       const Center(child: Text("Invalid or missing reset token."));
+        //     // TODO add a button to resend link
+        //     }
+        //
+        //     return Center(
               child: SingleChildScrollView(
                 child: Form(
                   key: formKey,
@@ -177,10 +177,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                 ),
               ),
-            );
-          },
-        ),
-      ),
-    );
+            ));
+        //   },
+        // ),
+      // ),
+    // );
   }
 }

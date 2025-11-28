@@ -33,9 +33,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     if (!isFormValid) return;
 
-    context.read<PasswordCubit>().sendForgotPasswordEmail(
-        emailController.text.trim()
-    );
+    // context.read<PasswordCubit>().sendForgotPasswordEmail(
+    //     emailController.text.trim()
+    // );
   }
 
   void sendForgotUsernameEmail() {
@@ -43,9 +43,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     if (!isFormValid) return;
 
-    context.read<PasswordCubit>().sendForgotUsernameEmail(
-        emailController.text.trim()
-    );
+    // context.read<PasswordCubit>().sendForgotUsernameEmail(
+    //     emailController.text.trim()
+    // );
   }
 
   @override

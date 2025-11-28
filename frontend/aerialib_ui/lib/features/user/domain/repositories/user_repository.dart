@@ -119,22 +119,11 @@ class UserRepository {
     required String email,
   }) async {
     // TODO get existing users, check emails and usernames HERE before sending to backend
-    final takenStatus = await remoteDataSource.checkTaken(
-      username: username,
-      email: email,
-    );
-
-    return takenStatus;
+    return {
+      'email': false, // TODO change validation from here and use firebase built in instead
+      'username': false,
+    };
   }
 
-  Future<bool> tokenIsValid(String token) => remoteDataSource.tokenIsValid(token);
-
-  Future<String?> resetPassword(String token, String newPassword) =>
-      remoteDataSource.resetPassword(token: token, newPassword: newPassword);
-
-  Future<String?> sendForgotPasswordEmail(String email) =>
-      remoteDataSource.sendForgotPasswordEmail(email: email);
-
-  Future<String?> sendForgotUsernameEmail(String email) =>
-      remoteDataSource.sendForgotUsernameEmail(email: email);
+  bool tokenIsValid(String token) => true;
 }
