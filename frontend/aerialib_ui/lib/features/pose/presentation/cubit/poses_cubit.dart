@@ -43,7 +43,7 @@ class PosesCubit extends Cubit<PosesState> {
   }
 
   /// Fetch all poses
-  Future<void> getAllPoses({required String token}) async {
+  Future<void> getAllPoses() async {
     try {
       log('[PosesCubit] Fetching poses...');
       emit(const PoseLoading());

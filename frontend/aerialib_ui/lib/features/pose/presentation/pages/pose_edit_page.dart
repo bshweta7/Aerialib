@@ -130,7 +130,7 @@ class _PoseEditDetailsPageState extends State<PoseEditDetailsPage> {
       token: user.user.token,
     );
 
-    await context.read<PosesCubit>().getAllPoses(token: user.user.token);
+    await context.read<PosesCubit>().getAllPoses();
 
     context.goNamed(
         'pose-view',
