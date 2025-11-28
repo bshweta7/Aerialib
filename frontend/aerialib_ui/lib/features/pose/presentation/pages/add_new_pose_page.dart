@@ -122,7 +122,7 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
       final now = DateTime.now();
 
       final newPose = PoseEntity(
-        id: const Uuid().v4(),
+        id: '',
         slug: generatedSlug,
         displayName: nameController.text.trim(),
         altName: altNameController.text

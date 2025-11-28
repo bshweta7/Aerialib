@@ -6,7 +6,6 @@ import 'package:frontend/features/pose/domain/mappers/pose_mapper.dart';
 
 import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dart';
 import 'package:frontend/features/pose/data/datasources/pose/pose_remote_data.dart';
-import 'package:uuid/uuid.dart';
 
 
 class PoseRepository {
@@ -21,26 +20,25 @@ class PoseRepository {
   }): _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Create a new pose
-   Future<PoseEntity> createPose({
+  Future<PoseEntity> createPose({
     required PoseEntity pose,
   }) async {
     try {
       log('[PoseRepository] Creating pose in Firestore...');
 
-      // Ensure we have an id
-      final String id = pose.id.isNotEmpty ? pose.id : const Uuid().v4();
+      // 1. Get a new document ref to generate an autoId
+      final docRef = _firestore.collection('poses').doc();
+      final id = docRef.id;
       final now = DateTime.now();
 
+      // 2. Overwrite the id (and updatedAt) on the pose
       final poseToSave = pose.copyWith(
         id: id,
-        createdAt: pose.createdAt,
         updatedAt: now,
       );
 
-      await _firestore
-          .collection('poses')
-          .doc(id)
-          .set(poseToSave.toMap());
+      // 3. Save to Firestore
+      await docRef.set(poseToSave.toMap());
 
       log('[PoseRepository] Pose created with id: $id');
       return poseToSave;
