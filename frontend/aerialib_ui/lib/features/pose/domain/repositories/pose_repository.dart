@@ -1,47 +1,52 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frontend/features/pose/domain/entities/pose_entity.dart';
 import 'package:frontend/features/pose/domain/mappers/pose_mapper.dart';
 
 import 'package:frontend/features/pose/data/datasources/pose/pose_local_data.dart';
 import 'package:frontend/features/pose/data/datasources/pose/pose_remote_data.dart';
 import 'package:frontend/features/pose/data/models/pose_model.dart';
+import 'package:uuid/uuid.dart';
 
 
 class PoseRepository {
+  final FirebaseFirestore _firestore;
   final PoseLocalDataSource localDataSource;
   final PoseRemoteDataSource remoteDataSource;
 
   PoseRepository({
+    FirebaseFirestore? firestore,
     required this.localDataSource,
     required this.remoteDataSource,
-  });
+  }): _firestore = firestore ?? FirebaseFirestore.instance;
 
-  /// Create a new pose (tries remote first, fallback to local if offline)
-  Future<PoseEntity> createPose({
+  /// Create a new pose
+   Future<PoseEntity> createPose({
     required PoseEntity pose,
-    required String token,
   }) async {
     try {
-      log('[PoseRepository] Creating pose remotely...');
+      log('[PoseRepository] Creating pose in Firestore...');
 
-      // Convert to model and send to backend
-      final poseModel = await remoteDataSource.createPose(
-        pose: PoseMapper.entityToModel(pose),
-        token: token,
+      // Ensure we have an id
+      final String id = pose.id.isNotEmpty ? pose.id : const Uuid().v4();
+      final now = DateTime.now();
+
+      final poseToSave = pose.copyWith(
+        id: id,
+        createdAt: pose.createdAt,
+        updatedAt: now,
       );
 
-      // Save to local DB
-      await localDataSource.createPose(poseModel);
-      // log('[PoseRepository] Pose inserted into local database.');
+      await _firestore
+          .collection('poses')
+          .doc(id)
+          .set(poseToSave.toMap());
 
-      // Return as entity
-      final entity = PoseMapper.modelToEntity(poseModel);
-      log('[PoseRepository] Mapped PoseModel to PoseEntity: ${entity.id}');
-      return entity;
-
-    } catch (e) {
-      log('[PoseRepository] Error creating pose: $e');
+      log('[PoseRepository] Pose created with id: $id');
+      return poseToSave;
+    } catch (e, st) {
+      log('[PoseRepository] Error creating pose: $e', stackTrace: st);
       rethrow;
     }
   }

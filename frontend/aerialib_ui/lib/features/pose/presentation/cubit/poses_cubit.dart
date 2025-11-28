@@ -24,14 +24,12 @@ class PosesCubit extends Cubit<PosesState> {
   /// Create a new pose
   Future<void> createNewPose({
     required PoseEntity pose,
-    required String token,
   }) async {
     try {
       emit(const PoseLoading());
 
       final createdPose = await _poseRepository.createPose(
         pose: pose,
-        token: token,
       );
 
       // TODO - see if commenting this out breaks anything (router)

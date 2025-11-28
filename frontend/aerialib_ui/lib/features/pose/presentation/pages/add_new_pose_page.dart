@@ -179,7 +179,6 @@ class _AddNewPosePageState extends State<AddNewPosePage> {
 
       await context.read<PosesCubit>().createNewPose(
         pose: newPose,
-        token: user.user.token,
       );
     }
   }
